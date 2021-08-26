@@ -1,172 +1,181 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-    <head>
-		<script type="text/javascript" src="javascript/jquery.js"></script>
-		<link rel="icon" type="../image/png" sizes="25x17" href="images/logo16x16.png">
-		<link rel="manifest" href="/manifest.json">
-        <title>Tabuada Divertida</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-        <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
-        <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-		<script type="text/javascript" src="javascript/scriptpagina.js"></script>
-		<script type="text/javascript" src="javascript/jquery.maskedinput.js"></script>
-        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="css/style.css" type="text/css">
-    </head>
-    <body id="home" data-spy="scroll" data-target=".navbar" data-offset="60">
-        <div class="modal fade" id="myModal" role="dialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title" id="tituloModal"></h4>
-                    </div>
-                    <div class="modal-body" id="textoModal">
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    </div>
+
+<head>
+    <script type="text/javascript" src="javascript/jquery.js"></script>
+    <link rel="icon" type="../image/png" sizes="25x17" href="images/logo16x16.png">
+    <link rel="manifest" href="/manifest.json">
+    <title>Tabuada Divertida</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="javascript/scriptpagina.js"></script>
+    <script type="text/javascript" src="javascript/jquery.maskedinput.js"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css" type="text/css">
+</head>
+
+<body id="home" data-spy="scroll" data-target=".navbar" data-offset="60">
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title" id="tituloModal"></h4>
+                </div>
+                <div class="modal-body" id="textoModal">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
-        <div class="jumbotron">	
-			<div class="interna" style="background-color: #dddddd;" align="justify">
-                <div id="contact" class="container-fluid bg-grey">
+    </div>
+    <div class="jumbotron">
+        <div class="interna" style="background-color: #dddddd;" align="justify">
+            <div id="contact" class="container-fluid bg-grey">
+                <div class="row">
                     <div class="row">
-                        <div class="row">
-        					<div class="col-sm-12">
-				        		<h2 style="text-align: center;">
-                                    Tabuada Divertida 
-                                </h2>
-                                <hr>
-                                <br>					
-        					</div>
+                        <div class="col-sm-12">
+                            <h2 style="text-align: center;">
+                                Tabuada Divertida
+                            </h2>
+                            <hr>
+                            <br>
                         </div>
                     </div>
-                    <div class="row" id="espacoInicio">
-                        <div class="row">
-        					<div class="col-sm-12">
-                                <h3>
-                                    Teste seu raciocínio e sua rapidez, em quanto tempo demora para responder 20 questões de multiplicação?
-                                </h3>
-                                <hr>
-                                <br>					
-        					</div>
-                        </div>
-                        <div>
-                            <div class="col-sm-12">
-							    <div class="row">
-						    		<div class="col-sm-12 form-group" id = "game">
-                                        <h4 style="text-align: center;">
-                                            <button class="buttonStartGame" onclick="ComecaJogo()">Começar o Jogo</button>
-                                            <br>
-                                            <button class="buttonInicio" onclick="ApresentaInstrucoes()">Instrucoes do Jogo</button>
-                                            <br>
-                                            <button class="buttonRanking" onclick="PreencheClassificao();">Ranking</button>
-                                        </h4>
-					        			<!---<input class="form-control" id="tempoRelacionamento" name="tempoRelacionamento" placeholder="Anos de relacionamento" type="text" required>-->
-                                    </div>
-							    </div>
-							</div>                            
-                        </div>
-                    </div>
-                    <div class="row" id="espacoPreencheDados">
+                </div>
+                <div class="row" id="espacoInicio">
+                    <div class="row">
                         <div class="col-sm-12">
                             <h3>
-                                Como você gostaria de ser chamado?
+                                Teste seu raciocínio e sua rapidez, em quanto tempo demora para responder 20 questões de
+                                multiplicação?
                             </h3>
-                            <input class="form-control" id="nome" name="nome" placeholder="Nome" type="text" required>
-                            <h4 style="text-align: center;">
-                                <button class="buttonStartGame" onclick="Start()">Start</button>
-                                <br>
-                                <button class="buttonInicio" onclick="document.location.reload(true);">Início</button>
-                            </h4>
+                            <hr>
+                            <br>
                         </div>
                     </div>
-                    <div class="row" id="espacoJogo">
-                        <div class="row">
-                            <div class="col-sm-2">
-                                <button class="buttonInicio" onclick="document.location.reload(true);">Início</button>
-
-                                <h4 style="text-align: left;">
-                                    Tempo:
-                                    <br>
-                                    <b style="color: red;" id="time">
-                                    </b>
-                                    <br>
-                                    <br>
-                                    <h1 style="text-align: center;color:red;" id="lugarTotal">
-
-                                    </h1>
-                                </h4>
-                            </div>
-                            <div class="col-sm-8">
-                                <h1 style="text-align: center;color:red;" id="lugarParaConta">
-                                
-                                </h1>
-                            </div>
-                            <div class="col-sm-2">
-                                <h1 style="text-align: center;color:red;" id="lugarParaImagem">
-                                
-                                </h1>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div  class="col-sm-2">
-                            </div>
-                            <div class="col-sm-10">
-                                <div class="col-sm-12">
-                                    <h1 style="text-align: center;color:red;">
-                                        <button class="buttonNumero" onclick="EnviaValor('1');">1</button>
-                                        <button class="buttonNumero" onclick="EnviaValor('2');">2</button>
-                                        <button class="buttonNumero" onclick="EnviaValor('3');">3</button>
+                    <div>
+                        <div class="col-sm-12">
+                            <div class="row">
+                                <div class="col-sm-12 form-group" id="game">
+                                    <h4 style="text-align: center;">
+                                        <button class="buttonStartGame" onclick="ComecaJogo()">Começar o Jogo</button>
                                         <br>
-                                        <button class="buttonNumero" onclick="EnviaValor('4');">4</button>
-                                        <button class="buttonNumero" onclick="EnviaValor('5');">5</button>
-                                        <button class="buttonNumero" onclick="EnviaValor('6');">6</button>
+                                        <button class="buttonInicio" onclick="ApresentaInstrucoes()">Instrucoes do
+                                            Jogo</button>
                                         <br>
-                                        <button class="buttonNumero" onclick="EnviaValor('7');">7</button>
-                                        <button class="buttonNumero" onclick="EnviaValor('8');">8</button>
-                                        <button class="buttonNumero" onclick="EnviaValor('9');">9</button>
-                                        <br>
-                                        <button class="buttonNumero" onclick="document.getElementById('valorResultado').value = ''"><span class="glyphicon glyphicon-erase"></span></button>
-                                        <button class="buttonNumero" onclick="EnviaValor('0');">0</button>
-                                        <button class="buttonNumero" onclick="document.getElementById('valorResultado').value = ''"><span class="glyphicon glyphicon-erase"></span></button>
-                                    </h1>
+                                        <button class="buttonRanking" onclick="PreencheClassificao();">Ranking</button>
+                                    </h4>
+                                    <!---<input class="form-control" id="tempoRelacionamento" name="tempoRelacionamento" placeholder="Anos de relacionamento" type="text" required>-->
                                 </div>
                             </div>
                         </div>
                     </div>
-                        
+                </div>
+                <div class="row" id="espacoPreencheDados">
+                    <div class="col-sm-12">
+                        <h3>
+                            Como você gostaria de ser chamado?
+                        </h3>
+                        <input class="form-control" id="nome" name="nome" placeholder="Nome" type="text" required>
+                        <h4 style="text-align: center;">
+                            <button class="buttonStartGame" onclick="Start()">Start</button>
+                            <br>
+                            <button class="buttonInicio" onclick="document.location.reload(true);">Início</button>
+                        </h4>
                     </div>
-                    <div class="row" id="espacoResultado">
-                        <div class="col-sm-12">
-                            <h4 style="text-align: left;" id="resultadoTexto">
-                                
-                            </h4>
-                            <h4 style="text-align: center;">
-                                <button class="buttonInicio" onclick="document.location.reload(true);">Início</button>
-                                <br>
-                                <button class="buttonStartGame" onclick="ComecaJogo()">Jogar Novamente</button>
-                            </h4>
-                        </div>
-                    </div>
-                    <div class="row" id="espacoClassificacao">
-                        <div class="col-sm-12" id="classificacaoTexto">
+                </div>
+                <div class="row" id="espacoJogo">
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <button class="buttonInicio" onclick="document.location.reload(true);">Início</button>
 
+                            <h4 style="text-align: left;">
+                                Tempo:
+                                <br>
+                                <b style="color: red;" id="time">
+                                </b>
+                                <br>
+                                <br>
+                                <h1 style="text-align: center;color:red;" id="lugarTotal">
+
+                                </h1>
+                            </h4>
+                        </div>
+                        <div class="col-sm-8">
+                            <h1 style="text-align: center;color:red;" id="lugarParaConta">
+
+                            </h1>
+                        </div>
+                        <div class="col-sm-2">
+                            <h1 style="text-align: center;color:red;" id="lugarParaImagem">
+
+                            </h1>
                         </div>
                     </div>
-			    </div>
+                    <div class="row">
+                        <div class="col-sm-2">
+                        </div>
+                        <div class="col-sm-10">
+                            <div class="col-sm-12">
+                                <h1 style="text-align: center;color:red;">
+                                    <button class="buttonNumero" onclick="EnviaValor('1');">1</button>
+                                    <button class="buttonNumero" onclick="EnviaValor('2');">2</button>
+                                    <button class="buttonNumero" onclick="EnviaValor('3');">3</button>
+                                    <br>
+                                    <button class="buttonNumero" onclick="EnviaValor('4');">4</button>
+                                    <button class="buttonNumero" onclick="EnviaValor('5');">5</button>
+                                    <button class="buttonNumero" onclick="EnviaValor('6');">6</button>
+                                    <br>
+                                    <button class="buttonNumero" onclick="EnviaValor('7');">7</button>
+                                    <button class="buttonNumero" onclick="EnviaValor('8');">8</button>
+                                    <button class="buttonNumero" onclick="EnviaValor('9');">9</button>
+                                    <br>
+                                    <button class="buttonNumero"
+                                        onclick="document.getElementById('valorResultado').value = ''"><span
+                                            class="glyphicon glyphicon-erase"></span></button>
+                                    <button class="buttonNumero" onclick="EnviaValor('0');">0</button>
+                                    <button class="buttonNumero"
+                                        onclick="document.getElementById('valorResultado').value = ''"><span
+                                            class="glyphicon glyphicon-erase"></span></button>
+                                </h1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
-            <footer  class="bg-grey" style="text-align: center;">
-                SunSale System
-            </footer>
-		</div>
-    </body>
+            <div class="row" id="espacoResultado">
+                <div class="col-sm-12">
+                    <h4 style="text-align: left;" id="resultadoTexto">
+
+                    </h4>
+                    <h4 style="text-align: center;">
+                        <button class="buttonInicio" onclick="document.location.reload(true);">Início</button>
+                        <br>
+                        <button class="buttonStartGame" onclick="ComecaJogo()">Jogar Novamente</button>
+                    </h4>
+                </div>
+            </div>
+            <div class="row" id="espacoClassificacao">
+                <div class="col-sm-12" id="classificacaoTexto">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer class="bg-grey" style="text-align: center;">
+        SunSale System
+    </footer>
+    </div>
+</body>
+
 </html>
 
 <script>
@@ -175,17 +184,17 @@
     document.getElementById('espacoJogo').hidden = true;
     document.getElementById('espacoResultado').hidden = true;
     document.getElementById('espacoClassificacao').hidden = true;
-    
+
     var listaContas1 = CriarContas();
-    var listaContas2 = CriarContas(); 
+    var listaContas2 = CriarContas();
     var listaIndicesImagem = CriarImagens();
-    var listaRespostas = new Array(); 
+    var listaRespostas = new Array();
     var hora = 0;
     var minuto = 0;
     var segundo = 0;
     var interval;
 
-    function ComecaJogo(){
+    function ComecaJogo() {
         document.getElementById('espacoInicio').hidden = true;
         document.getElementById('espacoJogo').hidden = true;
         document.getElementById('espacoPreencheDados').hidden = false;
@@ -193,25 +202,25 @@
         document.getElementById('espacoClassificacao').hidden = true;
 
         document.getElementById('nome').focus();
-        if(sessionStorage.getItem('nomeUsuario') != ''){
+        if (sessionStorage.getItem('nomeUsuario') != '') {
             document.getElementById('nome').value = sessionStorage.getItem('nomeUsuario');
         }
-        else{
+        else {
             sessionStorage.setItem('nomeUsuario', '');
         }
     }
 
-    function Start(){
+    function Start() {
         listaContas1 = CriarContas();
         listaContas2 = CriarContas();
         listaIndicesImagem = CriarImagens();
 
-        if(document.getElementById('nome').value == ""){
+        if (document.getElementById('nome').value == "") {
             alerta("O nome não foi fornecido corretamente!");
         }
-        else{
+        else {
             sessionStorage.setItem('nomeUsuario', document.getElementById('nome').value);
-            
+
             document.getElementById('espacoInicio').hidden = true;
             document.getElementById('espacoJogo').hidden = false;
             document.getElementById('espacoPreencheDados').hidden = true;
@@ -224,7 +233,7 @@
         }
     }
 
-    function PreencheResultado(hora, minuto, segundo){
+    function PreencheResultado(hora, minuto, segundo) {
         document.getElementById('espacoInicio').hidden = true;
         document.getElementById('espacoJogo').hidden = true;
         document.getElementById('espacoPreencheDados').hidden = true;
@@ -232,38 +241,43 @@
         document.getElementById('espacoClassificacao').hidden = true;
 
         sessionStorage.setItem('nomeUsuario', document.getElementById('nome').value);
-        document.getElementById('resultadoTexto').innerHTML = 'Parabéns ' + sessionStorage.getItem('nomeUsuario') + '! Você acertou 20 questões em ' + (hora > 0? (hora > 9 ? hora : '0' + hora) + ' horas' : '') + (minuto > 0? (minuto > 9 ? minuto : '0' + minuto) + ' minutos e ' : '') + (segundo > 0? (segundo > 9 ? segundo : '0' + segundo) : '0') + ' segundos';
+        document.getElementById('resultadoTexto').innerHTML = 'Parabéns '
+            + sessionStorage.getItem('nomeUsuario') +
+            '! Você acertou 20 questões em ' +
+            (hora > 0 ? (hora > 9 ? hora : '0' + hora) + ' horas' : '')
+            + (minuto > 0 ? (minuto > 9 ? minuto : '0' + minuto) + ' minutos e ' : '')
+            + (segundo > 0 ? (segundo > 9 ? segundo : '0' + segundo) : '0') + ' segundos';
     }
-    
-    function PreencheTime(){
+
+    function PreencheTime() {
         document.getElementById('time').innerHTML = '00:00:00';
-        hora = 0;    
+        hora = 0;
         minuto = 0;
         segundo = 0;
 
-        interval = setInterval(function() {
+        interval = setInterval(function () {
             segundo++;
-            if(segundo == 60){
-                segundo =0;
+            if (segundo == 60) {
+                segundo = 0;
                 minuto++;
             }
-            if(minuto == 60){
+            if (minuto == 60) {
                 minuto = 0;
-                hora ++;
+                hora++;
             }
-            document.getElementById('time').innerHTML = (hora    >= 10 ? hora    : '0' + hora   ) + ":" + 
-                                                        (minuto  >= 10 ? minuto  : '0' + minuto ) + ":" + 
-                                                        (segundo >= 10 ? segundo : '0' + segundo);
+            document.getElementById('time').innerHTML = (hora >= 10 ? hora : '0' + hora) + ":" +
+                (minuto >= 10 ? minuto : '0' + minuto) + ":" +
+                (segundo >= 10 ? segundo : '0' + segundo);
         }, 1000);
     }
 
-    function PreencheConta(indice){
-        if(indice == 20){
+    function PreencheConta(indice) {
+        if (indice == 20) {
             clearInterval(interval);
             PreencheResultado(hora, minuto, segundo);
             EnviarRequisicaoPOST(sessionStorage.getItem('nomeUsuario'), (hora > 9 ? hora : '0' + hora) + ':' + (minuto > 9 ? minuto : '0' + minuto) + ':' + (segundo > 9 ? segundo : '0' + segundo));
         }
-        else{
+        else {
             document.getElementById('lugarParaConta').innerHTML = listaContas1[indice] + " x " + listaContas2[indice];
             document.getElementById('lugarTotal').innerHTML = (indice + 1) + 'de 20';
             document.getElementById('lugarParaConta').innerHTML += '<br><br><input class="form-control" type="number" id="valorResultado" oninput="InsereResposta(' + listaContas1[indice] + ', ' + listaContas2[indice] + ', ' + indice + ')">';
@@ -272,29 +286,41 @@
         }
     }
 
-    function preencheImagem(indice){
+    function respostaErrada(resultado){
+            if (document.getElementById('lugarParaConta').innerHTML.indexOf("Errado") == -1) {
+                document.getElementById('lugarParaConta').innerHTML += "<p><h6><strong>Errado</strong></h6></p>";
+                document.getElementById('valorResultado').style.borderColor = "#e10";
+            }
+            
+            document.getElementById('valorResultado').value = resultado;
+            document.getElementById('valorResultado').focus();
+    }
+
+    function preencheImagem(indice) {
         //document.getElementById('lugarParaImagem').innerHTML = '<img src="' + listaImagens[listaIndicesImagem[indice]] + '" width="100%" height="100%">';
     }
 
-    function InsereResposta(val1, val2, indice){
+    function InsereResposta(val1, val2, indice) {
         var result = document.getElementById('valorResultado').value;
-        if(Number.isInteger(parseInt(result))){
-            if(val1 * val2 == result){
-                PreencheConta(indice+1);
+        if (Number.isInteger(parseInt(result))) {
+            if (val1 * val2 == result) {
+                PreencheConta(indice + 1);
+            } else {
+                respostaErrada(result);
             }
         }
     }
 
-    function EnviaValor(valor){
+    function EnviaValor(valor) {
         document.getElementById('valorResultado').value += valor;
         document.getElementById('valorResultado').dispatchEvent(new Event('input'));
     }
 
-    function ApresentaInstrucoes(){
+    function ApresentaInstrucoes() {
         alerta('O jogo consiste em responder à questões da tabuada. Basta apertar em iniciar e o jogo já começa. Estando no computador você pode utsar o teclado numérico para rresponder às questões. Pode usar o teclado que aparece em tela. Enquanto não acerta a questão a mesma não muda, então é necessário acerta-la para prosseguir. O objetivo é responder a vinte questões no menor tempo possível, você consegue entrar no ranking?<br> Boa sorte!');
     }
 
-    function PreencheClassificao(){
+    function PreencheClassificao() {
         document.getElementById('espacoInicio').hidden = true;
         document.getElementById('espacoJogo').hidden = true;
         document.getElementById('espacoPreencheDados').hidden = true;
@@ -303,11 +329,11 @@
 
         var listaClassificacao = BuscaLista();
         document.getElementById('classificacaoTexto').innerHTML = '<h2 style="text-align: center;">Classificação</h2>';
-        
+
         var texto = '';
-        
-        for(i = 0; i < listaClassificacao.length; i++){
-            if(i == 0){
+
+        for (i = 0; i < listaClassificacao.length; i++) {
+            if (i == 0) {
                 texto += '  <table class="table table-striped">';
                 texto += '    <thead>';
                 texto += '      <tr>';
@@ -322,7 +348,7 @@
 
             texto += '      <tr>';
             texto += '        <td>';
-            texto += '         <h4 style="text-align: center;">' + (i+ 1) + '</h4>';
+            texto += '         <h4 style="text-align: center;">' + (i + 1) + '</h4>';
             texto += '        </td>';
             texto += '        <td>';
             texto += '          <h4 style="text-align: center;">' + listaClassificacao[i].NOME + '</h4>';
@@ -335,25 +361,25 @@
             texto += '        </td>';
             texto += '      </tr>';
 
-            if(i+1 == listaClassificacao.length){
+            if (i + 1 == listaClassificacao.length) {
                 texto += '    </tbody>';
                 texto += '  </table>';
             }
         }
 
         document.getElementById('classificacaoTexto').innerHTML += texto +
-                           `<h4 style="text-align: center;">
+            `<h4 style="text-align: center;">
                                 <button class="buttonInicio" onclick="PreencheClassificao();">Atualizar</button>
                                 <br>
                                 <button class="buttonInicio" onclick="document.location.reload(true);">Início</button>
                             </h4>`;
     }
 
-    function alerta(mensagem){
+    function alerta(mensagem) {
         AbrirModal("Alerta", mensagem);
     }
 
-    function AbrirModal(tituloModal, textoModal){
+    function AbrirModal(tituloModal, textoModal) {
         var titulo = document.querySelector('#tituloModal');
         var texto = document.querySelector('#textoModal');
 
@@ -361,7 +387,7 @@
         titulo.innerHTML = tituloModal;
         texto.innerHTML = '';
         texto.innerHTML = '<p>' + textoModal + '</p>';
-        
+
         $("#myModal").modal();
     }
 
