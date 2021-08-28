@@ -253,7 +253,10 @@ code {
     background-color: blueviolet;
 }
 
+
 .buttonNumero {
+    display: flex;
+    box-sizing: border-box;
     border: none;
     color: white;
     padding: 10px 22px;
@@ -263,5 +266,31 @@ code {
     font-size: 16px;
     margin: 4px 2px;
     cursor: pointer;
-    background-color: #818181;
+    background-color: rgb(81, 76, 85);
 }
+
+#lugarTotal {
+    font-size: 32px;
+}
+
+#lugarParaConta {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    flex-flow: column;
+    flex-direction: column;
+}
+
+#valorResultado {
+    display: flex;
+    color: #fff;
+    box-sizing: border-box;
+    width: 200px;
+    height: 50px;
+    font-size: 16px;
+    border-radius: 0;
+    background-color: #4CAF50;
+    border-block-color: none;
+}
+

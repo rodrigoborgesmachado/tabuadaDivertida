@@ -279,7 +279,7 @@
         }
         else {
             document.getElementById('lugarParaConta').innerHTML = listaContas1[indice] + " x " + listaContas2[indice];
-            document.getElementById('lugarTotal').innerHTML = (indice + 1) + 'de 20';
+            document.getElementById('lugarTotal').innerHTML = (indice + 1) + ' de 20';
             document.getElementById('lugarParaConta').innerHTML += '<br><br><input class="form-control" type="number" id="valorResultado" oninput="InsereResposta(' + listaContas1[indice] + ', ' + listaContas2[indice] + ', ' + indice + ')">';
             document.getElementById('valorResultado').focus();
             //preencheImagem(indice);
@@ -288,7 +288,7 @@
 
     function respostaErrada(resultado){
             if (document.getElementById('lugarParaConta').innerHTML.indexOf("Errado") == -1) {
-                document.getElementById('lugarParaConta').innerHTML += "<p><h6><strong>Errado</strong></h6></p>";
+                document.getElementById('lugarParaConta').innerHTML += "<p><h5><strong>Errado</strong></h5></p>";
                 document.getElementById('valorResultado').style.borderColor = "#e10";
             }
             
