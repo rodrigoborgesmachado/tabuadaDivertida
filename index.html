@@ -84,6 +84,10 @@
                             Como você gostaria de ser chamado?
                         </h3>
                         <input class="form-control" id="nome" name="nome" placeholder="Nome" type="text" required>
+                        <h3>
+                            Quantas questões?
+                        </h3>
+                        <input class="form-control" id="questoes" name="questoes" placeholder="Questões" type="number" required>
                         <h4 style="text-align: center;">
                             <button class="buttonStartGame" onclick="Start()">Start</button>
                             <br>
@@ -243,7 +247,7 @@
         sessionStorage.setItem('nomeUsuario', document.getElementById('nome').value);
         document.getElementById('resultadoTexto').innerHTML = 'Parabéns '
             + sessionStorage.getItem('nomeUsuario') +
-            '! Você acertou 20 questões em ' +
+            '! Você acertou ' + document.getElementById('questoes').value + ' questões em ' +
             (hora > 0 ? (hora > 9 ? hora : '0' + hora) + ' horas' : '')
             + (minuto > 0 ? (minuto > 9 ? minuto : '0' + minuto) + ' minutos e ' : '')
             + (segundo > 0 ? (segundo > 9 ? segundo : '0' + segundo) : '0') + ' segundos';
@@ -272,14 +276,15 @@
     }
 
     function PreencheConta(indice) {
-        if (indice == 20) {
+        var numeroContas = document.getElementById('questoes').value;
+        if (indice == numeroContas) {
             clearInterval(interval);
             PreencheResultado(hora, minuto, segundo);
             EnviarRequisicaoPOST(sessionStorage.getItem('nomeUsuario'), (hora > 9 ? hora : '0' + hora) + ':' + (minuto > 9 ? minuto : '0' + minuto) + ':' + (segundo > 9 ? segundo : '0' + segundo));
         }
         else {
             document.getElementById('lugarParaConta').innerHTML = listaContas1[indice] + " x " + listaContas2[indice];
-            document.getElementById('lugarTotal').innerHTML = (indice + 1) + ' de 20';
+            document.getElementById('lugarTotal').innerHTML = (indice + 1) + ' de ' + numeroContas;
             document.getElementById('lugarParaConta').innerHTML += '<br><br><input class="form-control" type="number" id="valorResultado" oninput="InsereResposta(' + listaContas1[indice] + ', ' + listaContas2[indice] + ', ' + indice + ')">';
             document.getElementById('valorResultado').focus();
             //preencheImagem(indice);
