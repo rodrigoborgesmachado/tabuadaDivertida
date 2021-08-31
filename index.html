@@ -280,7 +280,7 @@
         if (indice == numeroContas) {
             clearInterval(interval);
             PreencheResultado(hora, minuto, segundo);
-            EnviarRequisicaoPOST(sessionStorage.getItem('nomeUsuario'), (hora > 9 ? hora : '0' + hora) + ':' + (minuto > 9 ? minuto : '0' + minuto) + ':' + (segundo > 9 ? segundo : '0' + segundo));
+            EnviarRequisicaoPOST(sessionStorage.getItem('nomeUsuario'), (hora > 9 ? hora : '0' + hora) + ':' + (minuto > 9 ? minuto : '0' + minuto) + ':' + (segundo > 9 ? segundo : '0' + segundo), numeroContas);
         }
         else {
             document.getElementById('lugarParaConta').innerHTML = listaContas1[indice] + " x " + listaContas2[indice];

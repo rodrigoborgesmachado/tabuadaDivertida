@@ -64,10 +64,10 @@ function CriarImagens(){
     return lista;
 };
 
-function EnviarRequisicaoPOST(nome, tempo){
+function EnviarRequisicaoPOST(nome, tempo, acertos){
     var xhr = new XMLHttpRequest();
 
-    var dados = JSON.stringify({nome, tempo});
+    var dados = JSON.stringify({nome, tempo, acertos});
 
     xhr.open("POST", "http://tabuadadivertida.sunsalesystem.com.br/PHP/InsereResultado.php");
     xhr.setRequestHeader('Content-Type', 'application/json');

@@ -9,7 +9,7 @@ $request = json_decode($postdata);
 // $numeroAcertos = isset($_POST['numeroAcertos']) ? $_POST['numeroAcertos'] : '100';
 
 // echo setResultado($nome, $tempo, $numeroAcertos);
-echo setResultado(preg_replace('/[^[:alpha:]_]/', '',$request->nome), $request->tempo, '20');
+echo setResultado(preg_replace('/[^[:alpha:]_]/', '',$request->nome), $request->tempo, $request->acertos);
 function setResultado($nome, $tempo, $numeroAcertos)
 {
 	$pdo = Conectar();
