@@ -1,23 +1,12 @@
 <?php
-include 'bd.php';
+$url = "http://teste.sunsalesystem.com.br/api/tabelaDivertida/ranking";
 
-echo getResultados($chave);
+$curl = curl_init($url);
+curl_setopt($curl, CURLOPT_URL, $url);
+curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 
-function getResultados($chave)
-{
-	$pdo = Conectar();
-	if($pdo == null)
-	{
-		echo '<br>deu ruim';
-	}
-	else
-	{
-		$sql = 'SELECT S.NOME, cast(S.NUMEROACERTOS as SIGNED) as NUMEROACERTOS, MIN(S.TEMPO) as TEMPO FROM RESULTADOS S GROUP BY S.NOME, S.NUMEROACERTOS ORDER BY 2 desc, 3';
-		$stm = $pdo->prepare($sql);
-		$stm->execute();
-		$pdo = null;	
-		return json_encode($stm->fetchAll(PDO::FETCH_ASSOC));
-	}
-}
+$resp = curl_exec($curl);
+
+echo $resp;
 
 ?>
