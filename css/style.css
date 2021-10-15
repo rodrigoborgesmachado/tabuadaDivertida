@@ -242,6 +242,20 @@ code {
     border-radius: 5px;
 }
 
+.buttonBuscar {
+    border: none;
+    color: white;
+    padding: 5px 8px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    background-color: #003388;
+    border-radius: 5px;
+}
+
 .buttonRanking {
     border: none;
     color: white;

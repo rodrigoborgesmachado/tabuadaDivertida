@@ -69,7 +69,7 @@
                                         <button class="buttonInicio" onclick="ApresentaInstrucoes()">Instrucoes do
                                             Jogo</button>
                                         <br>
-                                        <button class="buttonRanking" onclick="PreencheClassificao();">Ranking</button>
+                                        <button class="buttonRanking" onclick="PreencheListaEClassificacao();">Ranking</button>
                                     </h4>
                                     <!---<input class="form-control" id="tempoRelacionamento" name="tempoRelacionamento" placeholder="Anos de relacionamento" type="text" required>-->
                                 </div>
@@ -324,15 +324,23 @@
         alerta('O jogo consiste em responder à questões da tabuada. Basta apertar em iniciar e o jogo já começa. Estando no computador você pode utsar o teclado numérico para rresponder às questões. Pode usar o teclado que aparece em tela. Enquanto não acerta a questão a mesma não muda, então é necessário acerta-la para prosseguir. O objetivo é responder a vinte questões no menor tempo possível, você consegue entrar no ranking?<br> Boa sorte!');
     }
 
-    function PreencheClassificao() {
+    function PreencheListaEClassificacao(){
+        var listaClassificacao = BuscaLista();
+        PreencheClassificao(listaClassificacao);
+    }
+
+    function PreencheClassificao(listaClassificacao) {
         document.getElementById('espacoInicio').hidden = true;
         document.getElementById('espacoJogo').hidden = true;
         document.getElementById('espacoPreencheDados').hidden = true;
         document.getElementById('espacoResultado').hidden = true;
         document.getElementById('espacoClassificacao').hidden = false;
 
-        var listaClassificacao = BuscaLista();
-        document.getElementById('classificacaoTexto').innerHTML = '<h2 style="text-align: center;">Classificação</h2>';
+        document.getElementById('classificacaoTexto').innerHTML = 
+                            `<h4 style="text-align: left;">&nbsp&nbsp&nbsp Buscar&nbsp&nbsp&nbsp<input type="text" id="fname" name="fname">    <button class="buttonBuscar" onclick="BuscarNoRanking();"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-search" viewBox="0 0 16 16">
+  <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+</svg></button></h4>
+                            <h2 style="text-align: center;">Classificação</h2>`;
 
         var texto = '';
         var ultimoNumeroAcerto = 0;
@@ -350,7 +358,7 @@
             if (i == 0 || (ultimoNumeroAcerto != 0 && ultimoNumeroAcerto != listaClassificacao.lista[i].Numeroacertos)) {
                 posicao = 1;
 
-                texto += '<br><h2 style="text-align: left;">' + listaClassificacao.lista[i].Numeroacertos + ' Questões Respondidas</h2><br>'
+                texto += '<br><h2 style="text-align: left;">&nbsp&nbsp&nbsp ' + listaClassificacao.lista[i].Numeroacertos + ' Questões Respondidas</h2><br>'
                 texto += '  <table class="table table-striped">';
                 texto += '    <thead>';
                 texto += '      <tr>';
@@ -388,7 +396,7 @@
 
         document.getElementById('classificacaoTexto').innerHTML += texto +
             `<h4 style="text-align: center;">
-                                <button class="buttonInicio" onclick="PreencheClassificao();">Atualizar</button>
+                                <button class="buttonInicio" onclick="PreencheListaEClassificacao();">Atualizar</button>
                                 <br>
                                 <button class="buttonInicio" onclick="document.location.reload(true);">Início</button>
                             </h4>`;
@@ -408,6 +416,21 @@
         texto.innerHTML = '<p>' + textoModal + '</p>';
 
         $("#myModal").modal();
+    }
+
+    function BuscarNoRanking(){
+        var nome = document.getElementById("fname").value;
+
+        if(nome == ''){
+            alerta("Favor preencher um nome válido!");
+            return;
+        }
+
+        var listaClassificacao = BuscaLista();
+        listaClassificacao.lista = listaClassificacao.lista.filter(item => item.Nome.toUpperCase().includes(nome.toUpperCase()));
+
+        PreencheClassificao(listaClassificacao);
+        alerta("Total de resultados: " + listaClassificacao.lista.length)
     }
 
 </script>
