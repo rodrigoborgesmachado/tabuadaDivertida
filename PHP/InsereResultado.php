@@ -19,6 +19,7 @@ $data = <<<DATA
 {
     "Nome": '$request->nome',
     "Tempo": '$request->tempo',
+    "Tipo": '$request->tipo',
     "Numeroacertos": '$request->acertos'
 }
 DATA;
@@ -28,6 +29,4 @@ curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
 $resp = curl_exec($curl);
 curl_close($curl);
 var_dump($resp);
-echo 'br';
-echo $data;
 ?>

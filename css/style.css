@@ -228,6 +228,62 @@ code {
     border-radius: 5px;
 }
 
+.buttonMultiplicacao {
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    background-color: #4CAF50;
+    border-radius: 5px;
+}
+
+.buttonDivisao {
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    background-color: #20B2AA;
+    border-radius: 5px;
+}
+
+.buttonSoma {
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    background-color: #8A2BE2;
+    border-radius: 5px;
+}
+
+.buttonSubtracao {
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    background-color: #F08080;
+    border-radius: 5px;
+}
+
 .buttonInicio {
     border: none;
     color: white;

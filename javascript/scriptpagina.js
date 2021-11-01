@@ -37,13 +37,13 @@ $(document).ready(function () {
     });
 })
 
-function CriarContas(){
+function CriarContas(total, maximo){
     var lista = new Array();
     
-    for(i = 0; i< 100;i++){
+    for(i = 0; i< total;i++){
         var num1 = 0;
         while(num1 == 0 || num1 == 1){
-            num1 = Math.floor(Math.random() * 11);
+            num1 = Math.floor(Math.random() * maximo);
         }
         
         lista.push(num1);
@@ -52,22 +52,23 @@ function CriarContas(){
     return lista;
 };
 
-function CriarImagens(){
-    var lista = new Array();
-    
-    for(i = 0; i< 20;i++){
-        var num1 = Math.floor(Math.random() * 30);
-        
-        lista.push(num1);
-    }
-    
-    return lista;
-};
-
-function EnviarRequisicaoPOST(nome, tempo, acertos){
+function EnviarRequisicaoPOST(nome, tempo, acertos, tipo){
     var xhr = new XMLHttpRequest();
 
-    var dados = JSON.stringify({nome, tempo, acertos});
+    if (tipo == 'M'){
+        tipo = 'MULTIPLICAÇÃO';
+    }
+    else if (tipo == 'D'){
+        tipo = 'DIVISÃO';
+    }
+    else if (tipo == 'S'){
+        tipo = 'SOMA';
+    }
+    else if (tipo == 'SU'){
+        tipo = 'SUBTRAÇÃO';
+    }
+
+    var dados = JSON.stringify({nome, tempo, acertos, tipo});
 
     xhr.open("POST", "http://tabuadadivertida.sunsalesystem.com.br/PHP/InsereResultado.php");
     xhr.setRequestHeader('Content-Type', 'application/json');

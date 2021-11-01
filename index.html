@@ -92,9 +92,22 @@
                         </h3>
                         <input class="form-control" id="questoes" name="questoes" placeholder="Questões" type="number" value="20" required>
                         <h4 style="text-align: center;">
-                            <button class="buttonStartGame" onclick="Start()">Start</button>
+                            <button class="buttonStartGame" onclick="SelecionaTipoJogo()">Start</button>
                             <br>
                             <button class="buttonInicio" onclick="document.location.reload(true);">Início</button>
+                        </h4>
+                    </div>
+                </div>
+                <div class="row" id="espacoSelecionaTipoJogo">
+                    <div class="col-sm-12">
+                        <h4 style="text-align: center;">
+                            <button class="buttonMultiplicacao" onclick="Multiplicacao()">Multiplicação</button>
+                            <br>
+                            <button class="buttonDivisao" onclick="Divisao()">Divisão</button>
+                            <br>
+                            <button class="buttonSoma" onclick="Soma()">Soma</button>
+                            <br>
+                            <button class="buttonSubtracao" onclick="Substracao()">Substração</button>
                         </h4>
                     </div>
                 </div>
@@ -191,15 +204,35 @@
     document.getElementById('espacoJogo').hidden = true;
     document.getElementById('espacoResultado').hidden = true;
     document.getElementById('espacoClassificacao').hidden = true;
+    document.getElementById('espacoSelecionaTipoJogo').hidden = true;
 
-    var listaContas1 = CriarContas();
-    var listaContas2 = CriarContas();
-    var listaIndicesImagem = CriarImagens();
+    var listaContas1 = new Array();
+    var listaContas2 = new Array();
     var listaRespostas = new Array();
     var hora = 0;
     var minuto = 0;
     var segundo = 0;
     var interval;
+
+    function Multiplicacao(){
+        sessionStorage.setItem('TipoQuestao', 'M');
+        Start();
+    }
+
+    function Divisao(){
+        sessionStorage.setItem('TipoQuestao', 'D');
+        Start();
+    }
+
+    function Soma(){
+        sessionStorage.setItem('TipoQuestao', 'S');
+        Start();
+    }
+
+    function Substracao(){
+        sessionStorage.setItem('TipoQuestao', 'SU');
+        Start();
+    }
 
     function ComecaJogo() {
         document.getElementById('espacoInicio').hidden = true;
@@ -207,6 +240,7 @@
         document.getElementById('espacoPreencheDados').hidden = false;
         document.getElementById('espacoResultado').hidden = true;
         document.getElementById('espacoClassificacao').hidden = true;
+        document.getElementById('espacoSelecionaTipoJogo').hidden = true;
 
         document.getElementById('nome').focus();
         if (sessionStorage.getItem('nomeUsuario') != '') {
@@ -217,15 +251,41 @@
         }
     }
 
-    function Start() {
-        listaContas1 = CriarContas();
-        listaContas2 = CriarContas();
-        listaIndicesImagem = CriarImagens();
+    function SelecionaTipoJogo(){
+        document.getElementById('espacoInicio').hidden = true;
+        document.getElementById('espacoJogo').hidden = true;
+        document.getElementById('espacoPreencheDados').hidden = true;
+        document.getElementById('espacoResultado').hidden = true;
+        document.getElementById('espacoClassificacao').hidden = true;
+        document.getElementById('espacoSelecionaTipoJogo').hidden = false;
+    }
 
+    function RetornaMaximo(){
+        var retorno = 11;
+
+        if(sessionStorage.getItem('TipoQuestao') == 'D'){
+            retorno = 11;
+        }
+        else if (sessionStorage.getItem('TipoQuestao') == 'S'){
+            retorno = 100;
+        }
+        else if (sessionStorage.getItem('TipoQuestao') == 'SU'){
+            retorno = 100;
+        }
+
+        return retorno;
+    }
+
+    function Start() {
+        
         if (document.getElementById('nome').value == "") {
             alerta("O nome não foi fornecido corretamente!");
         }
         else {
+            var qt = document.getElementById('questoes').value;
+            
+            listaContas1 = CriarContas(qt, RetornaMaximo());
+            listaContas2 = CriarContas(qt, RetornaMaximo());
             sessionStorage.setItem('nomeUsuario', document.getElementById('nome').value);
 
             document.getElementById('espacoInicio').hidden = true;
@@ -233,6 +293,7 @@
             document.getElementById('espacoPreencheDados').hidden = true;
             document.getElementById('espacoResultado').hidden = true;
             document.getElementById('espacoClassificacao').hidden = true;
+            document.getElementById('espacoSelecionaTipoJogo').hidden = true;
 
             PreencheTime();
 
@@ -246,6 +307,7 @@
         document.getElementById('espacoPreencheDados').hidden = true;
         document.getElementById('espacoResultado').hidden = false;
         document.getElementById('espacoClassificacao').hidden = true;
+        document.getElementById('espacoSelecionaTipoJogo').hidden = true;
 
         sessionStorage.setItem('nomeUsuario', document.getElementById('nome').value);
         document.getElementById('resultadoTexto').innerHTML = 'Parabéns '
@@ -278,19 +340,34 @@
         }, 1000);
     }
 
+    function MontaExpressao(num1, num2){
+        var retorno = num1 + ' x ' + num2;
+
+        if(sessionStorage.getItem('TipoQuestao') == 'D'){
+            retorno = (num1*num2) + ' : ' + num1;
+        }
+        else if (sessionStorage.getItem('TipoQuestao') == 'S'){
+            retorno = num1 + ' + ' + num2;
+        }
+        else if (sessionStorage.getItem('TipoQuestao') == 'SU'){
+            retorno = (num1 > num2 ? num1 + " - " + num2 : num2 + " - " + num1);
+        }
+
+        return retorno;
+    }
+
     function PreencheConta(indice) {
         var numeroContas = document.getElementById('questoes').value;
         if (indice == numeroContas) {
             clearInterval(interval);
             PreencheResultado(hora, minuto, segundo);
-            EnviarRequisicaoPOST(sessionStorage.getItem('nomeUsuario'), (hora > 9 ? hora : '0' + hora) + ':' + (minuto > 9 ? minuto : '0' + minuto) + ':' + (segundo > 9 ? segundo : '0' + segundo), numeroContas);
+            EnviarRequisicaoPOST(sessionStorage.getItem('nomeUsuario'), (hora > 9 ? hora : '0' + hora) + ':' + (minuto > 9 ? minuto : '0' + minuto) + ':' + (segundo > 9 ? segundo : '0' + segundo), numeroContas, sessionStorage.getItem('TipoQuestao'));
         }
         else {
-            document.getElementById('lugarParaConta').innerHTML = listaContas1[indice] + " x " + listaContas2[indice];
+            document.getElementById('lugarParaConta').innerHTML = MontaExpressao(listaContas1[indice], listaContas2[indice]);
             document.getElementById('lugarTotal').innerHTML = (indice + 1) + ' de ' + numeroContas;
             document.getElementById('lugarParaConta').innerHTML += '<br><br><input class="form-control" type="number" id="valorResultado" oninput="InsereResposta(' + listaContas1[indice] + ', ' + listaContas2[indice] + ', ' + indice + ')">';
             document.getElementById('valorResultado').focus();
-            //preencheImagem(indice);
         }
     }
 
@@ -304,17 +381,45 @@
             document.getElementById('valorResultado').focus();
     }
 
-    function preencheImagem(indice) {
-        //document.getElementById('lugarParaImagem').innerHTML = '<img src="' + listaImagens[listaIndicesImagem[indice]] + '" width="100%" height="100%">';
-    }
-
     function InsereResposta(val1, val2, indice) {
         var result = document.getElementById('valorResultado').value;
         if (Number.isInteger(parseInt(result))) {
-            if (val1 * val2 == result) {
-                PreencheConta(indice + 1);
-            } else {
-                respostaErrada(result);
+            if(sessionStorage.getItem('TipoQuestao') == 'M'){
+                if (val1 * val2 == result) {
+                    PreencheConta(indice + 1);
+                } else {
+                    respostaErrada(result);
+                }
+            }
+            else if(sessionStorage.getItem('TipoQuestao') == 'D'){
+                if (val2 == result) {
+                    PreencheConta(indice + 1);
+                } else {
+                    respostaErrada(result);
+                }
+            }
+            else if (sessionStorage.getItem('TipoQuestao') == 'S'){
+                if (val1 + val2 == result) {
+                    PreencheConta(indice + 1);
+                } else {
+                    respostaErrada(result);
+                }
+            }
+            else if (sessionStorage.getItem('TipoQuestao') == 'SU'){
+                if(val1 > val2){
+                    if (val1 - val2 == result) {
+                    PreencheConta(indice + 1);
+                    } else {
+                        respostaErrada(result);
+                    }
+                }
+                else{
+                    if (val2 - val1 == result) {
+                    PreencheConta(indice + 1);
+                    } else {
+                        respostaErrada(result);
+                    }
+                }
             }
         }
     }
@@ -325,7 +430,7 @@
     }
 
     function ApresentaInstrucoes() {
-        alerta('O jogo consiste em responder à questões da tabuada. Basta apertar em iniciar e o jogo já começa. Estando no computador você pode utsar o teclado numérico para rresponder às questões. Pode usar o teclado que aparece em tela. Enquanto não acerta a questão a mesma não muda, então é necessário acerta-la para prosseguir. O objetivo é responder a vinte questões no menor tempo possível, você consegue entrar no ranking?<br> Boa sorte!');
+        informa('O jogo consiste em responder à questões da tabuada. Basta apertar em iniciar e o jogo já começa. Estando no computador você pode utsar o teclado numérico para rresponder às questões. Pode usar o teclado que aparece em tela. Enquanto não acerta a questão a mesma não muda, então é necessário acerta-la para prosseguir. O objetivo é responder a vinte questões no menor tempo possível, você consegue entrar no ranking?<br> Boa sorte!');
     }
 
     function PreencheListaEClassificacao(){
@@ -339,30 +444,58 @@
         document.getElementById('espacoPreencheDados').hidden = true;
         document.getElementById('espacoResultado').hidden = true;
         document.getElementById('espacoClassificacao').hidden = false;
+        document.getElementById('espacoSelecionaTipoJogo').hidden = true;
 
         document.getElementById('classificacaoTexto').innerHTML = 
                             `<h4 style="text-align: left;">&nbsp&nbsp&nbsp Buscar&nbsp&nbsp&nbsp<input type="text" id="fname" name="fname">    <button class="buttonBuscar" onclick="BuscarNoRanking();"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-search" viewBox="0 0 16 16">
   <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
 </svg></button></h4>
-                            <h2 style="text-align: center;">Classificação</h2>`;
+                            `;
+        document.getElementById('classificacaoTexto').innerHTML += `<h2 style="text-align: center;">Classificação</h2><br>`;
+        document.getElementById('classificacaoTexto').innerHTML += `<h2 style="text-align: center;">Multiplicação</h2>`;
+        var texto = montaTextoTabela(listaClassificacao.lista.filter(item => item.Tipo.toUpperCase().includes('MULTIPLICAÇÃO')));
+        document.getElementById('classificacaoTexto').innerHTML += texto;
+
+        document.getElementById('classificacaoTexto').innerHTML += `<br><h2 style="text-align: center;">Divisão</h2>`;
+        var texto = montaTextoTabela(listaClassificacao.lista.filter(item => item.Tipo.toUpperCase().includes('DIVISÃO')));
+        document.getElementById('classificacaoTexto').innerHTML += texto;
+
+        document.getElementById('classificacaoTexto').innerHTML += `<br><h2 style="text-align: center;">Soma</h2>`;
+        var texto = montaTextoTabela(listaClassificacao.lista.filter(item => item.Tipo.toUpperCase().includes('SOMA')));
+        document.getElementById('classificacaoTexto').innerHTML += texto;
+
+        document.getElementById('classificacaoTexto').innerHTML += `<br><h2 style="text-align: center;">Subtração</h2>`;
+        var texto = montaTextoTabela(listaClassificacao.lista.filter(item => item.Tipo.toUpperCase().includes('SUBTRAÇÃO')));
+        document.getElementById('classificacaoTexto').innerHTML += texto +
+            `<h4 style="text-align: center;">
+                                <button class="buttonInicio" onclick="PreencheListaEClassificacao();">Atualizar</button>
+                                <br>
+                                <button class="buttonInicio" onclick="document.location.reload(true);">Início</button>
+                            </h4>`;
+    }
+
+    function montaTextoTabela(listaClassificacao){
+        if(listaClassificacao == null){
+            return '';
+        }
 
         var texto = '';
         var ultimoNumeroAcerto = 0;
         var posicao = 1;
-        for (i = 0; i < listaClassificacao.lista.length; i++) {
-            if(i>0 && ultimoNumeroAcerto != listaClassificacao.lista[i].Numeroacertos){
+        for (i = 0; i < listaClassificacao.length; i++) {
+            if(i>0 && ultimoNumeroAcerto != listaClassificacao[i].Numeroacertos){
                 texto += '    </tbody>';
                 texto += '  </table>';
             }
             
-            if(listaClassificacao.lista[i].Numeroacertos == 0){
+            if(listaClassificacao[i].Numeroacertos == 0){
                 continue
             }
 
-            if (i == 0 || (ultimoNumeroAcerto != 0 && ultimoNumeroAcerto != listaClassificacao.lista[i].Numeroacertos)) {
+            if (i == 0 || (ultimoNumeroAcerto != 0 && ultimoNumeroAcerto != listaClassificacao[i].Numeroacertos)) {
                 posicao = 1;
 
-                texto += '<br><h2 style="text-align: left;">&nbsp&nbsp&nbsp ' + listaClassificacao.lista[i].Numeroacertos + ' Questões Respondidas</h2><br>'
+                texto += '<br><h2 style="text-align: left;">&nbsp&nbsp&nbsp ' + listaClassificacao[i].Numeroacertos + ' Questões Respondidas</h2><br>'
                 texto += '  <table class="table table-striped">';
                 texto += '    <thead>';
                 texto += '      <tr>';
@@ -380,34 +513,32 @@
             texto += '         <h4 style="text-align: center;">' + posicao + '</h4>';
             texto += '        </td>';
             texto += '        <td>';
-            texto += '          <h4 style="text-align: center;">' + listaClassificacao.lista[i].Nome + '</h4>';
+            texto += '          <h4 style="text-align: center;">' + listaClassificacao[i].Nome + '</h4>';
             texto += '        </td>';
             texto += '        <td>';
-            texto += '          <h4 style="text-align: center;">' + listaClassificacao.lista[i].Numeroacertos + '</h4>';
+            texto += '          <h4 style="text-align: center;">' + listaClassificacao[i].Numeroacertos + '</h4>';
             texto += '        </td>';
             texto += '        <td>';
-            texto += '          <h4 style="text-align: center;">' + listaClassificacao.lista[i].Tempo + '</h4>';
+            texto += '          <h4 style="text-align: center;">' + listaClassificacao[i].Tempo + '</h4>';
             texto += '        </td>';
             texto += '      </tr>';
 
             posicao++;
-            ultimoNumeroAcerto = listaClassificacao.lista[i].Numeroacertos;
-            if (i + 1 == listaClassificacao.lista.length) {
+            ultimoNumeroAcerto = listaClassificacao[i].Numeroacertos;
+            if (i + 1 == listaClassificacao.length) {
                 texto += '    </tbody>';
                 texto += '  </table>';
             }
         }
-
-        document.getElementById('classificacaoTexto').innerHTML += texto +
-            `<h4 style="text-align: center;">
-                                <button class="buttonInicio" onclick="PreencheListaEClassificacao();">Atualizar</button>
-                                <br>
-                                <button class="buttonInicio" onclick="document.location.reload(true);">Início</button>
-                            </h4>`;
+        return texto;
     }
 
     function alerta(mensagem) {
         AbrirModal("Alerta", mensagem);
+    }
+
+    function informa(mensagem) {
+        AbrirModal("Informação", mensagem);
     }
 
     function AbrirModal(tituloModal, textoModal) {
