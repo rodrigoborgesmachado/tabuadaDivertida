@@ -20,6 +20,9 @@
 </head>
 
 <body id="home" data-spy="scroll" data-target=".navbar" data-offset="60">
+    <div id="loading">
+        <img id="loading-image" src="images/hug.gif" alt="Loading..." />
+    </div>
     <div class="topnav navbar navbar-default navbar-fixed-top">
         <a onclick="document.location.reload(true);">Início</a>
         <a onclick="PreencheClassificao();">Ranking</a>
@@ -205,6 +208,7 @@
     document.getElementById('espacoResultado').hidden = true;
     document.getElementById('espacoClassificacao').hidden = true;
     document.getElementById('espacoSelecionaTipoJogo').hidden = true;
+    removeLoader();
 
     var listaContas1 = new Array();
     var listaContas2 = new Array();
@@ -434,8 +438,23 @@
     }
 
     function PreencheListaEClassificacao(){
-        var listaClassificacao = BuscaLista();
-        PreencheClassificao(listaClassificacao);
+        openLoader();
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "http://tabuadadivertida.sunsalesystem.com.br/PHP/GetResultados.php");
+        xhr.addEventListener("load", function() {
+            var erroAjax = document.querySelector("#erro-ajax");
+            if (xhr.status == 200) {
+                var listaClassificacao =JSON.parse(xhr.responseText);
+        
+                PreencheClassificao(listaClassificacao);
+            } else {
+                alert('erro');
+                //erro!
+            }
+            removeLoader();
+        });
+
+        xhr.send(null);
     }
 
     function PreencheClassificao(listaClassificacao) {
@@ -561,11 +580,49 @@
             return;
         }
 
-        var listaClassificacao = BuscaLista();
-        listaClassificacao.lista = listaClassificacao.lista.filter(item => item.Nome.toUpperCase().includes(nome.toUpperCase()));
+        openLoader();
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "http://tabuadadivertida.sunsalesystem.com.br/PHP/GetResultados.php");
+        xhr.addEventListener("load", function() {
+            var erroAjax = document.querySelector("#erro-ajax");
+            if (xhr.status == 200) {
+                var listaClassificacao =JSON.parse(xhr.responseText);
+                listaClassificacao.lista = listaClassificacao.lista.filter(item => item.Nome.toUpperCase().includes(nome.toUpperCase()));
+        
+                PreencheClassificao(listaClassificacao);
+                alerta("Total de resultados: " + listaClassificacao.lista.length)
+            } else {
+                alert('Erro');
+                //erro!
+            }
+            removeLoader();
+        });
 
-        PreencheClassificao(listaClassificacao);
-        alerta("Total de resultados: " + listaClassificacao.lista.length)
+        xhr.send(null);
+    }
+
+    function removeLoader(){
+        $( "#loading" ).fadeOut(500, function() {
+            document.getElementById('loading').hidden = true;
+        });  
+    }
+
+    function openLoader(){
+        document.getElementById('loading').style["display"] = "";
+        pollVisibility();
+    }
+
+    const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+    async function pollVisibility() {
+        try {
+            if (document.getElementById("loading").style.display == '') {
+                return null;
+            } else {
+                return await delay(100).then(pollVisibility);
+            }
+        } catch (e) {
+            console.log(e)
+        }
     }
 
 </script>
