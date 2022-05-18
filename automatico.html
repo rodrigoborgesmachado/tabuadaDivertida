@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <script type="text/javascript" src="javascript/jquery.js"></script>
+    <link rel="icon" type="../image/png" sizes="25x17" href="images/logo16x16.png">
+    <link rel="manifest" href="/manifest.json">
+    <title>Tabuada Divertida</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="javascript/scriptpagina.js"></script>
+    <script type="text/javascript" src="javascript/robo.js"></script>
+    <script type="text/javascript" src="javascript/jquery.maskedinput.js"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css" type="text/css">
+</head>
+
+<body id="home" data-spy="scroll" data-target=".navbar" data-offset="60">
+    <div id="loading">
+        <img id="loading-image" src="images/hug.gif" alt="Loading..." />
+    </div>
+    <div class="topnav navbar navbar-default navbar-fixed-top">
+        <a onclick="document.location.reload(true);">Início</a>
+        <a onclick="PreencheClassificao();">Ranking</a>
+    </div>
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title" id="tituloModal"></h4>
+                </div>
+                <div class="modal-body" id="textoModal">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="jumbotron">
+        <div class="interna" style="background-color: #dddddd;" align="justify">
+            <div id="contact" class="container-fluid bg-grey">
+                <div class="row">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <h2 style="text-align: center;">
+                                Tabuada Divertida
+                            </h2>
+                            <hr>
+                            <br>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" id="espacoInicio">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <h3>
+                                Teste seu raciocínio e sua rapidez: quanto tempo você demora para responder questões de multiplicação?
+                            </h3>
+                            <hr>
+                            <br>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="col-sm-12">
+                            <div class="row">
+                                <div class="col-sm-12 form-group" id="game">
+                                    <h4 style="text-align: center;">
+                                        <button class="buttonStartGame" onclick="ComecaJogo()">Começar o Jogo</button>
+                                        <br>
+                                        <button class="buttonInicio" onclick="ApresentaInstrucoes()">Instrucoes do
+                                            Jogo</button>
+                                        <br>
+                                        <button class="buttonRanking" onclick="PreencheListaEClassificacao();">Ranking</button>
+                                    </h4>
+                                    <!---<input class="form-control" id="tempoRelacionamento" name="tempoRelacionamento" placeholder="Anos de relacionamento" type="text" required>-->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" id="espacoPreencheDados">
+                    <div class="col-sm-12">
+                        <h3>
+                            Como você gostaria de ser chamado?
+                        </h3>
+                        <input class="form-control" id="nome" name="nome" placeholder="Nome" type="text" required>
+                        <h3>
+                            Quantas questões?
+                        </h3>
+                        <input class="form-control" id="questoes" name="questoes" placeholder="Questões" type="number" value="20" required>
+                        <h4 style="text-align: center;">
+                            <button class="buttonStartGame" onclick="SelecionaTipoJogo()">Start</button>
+                            <br>
+                            <button class="buttonInicio" onclick="document.location.reload(true);">Início</button>
+                        </h4>
+                    </div>
+                </div>
+                <div class="row" id="espacoSelecionaTipoJogo">
+                    <div class="col-sm-12">
+                        <h4 style="text-align: center;">
+                            <button class="buttonMultiplicacao" onclick="Multiplicacao()">Multiplicação</button>
+                            <br>
+                            <button class="buttonDivisao" onclick="Divisao()">Divisão</button>
+                            <br>
+                            <button class="buttonSoma" onclick="Soma()">Soma</button>
+                            <br>
+                            <button class="buttonSubtracao" onclick="Substracao()">Substração</button>
+                        </h4>
+                    </div>
+                </div>
+                <div class="row" id="espacoJogo">
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <button class="buttonInicio" onclick="document.location.reload(true);">Início</button>
+
+                            <h4 style="text-align: left;">
+                                Tempo:
+                                <br>
+                                <b style="color: red;" id="time">
+                                </b>
+                                <br>
+                                <br>
+                                <h1 style="text-align: center;color:red;" id="lugarTotal">
+
+                                </h1>
+                            </h4>
+                        </div>
+                        <div class="col-sm-8">
+                            <h1 style="text-align: center;color:red;" id="lugarParaConta">
+
+                            </h1>
+                        </div>
+                        <div class="col-sm-2">
+                            <h1 style="text-align: center;color:red;" id="lugarParaImagem">
+
+                            </h1>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-2">
+                        </div>
+                        <div class="col-sm-10">
+                            <div class="col-sm-12">
+                                <h1 style="text-align: center;color:red;">
+                                    <button class="buttonNumero" onclick="EnviaValor('1');">1</button>
+                                    <button class="buttonNumero" onclick="EnviaValor('2');">2</button>
+                                    <button class="buttonNumero" onclick="EnviaValor('3');">3</button>
+                                    <br>
+                                    <button class="buttonNumero" onclick="EnviaValor('4');">4</button>
+                                    <button class="buttonNumero" onclick="EnviaValor('5');">5</button>
+                                    <button class="buttonNumero" onclick="EnviaValor('6');">6</button>
+                                    <br>
+                                    <button class="buttonNumero" onclick="EnviaValor('7');">7</button>
+                                    <button class="buttonNumero" onclick="EnviaValor('8');">8</button>
+                                    <button class="buttonNumero" onclick="EnviaValor('9');">9</button>
+                                    <br>
+                                    <button class="buttonNumero"
+                                        onclick="document.getElementById('valorResultado').value = ''"><span
+                                            class="glyphicon glyphicon-erase"></span></button>
+                                    <button class="buttonNumero" onclick="EnviaValor('0');">0</button>
+                                    <button class="buttonNumero"
+                                        onclick="document.getElementById('valorResultado').value = ''"><span
+                                            class="glyphicon glyphicon-erase"></span></button>
+                                </h1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row" id="espacoResultado">
+                <div class="col-sm-12">
+                    <h4 style="text-align: left;" id="resultadoTexto">
+
+                    </h4>
+                    <h4 style="text-align: center;">
+                        <button class="buttonInicio" onclick="document.location.reload(true);">Início</button>
+                        <br>
+                        <button class="buttonStartGame" onclick="ComecaJogo()">Jogar Novamente</button>
+                    </h4>
+                </div>
+            </div>
+            <div class="row" id="espacoClassificacao">
+                <div class="col-sm-12" id="classificacaoTexto">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer class="bg-grey" style="text-align: center;">
+        SunSale System
+    </footer>
+    </div>
+</body>
+
+</html>
+
+<script>
+    document.getElementById('espacoInicio').hidden = false;
+    document.getElementById('espacoPreencheDados').hidden = true;
+    document.getElementById('espacoJogo').hidden = true;
+    document.getElementById('espacoResultado').hidden = true;
+    document.getElementById('espacoClassificacao').hidden = true;
+    document.getElementById('espacoSelecionaTipoJogo').hidden = true;
+    removeLoader();
+
+    var listaContas1 = new Array();
+    var listaContas2 = new Array();
+    var listaRespostas = new Array();
+    var hora = 0;
+    var minuto = 0;
+    var segundo = 0;
+    var interval;
+
+    function Multiplicacao(){
+        sessionStorage.setItem('TipoQuestao', 'M');
+        Start();
+    }
+
+    function Divisao(){
+        sessionStorage.setItem('TipoQuestao', 'D');
+        Start();
+    }
+
+    function Soma(){
+        sessionStorage.setItem('TipoQuestao', 'S');
+        Start();
+    }
+
+    function Substracao(){
+        sessionStorage.setItem('TipoQuestao', 'SU');
+        Start();
+    }
+
+    function ComecaJogo() {
+        document.getElementById('espacoInicio').hidden = true;
+        document.getElementById('espacoJogo').hidden = true;
+        document.getElementById('espacoPreencheDados').hidden = false;
+        document.getElementById('espacoResultado').hidden = true;
+        document.getElementById('espacoClassificacao').hidden = true;
+        document.getElementById('espacoSelecionaTipoJogo').hidden = true;
+
+        document.getElementById('nome').focus();
+        if (sessionStorage.getItem('nomeUsuario') != '') {
+            document.getElementById('nome').value = sessionStorage.getItem('nomeUsuario');
+        }
+        else {
+            sessionStorage.setItem('nomeUsuario', '');
+        }
+    }
+
+    function SelecionaTipoJogo(){
+        document.getElementById('espacoInicio').hidden = true;
+        document.getElementById('espacoJogo').hidden = true;
+        document.getElementById('espacoPreencheDados').hidden = true;
+        document.getElementById('espacoResultado').hidden = true;
+        document.getElementById('espacoClassificacao').hidden = true;
+        document.getElementById('espacoSelecionaTipoJogo').hidden = false;
+    }
+
+    function RetornaMaximo(){
+        var retorno = 11;
+
+        if(sessionStorage.getItem('TipoQuestao') == 'D'){
+            retorno = 11;
+        }
+        else if (sessionStorage.getItem('TipoQuestao') == 'S'){
+            retorno = 100;
+        }
+        else if (sessionStorage.getItem('TipoQuestao') == 'SU'){
+            retorno = 100;
+        }
+
+        return retorno;
+    }
+
+    function Start() {
+        
+        if (document.getElementById('nome').value == "") {
+            alerta("O nome não foi fornecido corretamente!");
+        }
+        else {
+            var qt = document.getElementById('questoes').value;
+            
+            listaContas1 = CriarContas(qt, RetornaMaximo());
+            listaContas2 = CriarContas(qt, RetornaMaximo());
+            sessionStorage.setItem('nomeUsuario', document.getElementById('nome').value);
+
+            document.getElementById('espacoInicio').hidden = true;
+            document.getElementById('espacoJogo').hidden = false;
+            document.getElementById('espacoPreencheDados').hidden = true;
+            document.getElementById('espacoResultado').hidden = true;
+            document.getElementById('espacoClassificacao').hidden = true;
+            document.getElementById('espacoSelecionaTipoJogo').hidden = true;
+
+            PreencheTime();
+
+            PreencheConta(0);
+        }
+    }
+
+    function PreencheResultado(hora, minuto, segundo) {
+        document.getElementById('espacoInicio').hidden = true;
+        document.getElementById('espacoJogo').hidden = true;
+        document.getElementById('espacoPreencheDados').hidden = true;
+        document.getElementById('espacoResultado').hidden = false;
+        document.getElementById('espacoClassificacao').hidden = true;
+        document.getElementById('espacoSelecionaTipoJogo').hidden = true;
+
+        sessionStorage.setItem('nomeUsuario', document.getElementById('nome').value);
+        document.getElementById('resultadoTexto').innerHTML = 'Parabéns '
+            + sessionStorage.getItem('nomeUsuario') +
+            '! Você acertou ' + document.getElementById('questoes').value + ' questões em ' +
+            (hora > 0 ? (hora > 9 ? hora : '0' + hora) + ' horas' : '')
+            + (minuto > 0 ? (minuto > 9 ? minuto : '0' + minuto) + ' minutos e ' : '')
+            + (segundo > 0 ? (segundo > 9 ? segundo : '0' + segundo) : '0') + ' segundos';
+    }
+
+    function PreencheTime() {
+        document.getElementById('time').innerHTML = '00:00:00';
+        hora = 0;
+        minuto = 0;
+        segundo = 0;
+
+        interval = setInterval(function () {
+            segundo++;
+            if (segundo == 60) {
+                segundo = 0;
+                minuto++;
+            }
+            if (minuto == 60) {
+                minuto = 0;
+                hora++;
+            }
+            document.getElementById('time').innerHTML = (hora >= 10 ? hora : '0' + hora) + ":" +
+                (minuto >= 10 ? minuto : '0' + minuto) + ":" +
+                (segundo >= 10 ? segundo : '0' + segundo);
+        }, 1000);
+    }
+
+    function MontaExpressao(num1, num2){
+        var retorno = num1 + ' x ' + num2;
+
+        if(sessionStorage.getItem('TipoQuestao') == 'D'){
+            retorno = (num1*num2) + ' : ' + num1;
+        }
+        else if (sessionStorage.getItem('TipoQuestao') == 'S'){
+            retorno = num1 + ' + ' + num2;
+        }
+        else if (sessionStorage.getItem('TipoQuestao') == 'SU'){
+            retorno = (num1 > num2 ? num1 + " - " + num2 : num2 + " - " + num1);
+        }
+
+        return retorno;
+    }
+
+    function PreencheConta(indice) {
+        var numeroContas = document.getElementById('questoes').value;
+        if (indice == numeroContas) {
+            clearInterval(interval);
+            PreencheResultado(hora, minuto, segundo);
+            EnviarRequisicaoPOST(sessionStorage.getItem('nomeUsuario'), (hora > 9 ? hora : '0' + hora) + ':' + (minuto > 9 ? minuto : '0' + minuto) + ':' + (segundo > 9 ? segundo : '0' + segundo), numeroContas, sessionStorage.getItem('TipoQuestao'));
+        }
+        else {
+            document.getElementById('lugarParaConta').innerHTML = MontaExpressao(listaContas1[indice], listaContas2[indice]);
+            document.getElementById('lugarTotal').innerHTML = (indice + 1) + ' de ' + numeroContas;
+            document.getElementById('lugarParaConta').innerHTML += '<br><br><input class="form-control" type="number" id="valorResultado" oninput="InsereResposta(' + listaContas1[indice] + ', ' + listaContas2[indice] + ', ' + indice + ')">';
+            document.getElementById('valorResultado').focus();
+        }
+    }
+
+    function respostaErrada(resultado){
+            if (document.getElementById('lugarParaConta').innerHTML.indexOf("Errado") == -1) {
+                document.getElementById('lugarParaConta').innerHTML += "<p><h5><strong>Errado</strong></h5></p>";
+                document.getElementById('valorResultado').style.borderColor = "#e10";
+            }
+            
+            document.getElementById('valorResultado').value = resultado;
+            document.getElementById('valorResultado').focus();
+    }
+
+    function InsereResposta(val1, val2, indice) {
+        var result = document.getElementById('valorResultado').value;
+        if (Number.isInteger(parseInt(result))) {
+            if(sessionStorage.getItem('TipoQuestao') == 'M'){
+                if (val1 * val2 == result) {
+                    PreencheConta(indice + 1);
+                } else {
+                    respostaErrada(result);
+                }
+            }
+            else if(sessionStorage.getItem('TipoQuestao') == 'D'){
+                if (val2 == result) {
+                    PreencheConta(indice + 1);
+                } else {
+                    respostaErrada(result);
+                }
+            }
+            else if (sessionStorage.getItem('TipoQuestao') == 'S'){
+                if (val1 + val2 == result) {
+                    PreencheConta(indice + 1);
+                } else {
+                    respostaErrada(result);
+                }
+            }
+            else if (sessionStorage.getItem('TipoQuestao') == 'SU'){
+                if(val1 > val2){
+                    if (val1 - val2 == result) {
+                    PreencheConta(indice + 1);
+                    } else {
+                        respostaErrada(result);
+                    }
+                }
+                else{
+                    if (val2 - val1 == result) {
+                    PreencheConta(indice + 1);
+                    } else {
+                        respostaErrada(result);
+                    }
+                }
+            }
+        }
+    }
+
+    function EnviaValor(valor) {
+        document.getElementById('valorResultado').value += valor;
+        document.getElementById('valorResultado').dispatchEvent(new Event('input'));
+    }
+
+    function ApresentaInstrucoes() {
+        informa('O jogo consiste em responder à questões da tabuada. Basta apertar em iniciar e o jogo já começa. Estando no computador você pode utsar o teclado numérico para rresponder às questões. Pode usar o teclado que aparece em tela. Enquanto não acerta a questão a mesma não muda, então é necessário acerta-la para prosseguir. O objetivo é responder a vinte questões no menor tempo possível, você consegue entrar no ranking?<br> Boa sorte!');
+    }
+
+    function PreencheListaEClassificacao(){
+        openLoader();
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "http://tabuadadivertida.sunsalesystem.com.br/PHP/GetResultados.php");
+        xhr.addEventListener("load", function() {
+            var erroAjax = document.querySelector("#erro-ajax");
+            if (xhr.status == 200) {
+                var listaClassificacao =JSON.parse(xhr.responseText);
+        
+                PreencheClassificao(listaClassificacao);
+            } else {
+                alert('erro');
+                //erro!
+            }
+            removeLoader();
+        });
+
+        xhr.send(null);
+    }
+
+    function PreencheClassificao(listaClassificacao) {
+        document.getElementById('espacoInicio').hidden = true;
+        document.getElementById('espacoJogo').hidden = true;
+        document.getElementById('espacoPreencheDados').hidden = true;
+        document.getElementById('espacoResultado').hidden = true;
+        document.getElementById('espacoClassificacao').hidden = false;
+        document.getElementById('espacoSelecionaTipoJogo').hidden = true;
+
+        document.getElementById('classificacaoTexto').innerHTML = 
+                            `<h4 style="text-align: left;">&nbsp&nbsp&nbsp Buscar&nbsp&nbsp&nbsp<input type="text" id="fname" name="fname">    <button class="buttonBuscar" onclick="BuscarNoRanking();"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-search" viewBox="0 0 16 16">
+  <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+</svg></button></h4>
+                            `;
+        document.getElementById('classificacaoTexto').innerHTML += `<h2 style="text-align: center;">Classificação</h2><br>`;
+        document.getElementById('classificacaoTexto').innerHTML += `<h2 style="text-align: center;">Multiplicação</h2>`;
+        var texto = montaTextoTabela(listaClassificacao.lista.filter(item => item.Tipo.toUpperCase().includes('MULTIPLICAÇÃO')));
+        document.getElementById('classificacaoTexto').innerHTML += texto;
+
+        document.getElementById('classificacaoTexto').innerHTML += `<br><h2 style="text-align: center;">Divisão</h2>`;
+        var texto = montaTextoTabela(listaClassificacao.lista.filter(item => item.Tipo.toUpperCase().includes('DIVISÃO')));
+        document.getElementById('classificacaoTexto').innerHTML += texto;
+
+        document.getElementById('classificacaoTexto').innerHTML += `<br><h2 style="text-align: center;">Soma</h2>`;
+        var texto = montaTextoTabela(listaClassificacao.lista.filter(item => item.Tipo.toUpperCase().includes('SOMA')));
+        document.getElementById('classificacaoTexto').innerHTML += texto;
+
+        document.getElementById('classificacaoTexto').innerHTML += `<br><h2 style="text-align: center;">Subtração</h2>`;
+        var texto = montaTextoTabela(listaClassificacao.lista.filter(item => item.Tipo.toUpperCase().includes('SUBTRAÇÃO')));
+        document.getElementById('classificacaoTexto').innerHTML += texto +
+            `<h4 style="text-align: center;">
+                                <button class="buttonInicio" onclick="PreencheListaEClassificacao();">Atualizar</button>
+                                <br>
+                                <button class="buttonInicio" onclick="document.location.reload(true);">Início</button>
+                            </h4>`;
+    }
+
+    function montaTextoTabela(listaClassificacao){
+        if(listaClassificacao == null){
+            return '';
+        }
+
+        var texto = '';
+        var ultimoNumeroAcerto = 0;
+        var posicao = 1;
+        for (i = 0; i < listaClassificacao.length; i++) {
+            if(i>0 && ultimoNumeroAcerto != listaClassificacao[i].Numeroacertos){
+                texto += '    </tbody>';
+                texto += '  </table>';
+            }
+            
+            if(listaClassificacao[i].Numeroacertos == 0){
+                continue
+            }
+
+            if (i == 0 || (ultimoNumeroAcerto != 0 && ultimoNumeroAcerto != listaClassificacao[i].Numeroacertos)) {
+                posicao = 1;
+
+                texto += '<br><h2 style="text-align: left;">&nbsp&nbsp&nbsp ' + listaClassificacao[i].Numeroacertos + ' Questões Respondidas</h2><br>'
+                texto += '  <table class="table table-striped">';
+                texto += '    <thead>';
+                texto += '      <tr>';
+                texto += '        <th><h4 style="text-align: center;">Posição</h4></th>';
+                texto += '        <th><h4 style="text-align: center;">Nome</h4></th>';
+                texto += '        <th><h4 style="text-align: center;">Total Acertos</h4></th>';
+                texto += '        <th><h4 style="text-align: center;">Tempo Total</h4></th>';
+                texto += '      </tr>';
+                texto += '    </thead>';
+                texto += '    <tbody>';
+            }
+
+            texto += '      <tr>';
+            texto += '        <td>';
+            texto += '         <h4 style="text-align: center;">' + posicao + '</h4>';
+            texto += '        </td>';
+            texto += '        <td>';
+            texto += '          <h4 style="text-align: center;">' + listaClassificacao[i].Nome + '</h4>';
+            texto += '        </td>';
+            texto += '        <td>';
+            texto += '          <h4 style="text-align: center;">' + listaClassificacao[i].Numeroacertos + '</h4>';
+            texto += '        </td>';
+            texto += '        <td>';
+            texto += '          <h4 style="text-align: center;">' + listaClassificacao[i].Tempo + '</h4>';
+            texto += '        </td>';
+            texto += '      </tr>';
+
+            posicao++;
+            ultimoNumeroAcerto = listaClassificacao[i].Numeroacertos;
+            if (i + 1 == listaClassificacao.length) {
+                texto += '    </tbody>';
+                texto += '  </table>';
+            }
+        }
+        return texto;
+    }
+
+    function alerta(mensagem) {
+        AbrirModal("Alerta", mensagem);
+    }
+
+    function informa(mensagem) {
+        AbrirModal("Informação", mensagem);
+    }
+
+    function AbrirModal(tituloModal, textoModal) {
+        var titulo = document.querySelector('#tituloModal');
+        var texto = document.querySelector('#textoModal');
+
+        titulo.innerHTML = '';
+        titulo.innerHTML = tituloModal;
+        texto.innerHTML = '';
+        texto.innerHTML = '<p>' + textoModal + '</p>';
+
+        $("#myModal").modal();
+    }
+
+    function BuscarNoRanking(){
+        var nome = document.getElementById("fname").value;
+
+        if(nome == ''){
+            alerta("Favor preencher um nome válido!");
+            return;
+        }
+
+        openLoader();
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "http://tabuadadivertida.sunsalesystem.com.br/PHP/GetResultados.php");
+        xhr.addEventListener("load", function() {
+            var erroAjax = document.querySelector("#erro-ajax");
+            if (xhr.status == 200) {
+                var listaClassificacao =JSON.parse(xhr.responseText);
+                listaClassificacao.lista = listaClassificacao.lista.filter(item => item.Nome.toUpperCase().includes(nome.toUpperCase()));
+        
+                PreencheClassificao(listaClassificacao);
+                alerta("Total de resultados: " + listaClassificacao.lista.length)
+            } else {
+                alert('Erro');
+                //erro!
+            }
+            removeLoader();
+        });
+
+        xhr.send(null);
+    }
+
+    function removeLoader(){
+        $( "#loading" ).fadeOut(500, function() {
+            document.getElementById('loading').hidden = true;
+        });  
+    }
+
+    function openLoader(){
+        document.getElementById('loading').style["display"] = "";
+        pollVisibility();
+    }
+
+    const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+    async function pollVisibility() {
+        try {
+            if (document.getElementById("loading").style.display == '') {
+                return null;
+            } else {
+                return await delay(100).then(pollVisibility);
+            }
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
+    onload = function(){
+        automatico();
+    }
+
+</script>
