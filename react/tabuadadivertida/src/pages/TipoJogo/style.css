@@ -1,0 +1,8 @@
+.opcoes{
+    margin-top: 50px;
+    min-width: 25%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}

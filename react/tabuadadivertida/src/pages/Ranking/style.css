@@ -1,0 +1,26 @@
+.rankingMultiplicacao{
+    width: 100%;
+}
+
+.divDescricao{
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-around;
+    margin-top: 5px;
+}
+
+hr{
+    width: 100%;
+    margin: 10px;
+    color: #FFF;
+    background-color: #FFF;   
+}
+
+.opcao a{
+    text-decoration: none;
+    background-color: #116feb;
+    color: #FFF;
+    padding: 10px;
+    margin-top: 20px;
+}

@@ -1,0 +1,32 @@
+import './style.css';
+import configData from "./../../Config.json";
+import { useState, useEffect } from 'react';
+
+function Tempo(){
+    const[tempo, setTempo] = useState(1);
+    const[start, setStart] = useState(true);
+
+    useEffect(() =>
+    {
+        let intervalId;
+
+        if(start){
+            intervalId = setInterval(() => {
+                setTempo(tempo+1);
+                sessionStorage.setItem(configData.TEMPO_PARAM, tempo);
+            }, 1000);
+        }
+
+        return() => {
+            clearInterval(intervalId);
+        };
+    }, [tempo])
+
+    return(
+        <div className='timerdiv'>
+            Tempo: {tempo}
+        </div>
+    )
+}
+
+export default Tempo;
