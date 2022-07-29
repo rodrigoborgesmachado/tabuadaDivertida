@@ -2,8 +2,9 @@
 
 **Web site disponível em http://tabuadadivertida.sunsalesystem.com.br/**
 
-## Considerações Gerais
+## Considerações Gerais 
 
-* Site desenvolvido em HTML, JavaScript, CSS e Bootstrap conectando em uma API feita em PHP
+* Site desenvolvido em HTML, JavaScript, CSS e Bootstrap conectando em uma API feita em PHP (Versão OLD)
+* Site desenvolvido em React com API em PHP (gateway) e Dotnet
 * Minhas sobrinhas estavam com dificuldade em matemática, mais especificamente com tabuada, então criei esse joguinho para ajudar elas. Estou aberto a dicas para melhorar
 * As fotos que aparecem no jogo é referente à minha formatura e aos meus amigos que me acompanham desde sempre
