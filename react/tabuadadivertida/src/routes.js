@@ -19,7 +19,7 @@ function RoutesApp(){
                 <Route path='/selecionarjogo' element={<TipoJogo/>}/>
                 <Route path='/jogo/:tipo' element={<Jogo/>}/>
                 <Route path='/ranking' element={<Ranking/>}/>
-                <Route path='/final' element={<Final/>}/>
+                <Route path='/final/:tipo' element={<Final/>}/>
                 <Route path='/instrucoes' element={<Instrucoes/>}/>
                 <Route path='*' element={<Erro/>}/>
             </Routes>
