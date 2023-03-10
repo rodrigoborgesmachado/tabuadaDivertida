@@ -8,6 +8,7 @@ function Ranking(){
     const navigate = useNavigate();
 
     const[lista, setLista] = useState([]);
+    const[loadding, setLoadding] = useState(true);
     let contadorMultiplicacao = 1;
     let contadorAdicao = 1;
     let contadorSubtracao = 1;
@@ -17,6 +18,7 @@ function Ranking(){
             await api.get(`GetResultados.php`)
             .then((response) => {
                 setLista(response.data.lista);
+                setLoadding(false);
             }).catch(() => {
                 navigate('/', {replace: true});
                 return;
@@ -29,6 +31,14 @@ function Ranking(){
 
         }
     }, [navigate])
+
+    if(loadding){
+        return(
+            <div className='loaddingDiv'>
+                <img src={require('../../assets/hug.gif')} alt="Loading..." />
+            </div>
+        )
+    }
 
     return(
         <div className='container'>

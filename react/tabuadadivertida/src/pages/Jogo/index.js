@@ -142,7 +142,7 @@ function Jogo(){
 
         await api.post(`/InsereResultado.php`, data)
         .then((response) => {
-            navigate('/final', {replace: true});
+            navigate('/final/' + tipo, {replace: true});
         }).catch(() => {
             navigate('/error', {replace: true});
             return;

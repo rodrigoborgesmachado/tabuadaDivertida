@@ -6,4 +6,6 @@ footer{
     width: 100%;
     color: white;
     text-align: center;
+    background-color: #121212;
+    opacity : 0.9;
 }
