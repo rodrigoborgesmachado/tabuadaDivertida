@@ -16,6 +16,7 @@ function Jogo(){
     const[resposta, setResposta] = useState('');
     const [width, setWidth] = useState(window.innerWidth);
     const navigate = useNavigate();
+    const[loadding, setLoadding] = useState(false);
 
     useEffect(() => {
         setContas1(LoadContas(parseInt(sessionStorage.getItem(configData.QUANTIDADE_PARAM) || 20)));
@@ -140,6 +141,7 @@ function Jogo(){
             tempo: sessionStorage.getItem(configData.TEMPO_PARAM)
         };
 
+        setLoadding(true);
         await api.post(`/InsereResultado.php`, data)
         .then((response) => {
             navigate('/final/' + tipo, {replace: true});
@@ -159,6 +161,14 @@ function Jogo(){
                     Não existe essa opção.
                     <Link to="/">Home</Link>
                 </div>
+            </div>
+        )
+    }
+
+    if(loadding){
+        return(
+            <div className='loaddingDiv'>
+                <img src={require('../../assets/hug.gif')} alt="Loading..." />
             </div>
         )
     }
