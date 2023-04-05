@@ -64,7 +64,7 @@ function Ranking(){
                                     Tempo: {item.Tempo}s
                                 </h4>
                                 <h4>
-                                    Quantidade: {item.Numeroacertos}
+                                    Quantidade: {item.Numeroacertos} de {item.NumeroQuestoes}
                                 </h4>
                             </div>
                         </div>
@@ -92,7 +92,7 @@ function Ranking(){
                                     Tempo: {item.Tempo}s   
                                 </h4>
                                 <h4>
-                                    Quantidade: {item.Numeroacertos}
+                                Quantidade: {item.Numeroacertos} de {item.NumeroQuestoes}
                                 </h4>
                             </div>
                         </div>
@@ -120,7 +120,7 @@ function Ranking(){
                                     Tempo: {item.Tempo}s   
                                 </h4>
                                 <h4>
-                                    Quantidade: {item.Numeroacertos}
+                                Quantidade: {item.Numeroacertos} de {item.NumeroQuestoes}
                                 </h4>
                             </div>
                         </div>

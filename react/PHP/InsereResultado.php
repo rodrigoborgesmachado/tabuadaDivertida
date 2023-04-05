@@ -26,7 +26,8 @@ $data = <<<DATA
     "Nome": '$request->nome',
     "Tempo": '$request->tempo',
     "Tipo": '$request->tipo',
-    "Numeroacertos": '$request->acertos'
+    "Numeroacertos": '$request->acertos',
+	"NumeroQuestoes": '$request->NumeroQuestoes'
 }
 DATA;
 

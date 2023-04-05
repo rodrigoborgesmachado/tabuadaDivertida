@@ -10,6 +10,8 @@ import {toast} from 'react-toastify';
 function Jogo(){
     const{tipo} = useParams();
     const[contador, setContador] = useState(0);
+    const[respostasIncorretas, setRespostasIncorretas] = useState(1);
+    const[respostasCorretas, setRespostasCorretas] = useState(1);
     const[contas1, setContas1] = useState([]);
     const[contas2, setContas2] = useState([]);
     const[contasCorrente, setContasCorrente] = useState('');
@@ -51,7 +53,7 @@ function Jogo(){
 
     function LoadContas(total){
         var lista = [];
-        for(let i = 0; i< total;i++){
+        for(let i = 0; i<= total;i++){
             var num1 = 0;
             while(num1 === 0 || num1 === 1){
                 num1 = Math.floor(Math.random() * RetornaMaximo());
@@ -90,7 +92,15 @@ function Jogo(){
 
     function respondeu(resposta){
         if (Number.isInteger(parseInt(resposta))) {
-            setResposta(resposta);
+            setResposta(resposta);            
+        }
+        else{
+            setResposta('');
+        }
+    }
+
+    const handleKeyDown = (event) => {
+        if (event.key === 'Enter') {
             let respostaCerta = false;
 
             if(tipo === 'M'){
@@ -116,27 +126,29 @@ function Jogo(){
             }
 
             if(respostaCerta){
-                if(width > 768){
-                    toast.success('Correto');
-                }
+                toast.success('Correto');
+                setRespostasCorretas(respostasCorretas+1);
+            }
+            else{
+                toast.error('Incorreto');
+                setRespostasIncorretas(respostasIncorretas+1);
+            }
 
-                setResposta('');
-                if(contador + 1 === parseInt(sessionStorage.getItem(configData.QUANTIDADE_PARAM) || 20)){
-                    Finaliza();
-                }else{
-                    setContasCorrente(MontaConta());
-                }
+            setResposta('');
+            if(contador + 1 === parseInt(sessionStorage.getItem(configData.QUANTIDADE_PARAM) || 20)+2){
+                sessionStorage.setItem(configData.QUANTIDADE_ACERTOS, respostasCorretas);
+                Finaliza();
+            }else{
+                setContasCorrente(MontaConta());
             }
         }
-        else{
-            setResposta('');
-        }
-    }
+      }
 
     async function Finaliza(){
         var data = {
             nome: sessionStorage.getItem(configData.NOME_PARAM),
-            acertos: sessionStorage.getItem(configData.QUANTIDADE_PARAM),
+            acertos: respostasCorretas,
+            NumeroQuestoes: sessionStorage.getItem(configData.QUANTIDADE_PARAM) || 20,
             tipo: tipo,
             tempo: sessionStorage.getItem(configData.TEMPO_PARAM)
         };
@@ -178,11 +190,14 @@ function Jogo(){
             <div className='tempo'>
                 <Tempo/>
             </div>
+            <div className='tempo'>
+                <h1>{contador-1} de {sessionStorage.getItem(configData.QUANTIDADE_PARAM) || 20}</h1>
+            </div>
             <div className='divJogo'>
                 <h3>
                     {contasCorrente}
                 </h3>
-                <input type="number" value={resposta} onChange={(e) => respondeu(e.target.value)} autoFocus={true}/>
+                <input type="number" value={resposta} onChange={(e) => respondeu(e.target.value)} onKeyDown={handleKeyDown} autoFocus={true}/>
             </div>
         </div>
     )

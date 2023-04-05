@@ -1,5 +1,6 @@
 {
     "NOME_PARAM": "nome",
     "QUANTIDADE_PARAM": "quantidade",
+    "QUANTIDADE_ACERTOS": "quantidadeAcertos",
     "TEMPO_PARAM":"tempo"
 }

@@ -8,7 +8,7 @@ function Final(){
 
     return(
         <div className='container'>
-            <h3>Parabéns {sessionStorage.getItem(configData.NOME_PARAM)}!!! Você acertou {sessionStorage.getItem(configData.QUANTIDADE_PARAM)} em {sessionStorage.getItem(configData.TEMPO_PARAM)} segundos</h3>
+            <h3>Parabéns {sessionStorage.getItem(configData.NOME_PARAM)}!!! Você acertou {sessionStorage.getItem(configData.QUANTIDADE_ACERTOS)} de {sessionStorage.getItem(configData.QUANTIDADE_PARAM)} em {sessionStorage.getItem(configData.TEMPO_PARAM)} segundos</h3>
             <br/>
             <br/>
             <Link to={`/jogo/` + tipo}>Jogar novamente</Link>
