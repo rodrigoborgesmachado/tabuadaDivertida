@@ -6,8 +6,8 @@ import {toast} from 'react-toastify';
 import './style.css';
 
 function Formulario(){
-        const[nome, setNome] = useState(sessionStorage.getItem(configData.NOME_PARAM) || '');
-        const[quantidade, setQuantidade] = useState(sessionStorage.getItem(configData.QUANTIDADE_PARAM) || 20);
+        const[nome, setNome] = useState(localStorage.getItem(configData.NOME_PARAM) || '');
+        const[quantidade, setQuantidade] = useState(localStorage.getItem(configData.QUANTIDADE_PARAM) || 20);
         const navigate = useNavigate();
 
         useEffect(() => {
@@ -19,8 +19,8 @@ function Formulario(){
 
         function salvarDados(){
             if(quantidade >= 5){
-                sessionStorage.setItem(configData.NOME_PARAM, nome);
-                sessionStorage.setItem(configData.QUANTIDADE_PARAM, quantidade);
+                localStorage.setItem(configData.NOME_PARAM, nome);
+                localStorage.setItem(configData.QUANTIDADE_PARAM, quantidade);
                 navigate('/selecionarjogo', {replace: true});
             }
             else{

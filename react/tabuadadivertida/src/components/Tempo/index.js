@@ -13,7 +13,7 @@ function Tempo(){
         if(start){
             intervalId = setInterval(() => {
                 setTempo(tempo+1);
-                sessionStorage.setItem(configData.TEMPO_PARAM, tempo);
+                localStorage.setItem(configData.TEMPO_PARAM, tempo);
             }, 1000);
         }
 

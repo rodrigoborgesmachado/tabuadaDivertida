@@ -15,9 +15,9 @@ function Ranking(){
 
     useEffect(() => {
         async function loadFilme(){
-            await api.get(`GetResultados.php`)
+            await api.get(`ResultadosTabuadaDivertida/ranking`)
             .then((response) => {
-                setLista(response.data.lista);
+                setLista(response.data.object);
                 setLoadding(false);
             }).catch(() => {
                 navigate('/', {replace: true});
@@ -50,21 +50,21 @@ function Ranking(){
                 <h3>Ranking Multiplicação</h3>
                 <br/>
                 {
-                lista.filter((item) => item.Tipo === 'M').map((item) => {
+                lista.filter((item) => item.tipo === 'M').map((item) => {
                     return(
-                        <div key={item.Nome+item.Numeroacertos}>
+                        <div key={item.nome+item.quantidade}>
                             <div className='divDescricao'>
                                 <h4>
                                     {contadorMultiplicacao++}
                                 </h4>
                                 <h4>
-                                    Nome: {item.Nome}
+                                    Nome: {item.nome}
                                 </h4>
                                 <h4>
-                                    Tempo: {item.Tempo}s
+                                    Tempo: {item.tempo}s
                                 </h4>
                                 <h4>
-                                    Quantidade: {item.Numeroacertos} de {item.NumeroQuestoes}
+                                    Quantidade: {item.quantidade}
                                 </h4>
                             </div>
                         </div>
@@ -78,21 +78,21 @@ function Ranking(){
                 <h3>Ranking Adicao</h3>
                 <br/>
                 {
-                lista.filter((item) => item.Tipo === 'A').map((item) => {
+                lista.filter((item) => item.tipo === 'A').map((item) => {
                     return(
-                        <div key={item.Nome+item.Numeroacertos}>
+                        <div key={item.nome+item.quantidade}>
                             <div className='divDescricao'>
                                 <h4>
                                     {contadorAdicao++}
                                 </h4>
                                 <h4>
-                                    Nome: {item.Nome}
+                                    Nome: {item.nome}
                                 </h4>
                                 <h4>
-                                    Tempo: {item.Tempo}s   
+                                    Tempo: {item.tempo}s   
                                 </h4>
                                 <h4>
-                                Quantidade: {item.Numeroacertos} de {item.NumeroQuestoes}
+                                Quantidade: {item.quantidade}
                                 </h4>
                             </div>
                         </div>
@@ -106,21 +106,21 @@ function Ranking(){
                 <h3>Ranking Subtração</h3>
                 <br/>
                 {
-                lista.filter((item) => item.Tipo === 'S').map((item) => {
+                lista.filter((item) => item.tipo === 'S').map((item) => {
                     return(
-                        <div key={item.Nome+item.Numeroacertos}>
+                        <div key={item.nome+item.quantidade}>
                             <div className='divDescricao'>
                                 <h4>
                                     {contadorSubtracao++}
                                 </h4>
                                 <h4>
-                                    Nome: {item.Nome}
+                                    Nome: {item.nome}
                                 </h4>
                                 <h4>
-                                    Tempo: {item.Tempo}s   
+                                    Tempo: {item.tempo}s   
                                 </h4>
                                 <h4>
-                                Quantidade: {item.Numeroacertos} de {item.NumeroQuestoes}
+                                Quantidade: {item.quantidade}
                                 </h4>
                             </div>
                         </div>

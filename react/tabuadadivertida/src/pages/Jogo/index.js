@@ -21,8 +21,8 @@ function Jogo(){
     const[loadding, setLoadding] = useState(false);
 
     useEffect(() => {
-        setContas1(LoadContas(parseInt(sessionStorage.getItem(configData.QUANTIDADE_PARAM) || 20)));
-        setContas2(LoadContas(parseInt(sessionStorage.getItem(configData.QUANTIDADE_PARAM) || 20)));
+        setContas1(LoadContas(parseInt(localStorage.getItem(configData.QUANTIDADE_PARAM) || 20)));
+        setContas2(LoadContas(parseInt(localStorage.getItem(configData.QUANTIDADE_PARAM) || 20)));
         return() =>{
 
         }
@@ -135,8 +135,8 @@ function Jogo(){
             }
 
             setResposta('');
-            if(contador + 1 === parseInt(sessionStorage.getItem(configData.QUANTIDADE_PARAM) || 20)+2){
-                sessionStorage.setItem(configData.QUANTIDADE_ACERTOS, respostasCorretas);
+            if(contador + 1 === parseInt(localStorage.getItem(configData.QUANTIDADE_PARAM) || 20)+2){
+                localStorage.setItem(configData.QUANTIDADE_ACERTOS, respostasCorretas);
                 Finaliza();
             }else{
                 setContasCorrente(MontaConta());
@@ -146,15 +146,15 @@ function Jogo(){
 
     async function Finaliza(){
         var data = {
-            nome: sessionStorage.getItem(configData.NOME_PARAM),
-            acertos: respostasCorretas,
-            NumeroQuestoes: sessionStorage.getItem(configData.QUANTIDADE_PARAM) || 20,
+            nome: localStorage.getItem(configData.NOME_PARAM),
+            numerAcertos: respostasCorretas,
+            numeroQuestoes: localStorage.getItem(configData.QUANTIDADE_PARAM) || 20,
             tipo: tipo,
-            tempo: sessionStorage.getItem(configData.TEMPO_PARAM)
+            tempo: localStorage.getItem(configData.TEMPO_PARAM)
         };
 
         setLoadding(true);
-        await api.post(`/InsereResultado.php`, data)
+        await api.post(`/ResultadosTabuadaDivertida`, data)
         .then((response) => {
             navigate('/final/' + tipo, {replace: true});
         }).catch(() => {
@@ -191,7 +191,7 @@ function Jogo(){
                 <Tempo/>
             </div>
             <div className='tempo'>
-                <h1>{contador-1} de {sessionStorage.getItem(configData.QUANTIDADE_PARAM) || 20}</h1>
+                <h1>{contador-1} de {localStorage.getItem(configData.QUANTIDADE_PARAM) || 20}</h1>
             </div>
             <div className='divJogo'>
                 <h3>

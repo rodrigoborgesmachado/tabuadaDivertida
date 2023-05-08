@@ -4,7 +4,8 @@ import axios from "axios";
 // base da url: https://api.themoviedb.org/3
 
 const api = axios.create({
-    baseURL: 'http://tabuadadivertida.sunsalesystem.com.br/PHP'
+    //baseURL: 'https://localhost:7119/api'
+    baseURL: 'https://apisunsale.azurewebsites.net/api'
 })
 
 export default api;
