@@ -5,7 +5,7 @@ function Home(){
     return(
         <div className='container'>
             <h3>
-                Teste seu raciocínio e sua rapidez: quanto tempo você demora para responder questões de tabuada?
+                A Tabuada Divertida é uma maneira interativa e educativa para crianças aprenderem a tabuada de multiplicação. Com jogos e desafios divertidos, as crianças podem praticar e melhorar suas habilidades matemáticas enquanto se divertem. Nossa plataforma é fácil de usar e tem recursos úteis para ajudar os pais e educadores a acompanhar o progresso das crianças. Comece a aprender hoje mesmo com a Tabuada Divertida!
             </h3>
             <br/>
             <div className='botoes'>
