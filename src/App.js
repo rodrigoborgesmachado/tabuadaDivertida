@@ -6,7 +6,7 @@ import Footer from './components/footer';
 function App() {
   return (
     <div className="app">
-      <ToastContainer autoClose="3000"/>
+      <ToastContainer autoClose="1000"/>
       <RoutesApp/>
       <Footer/>
     </div>
