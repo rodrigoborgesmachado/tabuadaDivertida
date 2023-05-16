@@ -9,9 +9,6 @@ function Ranking(){
 
     const[lista, setLista] = useState([]);
     const[loadding, setLoadding] = useState(true);
-    let contadorMultiplicacao = 1;
-    let contadorAdicao = 1;
-    let contadorSubtracao = 1;
 
     useEffect(() => {
         async function loadFilme(){
@@ -50,21 +47,24 @@ function Ranking(){
                 <h3>Ranking Multiplicação</h3>
                 <br/>
                 {
-                lista.filter((item) => item.tipo === 'M').map((item) => {
+                lista.filter((item) => item.tipo === 'M').map((item, index) => {
                     return(
-                        <div key={item.nome+item.quantidade}>
+                        <div key={index}>
                             <div className='divDescricao'>
                                 <h4>
-                                    {contadorMultiplicacao++}
+                                    {index == 0 ? <>🥇</> : <></>}
+                                    {index == 1 ? <>🥈</> : <></>}
+                                    {index == 2 ? <>🥉</> : <></>}
+                                    {index > 2 ? <>{index + 1}</> : <></>}
                                 </h4>
                                 <h4>
-                                    Nome: {item.nome}
+                                    Nome: {index == 0 ? <>🏆</> : <></>}{item.nome}
                                 </h4>
                                 <h4>
-                                    Tempo: {item.tempo}s
+                                    Tempo: {index == 0 ? <>🏆</> : <></>}{item.tempo}s
                                 </h4>
                                 <h4>
-                                    Quantidade: {item.quantidade}
+                                    Quantidade: {index == 0 ? <>🏆</> : <></>}{item.quantidade}
                                 </h4>
                             </div>
                         </div>
@@ -78,21 +78,24 @@ function Ranking(){
                 <h3>Ranking Adicao</h3>
                 <br/>
                 {
-                lista.filter((item) => item.tipo === 'A').map((item) => {
+                lista.filter((item) => item.tipo === 'A').map((item, index) => {
                     return(
-                        <div key={item.nome+item.quantidade}>
+                        <div key={index}>
                             <div className='divDescricao'>
                                 <h4>
-                                    {contadorAdicao++}
+                                    {index == 0 ? <>🥇</> : <></>}
+                                    {index == 1 ? <>🥈</> : <></>}
+                                    {index == 2 ? <>🥉</> : <></>}
+                                    {index > 2 ? <>{index + 1}</> : <></>}
                                 </h4>
                                 <h4>
-                                    Nome: {item.nome}
+                                    Nome: {index == 0 ? <>🏆</> : <></>}{item.nome}
                                 </h4>
                                 <h4>
-                                    Tempo: {item.tempo}s   
+                                    Tempo: {index == 0 ? <>🏆</> : <></>}{item.tempo}s
                                 </h4>
                                 <h4>
-                                Quantidade: {item.quantidade}
+                                    Quantidade: {index == 0 ? <>🏆</> : <></>}{item.quantidade}
                                 </h4>
                             </div>
                         </div>
@@ -106,21 +109,24 @@ function Ranking(){
                 <h3>Ranking Subtração</h3>
                 <br/>
                 {
-                lista.filter((item) => item.tipo === 'S').map((item) => {
+                lista.filter((item) => item.tipo === 'S').map((item, index) => {
                     return(
-                        <div key={item.nome+item.quantidade}>
+                        <div key={index}>
                             <div className='divDescricao'>
                                 <h4>
-                                    {contadorSubtracao++}
+                                    {index == 0 ? <>🥇</> : <></>}
+                                    {index == 1 ? <>🥈</> : <></>}
+                                    {index == 2 ? <>🥉</> : <></>}
+                                    {index > 2 ? <>{index + 1}</> : <></>}
                                 </h4>
                                 <h4>
-                                    Nome: {item.nome}
+                                    Nome: {index == 0 ? <>🏆</> : <></>}{item.nome}
                                 </h4>
                                 <h4>
-                                    Tempo: {item.tempo}s   
+                                    Tempo: {index == 0 ? <>🏆</> : <></>}{item.tempo}s
                                 </h4>
                                 <h4>
-                                Quantidade: {item.quantidade}
+                                    Quantidade: {index == 0 ? <>🏆</> : <></>}{item.quantidade}
                                 </h4>
                             </div>
                         </div>
