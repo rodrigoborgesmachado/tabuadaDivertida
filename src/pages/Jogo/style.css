@@ -13,6 +13,11 @@
     margin-left: 0;
     padding: 0;
     width: 100%;
+    color: #FFF;
+}
+
+.tempo a{
+    color: #000;
 }
 
 .divJogo{

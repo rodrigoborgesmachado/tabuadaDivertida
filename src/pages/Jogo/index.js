@@ -193,6 +193,9 @@ function Jogo(){
             <div className='tempo'>
                 <h1>🏋️ {contador-1} de {localStorage.getItem(configData.QUANTIDADE_PARAM) || 20}</h1>
             </div>
+            <div className='tempo'>
+                <a onClick={() => window.location.reload(false)}>Restart</a>
+            </div>
             <div className='divJogo'>
                 <h3>
                     {contasCorrente}
