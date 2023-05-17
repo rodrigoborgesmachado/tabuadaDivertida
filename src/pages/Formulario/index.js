@@ -18,13 +18,16 @@ function Formulario(){
         }
 
         function salvarDados(){
-            if(quantidade >= 5){
+            if(quantidade >= 5 && quantidade <= 100){
                 localStorage.setItem(configData.NOME_PARAM, nome);
                 localStorage.setItem(configData.QUANTIDADE_PARAM, quantidade);
                 navigate('/selecionarjogo', {replace: true});
             }
-            else{
+            else if(quantidade < 5){
                 toast.warn('Quantidade precisa ser maior ou igual a 5.');
+            }
+            else if(quantidade < 5){
+                toast.warn('Quantidade precisa ser menor ou igual a 100.');
             }
         }
 
