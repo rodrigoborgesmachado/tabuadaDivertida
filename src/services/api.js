@@ -7,6 +7,5 @@ const api = axios.create({
     //baseURL: 'https://localhost:7119/api'
     baseURL: 'https://apisunsale.azurewebsites.net/api'
 })
-api.defaults.headers.common['Referer'] = `tabuadadivertida`;
 
 export default api;
