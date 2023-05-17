@@ -147,7 +147,7 @@ function Jogo(){
     async function Finaliza(){
         var data = {
             nome: localStorage.getItem(configData.NOME_PARAM),
-            numerAcertos: respostasCorretas,
+            numeroAcertos: respostasCorretas,
             numeroQuestoes: localStorage.getItem(configData.QUANTIDADE_PARAM) || 20,
             tipo: tipo,
             tempo: localStorage.getItem(configData.TEMPO_PARAM)
