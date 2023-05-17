@@ -24,7 +24,7 @@ function Tempo(){
 
     return(
         <div className='timerdiv'>
-            Tempo: {tempo}
+            ⏳Tempo: {tempo}
         </div>
     )
 }

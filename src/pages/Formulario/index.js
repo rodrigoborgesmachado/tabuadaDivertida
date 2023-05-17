@@ -32,16 +32,16 @@ function Formulario(){
             <div className='container'>
                 <div className='formulario'>
                     <h3>
-                        Como você gostaria de ser chamado?
+                        Como você gostaria de ser chamado?👽
                     </h3>
                     <input type="text" id="name" value={nome} onChange={(e) => {setNome(e.target.value)}}/>
                     <h3>
-                        Quantas questões?
+                        Quantas questões?🚀
                     </h3>
                     <input type="text" value={quantidade} onChange={(e) => chageText(e.target.value)}/>
                 </div>
                 <div className='botoes'>
-                    <button className='botao' onClick={() => {salvarDados()}}>Continuar</button>
+                    <button className='botao' onClick={() => {salvarDados()}}>Continuar▶️</button>
                 </div>
             </div>
         )

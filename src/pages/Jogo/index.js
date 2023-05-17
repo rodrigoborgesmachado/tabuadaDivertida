@@ -100,7 +100,7 @@ function Jogo(){
     }
 
     const handleKeyDown = (event) => {
-        if (event.key === 'Enter') {
+        if (event.key === 'Enter' && resposta != '') {
             let respostaCerta = false;
 
             if(tipo === 'M'){
@@ -191,7 +191,7 @@ function Jogo(){
                 <Tempo/>
             </div>
             <div className='tempo'>
-                <h1>{contador-1} de {localStorage.getItem(configData.QUANTIDADE_PARAM) || 20}</h1>
+                <h1>🏋️ {contador-1} de {localStorage.getItem(configData.QUANTIDADE_PARAM) || 20}</h1>
             </div>
             <div className='divJogo'>
                 <h3>
