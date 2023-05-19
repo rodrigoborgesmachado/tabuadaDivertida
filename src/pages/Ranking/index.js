@@ -8,21 +8,23 @@ function Ranking(){
     const navigate = useNavigate();
 
     const[lista, setLista] = useState([]);
+    const[quantidade, setQuantidade] = useState([]);
     const[loadding, setLoadding] = useState(true);
 
-    useEffect(() => {
-        async function loadFilme(){
-            await api.get(`ResultadosTabuadaDivertida/ranking`)
-            .then((response) => {
-                setLista(response.data.object);
-                setLoadding(false);
-            }).catch(() => {
-                navigate('/', {replace: true});
-                return;
-            });
-        }
+    async function CarregaLista(){
+        await api.get(`ResultadosTabuadaDivertida/ranking`)
+        .then((response) => {
+            setLista(response.data.object);
+            setQuantidade(response.data.object.map(obj => obj.quantidade).filter((value, index, array) => array.indexOf(value) === index));
+            setLoadding(false);
+        }).catch(() => {
+            navigate('/', {replace: true});
+            return;
+        });
+    }
 
-        loadFilme();
+    useEffect(() => {
+        CarregaLista();
 
         return () =>{
 
@@ -43,96 +45,141 @@ function Ranking(){
                 Ranking
             </h1>
             <br/>
-            <div className='rankingMultiplicacao'>
-                <h3>Ranking Multiplicação</h3>
-                <br/>
-                {
-                lista.filter((item) => item.tipo === 'M').map((item, index) => {
-                    return(
-                        <div key={index}>
-                            <div className='divDescricao'>
-                                <h4>
-                                    {index == 0 ? <>🥇</> : <></>}
-                                    {index == 1 ? <>🥈</> : <></>}
-                                    {index == 2 ? <>🥉</> : <></>}
-                                    {index > 2 ? <>{index + 1}</> : <></>}
-                                </h4>
-                                <h4>
-                                    Nome: {index == 0 ? <>🏆</> : <></>}{item.nome}
-                                </h4>
-                                <h4>
-                                    Tempo: {index == 0 ? <>🏆</> : <></>}{item.tempo}s
-                                </h4>
-                                <h4>
-                                    Quantidade: {index == 0 ? <>🏆</> : <></>}{item.quantidade}
-                                </h4>
+            <div className='rankingText'>
+                <div className='rankingMultiplicacao'>
+                    <h3>Ranking Multiplicação</h3>
+                    <br/>
+                    {
+                    quantidade.map((q) =>{
+                        return(
+                            lista.filter((item) => item.tipo === 'M' && item.quantidade == q).length == 0 ?
+                            <>
+                            </>
+                                :
+                            <div key={q}>
+                                <div className='quantidade'>
+                                    Quantidade: {q}
+                                </div>
+                                <br/>
+                                {
+                                lista.filter((item) => item.tipo === 'M' && item.quantidade == q).map((item, index) => {
+                                    return(
+                                        <div key={index}>
+                                            <div className='divDescricao'>
+                                                <h4>
+                                                    {index == 0 ? <>🥇</> : <></>}
+                                                    {index == 1 ? <>🥈</> : <></>}
+                                                    {index == 2 ? <>🥉</> : <></>}
+                                                    {index > 2 ? <>{index + 1}</> : <></>}
+                                                </h4>
+                                                <h4>
+                                                    {index == 0 ? <>🏆</> : <></>}{item.nome}
+                                                </h4>
+                                                <h4>
+                                                    {index == 0 ? <>🏆</> : <></>}{item.tempo}s
+                                                </h4>
+                                            </div>
+                                        </div>
+                                    );
+                                })
+                                }
+                                <hr/>
+                                <br/>
                             </div>
-                        </div>
-                    );
-                })
-                }
-            </div>
-            <hr/>
-            <br/>
-            <div className='rankingMultiplicacao'>
-                <h3>Ranking Adicao</h3>
+                        )
+                    })
+                    }
+                </div>
                 <br/>
-                {
-                lista.filter((item) => item.tipo === 'A').map((item, index) => {
-                    return(
-                        <div key={index}>
-                            <div className='divDescricao'>
-                                <h4>
-                                    {index == 0 ? <>🥇</> : <></>}
-                                    {index == 1 ? <>🥈</> : <></>}
-                                    {index == 2 ? <>🥉</> : <></>}
-                                    {index > 2 ? <>{index + 1}</> : <></>}
-                                </h4>
-                                <h4>
-                                    Nome: {index == 0 ? <>🏆</> : <></>}{item.nome}
-                                </h4>
-                                <h4>
-                                    Tempo: {index == 0 ? <>🏆</> : <></>}{item.tempo}s
-                                </h4>
-                                <h4>
-                                    Quantidade: {index == 0 ? <>🏆</> : <></>}{item.quantidade}
-                                </h4>
+                <div className='rankingMultiplicacao'>
+                    <h3>Ranking Adicao</h3>
+                    <br/>
+                    {
+                    quantidade.map((q) =>{
+                        return(
+                            lista.filter((item) => item.tipo === 'A' && item.quantidade == q).length == 0 ?
+                            <>
+                            </>
+                                :
+                            <div key={q}>
+                                <div className='quantidade'>
+                                    Quantidade: {q}
+                                </div>
+                                <br/>
+                                {
+                                lista.filter((item) => item.tipo === 'A' && item.quantidade == q).map((item, index) => {
+                                    return(
+                                        <div key={index}>
+                                            <div className='divDescricao'>
+                                                <h4>
+                                                    {index == 0 ? <>🥇</> : <></>}
+                                                    {index == 1 ? <>🥈</> : <></>}
+                                                    {index == 2 ? <>🥉</> : <></>}
+                                                    {index > 2 ? <>{index + 1}</> : <></>}
+                                                </h4>
+                                                <h4>
+                                                    {index == 0 ? <>🏆</> : <></>}{item.nome}
+                                                </h4>
+                                                <h4>
+                                                    {index == 0 ? <>🏆</> : <></>}{item.tempo}s
+                                                </h4>
+                                            </div>
+                                        </div>
+                                    );
+                                })
+                                }
+                                <hr/>
+                                <br/>
                             </div>
-                        </div>
-                    );
-                })
-                }
-            </div>
-            <hr/>
-            <br/>
-            <div className='rankingMultiplicacao'>
-                <h3>Ranking Subtração</h3>
+                        )
+                    })
+                    }
+                </div>
                 <br/>
-                {
-                lista.filter((item) => item.tipo === 'S').map((item, index) => {
-                    return(
-                        <div key={index}>
-                            <div className='divDescricao'>
-                                <h4>
-                                    {index == 0 ? <>🥇</> : <></>}
-                                    {index == 1 ? <>🥈</> : <></>}
-                                    {index == 2 ? <>🥉</> : <></>}
-                                    {index > 2 ? <>{index + 1}</> : <></>}
-                                </h4>
-                                <h4>
-                                    Nome: {index == 0 ? <>🏆</> : <></>}{item.nome}
-                                </h4>
-                                <h4>
-                                    Tempo: {index == 0 ? <>🏆</> : <></>}{item.tempo}s
-                                </h4>
-                                <h4>
-                                    Quantidade: {index == 0 ? <>🏆</> : <></>}{item.quantidade}
-                                </h4>
+                <div className='rankingMultiplicacao'>
+                    <h3>Ranking Subtração</h3>
+                    <br/>
+                    {
+                    quantidade.map((q) =>{
+                        return(
+                            lista.filter((item) => item.tipo === 'S' && item.quantidade == q).length == 0 ?
+                            <>
+                            </>
+                                :
+                            <div key={q}>
+                                <div className='quantidade'>
+                                    Quantidade: {q}
+                                </div>
+                                <br/>
+                                {
+                                lista.filter((item) => item.tipo === 'S' && item.quantidade == q).map((item, index) => {
+                                    return(
+                                        <div key={index}>
+                                            <div className='divDescricao'>
+                                                <h4>
+                                                    {index == 0 ? <>🥇</> : <></>}
+                                                    {index == 1 ? <>🥈</> : <></>}
+                                                    {index == 2 ? <>🥉</> : <></>}
+                                                    {index > 2 ? <>{index + 1}</> : <></>}
+                                                </h4>
+                                                <h4>
+                                                    {index == 0 ? <>🏆</> : <></>}{item.nome}
+                                                </h4>
+                                                <h4>
+                                                    {index == 0 ? <>🏆</> : <></>}{item.tempo}s
+                                                </h4>
+                                            </div>
+                                        </div>
+                                    );
+                                })
+                                }
+                                <hr/>
+                                <br/>
                             </div>
-                        </div>
-                    );
-                })
-                }
+                        )
+                    })
+                    }
+                </div>
             </div>
             <br/>
             <br/>
