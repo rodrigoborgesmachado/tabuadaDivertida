@@ -9,6 +9,8 @@ function Ranking(){
 
     const[lista, setLista] = useState([]);
     const[quantidade, setQuantidade] = useState([]);
+    const[quantidadeTetativas, setQuantidadeTentativas] = useState([]);
+    const[quantidadeRanking, setQuantidadeRanking] = useState([]);
     const[loadding, setLoadding] = useState(true);
 
     async function CarregaLista(){
@@ -16,6 +18,8 @@ function Ranking(){
         .then((response) => {
             setLista(response.data.object);
             setQuantidade(response.data.object.map(obj => obj.quantidade).filter((value, index, array) => array.indexOf(value) === index));
+            setQuantidadeTentativas(response.data.total);
+            setQuantidadeRanking(response.data.quantity);
             setLoadding(false);
         }).catch(() => {
             navigate('/', {replace: true});
@@ -46,6 +50,9 @@ function Ranking(){
             </h1>
             <br/>
             <div className='rankingText'>
+                <h3>🔥Apenas {quantidadeRanking} de {quantidadeTetativas} jogadores conseguiram entrar no ranking!!🔥</h3>
+                <br/>
+                <br/>
                 <div className='rankingMultiplicacao'>
                     <h3>Ranking Multiplicação</h3>
                     <br/>
