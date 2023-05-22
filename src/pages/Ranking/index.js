@@ -54,7 +54,7 @@ function Ranking(){
                 <br/>
                 <br/>
                 <div className='rankingMultiplicacao'>
-                    <h3>Ranking Multiplicação</h3>
+                    <h2>Ranking Multiplicação</h2>
                     <br/>
                     {
                     quantidade.map((q) =>{
@@ -99,7 +99,7 @@ function Ranking(){
                 </div>
                 <br/>
                 <div className='rankingMultiplicacao'>
-                    <h3>Ranking Adicao</h3>
+                    <h2>Ranking Adicao</h2>
                     <br/>
                     {
                     quantidade.map((q) =>{
@@ -144,7 +144,7 @@ function Ranking(){
                 </div>
                 <br/>
                 <div className='rankingMultiplicacao'>
-                    <h3>Ranking Subtração</h3>
+                    <h2>Ranking Subtração</h2>
                     <br/>
                     {
                     quantidade.map((q) =>{
@@ -189,7 +189,7 @@ function Ranking(){
                 </div>
                 <br/>
                 <div className='rankingMultiplicacao'>
-                    <h3>Ranking Divisão</h3>
+                    <h2>Ranking Divisão</h2>
                     <br/>
                     {
                     quantidade.map((q) =>{
@@ -234,7 +234,7 @@ function Ranking(){
                 </div>
                 <br/>
                 <div className='rankingMultiplicacao'>
-                    <h3>Ranking Aleatórias</h3>
+                    <h2>Ranking Aleatórias</h2>
                     <br/>
                     {
                     quantidade.map((q) =>{
