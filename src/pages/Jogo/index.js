@@ -91,7 +91,7 @@ function Jogo(){
             if(index === 3){
                 temp += (n1*n2) + t[3] + n2;
             }
-            if(index === 1){
+            else if(index === 1){
                 if(n1 > n2){
                     temp += n1 + t[1] + n2;
                 }
