@@ -87,7 +87,10 @@ function Jogo(){
             temp += n1 + t[2] + n2;
         }
         else if (tipo === 'R'){
-            let index = Math.floor(Math.random() * 3);
+            let index = Math.floor(Math.random() * 4);
+            if(index === 3){
+                temp += (n1*n2) + t[3] + n2;
+            }
             if(index === 1){
                 if(n1 > n2){
                     temp += n1 + t[1] + n2;
