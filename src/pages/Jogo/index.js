@@ -38,7 +38,10 @@ function Jogo(){
     function RetornaMaximo(){
         var retorno = 11;
 
-        if(tipo === 'D'){
+        if(tipo === 'R'){
+            retorno = 11;
+        }
+        else if(tipo === 'D'){
             retorno = 11;
         }
         else if (tipo === 'S'){
@@ -66,24 +69,39 @@ function Jogo(){
     function MontaConta(){
         let n1 = contas1[contador];
         let n2 = contas2[contador];
+        let t = ['x', '-', '+', '/'];
         let temp = '';
 
         if(tipo === 'D'){
-            temp += n1 + '/' + n2;
+            temp += n1 + t[3] + n2;
         }
         else if (tipo === 'S'){
             if(n1 > n2){
-                temp += n1 + '-' + n2;
+                temp += n1 + t[1] + n2;
             }
             else{
-                temp += n2 + '-' + n1;
+                temp += n2 + t[1] + n1;
             }
         }
         else if (tipo === 'A'){
-            temp += n1 + '+' + n2;
+            temp += n1 + t[2] + n2;
+        }
+        else if (tipo === 'R'){
+            let index = Math.floor(Math.random() * 3);
+            if(index === 1){
+                if(n1 > n2){
+                    temp += n1 + t[1] + n2;
+                }
+                else{
+                    temp += n2 + t[1] + n1;
+                }
+            }
+            else{
+                temp += n1 + t[index] + n2;
+            }
         }
         else{
-            temp += n1 + 'x' + n2;
+            temp += n1 + t[0] + n2;
         }
 
         setContador(contador+1);
@@ -114,14 +132,37 @@ function Jogo(){
                 }
             }
             else if(tipo === 'S'){
-                if(resposta == parseInt(contasCorrente.split('-')[0]) - parseInt(contasCorrente.split('-')[1]) || 
-                    resposta == parseInt(contasCorrente.split('-')[1]) - parseInt(contasCorrente.split('-')[0])){
+                if(resposta == parseInt(contasCorrente.split('-')[0]) - parseInt(contasCorrente.split('-')[1]) 
+                || resposta == parseInt(contasCorrente.split('-')[1]) - parseInt(contasCorrente.split('-')[0])){
                     respostaCerta = true;
                 }
             }
             else if(tipo === 'A'){
                 if(resposta == parseInt(contasCorrente.split('+')[0]) + parseInt(contasCorrente.split('+')[1])){
                     respostaCerta = true;
+                }
+            }
+            else if(tipo == 'R'){
+                if(contasCorrente.includes('x')){
+                    if(resposta == parseInt(contasCorrente.split('x')[0]) * parseInt(contasCorrente.split('x')[1])){
+                        respostaCerta = true;
+                    }
+                }
+                else if(contasCorrente.includes('+')){
+                    if(resposta == parseInt(contasCorrente.split('+')[0]) + parseInt(contasCorrente.split('+')[1])){
+                        respostaCerta = true;
+                    }
+                }
+                else if(contasCorrente.includes('-')){
+                    if(resposta == parseInt(contasCorrente.split('-')[0]) - parseInt(contasCorrente.split('-')[1]) || 
+                        resposta == parseInt(contasCorrente.split('-')[1]) - parseInt(contasCorrente.split('-')[0])){
+                        respostaCerta = true;
+                    }
+                }
+                else if(contasCorrente.includes('/')){
+                    if(resposta == parseInt(contasCorrente.split('/')[0]) / parseInt(contasCorrente.split('/')[1])){
+                        respostaCerta = true;
+                    }
                 }
             }
 
@@ -166,6 +207,7 @@ function Jogo(){
     if(tipo.toUpperCase() !== 'M' &&
        tipo.toUpperCase() !== 'D' &&
        tipo.toUpperCase() !== 'A' &&
+       tipo.toUpperCase() !== 'R' &&
        tipo.toUpperCase() !== 'S'  ){
         return(
             <div className='container'>
