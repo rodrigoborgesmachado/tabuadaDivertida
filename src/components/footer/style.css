@@ -9,3 +9,8 @@ footer{
     background-color: #121212;
     opacity : 0.9;
 }
+
+footer a{
+    color: white;
+    text-decoration: none;
+}

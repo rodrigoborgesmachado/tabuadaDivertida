@@ -4,7 +4,7 @@ import {Link} from 'react-router-dom';
 function Header(){
     return(
         <footer>
-            <h1>SunSale System</h1>
+            <h1><a target='_blank' rel='noreferrer' href='http://www.sunsalesystem.com.br/' >SunSale System</a></h1>
         </footer>
     )
 }
