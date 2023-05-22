@@ -189,6 +189,51 @@ function Ranking(){
                 </div>
                 <br/>
                 <div className='rankingMultiplicacao'>
+                    <h3>Ranking Divisão</h3>
+                    <br/>
+                    {
+                    quantidade.map((q) =>{
+                        return(
+                            lista.filter((item) => item.tipo === 'D' && item.quantidade == q).length == 0 ?
+                            <>
+                            </>
+                                :
+                            <div key={q}>
+                                <div className='quantidade'>
+                                    Quantidade: {q}
+                                </div>
+                                <br/>
+                                {
+                                lista.filter((item) => item.tipo === 'D' && item.quantidade == q).map((item, index) => {
+                                    return(
+                                        <div key={index}>
+                                            <div className='divDescricao'>
+                                                <h4>
+                                                    {index == 0 ? <>🥇</> : <></>}
+                                                    {index == 1 ? <>🥈</> : <></>}
+                                                    {index == 2 ? <>🥉</> : <></>}
+                                                    {index > 2 ? <>{index + 1}</> : <></>}
+                                                </h4>
+                                                <h4>
+                                                    {index == 0 ? <>🏆</> : <></>}{item.nome}
+                                                </h4>
+                                                <h4>
+                                                    {index == 0 ? <>🏆</> : <></>}{item.tempo}s
+                                                </h4>
+                                            </div>
+                                        </div>
+                                    );
+                                })
+                                }
+                                <hr/>
+                                <br/>
+                            </div>
+                        )
+                    })
+                    }
+                </div>
+                <br/>
+                <div className='rankingMultiplicacao'>
                     <h3>Ranking Aleatórias</h3>
                     <br/>
                     {

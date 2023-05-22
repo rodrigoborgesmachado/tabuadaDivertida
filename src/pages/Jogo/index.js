@@ -73,7 +73,7 @@ function Jogo(){
         let temp = '';
 
         if(tipo === 'D'){
-            temp += n1 + t[3] + n2;
+            temp += (n1*n2) + t[3] + n2;
         }
         else if (tipo === 'S'){
             if(n1 > n2){
