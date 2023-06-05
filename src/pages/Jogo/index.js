@@ -201,7 +201,7 @@ function Jogo(){
             quantidadeAcertos = localStorage.getItem(configData.QUANTIDADE_ACERTOS);
             tempo = localStorage.getItem(configData.TEMPO_PARAM);
             nome = localStorage.getItem(configData.NOME_PARAM);
-            tipo = localStorage.getItem(tipo);
+            tipo = tipo;
         }
 
         historico.push(novo);
