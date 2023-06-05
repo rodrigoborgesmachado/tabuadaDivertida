@@ -181,12 +181,33 @@ function Jogo(){
             setResposta('');
             if(contador + 1 === parseInt(localStorage.getItem(configData.QUANTIDADE_PARAM) || 20)+2){
                 localStorage.setItem(configData.QUANTIDADE_ACERTOS, respostasCorretas);
+                SetHistorico();
                 Finaliza();
             }else{
                 setContasCorrente(MontaConta());
             }
         }
       }
+
+    function SetHistorico(){
+        var historico = JSON.parse(localStorage.getItem(configData.HISTORICO));
+
+        if(historico == null){
+            historico = new Array();
+        }
+
+        var novo = new class{
+            quantidadeQuestoes = localStorage.getItem(configData.QUANTIDADE_PARAM);
+            quantidadeAcertos = localStorage.getItem(configData.QUANTIDADE_ACERTOS);
+            tempo = localStorage.getItem(configData.TEMPO_PARAM);
+            nome = localStorage.getItem(configData.NOME_PARAM);
+            tipo = localStorage.getItem(tipo);
+        }
+
+        historico.push(novo);
+
+        localStorage.setItem(configData.HISTORICO, JSON.stringify(historico));
+    }
 
     async function Finaliza(){
         var data = {
