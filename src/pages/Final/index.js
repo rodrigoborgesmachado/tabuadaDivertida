@@ -34,6 +34,7 @@ function Final(){
             <br/>
             <Link to={`/jogo/` + tipo}>Jogar novamente</Link>
             <Link to={`/ranking`}>Ranking</Link>
+            <Link to="/historico">Histórico</Link>
             <Link to="/">Início</Link>
         </div>
     )

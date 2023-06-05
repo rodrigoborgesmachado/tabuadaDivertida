@@ -16,6 +16,7 @@ function Home(){
                 <Link className='botao' to={`/formulario`}>Começar o Jogo</Link>
                 <Link className='botao' to={`/instrucoes`}>Instruções do jogo</Link>
                 <Link className='botao' to={`/ranking`}>Ranking</Link>
+                <Link className='botao' to={`/historico`}>Histórico</Link>
             </div>
         </div>
     )

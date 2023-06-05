@@ -7,6 +7,7 @@ import Final from './pages/Final';
 import Ranking from './pages/Ranking';
 import Instrucoes from './pages/Instrucoes';
 import Erro from './pages/Erro';
+import Historico from './pages/Historico';
 import Header from './components/Header';
 
 function RoutesApp(){
@@ -21,6 +22,7 @@ function RoutesApp(){
                 <Route path='/ranking' element={<Ranking/>}/>
                 <Route path='/final/:tipo' element={<Final/>}/>
                 <Route path='/instrucoes' element={<Instrucoes/>}/>
+                <Route path='/historico' element={<Historico/>}/>
                 <Route path='*' element={<Erro/>}/>
             </Routes>
         </BrowserRouter>

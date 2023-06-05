@@ -2,6 +2,12 @@
     width: 90%;
 }
 
+
+
+.botoes{
+  margin-top: 50px;
+}
+
 .botao{
     text-decoration: none;
     display: flex;
