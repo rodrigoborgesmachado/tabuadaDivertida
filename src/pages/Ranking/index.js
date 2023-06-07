@@ -73,7 +73,7 @@ function Ranking(){
                 <h3>🔥Apenas {quantidadeRanking} de {quantidadeTetativas} jogadores conseguiram entrar no ranking!!🔥</h3>
                 <br/>
                 <br/>
-                <div className='botoes'>
+                <div className='botoesRanking'>
                     <button onClick={() => setType('M')}>Multiplicação</button>
                     <button onClick={() => setType('D')}>Divisão</button>
                     <button onClick={() => setType('A')}>Adição</button>

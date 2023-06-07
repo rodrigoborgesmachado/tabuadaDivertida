@@ -76,14 +76,14 @@ hr{
     width: 100%;
 }
 
-.botoes{
+.botoesRanking{
     width: 100%;
     margin-top: 20px;
     margin-bottom: 20px;
     display: flex;
 }
 
-.botoes button{
+.botoesRanking button{
     width: 100%;
     margin-top: 20px;
     margin-bottom: 20px;
@@ -92,7 +92,7 @@ hr{
     border-radius: 10px;
 }
 
-.botoes button:hover{
+.botoesRanking button:hover{
     background-color: rgb(37, 26, 166);
     color: #FFF;
     cursor: pointer;
