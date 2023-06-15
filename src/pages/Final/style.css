@@ -1,10 +1,15 @@
 .container a{
     text-decoration: none;
     background-color: beige;
+    color: #000000;
     padding: 10px;
     margin-top: 14px;
     border-radius: 4px;
     cursor: pointer;
+}
+
+.posicao{
+    background-color: #191970;
 }
 
 .container a:hover{

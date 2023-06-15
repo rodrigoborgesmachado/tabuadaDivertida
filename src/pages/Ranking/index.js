@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import {Link} from 'react-router-dom';
 import api from '../../services/api';
 import { Table } from 'react-bootstrap';
+import Config from '../../Config.json';
 
 function Ranking(){
     const navigate = useNavigate();
@@ -119,7 +120,7 @@ function Ranking(){
                                     {
                                     lista.filter((item) => item.tipo === type && item.quantidade == q).map((item, index) => {
                                         return(
-                                            <tr key={index}>
+                                            <tr key={index} className={localStorage.getItem(Config.NOME_PARAM) == item.nome ? 'posicao' : ''}>
                                                 <td>
                                                     {index == 0 ? <>🥇</> : <></>}
                                                     {index == 1 ? <>🥈</> : <></>}
