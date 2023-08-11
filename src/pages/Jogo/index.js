@@ -21,6 +21,7 @@ function Jogo(){
     const[loadding, setLoadding] = useState(false);
 
     useEffect(() => {
+        localStorage.setItem(configData.QUESTOES, JSON.stringify([]));
         setContas1(LoadContas(parseInt(localStorage.getItem(configData.QUANTIDADE_PARAM) || 20)));
         setContas2(LoadContas(parseInt(localStorage.getItem(configData.QUANTIDADE_PARAM) || 20)));
         return() =>{
@@ -122,6 +123,8 @@ function Jogo(){
 
     const handleKeyDown = (event) => {
         if (event.key === 'Enter' && resposta != '') {
+            var questoes = JSON.parse(localStorage.getItem(configData.QUESTOES));
+
             let respostaCerta = false;
 
             if(tipo === 'M'){
@@ -169,6 +172,14 @@ function Jogo(){
                 }
             }
 
+            questoes.push({
+                questao: contasCorrente,
+                resposta: resposta,
+                correta: respostaCerta
+            });
+
+            localStorage.setItem(configData.QUESTOES, JSON.stringify(questoes));
+
             if(respostaCerta){
                 toast.success('Correto ✅');
                 setRespostasCorretas(respostasCorretas+1);
@@ -191,17 +202,19 @@ function Jogo(){
 
     function SetHistorico(){
         var historico = JSON.parse(localStorage.getItem(configData.HISTORICO));
+        var questoes = JSON.parse(localStorage.getItem(configData.QUESTOES));
 
         if(historico == null){
             historico = new Array();
         }
 
-        var novo = new class{
-            quantidadeQuestoes = localStorage.getItem(configData.QUANTIDADE_PARAM);
-            quantidadeAcertos = localStorage.getItem(configData.QUANTIDADE_ACERTOS);
-            tempo = localStorage.getItem(configData.TEMPO_PARAM);
-            nome = localStorage.getItem(configData.NOME_PARAM);
-            tipo = tipo;
+        var novo = {
+            quantidadeQuestoes: localStorage.getItem(configData.QUANTIDADE_PARAM),
+            quantidadeAcertos: localStorage.getItem(configData.QUANTIDADE_ACERTOS),
+            tempo: localStorage.getItem(configData.TEMPO_PARAM),
+            nome: localStorage.getItem(configData.NOME_PARAM),
+            tipo: tipo,
+            questoes: questoes
         }
 
         historico.push(novo);

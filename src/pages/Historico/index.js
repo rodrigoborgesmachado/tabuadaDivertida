@@ -2,9 +2,34 @@ import './historico.css';
 import { useEffect, useState } from 'react';
 import configData from "./../../Config.json";
 import { Table } from 'react-bootstrap';
+import Modal from 'react-modal';
+
+const customStyles = {
+    content: {
+      top: '50%',
+      left: '50%',
+      right: 'auto',
+      bottom: 'auto',
+      border: 0,
+      background: '#424242',
+      marginRight: '-50%',
+      'border-radius': '20px',
+      transform: 'translate(-50%, -50%)',
+    },
+  };
 
 function Historico(){
     const [historico, setHistorico] = useState(new Array());
+    const [modalIsOpen, setIsOpen] = useState(false);
+    const [questoesModal, setQuestoesModal] = useState([]);
+
+    function openModal() {
+        setIsOpen(true);
+    }
+
+    function closeModal() {
+        setIsOpen(false);
+    }
 
     useEffect(() =>{
         var temp = JSON.parse(localStorage.getItem(configData.HISTORICO));
@@ -31,8 +56,37 @@ function Historico(){
         return retorno;
     }
 
+    function OpenModal(questoes){
+        setQuestoesModal(questoes);
+        openModal();
+    }
+
     return (
         <div className='container'>
+            <Modal
+              isOpen={modalIsOpen}
+              onRequestClose={closeModal}
+              style={customStyles}
+              contentLabel="Respostas"
+            >
+                <div className='contextModal'>
+                    <div className='bodymodal'>
+                        <h3>Respostas</h3>
+                        <h3>
+                            {
+                                questoesModal.map((questao, index) => {
+                                    return(
+                                        <>
+                                            {questao.questao} = {questao.resposta} {questao.correta ? '🎉' : '😫'}
+                                            {(index > 0) && index%10 == 0 ? <br/> : ' | '}
+                                        </>
+                                    )
+                                })
+                            }
+                        </h3>
+                    </div>
+                </div>
+            </Modal>
             <h1>Histórico</h1>
             <Table>
                 <thead>
@@ -61,6 +115,8 @@ function Historico(){
                             <h3>
                             Tipo
                             </h3>
+                        </th>
+                        <th>
                         </th>
                     </tr>
                 </thead>
@@ -93,6 +149,11 @@ function Historico(){
                                         <h4>
                                             {RetornaTipo(item.tipo)}
                                         </h4>
+                                    </td>
+                                    <td>
+                                        <button className='botao' onClick={() => OpenModal(item.questoes)}>
+                                            Respostas
+                                        </button>
                                     </td>
                                 </tr>
                             )

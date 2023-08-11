@@ -16,3 +16,13 @@
     background-color: rgb(37, 26, 166);
     color: #FFF;
   }
+
+.respostasQuestoes{
+    display: flex;
+    flex-direction: column;
+    margin: 32px;
+}
+
+.respostasQuestoes li{
+    margin: 16px;
+}

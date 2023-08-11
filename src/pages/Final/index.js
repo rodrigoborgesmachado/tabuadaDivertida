@@ -2,9 +2,19 @@ import './style.css'
 import {Link} from 'react-router-dom';
 import configData from "./../../Config.json";
 import { useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+
 
 function Final(){
     const{tipo} = useParams();
+    const[questoes , setQuestoes] = useState([]);
+
+    useEffect(() => {
+        setQuestoes(JSON.parse(localStorage.getItem(configData.QUESTOES)));
+        return() =>{
+
+        }
+    }, []);
 
     return(
         <div className='container'>
@@ -30,8 +40,25 @@ function Final(){
                     🔥 Quão rápido você pode ser? Descubra em Tabuada Divertida! 💥
                 </h3>
             }
-            <br/>
-            <br/>
+            <div className='respostasQuestoes'>
+                <h2>
+                    Respostas:
+                </h2>
+                <ul>
+                    {
+                        questoes.map(questao => {
+                            return(
+                                <li>
+                                    <h3>
+                                        {questao.questao} = {questao.resposta} {questao.correta ? '🎉' : '😫'}
+                                    </h3>
+                                </li>
+                            )
+                        })
+                    }
+                </ul>
+            </div>
+
             <Link to={`/jogo/` + tipo}>Jogar novamente</Link>
             <Link to={`/ranking`}>Ranking</Link>
             <Link to="/historico">Histórico</Link>
