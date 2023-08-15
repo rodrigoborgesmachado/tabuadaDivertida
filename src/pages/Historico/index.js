@@ -33,7 +33,6 @@ function Historico(){
 
     useEffect(() =>{
         var temp = JSON.parse(localStorage.getItem(configData.HISTORICO));
-        console.log(temp);
         setHistorico(temp);
     }, {});
 
@@ -124,7 +123,7 @@ function Historico(){
                     {
                     historico?.map((item, index) => {
                             return(
-                                <tr key={item.nome}>
+                                <tr key={index}>
                                     <td key={item.nome}>
                                         <h4>
                                             {item.nome}
@@ -151,9 +150,16 @@ function Historico(){
                                         </h4>
                                     </td>
                                     <td>
-                                        <button className='botao' onClick={() => OpenModal(item.questoes)}>
-                                            Respostas
-                                        </button>
+                                        {
+                                            item.questoes != null ?
+                                            <button className='botao' onClick={() => OpenModal(item.questoes)}>
+                                                Respostas
+                                            </button>
+                                            :
+                                            <h4>
+                                                Histórico não disponível
+                                            </h4>
+                                        }
                                     </td>
                                 </tr>
                             )
