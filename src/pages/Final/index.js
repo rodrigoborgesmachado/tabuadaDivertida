@@ -17,7 +17,7 @@ function Final(){
     }, []);
 
     return(
-        <div className='container'>
+        <div className='global-pageContainer-left'>
             <h2><b>🎉Parabéns {localStorage.getItem(configData.NOME_PARAM)}!!!🎉</b></h2>
             <br/>
             {
@@ -59,10 +59,12 @@ function Final(){
                 </ul>
             </div>
 
-            <Link to={`/jogo/` + tipo}>Jogar novamente</Link>
-            <Link to={`/ranking`}>Ranking</Link>
-            <Link to="/historico">Histórico</Link>
-            <Link to="/">Início</Link>
+            <div className='botoes'>
+                <Link className='global-button global-button--full-width' to={`/jogo/` + tipo}>Jogar novamente</Link>
+                <Link className='global-button global-button--full-width' to={`/ranking`}>Ranking</Link>
+                <Link className='global-button global-button--full-width' to="/historico">Histórico</Link>
+                <Link className='global-button global-button--full-width' to="/">Início</Link>
+            </div>
         </div>
     )
 }

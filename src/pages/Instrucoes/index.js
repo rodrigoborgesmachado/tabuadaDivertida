@@ -3,7 +3,7 @@ import {Link} from 'react-router-dom';
 
 function Instrucoes(){
     return(
-    <div className='container'>
+    <div className='global-pageContainer-left'>
         <h3>
         Prepare-se para uma aventura matemágica! 🎩✨<br/><br/>
 
@@ -15,7 +15,7 @@ function Instrucoes(){
 
         Vamos lá, mostre suas habilidades e deixe todos boquiabertos com seu conhecimento matemágico! 💥 <br/><br/>   
         </h3>    
-        <Link to="/">Home</Link>
+        <Link className='global-button global-button--full-width' to="/">Home</Link>
     </div>
     )
 }

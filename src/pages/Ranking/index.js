@@ -65,7 +65,7 @@ function Ranking(){
     }
 
     return(
-        <div className='container'>
+        <div className='global-pageContainer-left'>
             <h1>
                 Ranking
             </h1>
@@ -75,11 +75,13 @@ function Ranking(){
                 <br/>
                 <br/>
                 <div className='botoesRanking'>
-                    <button onClick={() => setType('M')}>Multiplicação</button>
-                    <button onClick={() => setType('D')}>Divisão</button>
-                    <button onClick={() => setType('A')}>Adição</button>
-                    <button onClick={() => setType('S')}>Subtração</button>
-                    <button onClick={() => setType('R')}>Aleatório</button>
+                    <button className='global-button global-button--full-width' onClick={() => setType('M')}>Multiplicação</button>
+                    <button className='global-button global-button--full-width' onClick={() => setType('D')}>Divisão</button>
+                    <button className='global-button global-button--full-width' onClick={() => setType('A')}>Adição</button>
+                </div>
+                <div className='botoesRanking'>
+                    <button className='global-button global-button--full-width' onClick={() => setType('S')}>Subtração</button>
+                    <button className='global-button global-button--full-width' onClick={() => setType('R')}>Aleatório</button>
                 </div>
                 <div className='rankingMultiplicacao'>
                     <h2>Ranking {retornaTextoTipo()}</h2>
@@ -146,9 +148,9 @@ function Ranking(){
                     }
                 </div>
             </div>
-            <div className='opcao'>
-                <Link to="/">Home</Link>
-                <Link to="/historico">Histórico</Link>
+            <div className='botoes'>
+                <Link className='global-button global-button--full-width' to="/">Home</Link>
+                <Link className='global-button global-button--full-width' to="/historico">Histórico</Link>
             </div>
         </div>
     )

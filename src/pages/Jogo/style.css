@@ -33,6 +33,7 @@
 
 .divJogo input{
     align-items: center;
-    width: 30%;
+    text-align: center;
+    width: 50%;
     font-size: 110px;
 }

@@ -265,7 +265,7 @@ function Jogo(){
     }
 
     return(
-        <div className='container'>
+        <div className='global-pageContainer-left'>
             <div className='tempo'>
                 <Tempo/>
             </div>

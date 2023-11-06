@@ -61,7 +61,7 @@ function Historico(){
     }
 
     return (
-        <div className='container'>
+        <div className='global-pageContainer-left'>
             <Modal
               isOpen={modalIsOpen}
               onRequestClose={closeModal}
@@ -152,7 +152,7 @@ function Historico(){
                                     <td>
                                         {
                                             item.questoes != null ?
-                                            <button className='botao' onClick={() => OpenModal(item.questoes)}>
+                                            <button className='global-button global-button--full-width' onClick={() => OpenModal(item.questoes)}>
                                                 Respostas
                                             </button>
                                             :

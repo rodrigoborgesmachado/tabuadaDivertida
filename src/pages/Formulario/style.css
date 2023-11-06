@@ -3,6 +3,8 @@
     flex-direction: column;
     justify-content: center;
     margin-top: 20px;
+    width: 70%;
+    align-self: center;
 }
 
 .formulario h3{
@@ -13,8 +15,4 @@
     width: 100%;
     border-radius: 5px;
     padding: 5px;
-}
-
-.botao{
-    background-color: #116feb;
 }

@@ -4,13 +4,13 @@ import {Link} from 'react-router-dom';
 function TipoJogo(){
 
     return(
-        <div className='container'>
-            <div className='opcoes'>
-                <Link to={`/jogo/M`} className='botao'>Multiplicação✖️</Link>
-                <Link to={`/jogo/A`} className='botao'>Adição➕</Link>
-                <Link to={`/jogo/S`} className='botao'>Subtração➖</Link>
-                <Link to={`/jogo/D`} className='botao'>Divisão➗</Link>
-                <Link to={`/jogo/R`} className='botao'>Aleatório🔀</Link>
+        <div className='global-pageContainer-left'>
+            <div className='botoes'>
+                <Link to={`/jogo/M`} className='global-button global-button--full-width'>Multiplicação✖️</Link>
+                <Link to={`/jogo/A`} className='global-button global-button--full-width'>Adição➕</Link>
+                <Link to={`/jogo/S`} className='global-button global-button--full-width'>Subtração➖</Link>
+                <Link to={`/jogo/D`} className='global-button global-button--full-width'>Divisão➗</Link>
+                <Link to={`/jogo/R`} className='global-button global-button--full-width'>Aleatório🔀</Link>
             </div>
         </div>
     )
