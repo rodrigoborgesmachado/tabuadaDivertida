@@ -8,10 +8,6 @@
     cursor: pointer;
 }
 
-.posicao{
-    background-color: #191970;
-}
-
 .container a:hover{
     background-color: rgb(37, 26, 166);
     color: #FFF;

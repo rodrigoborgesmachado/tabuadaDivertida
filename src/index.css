@@ -6,7 +6,7 @@
   --primary-color: #161623;
 
   /* Cor dos painéis */
-  --secundary-color: #4D5B7D;
+  --secundary-color: #663399;
     /* Cor dos painéis */
     --secundary-color-hover: #383838;
 
@@ -14,7 +14,7 @@
   --text-color-primary-light: #cdd7f7;
 
   /* Cores do botão principal */
-  --button-color-primary: #8A2BE2;
+  --button-color-primary: #663399;
   --button-color-primary-hover: #4B0082;
   --button-color-primary-wrong: #B00020;
   --button-color-primary-wrong-hover: #CF6679;
