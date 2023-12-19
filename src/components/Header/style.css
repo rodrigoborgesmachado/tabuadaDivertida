@@ -23,3 +23,7 @@
     color: #FFF;
     border-radius: 5px;
 }
+
+.opcoes-head a{
+    margin-right: 8px;
+}

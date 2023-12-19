@@ -127,48 +127,25 @@ function Jogo(){
 
             let respostaCerta = false;
 
-            if(tipo === 'M'){
+            if(contasCorrente.includes('x')){
                 if(resposta == parseInt(contasCorrente.split('x')[0]) * parseInt(contasCorrente.split('x')[1])){
                     respostaCerta = true;
                 }
             }
-            else if(tipo === 'D'){
-                if(resposta == parseInt(contasCorrente.split('/')[0]) / parseInt(contasCorrente.split('/')[1])){
-                    respostaCerta = true;
-                }
-            }
-            else if(tipo === 'S'){
-                if(resposta == parseInt(contasCorrente.split('-')[0]) - parseInt(contasCorrente.split('-')[1]) 
-                || resposta == parseInt(contasCorrente.split('-')[1]) - parseInt(contasCorrente.split('-')[0])){
-                    respostaCerta = true;
-                }
-            }
-            else if(tipo === 'A'){
+            else if(contasCorrente.includes('+')){
                 if(resposta == parseInt(contasCorrente.split('+')[0]) + parseInt(contasCorrente.split('+')[1])){
                     respostaCerta = true;
                 }
             }
-            else if(tipo == 'R'){
-                if(contasCorrente.includes('x')){
-                    if(resposta == parseInt(contasCorrente.split('x')[0]) * parseInt(contasCorrente.split('x')[1])){
-                        respostaCerta = true;
-                    }
+            else if(contasCorrente.includes('-')){
+                if(resposta == parseInt(contasCorrente.split('-')[0]) - parseInt(contasCorrente.split('-')[1]) || 
+                    resposta == parseInt(contasCorrente.split('-')[1]) - parseInt(contasCorrente.split('-')[0])){
+                    respostaCerta = true;
                 }
-                else if(contasCorrente.includes('+')){
-                    if(resposta == parseInt(contasCorrente.split('+')[0]) + parseInt(contasCorrente.split('+')[1])){
-                        respostaCerta = true;
-                    }
-                }
-                else if(contasCorrente.includes('-')){
-                    if(resposta == parseInt(contasCorrente.split('-')[0]) - parseInt(contasCorrente.split('-')[1]) || 
-                        resposta == parseInt(contasCorrente.split('-')[1]) - parseInt(contasCorrente.split('-')[0])){
-                        respostaCerta = true;
-                    }
-                }
-                else if(contasCorrente.includes('/')){
-                    if(resposta == parseInt(contasCorrente.split('/')[0]) / parseInt(contasCorrente.split('/')[1])){
-                        respostaCerta = true;
-                    }
+            }
+            else if(contasCorrente.includes('/')){
+                if(resposta == parseInt(contasCorrente.split('/')[0]) / parseInt(contasCorrente.split('/')[1])){
+                    respostaCerta = true;
                 }
             }
 
