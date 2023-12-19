@@ -15,7 +15,7 @@ function Instrucoes(){
 
         Vamos lá, mostre suas habilidades e deixe todos boquiabertos com seu conhecimento matemágico! 💥 <br/><br/>   
         </h3>    
-        <Link className='global-button global-button--full-width' to="/">Home</Link>
+        <Link className='global-button global-button--full-width' to="/">Voltar</Link>
     </div>
     )
 }

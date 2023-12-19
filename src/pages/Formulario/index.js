@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import configData from "./../../Config.json";
-import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import {toast} from 'react-toastify';
 import './style.css';
@@ -45,6 +44,7 @@ function Formulario(){
                 </div>
                 <div className='botoes'>
                     <button className='global-button global-button--full-width' onClick={() => {salvarDados()}}>Continuar▶️</button>
+                    <button className='global-button global-button--full-width' onClick={() => {navigate('/', {replace: true})}}>Voltar</button>
                 </div>
             </div>
         )
