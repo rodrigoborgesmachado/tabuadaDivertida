@@ -7,9 +7,6 @@ var apiUrl = window.location.href.includes("localhost") ? 'https://localhost:711
 
 const api = axios.create({
     baseURL: apiUrl,
-    headers: {
-        'Referer': 'https://www.tabuadadivertida.com/',
-    },
 })
 
 export default api;
