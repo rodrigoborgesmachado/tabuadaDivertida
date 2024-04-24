@@ -9,4 +9,13 @@ const api = axios.create({
     baseURL: apiUrl,
 })
 
+api.interceptors.request.use(config => {
+    // Modify headers before request is sent
+    config.headers['Referer'] = window.location.href;
+    return config;
+}, error => {
+    // Handle request error
+    return Promise.reject(error);
+});
+
 export default api;
