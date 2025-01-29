@@ -16,7 +16,6 @@ function Jogo(){
     const[contas2, setContas2] = useState([]);
     const[contasCorrente, setContasCorrente] = useState('');
     const[resposta, setResposta] = useState('');
-    const [width, setWidth] = useState(window.innerWidth);
     const navigate = useNavigate();
     const[loadding, setLoadding] = useState(false);
 
@@ -236,7 +235,7 @@ function Jogo(){
     if(loadding){
         return(
             <div className='loaddingDiv'>
-                <img src={require('../../assets/hug.gif')} alt="Loading..." />
+                <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
             </div>
         )
     }
@@ -245,12 +244,14 @@ function Jogo(){
         <div className='global-pageContainer-left'>
             <div className='tempo'>
                 <Tempo/>
-            </div>
-            <div className='tempo'>
-                <h1>🏋️ {contador-1} de {localStorage.getItem(configData.QUANTIDADE_PARAM) || 20}</h1>
-            </div>
-            <div className='tempo'>
-                <a onClick={() => window.location.reload(false)}>Restart</a>
+                <div>
+                    <div className='tempo'>
+                        <h1>🏋️ {contador-1} de {localStorage.getItem(configData.QUANTIDADE_PARAM) || 20}</h1>
+                    </div>
+                    <div className='info-completo'>
+                        <button className='button-base' onClick={() => window.location.reload(false)}>Restart</button>
+                    </div>
+                </div>
             </div>
             <div className='divJogo'>
                 <h3>

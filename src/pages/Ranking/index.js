@@ -16,35 +16,24 @@ function Ranking(){
     const[type, setType] = useState('M');
     const[loadding, setLoadding] = useState(true);
 
-    async function CarregaLista(){
-        await api.get(`ResultadosTabuadaDivertida/ranking`)
-        .then((response) => {
-            setLista(response.data.object);
-            setQuantidade(response.data.object.map(obj => obj.quantidade).filter((value, index, array) => array.indexOf(value) === index));
-            setQuantidadeTentativas(response.data.total);
-            setQuantidadeRanking(response.data.quantity);
-            setLoadding(false);
-        }).catch(() => {
-            navigate('/', {replace: true});
-            return;
-        });
-    }
-
+    
     useEffect(() => {
-        CarregaLista();
-
-        return () =>{
-
+        async function CarregaLista(){
+            await api.get(`ResultadosTabuadaDivertida/ranking`)
+            .then((response) => {
+                setLista(response.data.object);
+                setQuantidade(response.data.object.map(obj => obj.quantidade).filter((value, index, array) => array.indexOf(value) === index));
+                setQuantidadeTentativas(response.data.total);
+                setQuantidadeRanking(response.data.quantity);
+                setLoadding(false);
+            }).catch(() => {
+                navigate('/', {replace: true});
+                return;
+            });
         }
-    }, [navigate])
 
-    if(loadding){
-        return(
-            <div className='loaddingDiv'>
-                <img src={require('../../assets/hug.gif')} alt="Loading..." />
-            </div>
-        )
-    }
+        CarregaLista();
+    }, [lista, quantidade, quantidadeTetativas, quantidadeRanking, loadding, navigate])
 
     function retornaTextoTipo(){
         if(type === 'M'){
@@ -62,6 +51,14 @@ function Ranking(){
         else if(type === 'R'){
             return 'Aleatório';
         }
+    }
+
+    if(loadding){
+        return(
+            <div className='loaddingDiv'>
+                <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+            </div>
+        )
     }
 
     return(
@@ -89,7 +86,7 @@ function Ranking(){
                     {
                     quantidade.map((q) =>{
                         return(
-                            lista.filter((item) => item.tipo === type && item.quantidade == q).length == 0 ?
+                            lista.filter((item) => item.tipo === type && item.quantidade === q).length === 0 ?
                             <>
                             </>
                                 :
@@ -120,20 +117,20 @@ function Ranking(){
                                     </thead>
                                     <tbody>
                                     {
-                                    lista.filter((item) => item.tipo === type && item.quantidade == q).map((item, index) => {
+                                    lista.filter((item) => item.tipo === type && item.quantidade === q).map((item, index) => {
                                         return(
-                                            <tr key={index} className={localStorage.getItem(Config.NOME_PARAM) == item.nome ? 'posicao' : ''}>
+                                            <tr key={index} className={localStorage.getItem(Config.NOME_PARAM) === item.nome ? 'posicao' : ''}>
                                                 <td>
-                                                    {index == 0 ? <>🥇</> : <></>}
-                                                    {index == 1 ? <>🥈</> : <></>}
-                                                    {index == 2 ? <>🥉</> : <></>}
+                                                    {index === 0 ? <>🥇</> : <></>}
+                                                    {index === 1 ? <>🥈</> : <></>}
+                                                    {index === 2 ? <>🥉</> : <></>}
                                                     {index > 2 ? <>{index + 1}</> : <></>}
                                                 </td>
                                                 <td>
-                                                    {index == 0 ? <>🏆</> : <></>}{item.nome}
+                                                    {index === 0 ? <>🏆</> : <></>}{item.nome}
                                                 </td>
                                                 <td>
-                                                    {index == 0 ? <>🏆</> : <></>}{item.tempo}s
+                                                    {index === 0 ? <>🏆</> : <></>}{item.tempo}s
                                                 </td>
                                             </tr>
                                         );

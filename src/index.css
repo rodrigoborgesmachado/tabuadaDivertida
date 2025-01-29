@@ -1,72 +1,54 @@
 :root {
   /* Cor do background */
-  --background-color: #121212;
+  --background-color: #F8F9FA;
 
   /* Cor do header, footer e outros elementos principais */
-  --primary-color: #161623;
+  --primary-color: #1E1E2F;
 
   /* Cor dos painéis */
-  --secundary-color: #663399;
-    /* Cor dos painéis */
-    --secundary-color-hover: #383838;
+  --secundary-color: #E9ECEF;
 
   /* Cor do texto nos painéis */
-  --text-color-primary-light: #cdd7f7;
+  --text-color-primary-light: #E0E0E0;
 
   /* Cores do botão principal */
-  --button-color-primary: #663399;
-  --button-color-primary-hover: #4B0082;
-  --button-color-primary-wrong: #B00020;
-  --button-color-primary-wrong-hover: #CF6679;
+  --button-color-primary: #0056B3;
+  --button-color-primary-hover: #003D82;
+  --button-color-primary-wrong: #D32F2F;
+  --button-color-primary-wrong-hover: #B71C1C;
 
-  --button-color-primary-right: rgb(56, 142, 60);
-  --button-color-primary-right-hover: rgb(56, 142, 60, 0.9);
+  --button-color-primary-right: #388E3C;
+  --button-color-primary-right-hover: #2E7D32;
 
-
-
-  --text-color-primary: #C9D1D9;
-  
+  --text-color-primary: #212529;
   --text-color-secondary: #FFFFFF;
-  --text-color-accent: #2CDEBF;
-  --text-color-code: #426278;
-  --text-color-button: #FFFFFF;
   
-  --button-color-secondary: rgb(37, 26, 166);
-  --separator-color-primary: rgba(173, 179, 187, 0.48);;
-  --shadow-color-primary: rgba(0, 0, 0, .12);
-  --shadow-color-secondary: rgba(0, 0, 0, .12);
-  --separator-marker-color-primary: #006B59;
+  --button-color-secondary: #0056B3;
+  --separator-color-primary: rgba(108, 117, 125, 0.48);
 
-  --block-color: #FAFDFA;
-  --block-color-secundary: #FAFDFA;
+  --block-color: #FFFFFF;
+  --block-color-secundary: #E9ECEF;
 
-  --color-surface: #FAFDFA;
-  --color-surface-variant: #1F1F1F;
+  --color-surface: #FFFFFF;
+  --color-surface-variant: #343A40;
 
-  --loader-color: #8A2BE2;
-  --panel-border-color : #eaebeb;
+  --loader-color: #0056B3;
+  --panel-border-color: #CED4DA;
 
-  --modal-background-color:rgba(255, 255, 255, 0.25);
+  --modal-background-color: rgba(255, 255, 255, 0.95);
 
-  --footer-heigth:48px;
+  --footer-heigth: 48px;
 
+  /* Espaçamentos padrões */
+  --default-spacing: 8px;
+  --double-default-spacing: 16px;
+  --triple-default-spacing: 24px;
 
-/* Espaçamentos padrões */
---default-spacing:8px;
---double-default-spacing:calc(2 * var(--default-spacing));
---triple-default-spacing:calc(3 * var(--default-spacing));
+  --default-max-width: 1080px;
 
---default-max-width:1080px;
-
---default-border-radius:4px;
---default-border-radius-extra:16px;
-
-
-
-
+  --default-border-radius: 8px;
+  --default-border-radius-extra: 16px;
 }
-
-
 
 * {
   padding: 0;
@@ -121,8 +103,6 @@ th{
   font-weight: bold;
   background-color: var(--secundary-color);
 }
-
-
 
 .containerpage-type1 {
   display: flex;
@@ -364,11 +344,11 @@ footer a {
 
 .button-base {
   cursor: pointer;
-  background-color: var(--secundary-color);
+  background-color: var(--primary-color);
   padding: 8px 16px 8px 16px;
   text-decoration: none;
   border-radius: 4px;
-  color: var(--text-color-primary);
+  color: var(--text-color-secondary);
   border: none;
   transition: all 0.5s;
   box-shadow: var(--mdc-protected-button-container-elevation, 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12));
@@ -452,8 +432,6 @@ footer a {
 
 .loaddingDiv{
   width: 90%;
-  height: 100%;
-  min-height: 640px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -752,4 +730,311 @@ table{
   width: 100%;
   padding: 8px;
   border-radius: 10px;
+}
+
+.not-found{
+  width: 100%;
+  height: calc(100vh - 60px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.not-found h1{
+  font-size: 120px;
+}
+
+.not-found a{
+  text-decoration: none;
+  background-color: #116feb;
+  color: #FFF;
+  padding: 10px;
+  margin-top: 14px;
+}
+
+.container a{
+  text-decoration: none;
+  background-color: beige;
+  color: #000000;
+  padding: 10px;
+  margin-top: 14px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.container a:hover{
+  background-color: rgb(37, 26, 166);
+  color: #FFF;
+}
+
+.respostasQuestoes{
+  display: flex;
+  flex-direction: column;
+  margin: 32px;
+}
+
+.respostasQuestoes li{
+  margin: 16px;
+}
+
+.formulario{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-top: 20px;
+  width: 70%;
+  align-self: center;
+}
+
+.formulario h3{
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+
+.formulario input{
+  width: 100%;
+  border-radius: 5px;
+  padding: 5px;
+}
+
+.botoes button{
+  margin-top: 8px;
+}
+
+.table{
+  text-align: center;
+  width: 100%;
+}
+
+.contextModal{
+  display: flex;
+  flex-direction: column;    
+  background-color: #424242;
+  width: 100%;
+  color: #fff;
+  
+}
+
+.tituloModal{
+  display: flex;
+  justify-content: left;
+  border: 5px;
+}
+
+.bodymodal{
+  display: flex;
+  flex-direction: column;    
+  justify-content: left;
+  margin: 32px;
+  border: 5px;
+}
+
+.description{
+  width: 100%;
+}
+
+.botoes{
+margin-top: 50px;
+margin-bottom: 50px;
+align-self: center;
+width: 70%;
+}
+
+.botoes a{
+margin: 10px;
+}
+
+.container a{
+  text-decoration: none;
+  background-color: beige;
+  padding: 10px;
+  margin-top: 14px;
+}
+
+.container a:hover{
+  background-color: rgb(37, 26, 166);
+  color: #FFF;
+}
+
+.not-found a{
+  text-decoration: none;
+  background-color: #116feb;
+  color: #FFF;
+  padding: 10px;
+  margin-top: 14px;
+}
+
+.tempo{
+  display: flex;
+  flex-direction: row;
+  gap: 32px;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.info-completo{
+  display: flex;
+  flex-direction: column;
+  justify-content: right;
+}
+
+.info-tempo{
+  margin-top: 8px;
+}
+
+.info-tempo2{
+  margin-top: 16px;
+  display: flex;
+  justify-content: end;
+}
+
+.tempo a{
+  margin-top: 8px;
+  padding: 8px 16px;
+  background-color: var(--button-color-primary);
+  cursor: pointer;
+}
+
+.divJogo{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.divJogo h3{
+  font-size: 150px;
+}
+
+.divJogo input{
+  align-items: center;
+  text-align: center;
+  width: 50%;
+  font-size: 110px;
+}
+
+.rankingMultiplicacao{
+  width: 100%;
+}
+
+.divDescricao{
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-right: 10px;
+}
+.divDescricao h4{
+  width: 20%;
+  max-width: 20%;
+}
+
+.quantidade{
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  justify-content: space-around;
+  margin-top: 10px;
+  font-size: large;
+}
+
+hr{
+  width: 100%;
+  margin: 10px;
+  color: #FFF;
+  background-color: #FFF;   
+}
+
+.opcao{
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 20px;
+}
+
+.loaddingDiv{
+  width: 90%;
+  height: 100%;
+  min-height: 640px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rankingText{
+  width: 100%;
+}
+
+.tableRanking{
+  border: white;
+  border-bottom: dotted;
+  padding-bottom: 20px;
+}
+
+.tableRanking tr{
+  height: 35px;
+  width: 100%;
+}
+
+.botoesRanking{
+  width: 100%;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  display: flex;
+}
+
+.botoesRanking button{
+  margin: 4px;
+}
+
+.opcoes{
+  margin-top: 50px;
+  min-width: 25%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.lds-ring {
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+
+.lds-ring div {
+  box-sizing: border-box;
+  display: block;
+  position: absolute;
+  width: 64px;
+  height: 64px;
+  margin: 8px;
+  border: 8px solid var(--loader-color);
+  border-radius: 50%;
+  animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  border-color: var(--loader-color) transparent transparent transparent;
+}
+
+.lds-ring div:nth-child(1) {
+  animation-delay: -0.45s;
+}
+
+.lds-ring div:nth-child(2) {
+  animation-delay: -0.3s;
+}
+
+.lds-ring div:nth-child(3) {
+  animation-delay: -0.15s;
+}
+
+@keyframes lds-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
