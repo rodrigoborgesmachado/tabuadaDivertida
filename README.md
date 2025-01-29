@@ -1,6 +1,6 @@
 # Tabuada Divertida
 
-**Web site disponível em http://tabuadadivertida.sunsalesystem.com.br/**
+[![Website](https://img.shields.io/website-up-down-green-red/http/shields.io.svg?label=site&url=https://www.tabuadadivertida.com/)](https://www.tabuadadivertida.com/)
 
 ## Considerações Gerais 
 
