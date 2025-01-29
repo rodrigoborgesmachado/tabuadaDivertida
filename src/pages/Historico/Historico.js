@@ -1,6 +1,5 @@
-import './historico.css';
 import { useEffect, useState } from 'react';
-import configData from "./../../Config.json";
+import configData from "../../Config.json";
 import { Table } from 'react-bootstrap';
 import {Link} from 'react-router-dom';
 

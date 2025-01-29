@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
-import configData from "./../../Config.json";
+import configData from "../../Config.json";
 import { useNavigate } from 'react-router-dom';
 import {toast} from 'react-toastify';
-import './style.css';
 
 function Formulario(){
         const[nome, setNome] = useState(localStorage.getItem(configData.NOME_PARAM) || '');

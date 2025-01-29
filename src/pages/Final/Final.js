@@ -1,6 +1,5 @@
-import './style.css'
 import {Link} from 'react-router-dom';
-import configData from "./../../Config.json";
+import configData from "../../Config.json";
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 

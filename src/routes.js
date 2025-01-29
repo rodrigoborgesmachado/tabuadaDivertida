@@ -1,14 +1,14 @@
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
-import Home from './pages/Home';
-import Formulario from './pages/Formulario';
-import TipoJogo from './pages/TipoJogo';
-import Jogo from './pages/Jogo';
-import Final from './pages/Final';
-import Ranking from './pages/Ranking';
-import Instrucoes from './pages/Instrucoes';
-import Erro from './pages/Erro';
-import Historico from './pages/Historico';
-import Header from './components/Header';
+import Home from './pages/Home/Home';
+import Formulario from './pages/Formulario/Formulario';
+import TipoJogo from './pages/TipoJogo/TipoJogo';
+import Jogo from './pages/Jogo/Jogo';
+import Final from './pages/Final/Final';
+import Ranking from './pages/Ranking/Ranking';
+import Instrucoes from './pages/Instrucoes/Instrucoes';
+import Erro from './pages/Erro/Erro';
+import Historico from './pages/Historico/Historico';
+import Header from './components/Header/index';
 
 function RoutesApp(){
     return(

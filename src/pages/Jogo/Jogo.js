@@ -1,5 +1,4 @@
-import './style.css';
-import configData from "./../../Config.json";
+import configData from "../../Config.json";
 import Tempo from '../../components/Tempo';
 import api from '../../services/api';
 import {Link} from 'react-router-dom';
