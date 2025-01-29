@@ -689,7 +689,6 @@ footer a {
   display: flex;
   flex-direction: column;
   margin-top: 8px;
-  height: 100%;
   margin-bottom: 48px;
   padding: 20px 8px;
   color: var(--text-color-primary);
@@ -1037,4 +1036,28 @@ hr{
   100% {
     transform: rotate(360deg);
   }
+}
+
+.timerdiv{
+  font-size: 25px;
+}
+
+.center {
+  display: flex;
+  justify-content: center; /* Centraliza horizontalmente */
+  align-items: center; /* Centraliza verticalmente */
+  height: 90vh; /* Ocupa toda a altura da tela */
+  width: 100%; /* Garante que ocupa toda a largura */
+}
+
+.botoes-home{
+  display: flex;
+  flex-direction: column;
+  gap: 16px; /* Espaço entre os botões */
+  width: 100%;
+  max-width: 300px; /* Limita a largura dos botões */
+}
+
+.game{
+  margin-top: 2rem;
 }

@@ -61,90 +61,92 @@ function Historico(){
     }
 
     return (
-        <div className='global-pageContainer-left'>
-            <h1>Histórico</h1>
-            <Table>
-                <thead>
-                    <tr>
-                        <th>
-                            <h3>
-                            Nome
-                            </h3>
-                        </th>
-                        <th>
-                            <h3>
-                            Nº questões Tentadas
-                            </h3>
-                        </th>
-                        <th>
-                            <h3>
-                            Nº questões Acertadas
-                            </h3>
-                        </th>
-                        <th>
-                            <h3>
-                            Tempo
-                            </h3>
-                        </th>
-                        <th>
-                            <h3>
-                            Tipo
-                            </h3>
-                        </th>
-                        <th>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {
-                    historico?.map((item, index) => {
-                            return(
-                                <tr key={index}>
-                                    <td key={item.nome}>
-                                        <h4>
-                                            {item.nome}
-                                        </h4>
-                                    </td>
-                                    <td>
-                                        <h4>
-                                            {item.quantidadeQuestoes}
-                                        </h4>
-                                    </td>
-                                    <td>
-                                        <h4>
-                                            {item.quantidadeAcertos}
-                                        </h4>
-                                    </td>
-                                    <td>
-                                        <h4>
-                                            {item.tempo}
-                                        </h4>
-                                    </td>
-                                    <td>
-                                        <h4>
-                                            {RetornaTipo(item.tipo)}
-                                        </h4>
-                                    </td>
-                                    <td>
-                                        {
-                                            item.questoes != null ?
-                                            <button className='global-button global-button--full-width' onClick={() => OpenModal(item.questoes)}>
-                                                Respostas
-                                            </button>
-                                            :
+        <div className='center'>
+            <div className='global-pageContainer-left'>
+                <h1>Histórico</h1>
+                <Table>
+                    <thead>
+                        <tr>
+                            <th>
+                                <h3>
+                                Nome
+                                </h3>
+                            </th>
+                            <th>
+                                <h3>
+                                Nº questões Tentadas
+                                </h3>
+                            </th>
+                            <th>
+                                <h3>
+                                Nº questões Acertadas
+                                </h3>
+                            </th>
+                            <th>
+                                <h3>
+                                Tempo
+                                </h3>
+                            </th>
+                            <th>
+                                <h3>
+                                Tipo
+                                </h3>
+                            </th>
+                            <th>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {
+                        historico?.map((item, index) => {
+                                return(
+                                    <tr key={index}>
+                                        <td key={item.nome}>
                                             <h4>
-                                                Histórico não disponível
+                                                {item.nome}
                                             </h4>
-                                        }
-                                    </td>
-                                </tr>
-                            )
-                        })
-                    }
-                </tbody>
-            </Table>
-            <div className='botoes'>
-                <Link className='global-button global-button--full-width' to="/">Home</Link>
+                                        </td>
+                                        <td>
+                                            <h4>
+                                                {item.quantidadeQuestoes}
+                                            </h4>
+                                        </td>
+                                        <td>
+                                            <h4>
+                                                {item.quantidadeAcertos}
+                                            </h4>
+                                        </td>
+                                        <td>
+                                            <h4>
+                                                {item.tempo}
+                                            </h4>
+                                        </td>
+                                        <td>
+                                            <h4>
+                                                {RetornaTipo(item.tipo)}
+                                            </h4>
+                                        </td>
+                                        <td>
+                                            {
+                                                item.questoes != null ?
+                                                <button className='global-button global-button--full-width' onClick={() => OpenModal(item.questoes)}>
+                                                    Respostas
+                                                </button>
+                                                :
+                                                <h4>
+                                                    Histórico não disponível
+                                                </h4>
+                                            }
+                                        </td>
+                                    </tr>
+                                )
+                            })
+                        }
+                    </tbody>
+                </Table>
+                <div className='botoes'>
+                    <Link className='global-button global-button--full-width' to="/">Home</Link>
+                </div>
             </div>
         </div>
     )

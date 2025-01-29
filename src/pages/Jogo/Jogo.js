@@ -240,23 +240,25 @@ function Jogo(){
     }
 
     return(
-        <div className='global-pageContainer-left'>
-            <div className='tempo'>
-                <Tempo/>
-                <div>
-                    <div className='tempo'>
-                        <h1>🏋️ {contador-1} de {localStorage.getItem(configData.QUANTIDADE_PARAM) || 20}</h1>
-                    </div>
-                    <div className='info-completo'>
-                        <button className='button-base' onClick={() => window.location.reload(false)}>Restart</button>
+        <div className="game">
+            <div className='global-pageContainer-left'>
+                <div className='tempo'>
+                    <Tempo/>
+                    <div>
+                        <div className='tempo'>
+                            <h1>🏋️ {contador-1} de {localStorage.getItem(configData.QUANTIDADE_PARAM) || 20}</h1>
+                        </div>
+                        <div className='info-completo'>
+                            <button className='button-base' onClick={() => window.location.reload(false)}>Restart</button>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div className='divJogo'>
-                <h3>
-                    {contasCorrente}
-                </h3>
-                <input type="number" value={resposta} onChange={(e) => respondeu(e.target.value)} onKeyDown={handleKeyDown} autoFocus={true}/>
+                <div className='divJogo'>
+                    <h3>
+                        {contasCorrente}
+                    </h3>
+                    <input type="number" value={resposta} onChange={(e) => respondeu(e.target.value)} onKeyDown={handleKeyDown} autoFocus={true}/>
+                </div>
             </div>
         </div>
     )

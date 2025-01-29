@@ -30,20 +30,22 @@ function Formulario(){
         }
 
         return(
-            <div className='global-pageContainer-left'>
-                <div className='formulario'>
-                    <h3>
-                        Como você gostaria de ser chamado?👽
-                    </h3>
-                    <input type="text" id="name" value={nome} onChange={(e) => {setNome(e.target.value)}}/>
-                    <h3>
-                        Quantas questões?🚀
-                    </h3>
-                    <input type="text" value={quantidade} onChange={(e) => chageText(e.target.value)}/>
-                </div>
-                <div className='botoes'>
-                    <button className='global-button global-button--full-width' onClick={() => {salvarDados()}}>Continuar▶️</button>
-                    <button className='global-button global-button--full-width' onClick={() => {navigate('/', {replace: true})}}>Voltar</button>
+            <div className='center'>
+                <div className='global-pageContainer-left'>
+                    <div className='formulario'>
+                        <h3>
+                            Como você gostaria de ser chamado?👽
+                        </h3>
+                        <input type="text" id="name" value={nome} onChange={(e) => {setNome(e.target.value)}}/>
+                        <h3>
+                            Quantas questões?🚀
+                        </h3>
+                        <input type="text" value={quantidade} onChange={(e) => chageText(e.target.value)}/>
+                    </div>
+                    <div className='botoes'>
+                        <button className='global-button global-button--full-width' onClick={() => {salvarDados()}}>Continuar▶️</button>
+                        <button className='global-button global-button--full-width' onClick={() => {navigate('/', {replace: true})}}>Voltar</button>
+                    </div>
                 </div>
             </div>
         )
