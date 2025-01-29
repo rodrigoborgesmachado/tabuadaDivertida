@@ -32,7 +32,7 @@ function Ranking(){
         }
 
         CarregaLista();
-    }, [lista, quantidade, quantidadeTetativas, quantidadeRanking, loadding, navigate])
+    }, [navigate])
 
     function retornaTextoTipo(){
         if(type === 'M'){
