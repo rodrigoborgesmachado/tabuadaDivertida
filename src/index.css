@@ -770,10 +770,10 @@ table{
 .respostasQuestoes{
   display: flex;
   flex-direction: column;
-  margin: 32px;
+  margin: 16px;
 }
 
-.respostasQuestoes li{
+.respostasQuestoes h2{
   margin: 16px;
 }
 
@@ -1060,4 +1060,25 @@ hr{
 
 .game{
   margin-top: 2rem;
+}
+
+.resultados-lista{
+  margin: auto;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: var(--double-default-spacing);
+}
+
+.resultados-item{
+  background-color: var(--color-surface);
+  min-width: 10rem;
+  padding: var(--double-default-spacing);
+  border-radius: var(--default-border-radius);
+  box-shadow: 0 2px 5px var(--shadow-color-primary);
+  text-align: center;
+  font-weight: bold;
+  color: var(--text-color-primary);
 }

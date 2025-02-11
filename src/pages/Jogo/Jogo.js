@@ -234,7 +234,7 @@ function Jogo(){
     if(loadding){
         return(
             <div className='loaddingDiv'>
-                <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+                <div className="lds-ring"><div></div><div></div><div></div><div></div></div>
             </div>
         )
     }

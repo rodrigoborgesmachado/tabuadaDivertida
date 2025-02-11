@@ -43,19 +43,19 @@ function Final(){
                 <h2>
                     Respostas:
                 </h2>
-                <ul>
+                <div className='resultados-lista'>
                     {
-                        questoes.map(questao => {
+                        questoes.map((questao, index) => {
                             return(
-                                <li>
+                                <div className='resultados-item' key={index}>
                                     <h3>
                                         {questao.questao} = {questao.resposta} {questao.correta ? '🎉' : '😫'}
                                     </h3>
-                                </li>
+                                </div>
                             )
                         })
                     }
-                </ul>
+                </div>
             </div>
 
             <div className='botoes'>
