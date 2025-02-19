@@ -61,10 +61,10 @@ function Historico(){
     }
 
     return (
-        <div className='center'>
-            <div className='global-pageContainer-left'>
+        <div>
+            <div className='pageContainer'>
                 <h1>Histórico</h1>
-                <Table>
+                <table className='admin-table'>
                     <thead>
                         <tr>
                             <th>
@@ -101,27 +101,27 @@ function Historico(){
                         historico?.map((item, index) => {
                                 return(
                                     <tr key={index}>
-                                        <td key={item.nome}>
+                                        <td key={item.nome} data-label='Nome'>
                                             <h4>
                                                 {item.nome}
                                             </h4>
                                         </td>
-                                        <td>
+                                        <td data-label='Quantidade'>
                                             <h4>
                                                 {item.quantidadeQuestoes}
                                             </h4>
                                         </td>
-                                        <td>
+                                        <td data-label='Acertos'>
                                             <h4>
                                                 {item.quantidadeAcertos}
                                             </h4>
                                         </td>
-                                        <td>
+                                        <td data-label='Tempo'>
                                             <h4>
                                                 {item.tempo}
                                             </h4>
                                         </td>
-                                        <td>
+                                        <td data-label='Tipo'>
                                             <h4>
                                                 {RetornaTipo(item.tipo)}
                                             </h4>
@@ -143,7 +143,7 @@ function Historico(){
                             })
                         }
                     </tbody>
-                </Table>
+                </table>
                 <div className='botoes'>
                     <Link className='global-button global-button--full-width' to="/">Home</Link>
                 </div>

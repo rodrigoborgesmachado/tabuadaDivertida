@@ -696,6 +696,17 @@ footer a {
   width: 100%;
 }
 
+.pageContainer{
+  display: flex;
+  flex-direction: column;
+  margin-top: 8px;
+  margin-bottom: 48px;
+  padding: 20px 8px;
+  color: var(--text-color-primary);
+  width: 100%;
+  min-width: 20rem;
+}
+
 .global-extraBottom{
   margin-bottom: 80px;
 }
@@ -1081,4 +1092,97 @@ hr{
   text-align: center;
   font-weight: bold;
   color: var(--text-color-primary);
+}
+
+.admin-table {
+  width: 100%;
+  min-width: 20rem;
+  border-collapse: collapse;
+}
+
+.admin-table th, .admin-table td {
+  padding: 0.75rem;
+  text-align: center;
+  border-bottom: 1px solid #ddd;
+}
+
+.admin-table th {
+  font-weight: bold;
+}
+
+.admin-table .action-icons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+@media (max-width: 1000px) {
+  .sidebar-toggle-btn {
+    display: block;
+  }
+  
+  .admin-options-top {
+    display: block; /* Show only on screens 768px wide or smaller */
+    position: absolute;
+    top: 10px; /* Adjust position as needed */
+    left: 10px;
+    z-index: 1000; /* Ensure it appears above other elements */
+  }
+
+  .admin-content {
+    display: none; /* Hide sidebar by default on mobile */
+  }
+
+  .admin-content.visible {
+    display: block; /* Show sidebar when visible */
+  }
+
+  /* Make main content full width on mobile */
+  .admin-main {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .admin-main > main {
+      flex-grow: 1; /* Take up the remaining space */
+      padding: 8px;
+  }
+
+  .container-admin-page {
+      margin: 0.5rem;
+      padding: 0.5rem;
+  }
+
+  .admin-table thead {
+      display: none; /* Hide table headers */
+  }
+
+  .admin-table tbody {
+      display: flex;
+      flex-direction: column;
+      gap: var(--double-default-spacing);
+  }
+
+  .admin-table tr {
+      display: flex;
+      flex-direction: column;
+      color: var(--text-color-primary);
+      background: var(--color-surface);
+      padding: var(--default-spacing);
+      border-radius: var(--default-border-radius);
+      box-shadow: 0 2px 5px var(--shadow-color-primary);
+  }
+
+  .admin-table td {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      width: 100%;
+      padding: 8px 0;
+  }
+
+  .admin-table td::before {
+      content: attr(data-label); /* Show column name as a label */
+      font-weight: bold;
+      color: var(--text-color-primary);
+  }
 }
