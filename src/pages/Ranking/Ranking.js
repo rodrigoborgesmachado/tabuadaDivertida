@@ -14,7 +14,7 @@ function Ranking(){
     const[quantidadeRanking, setQuantidadeRanking] = useState([]);
     const[type, setType] = useState('M');
     const[loadding, setLoadding] = useState(true);
-
+    const [filtroNome, setFiltroNome] = useState('');
     
     useEffect(() => {
         async function CarregaLista(){
@@ -79,13 +79,28 @@ function Ranking(){
                     <button className='global-button global-button--full-width' onClick={() => setType('S')}>Subtração</button>
                     <button className='global-button global-button--full-width' onClick={() => setType('R')}>Aleatório</button>
                 </div>
+                <h2>Filtro</h2>
+                <div className='global-mt'>
+                    <input
+                        type="text"
+                        className="global-input"
+                        placeholder="Filtrar por nome..."
+                        value={filtroNome}
+                        onChange={(e) => setFiltroNome(e.target.value)}
+                    />
+                </div>
+                <br />
                 <div className='rankingMultiplicacao'>
                     <h2>Ranking {retornaTextoTipo()}</h2>
                     <br/>
                     {
                     quantidade.map((q) =>{
                         return(
-                            lista.filter((item) => item.tipo === type && item.quantidade === q).length === 0 ?
+                            lista.filter(item =>
+                                item.tipo === type &&
+                                item.quantidade === q &&
+                                item.nome.toLowerCase().includes(filtroNome.toLowerCase())
+                            ).length === 0 ?
                             <>
                             </>
                                 :
@@ -118,7 +133,11 @@ function Ranking(){
                                     {
                                     lista.filter((item) => item.tipo === type && item.quantidade === q).map((item, index) => {
                                         return(
-                                            <tr key={index} className={localStorage.getItem(Config.NOME_PARAM) === item.nome ? 'posicao' : ''}>
+                                            <tr
+                                                key={index}
+                                                className={localStorage.getItem(Config.NOME_PARAM) === item.nome ? 'posicao' : ''}
+                                                style={{ display: filtroNome && !item.nome.toLowerCase().includes(filtroNome.toLowerCase()) ? 'none' : 'table-row' }}
+                                            >
                                                 <td>
                                                     {index === 0 ? <>🥇</> : <></>}
                                                     {index === 1 ? <>🥈</> : <></>}
