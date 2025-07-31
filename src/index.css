@@ -883,6 +883,15 @@ margin: 10px;
   justify-content: space-between;
 }
 
+.info-game{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 32px;
+  width: 100%;
+  justify-content: space-between;
+}
+
 .info-completo{
   display: flex;
   flex-direction: column;
@@ -906,14 +915,6 @@ margin: 10px;
   cursor: pointer;
 }
 
-@media (max-width: 600px){
-  .tempo{
-    flex-direction: column;
-    gap: 16px;
-    align-items: flex-start;
-  }
-}
-
 .divJogo{
   display: flex;
   flex-direction: column;
@@ -923,16 +924,14 @@ margin: 10px;
 }
 
 .divJogo h3{
-  font-size: clamp(2rem, 15vw, 8rem);
-  margin-bottom: 1rem;
+  font-size: clamp(3rem, 15vw, 9rem);
 }
 
 .divJogo input{
-  align-items: center;
   text-align: center;
   width: 100%;
-  max-width: 200px;
-  font-size: clamp(2rem, 12vw, 5rem);
+  max-width: 20rem;
+  font-size: clamp(2rem, 10vw, 6rem);
 }
 
 .rankingMultiplicacao{
@@ -1082,6 +1081,15 @@ hr{
 
 .game{
   margin-top: 2rem;
+}
+
+.game-header{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--double-default-spacing);
+  margin-bottom: var(--double-default-spacing);
 }
 
 .resultados-lista{
