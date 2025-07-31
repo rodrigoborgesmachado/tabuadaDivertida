@@ -26,7 +26,7 @@ function Ranking(){
                 setQuantidade(qs);
                 const openObj: Record<number, boolean> = {};
                 qs.forEach((q: number) => {
-                    openObj[q] = true;
+                    openObj[q] = false;
                 });
                 setOpenQuantidades(openObj);
                 setQuantidadeTentativas(response.data.total);
@@ -111,13 +111,18 @@ function Ranking(){
                             <>
                             </>
                                 :
-                            <div key={q}>
+                            <div key={q} className='item-ranking-table'>
                                 <div
                                     className='quantidade'
                                     onClick={() => setOpenQuantidades(prev => ({...prev, [q]: !prev[q]}))}
                                     style={{cursor: 'pointer'}}
                                 >
-                                    Quantidade: {q} {openQuantidades[q] ? '▼' : '►'}
+                                    <h3>
+                                        {q} Questões
+                                    </h3>
+                                    <h3>
+                                        {openQuantidades[q] ? '▼' : '►'}
+                                    </h3>
                                 </div>
                                 {openQuantidades[q] && (
                                 <>
