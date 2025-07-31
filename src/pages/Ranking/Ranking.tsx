@@ -10,6 +10,7 @@ function Ranking(){
 
     const[lista, setLista] = useState([]);
     const[quantidade, setQuantidade] = useState([]);
+    const[openQuantidades, setOpenQuantidades] = useState<Record<number, boolean>>({});
     const[quantidadeTetativas, setQuantidadeTentativas] = useState([]);
     const[quantidadeRanking, setQuantidadeRanking] = useState([]);
     const[type, setType] = useState('M');
@@ -21,7 +22,13 @@ function Ranking(){
             await api.get(`ResultadosTabuadaDivertida/ranking`)
             .then((response) => {
                 setLista(response.data.object);
-                setQuantidade(response.data.object.map(obj => obj.quantidade).filter((value, index, array) => array.indexOf(value) === index));
+                const qs = response.data.object.map(obj => obj.quantidade).filter((value, index, array) => array.indexOf(value) === index);
+                setQuantidade(qs);
+                const openObj: Record<number, boolean> = {};
+                qs.forEach((q: number) => {
+                    openObj[q] = true;
+                });
+                setOpenQuantidades(openObj);
                 setQuantidadeTentativas(response.data.total);
                 setQuantidadeRanking(response.data.quantity);
                 setLoadding(false);
@@ -105,9 +112,15 @@ function Ranking(){
                             </>
                                 :
                             <div key={q}>
-                                <div className='quantidade'>
-                                    Quantidade: {q}
+                                <div
+                                    className='quantidade'
+                                    onClick={() => setOpenQuantidades(prev => ({...prev, [q]: !prev[q]}))}
+                                    style={{cursor: 'pointer'}}
+                                >
+                                    Quantidade: {q} {openQuantidades[q] ? '▼' : '►'}
                                 </div>
+                                {openQuantidades[q] && (
+                                <>
                                 <br/>
                                 <Table className='tableRanking'>
                                     <thead>
@@ -165,6 +178,8 @@ function Ranking(){
                                     </tbody>
                                 </Table>
                                 <br/>
+                                </>
+                                )}
                             </div>
                         )
                     })
