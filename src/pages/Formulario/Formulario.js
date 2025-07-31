@@ -24,7 +24,7 @@ function Formulario(){
             else if(quantidade < 5){
                 toast.warn('Quantidade precisa ser maior ou igual a 5.');
             }
-            else if(quantidade < 5){
+            else if(quantidade > 100){
                 toast.warn('Quantidade precisa ser menor ou igual a 100.');
             }
         }

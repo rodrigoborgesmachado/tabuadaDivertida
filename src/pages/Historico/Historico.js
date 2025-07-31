@@ -11,7 +11,7 @@ function Historico(){
     useEffect(() =>{
         var temp = JSON.parse(localStorage.getItem(configData.HISTORICO));
         setHistorico(temp);
-    }, {});
+    }, []);
 
     function RetornaTipo(tipo){
         var retorno = 'Multiplicação';
