@@ -8,7 +8,7 @@ import {toast} from 'react-toastify';
 
 function Jogo(){
     const{tipo} = useParams();
-    const[contador, setContador] = useState(-1);
+    const[contador, setContador] = useState(0);
     const[respostasIncorretas, setRespostasIncorretas] = useState(1);
     const[respostasCorretas, setRespostasCorretas] = useState(1);
     const[contas1, setContas1] = useState([]);
@@ -185,7 +185,7 @@ function Jogo(){
             if(contador === parseInt(localStorage.getItem(configData.QUANTIDADE_PARAM) || 20)+1){
                 localStorage.setItem(configData.QUANTIDADE_ACERTOS, respostasCorretas);
                 SetHistorico();
-                Finaliza();
+                Finaliza(novaPontuacao);
             }else{
                 setContasCorrente(MontaConta());
             }
@@ -214,17 +214,17 @@ function Jogo(){
         localStorage.setItem(configData.HISTORICO, JSON.stringify(historico));
     }
 
-    async function Finaliza(){
+    async function Finaliza(novaPontuacao){
         var data = {
             nome: localStorage.getItem(configData.NOME_PARAM),
             numeroAcertos: respostasCorretas,
             numeroQuestoes: localStorage.getItem(configData.QUANTIDADE_PARAM) || 20,
             tipo: tipo,
             tempo: localStorage.getItem(configData.TEMPO_PARAM),
-            pontuacao: pontuacao
+            pontuacao: novaPontuacao
         };
 
-        localStorage.setItem(configData.PONTUACAO, pontuacao);
+        localStorage.setItem(configData.PONTUACAO, novaPontuacao);
         setLoadding(true);
         await api.post(`/ResultadosTabuadaDivertida`, data)
         .then((response) => {
