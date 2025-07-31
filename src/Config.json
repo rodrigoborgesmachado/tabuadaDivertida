@@ -5,5 +5,7 @@
     "TEMPO_PARAM":"tempo",
     "HISTORICO":"historico",
     "QUESTOES":"questoes",
-    "TIPO": "tipo"
+    "TIPO": "tipo",
+    "PONTUACAO": "pontuacao",
+    "RECORDE": "recorde"
 }

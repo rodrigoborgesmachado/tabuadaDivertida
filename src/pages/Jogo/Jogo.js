@@ -17,9 +17,12 @@ function Jogo(){
     const[resposta, setResposta] = useState('');
     const navigate = useNavigate();
     const[loadding, setLoadding] = useState(false);
+    const[pontuacao, setPontuacao] = useState(0);
+    const[recorde, setRecorde] = useState(parseInt(localStorage.getItem(configData.RECORDE) || 0));
 
     useEffect(() => {
         localStorage.setItem(configData.QUESTOES, JSON.stringify([]));
+        localStorage.setItem(configData.PONTUACAO, 0);
         setContas1(LoadContas(parseInt(localStorage.getItem(configData.QUANTIDADE_PARAM) || 20)));
         setContas2(LoadContas(parseInt(localStorage.getItem(configData.QUANTIDADE_PARAM) || 20)));
         return() =>{
@@ -155,14 +158,28 @@ function Jogo(){
 
             localStorage.setItem(configData.QUESTOES, JSON.stringify(questoes));
 
+            let novaPontuacao = pontuacao;
+
             if(respostaCerta){
                 toast.success('Correto ✅');
                 setRespostasCorretas(respostasCorretas+1);
+                novaPontuacao += 10;
             }
             else{
                 toast.error('Incorreto 💥');
                 setRespostasIncorretas(respostasIncorretas+1);
+                if(novaPontuacao >= 5){
+                    novaPontuacao -= 5;
+                }
             }
+
+            if(novaPontuacao > recorde){
+                setRecorde(novaPontuacao);
+                localStorage.setItem(configData.RECORDE, novaPontuacao);
+            }
+
+            setPontuacao(novaPontuacao);
+            localStorage.setItem(configData.PONTUACAO, novaPontuacao);
 
             setResposta('');
             if(contador + 1 === parseInt(localStorage.getItem(configData.QUANTIDADE_PARAM) || 20)+2){
@@ -203,9 +220,11 @@ function Jogo(){
             numeroAcertos: respostasCorretas,
             numeroQuestoes: localStorage.getItem(configData.QUANTIDADE_PARAM) || 20,
             tipo: tipo,
-            tempo: localStorage.getItem(configData.TEMPO_PARAM)
+            tempo: localStorage.getItem(configData.TEMPO_PARAM),
+            pontuacao: pontuacao
         };
 
+        localStorage.setItem(configData.PONTUACAO, pontuacao);
         setLoadding(true);
         await api.post(`/ResultadosTabuadaDivertida`, data)
         .then((response) => {
@@ -247,6 +266,7 @@ function Jogo(){
                     <div>
                         <div className='tempo'>
                             <h1>🏋️ {contador-1} de {localStorage.getItem(configData.QUANTIDADE_PARAM) || 20}</h1>
+                            <h2>🎯 Pontuação: {pontuacao} | Recorde: {recorde}</h2>
                         </div>
                         <div className='info-completo'>
                             <button className='button-base' onClick={() => window.location.reload(false)}>Restart</button>
