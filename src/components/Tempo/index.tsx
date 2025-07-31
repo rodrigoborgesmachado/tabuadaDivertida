@@ -8,12 +8,12 @@ function Tempo(){
 
     useEffect(() =>
     {
-        let intervalId;
+        let intervalId: NodeJS.Timeout;
 
         if(start){
             intervalId = setInterval(() => {
                 setTempo(tempo+1);
-                localStorage.setItem(configData.TEMPO_PARAM, tempo);
+                localStorage.setItem(configData.TEMPO_PARAM, tempo.toString());
             }, 1000);
         }
 

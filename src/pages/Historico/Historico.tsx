@@ -5,7 +5,7 @@ import {Link} from 'react-router-dom';
 
 function Historico(){
     const [historico, setHistorico] = useState(new Array());
-    const [questoesModal, setQuestoesModal] = useState();
+    const [questoesModal, setQuestoesModal] = useState<any[]>([]);
     const [detail, setDetail] = useState(false);
 
     useEffect(() =>{

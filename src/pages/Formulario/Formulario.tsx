@@ -18,7 +18,7 @@ function Formulario(){
         function salvarDados(){
             if(quantidade >= 5 && quantidade <= 100){
                 localStorage.setItem(configData.NOME_PARAM, nome);
-                localStorage.setItem(configData.QUANTIDADE_PARAM, quantidade);
+                localStorage.setItem(configData.QUANTIDADE_PARAM, quantidade.toString());
                 navigate('/selecionarjogo', {replace: true});
             }
             else if(quantidade < 5){
