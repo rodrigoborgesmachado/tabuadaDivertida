@@ -16,6 +16,11 @@
     "react-toastify": "^9.0.7",
     "web-vitals": "^2.1.4"
   },
+  "devDependencies": {
+    "typescript": "^5.2.2",
+    "@types/react": "^18.2.24",
+    "@types/react-dom": "^18.2.9"
+  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build && cp routes.json src/robots.txt src/sitemap.xml build/",

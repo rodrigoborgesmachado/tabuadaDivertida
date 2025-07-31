@@ -18,13 +18,13 @@ function Jogo(){
     const navigate = useNavigate();
     const[loadding, setLoadding] = useState(false);
     const[pontuacao, setPontuacao] = useState(0);
-    const[recorde, setRecorde] = useState(parseInt(localStorage.getItem(configData.RECORDE) || 0));
+    const[recorde, setRecorde] = useState(parseInt(localStorage.getItem(configData.RECORDE) || '0'));
 
     useEffect(() => {
         localStorage.setItem(configData.QUESTOES, JSON.stringify([]));
-        localStorage.setItem(configData.PONTUACAO, 0);
-        setContas1(LoadContas(parseInt(localStorage.getItem(configData.QUANTIDADE_PARAM) || 20)));
-        setContas2(LoadContas(parseInt(localStorage.getItem(configData.QUANTIDADE_PARAM) || 20)));
+        localStorage.setItem(configData.PONTUACAO, '0');
+        setContas1(LoadContas(parseInt(localStorage.getItem(configData.QUANTIDADE_PARAM) || '20')));
+        setContas2(LoadContas(parseInt(localStorage.getItem(configData.QUANTIDADE_PARAM) || '20')));
         return() =>{
 
         }
@@ -129,23 +129,23 @@ function Jogo(){
             let respostaCerta = false;
 
             if(contasCorrente.includes('x')){
-                if(resposta == parseInt(contasCorrente.split('x')[0]) * parseInt(contasCorrente.split('x')[1])){
+                if(parseInt(resposta) == parseInt(contasCorrente.split('x')[0]) * parseInt(contasCorrente.split('x')[1])){
                     respostaCerta = true;
                 }
             }
             else if(contasCorrente.includes('+')){
-                if(resposta == parseInt(contasCorrente.split('+')[0]) + parseInt(contasCorrente.split('+')[1])){
+                if(parseInt(resposta) == parseInt(contasCorrente.split('+')[0]) + parseInt(contasCorrente.split('+')[1])){
                     respostaCerta = true;
                 }
             }
             else if(contasCorrente.includes('-')){
-                if(resposta == parseInt(contasCorrente.split('-')[0]) - parseInt(contasCorrente.split('-')[1]) || 
-                    resposta == parseInt(contasCorrente.split('-')[1]) - parseInt(contasCorrente.split('-')[0])){
+                if(parseInt(resposta) == parseInt(contasCorrente.split('-')[0]) - parseInt(contasCorrente.split('-')[1]) ||
+                    parseInt(resposta) == parseInt(contasCorrente.split('-')[1]) - parseInt(contasCorrente.split('-')[0])){
                     respostaCerta = true;
                 }
             }
             else if(contasCorrente.includes('/')){
-                if(resposta == parseInt(contasCorrente.split('/')[0]) / parseInt(contasCorrente.split('/')[1])){
+                if(parseInt(resposta) == parseInt(contasCorrente.split('/')[0]) / parseInt(contasCorrente.split('/')[1])){
                     respostaCerta = true;
                 }
             }
@@ -175,15 +175,15 @@ function Jogo(){
 
             if(novaPontuacao > recorde){
                 setRecorde(novaPontuacao);
-                localStorage.setItem(configData.RECORDE, novaPontuacao);
+                localStorage.setItem(configData.RECORDE, String(novaPontuacao));
             }
 
             setPontuacao(novaPontuacao);
-            localStorage.setItem(configData.PONTUACAO, novaPontuacao);
+            localStorage.setItem(configData.PONTUACAO, String(novaPontuacao));
 
             setResposta('');
-            if(contador === parseInt(localStorage.getItem(configData.QUANTIDADE_PARAM) || 20)+1){
-                localStorage.setItem(configData.QUANTIDADE_ACERTOS, respostasCorretas);
+            if(contador === parseInt(localStorage.getItem(configData.QUANTIDADE_PARAM) || '20')+1){
+                localStorage.setItem(configData.QUANTIDADE_ACERTOS, String(respostasCorretas));
                 SetHistorico();
                 Finaliza(novaPontuacao);
             }else{
@@ -224,7 +224,7 @@ function Jogo(){
             pontuacao: novaPontuacao
         };
 
-        localStorage.setItem(configData.PONTUACAO, novaPontuacao);
+        localStorage.setItem(configData.PONTUACAO, String(novaPontuacao));
         setLoadding(true);
         await api.post(`/ResultadosTabuadaDivertida`, data)
         .then((response) => {
@@ -268,7 +268,7 @@ function Jogo(){
                         </div>
                         <div className='info-game'>
                             <Tempo/>
-                            <button className='button-base' onClick={() => window.location.reload(false)}>Restart</button>
+                            <button className='button-base' onClick={() => window.location.reload()}>Restart</button>
                         </div>
                     </div>
                     <div className='divJogo'>
