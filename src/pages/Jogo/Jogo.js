@@ -258,12 +258,11 @@ function Jogo(){
         )
     }
 
-    return(
-        <div className="game">
-            <div className='global-pageContainer-left'>
-                <div className='tempo'>
-                    <Tempo/>
-                    <div>
+        return(
+            <div className="game">
+                <div className='global-pageContainer-left'>
+                    <div className='game-header'>
+                        <Tempo/>
                         <div className='tempo'>
                             <h1>🏋️ {contador-1} de {localStorage.getItem(configData.QUANTIDADE_PARAM) || 20}</h1>
                             <h2>🎯 Pontuação: {pontuacao} | Recorde: {recorde}</h2>
@@ -272,16 +271,21 @@ function Jogo(){
                             <button className='button-base' onClick={() => window.location.reload(false)}>Restart</button>
                         </div>
                     </div>
-                </div>
-                <div className='divJogo'>
-                    <h3>
-                        {contasCorrente}
-                    </h3>
-                    <input type="number" value={resposta} onChange={(e) => respondeu(e.target.value)} onKeyDown={handleKeyDown} autoFocus={true}/>
+                    <div className='divJogo'>
+                        <h3>
+                            {contasCorrente}
+                        </h3>
+                        <input
+                            type="number"
+                            value={resposta}
+                            onChange={(e) => respondeu(e.target.value)}
+                            onKeyDown={handleKeyDown}
+                            autoFocus
+                        />
+                    </div>
                 </div>
             </div>
-        </div>
-    )
-}
+        )
+    }
 
 export default Jogo;
