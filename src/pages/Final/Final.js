@@ -25,6 +25,7 @@ function Final(){
                     Você é um mestre da tabuada! 🧠💪<br/><br/>
                     ✅Você acertou {localStorage.getItem(configData.QUANTIDADE_ACERTOS)} de {localStorage.getItem(configData.QUANTIDADE_PARAM)} em tempo recorde! ⏱️⚡️<br/>
                     Você levou apenas {localStorage.getItem(configData.TEMPO_PARAM)} segundos! ⏱️<br/><br/>
+                    Pontuação final: {localStorage.getItem(configData.PONTUACAO)} | Recorde: {localStorage.getItem(configData.RECORDE)}<br/><br/>
                     Compartilhe sua conquista com seus amigos e desafie-os a superar seu desempenho!<br/><br/>
 
                     🔥 Quão rápido você pode ser? Descubra em Tabuada Divertida! 💥
@@ -34,6 +35,7 @@ function Final(){
                     Não foi dessa vez, você ficou fora do ranking!!! 🧠💪<br/><br/>
                     ✅Você acertou {localStorage.getItem(configData.QUANTIDADE_ACERTOS)} de {localStorage.getItem(configData.QUANTIDADE_PARAM)}! ⏱️⚡️<br/>
                     Você levou apenas {localStorage.getItem(configData.TEMPO_PARAM)} segundos! ⏱️<br/><br/>
+                    Pontuação final: {localStorage.getItem(configData.PONTUACAO)} | Recorde: {localStorage.getItem(configData.RECORDE)}<br/><br/>
                     Compartilhe sua conquista com seus amigos e desafie-os a superar seu desempenho!<br/><br/>
 
                     🔥 Quão rápido você pode ser? Descubra em Tabuada Divertida! 💥

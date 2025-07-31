@@ -127,6 +127,11 @@ function Ranking(){
                                                     Tempo
                                                 </h4>
                                             </th>
+                                            <th>
+                                                <h4>
+                                                    Pontuação
+                                                </h4>
+                                            </th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -149,6 +154,9 @@ function Ranking(){
                                                 </td>
                                                 <td>
                                                     {index === 0 ? <>🏆</> : <></>}{item.tempo}s
+                                                </td>
+                                                <td>
+                                                    {item.pontuacao}
                                                 </td>
                                             </tr>
                                         );
