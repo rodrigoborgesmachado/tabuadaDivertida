@@ -11,7 +11,7 @@ function TipoJogo(){
                     <Link to={`/jogo/S`} className='global-button global-button--full-width'>Subtração➖</Link>
                     <Link to={`/jogo/D`} className='global-button global-button--full-width'>Divisão➗</Link>
                     <Link to={`/jogo/R`} className='global-button global-button--full-width'>Aleatório🔀</Link>
-                    <Link to={`/formulario`} className='global-button global-button--full-width'>Voltar</Link>
+                    <Link to={`/formulario`} className='global-button global-button--full-width global-button--back'>Voltar</Link>
                 </div>
             </div>
         </div>

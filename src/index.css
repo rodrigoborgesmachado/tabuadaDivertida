@@ -20,6 +20,10 @@
   --button-color-primary-right: #388E3C;
   --button-color-primary-right-hover: #2E7D32;
 
+  /* Cores do botão voltar */
+  --button-color-back: #6C757D;
+  --button-color-back-hover: #5A6268;
+
   --text-color-primary: #212529;
   --text-color-secondary: #FFFFFF;
   
@@ -658,6 +662,14 @@ footer a {
   background-color: transparent;
   color: var(--text-color-primary);
   font-weight: 100;
+}
+
+.global-button--back{
+  background-color: var(--button-color-back);
+}
+
+.global-button--back:hover{
+  background-color: var(--button-color-back-hover);
 }
 
 .global-button--transparent{
