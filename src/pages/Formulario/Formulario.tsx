@@ -44,7 +44,7 @@ function Formulario(){
                     </div>
                     <div className='botoes'>
                         <button className='global-button global-button--full-width' onClick={() => {salvarDados()}}>Continuar▶️</button>
-                        <button className='global-button global-button--full-width' onClick={() => {navigate('/', {replace: true})}}>Voltar</button>
+                        <button className='global-button global-button--full-width global-button--back' onClick={() => {navigate('/', {replace: true})}}>Voltar</button>
                     </div>
                 </div>
             </div>
