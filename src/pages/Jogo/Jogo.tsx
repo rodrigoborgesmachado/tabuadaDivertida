@@ -215,8 +215,14 @@ function Jogo(){
     }
 
     async function Finaliza(novaPontuacao){
+        const nome = String(localStorage.getItem(configData.NOME_PARAM) || '');
+        if(nome.length > 15){
+            toast.warn('Nome deve ter no máximo 15 caracteres.');
+            return;
+        }
+
         var data = {
-            nome: localStorage.getItem(configData.NOME_PARAM),
+            nome: nome,
             numeroAcertos: respostasCorretas,
             numeroQuestoes: localStorage.getItem(configData.QUANTIDADE_PARAM) || 20,
             tipo: tipo,

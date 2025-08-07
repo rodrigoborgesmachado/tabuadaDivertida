@@ -36,7 +36,7 @@ function Formulario(){
                         <h3>
                             Como você gostaria de ser chamado?👽
                         </h3>
-                        <input type="text" id="name" value={nome} onChange={(e) => {setNome(e.target.value)}}/>
+                        <input type="text" id="name" value={nome} onChange={(e) => {setNome(e.target.value)}} maxLength={15}/>
                         <h3>
                             Quantas questões?🚀
                         </h3>
