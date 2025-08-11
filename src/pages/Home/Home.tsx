@@ -4,10 +4,10 @@ function Home(){
     return(
         <div className='center'>
             <div className='botoes-home'>
-                <Link className='global-button global-button--full-width' to={`/formulario`}>Começar o Jogo</Link>
-                <Link className='global-button global-button--full-width' to={`/instrucoes`}>Instruções do jogo</Link>
-                <Link className='global-button global-button--full-width' to={`/ranking`}>Ranking</Link>
-                <Link className='global-button global-button--full-width' to={`/historico`}>Histórico</Link>
+                <Link className='global-button global-button--full-width' to={`/formulario`}>🎮 Jogar Agora</Link>
+                <Link className='global-button global-button--full-width' to={`/instrucoes`}>🤔 Como Jogar?</Link>
+                <Link className='global-button global-button--full-width' to={`/ranking`}>🏆 Ranking</Link>
+                <Link className='global-button global-button--full-width' to={`/historico`}>📝 Minhas Partidas</Link>
             </div>
         </div>
     )

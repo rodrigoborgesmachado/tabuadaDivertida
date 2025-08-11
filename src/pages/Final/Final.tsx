@@ -32,7 +32,7 @@ function Final(){
                 </h3>
                 :
                 <h3>
-                    Não foi dessa vez, você ficou fora do ranking!!! 🧠💪<br/><br/>
+                    Não foi dessa vez, sua pontuação não foi suficiente para entrar no ranking 😢🧠💪<br/><br/>
                     ✅Você acertou {localStorage.getItem(configData.QUANTIDADE_ACERTOS)} de {localStorage.getItem(configData.QUANTIDADE_PARAM)}! ⏱️⚡️<br/>
                     Você levou apenas {localStorage.getItem(configData.TEMPO_PARAM)} segundos! ⏱️<br/><br/>
                     Pontuação final: {localStorage.getItem(configData.PONTUACAO)} | Recorde: {localStorage.getItem(configData.RECORDE)}<br/><br/>

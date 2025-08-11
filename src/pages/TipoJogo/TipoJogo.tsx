@@ -6,6 +6,7 @@ function TipoJogo(){
         <div className='center'>
             <div className='global-pageContainer-left'>
                 <div className='botoes'>
+                    <h3> Selecione a operação matemática que deseja jogar ➕ ➖ ✖️ ➗ 🔢</h3>
                     <Link to={`/jogo/M`} className='global-button global-button--full-width'>Multiplicação✖️</Link>
                     <Link to={`/jogo/A`} className='global-button global-button--full-width'>Adição➕</Link>
                     <Link to={`/jogo/S`} className='global-button global-button--full-width'>Subtração➖</Link>

@@ -1,19 +1,19 @@
 :root {
   /* Cor do background */
-  --background-color: #F8F9FA;
+  --background-color: #F4F9FF;
 
   /* Cor do header, footer e outros elementos principais */
-  --primary-color: #1E1E1E;
+  --primary-color: #181a30;
 
   /* Cor dos painéis */
-  --secundary-color: #E9ECEF;
+  --secundary-color: #445361;
 
   /* Cor do texto nos painéis */
   --text-color-primary-light: #E0E0E0;
 
   /* Cores do botão principal */
-  --button-color-primary: #0056B3;
-  --button-color-primary-hover: #003D82;
+  --button-color-primary: #11549b;
+  --button-color-primary-hover: #0056B3;
   --button-color-primary-wrong: #D32F2F;
   --button-color-primary-wrong-hover: #B71C1C;
 
@@ -969,12 +969,8 @@ margin: 10px;
   justify-content: space-around;
   margin-top: 10px;
   font-size: large;
-  background-color: var(--secundary-color);
   padding: 8px;
-}
-
-.item-ranking-table{
-  background-color: var(--secundary-color);
+  border-bottom: solid 1px var(--separator-color-primary);
 }
 
 hr{

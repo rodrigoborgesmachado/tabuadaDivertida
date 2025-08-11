@@ -63,7 +63,7 @@ function Historico(){
     return (
         <div>
             <div className='pageContainer'>
-                <h1>Histórico</h1>
+                <h1>Seus Jogos📍</h1>
                 <table className='admin-table'>
                     <thead>
                         <tr>
