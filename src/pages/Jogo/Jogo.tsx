@@ -161,12 +161,12 @@ function Jogo(){
             let novaPontuacao = pontuacao;
 
             if(respostaCerta){
-                toast.success('Correto ✅');
+                toast.success('Correto 🤩✅');
                 setRespostasCorretas(respostasCorretas+1);
                 novaPontuacao += 10;
             }
             else{
-                toast.error('Incorreto 💥');
+                toast.error('Incorreto 😤💥');
                 setRespostasIncorretas(respostasIncorretas+1);
                 if(novaPontuacao >= 5){
                     novaPontuacao -= 5;

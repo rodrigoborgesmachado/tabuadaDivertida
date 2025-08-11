@@ -74,6 +74,7 @@ function Ranking(){
             </h1>
             <br/>
             <div className='rankingText'>
+                <h3>Conheça nossos melhores jogadores!!😎 🥳</h3>
                 <h3>🔥Apenas {quantidadeRanking} de {quantidadeTetativas} jogadores conseguiram entrar no ranking!!🔥</h3>
                 <br/>
                 <br/>
