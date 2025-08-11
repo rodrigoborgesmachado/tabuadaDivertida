@@ -969,12 +969,8 @@ margin: 10px;
   justify-content: space-around;
   margin-top: 10px;
   font-size: large;
-  background-color: var(--secundary-color);
   padding: 8px;
-}
-
-.item-ranking-table{
-  background-color: var(--secundary-color);
+  border-bottom: solid 1px var(--separator-color-primary);
 }
 
 hr{
