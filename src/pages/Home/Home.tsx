@@ -17,7 +17,12 @@ function Home() {
 
     return (
         <div className='center'>
-            <div className='home-robot-container' style={exploded ? { animation: 'none' } : undefined}>
+            <div
+                className='home-robot-container'
+                style={
+                    exploded ? { animation: 'none', pointerEvents: 'none' } : undefined
+                }
+            >
                 {exploded ? (
                     <span className='home-robot-explosion'>💥</span>
                 ) : (
