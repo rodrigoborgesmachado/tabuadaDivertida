@@ -1082,6 +1082,7 @@ hr{
   align-items: center; /* Centraliza verticalmente */
   height: 90vh; /* Ocupa toda a altura da tela */
   width: 100%; /* Garante que ocupa toda a largura */
+  flex-direction: column;
 }
 
 .botoes-home{
@@ -1232,23 +1233,52 @@ hr{
   position: absolute;
   bottom: 0;
   left: -250px;
-  animation: robot-move 6s linear infinite, robot-bob 0.5s ease-in-out infinite;
+  animation: robot-wander 6s linear infinite;
 }
 
-@keyframes robot-move {
-  from {
+@keyframes robot-wander {
+  0% {
     left: -250px;
+    transform: translateY(0) rotate(0deg);
   }
-  to {
+  20% {
+    left: 20%;
+    transform: translateY(-15px) rotate(-20deg);
+  }
+  40% {
+    left: 40%;
+    transform: translateY(10px) rotate(15deg);
+  }
+  60% {
+    left: 60%;
+    transform: translateY(-5px) rotate(25deg);
+  }
+  80% {
+    left: 80%;
+    transform: translateY(15px) rotate(-15deg);
+  }
+  100% {
     left: 100%;
+    transform: translateY(0) rotate(0deg);
   }
 }
 
-@keyframes robot-bob {
+.home-robot-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.home-robot {
+  width: 200px;
+  animation: home-robot-bounce 1s ease-in-out infinite;
+}
+
+@keyframes home-robot-bounce {
   0%, 100% {
     transform: translateY(0);
   }
   50% {
-    transform: translateY(-10px);
+    transform: translateY(-20px);
   }
 }
