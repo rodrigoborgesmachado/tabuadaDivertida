@@ -56,7 +56,9 @@ function Final(){
         <div className='global-pageContainer-left'>
             <h2><b>🎉Parabéns {localStorage.getItem(configData.NOME_PARAM)}!!!🎉</b></h2>
             <br/>
-            <img src={isPerfect ? happyRobot : sadRobot} alt={isPerfect ? 'Robô feliz' : 'Robô triste'} className='robot'/>
+            <div className='robot-container'>
+                <img src={isPerfect ? happyRobot : sadRobot} alt={isPerfect ? 'Robô feliz' : 'Robô triste'} className='robot'/>
+            </div>
             {
                 isPerfect ?
                 <h3>

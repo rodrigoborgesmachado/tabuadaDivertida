@@ -1219,8 +1219,36 @@ hr{
   }
 }
 
+.robot-container {
+  position: relative;
+  width: 100%;
+  height: 250px;
+  overflow: hidden;
+  margin: 20px 0;
+}
+
 .robot {
-  width: 150px;
-  display: block;
-  margin: 20px auto;
+  width: 250px;
+  position: absolute;
+  bottom: 0;
+  left: -250px;
+  animation: robot-move 6s linear infinite, robot-bob 0.5s ease-in-out infinite;
+}
+
+@keyframes robot-move {
+  from {
+    left: -250px;
+  }
+  to {
+    left: 100%;
+  }
+}
+
+@keyframes robot-bob {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
 }
