@@ -2,11 +2,14 @@ import {Link} from 'react-router-dom';
 import configData from "../../Config.json";
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import happyRobot from '../../assets/robot-happy.svg';
+import sadRobot from '../../assets/robot-sad.svg';
 
 
 function Final(){
     const{tipo} = useParams();
     const[questoes , setQuestoes] = useState([]);
+    const isPerfect = localStorage.getItem(configData.QUANTIDADE_ACERTOS) === localStorage.getItem(configData.QUANTIDADE_PARAM);
 
     const launchFireworks = () => {
         const confetti = (window as any).confetti;
@@ -41,7 +44,7 @@ function Final(){
 
     useEffect(() => {
         setQuestoes(JSON.parse(localStorage.getItem(configData.QUESTOES)));
-        if(localStorage.getItem(configData.QUANTIDADE_ACERTOS) === localStorage.getItem(configData.QUANTIDADE_PARAM)){
+        if(isPerfect){
             launchFireworks();
         }
         return() =>{
@@ -53,8 +56,9 @@ function Final(){
         <div className='global-pageContainer-left'>
             <h2><b>🎉Parabéns {localStorage.getItem(configData.NOME_PARAM)}!!!🎉</b></h2>
             <br/>
+            <img src={isPerfect ? happyRobot : sadRobot} alt={isPerfect ? 'Robô feliz' : 'Robô triste'} className='robot'/>
             {
-                localStorage.getItem(configData.QUANTIDADE_ACERTOS) == localStorage.getItem(configData.QUANTIDADE_PARAM) ?
+                isPerfect ?
                 <h3>
                     Você é um mestre da tabuada! 🧠💪<br/><br/>
                     ✅Você acertou {localStorage.getItem(configData.QUANTIDADE_ACERTOS)} de {localStorage.getItem(configData.QUANTIDADE_PARAM)} em tempo recorde! ⏱️⚡️<br/>

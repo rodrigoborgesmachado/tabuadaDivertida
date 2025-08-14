@@ -1218,3 +1218,9 @@ hr{
       color: var(--text-color-primary);
   }
 }
+
+.robot {
+  width: 150px;
+  display: block;
+  margin: 20px auto;
+}
