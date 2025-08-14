@@ -193,8 +193,8 @@ function Ranking(){
                 </div>
             </div>
             <div className='botoes'>
-                <Link className='global-button global-button--full-width' to="/">Home</Link>
                 <Link className='global-button global-button--full-width' to="/historico">Histórico</Link>
+                <Link className='global-button global-button--full-width global-button--back' to="/">Voltar</Link>
             </div>
         </div>
     )

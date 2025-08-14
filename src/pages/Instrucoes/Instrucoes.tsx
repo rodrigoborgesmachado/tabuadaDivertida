@@ -1,8 +1,40 @@
+import { useState } from 'react';
 import {Link} from 'react-router-dom';
+import happyRobot from '../../assets/robot-happy.svg';
 
 function Instrucoes(){
+    const [clickCount, setClickCount] = useState(0);
+    const [exploded, setExploded] = useState(false);
+
+    const handleRobotClick = () => {
+        if (exploded) return;
+        const newCount = clickCount + 1;
+        if (newCount >= 5) {
+            setExploded(true);
+        }
+        setClickCount(newCount);
+    };
+
     return(
     <div className='global-pageContainer-left'>
+        <div
+            className='home-robot-container'
+            style={
+                exploded ? { animation: 'none', pointerEvents: 'none' } : undefined
+            }
+        >
+            {exploded ? (
+                <span className='home-robot-explosion'>💥</span>
+            ) : (
+                <img
+                    src={happyRobot}
+                    alt='Robô feliz'
+                    className='home-robot'
+                    style={{ transform: `scale(${1 + clickCount * 0.1})` }}
+                    onClick={handleRobotClick}
+                />
+            )}
+        </div>
         <div className='description'>
             <h3 className='description'>
             Seja bem-vindo ao incrível mundo da Tabuada Divertida, onde a matemática ganha vida de forma mágica e divertida! ✨🎉<br/><br/>
