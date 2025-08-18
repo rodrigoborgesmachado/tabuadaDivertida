@@ -2,6 +2,8 @@
 
 [![Website](https://img.shields.io/website-up-down-green-red/http/shields.io.svg?label=site&url=https://www.tabuadadivertida.com/)](https://www.tabuadadivertida.com/)
 
+[Visite o site Tabuada Divertida](https://www.tabuadadivertida.com/)
+
 ## Considerações Gerais 
 
 * Site desenvolvido em HTML, JavaScript, CSS e Bootstrap conectando em uma API feita em PHP (Versão OLD)
