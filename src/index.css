@@ -3,17 +3,17 @@
   --background-color: #FFFFFF;
 
   /* Cor do header, footer e outros elementos principais */
-  --primary-color: #F0F0F0;
+  --primary-color: #F9FAFB;
 
   /* Cor dos painéis */
-  --secundary-color: #F7F7F7;
+  --secundary-color: #ebe8e8;
 
   /* Cor do texto nos painéis */
   --text-color-primary-light: #F2F2F2;
 
   /* Cores do botão principal */
-  --button-color-primary: #1E88E5;
-  --button-color-primary-hover: #1565C0;
+  --button-color-primary: #dfdfdf;
+  --button-color-primary-hover: #afafaf;
   --button-color-primary-wrong: #E53935;
   --button-color-primary-wrong-hover: #C62828;
 
@@ -21,20 +21,20 @@
   --button-color-primary-right-hover: #388E3C;
 
   /* Cores do botão voltar */
-  --button-color-back: #6B7280;
-  --button-color-back-hover: #4B5563;
+  --button-color-back: #afafaf;
+  --button-color-back-hover: #afafaf;
 
   --text-color-primary: #212529;
-  --text-color-secondary: #FFFFFF;
+  --text-color-secondary: #212529;
 
-  --button-color-secondary: #2563EB;
+  --button-color-secondary: #e9e9e9;
   --separator-color-primary: rgba(107, 114, 128, 0.48);
 
   --block-color: #FFFFFF;
   --block-color-secundary: #F5F5F5;
 
-  --color-surface: #FFFFFF;
-  --color-surface-variant: #374151;
+  --color-surface: #dfdfdf;
+  --color-surface-variant: #afafaf;
 
   --loader-color: #2563EB;
   --panel-border-color: #D1D5DB;
@@ -293,10 +293,6 @@ th{
 
 }
 
-.botao:hover {
-  color: var(--text-color-secondary);
-}
-
 /* HeaderDoc */
 
 .varBarResponsive {
@@ -361,8 +357,6 @@ footer a {
 
 .button-base:hover {
   background-color: var(--button-color-secondary);
-  ;
-  color: var(--text-color-secondary);
 }
 
 .varBarResponsive {
