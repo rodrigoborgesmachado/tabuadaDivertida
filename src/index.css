@@ -1,43 +1,43 @@
 :root {
   /* Cor do background */
-  --background-color: #F4F9FF;
+  --background-color: #F5F7FA;
 
   /* Cor do header, footer e outros elementos principais */
-  --primary-color: #181a30;
+  --primary-color: #2C3E50;
 
   /* Cor dos painéis */
-  --secundary-color: #445361;
+  --secundary-color: #5D6D7E;
 
   /* Cor do texto nos painéis */
-  --text-color-primary-light: #E0E0E0;
+  --text-color-primary-light: #F2F2F2;
 
   /* Cores do botão principal */
-  --button-color-primary: #11549b;
-  --button-color-primary-hover: #0056B3;
-  --button-color-primary-wrong: #D32F2F;
-  --button-color-primary-wrong-hover: #B71C1C;
+  --button-color-primary: #1E88E5;
+  --button-color-primary-hover: #1565C0;
+  --button-color-primary-wrong: #E53935;
+  --button-color-primary-wrong-hover: #C62828;
 
-  --button-color-primary-right: #388E3C;
-  --button-color-primary-right-hover: #2E7D32;
+  --button-color-primary-right: #43A047;
+  --button-color-primary-right-hover: #388E3C;
 
   /* Cores do botão voltar */
-  --button-color-back: #6C757D;
-  --button-color-back-hover: #5A6268;
+  --button-color-back: #6B7280;
+  --button-color-back-hover: #4B5563;
 
   --text-color-primary: #212529;
   --text-color-secondary: #FFFFFF;
-  
-  --button-color-secondary: #0056B3;
-  --separator-color-primary: rgba(108, 117, 125, 0.48);
+
+  --button-color-secondary: #2563EB;
+  --separator-color-primary: rgba(107, 114, 128, 0.48);
 
   --block-color: #FFFFFF;
-  --block-color-secundary: #E9ECEF;
+  --block-color-secundary: #E5E7EB;
 
   --color-surface: #FFFFFF;
-  --color-surface-variant: #343A40;
+  --color-surface-variant: #374151;
 
-  --loader-color: #0056B3;
-  --panel-border-color: #CED4DA;
+  --loader-color: #2563EB;
+  --panel-border-color: #D1D5DB;
 
   --modal-background-color: rgba(255, 255, 255, 0.95);
 
