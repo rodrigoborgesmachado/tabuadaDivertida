@@ -1,43 +1,43 @@
 :root {
   /* Cor do background */
-  --background-color: #F4F9FF;
+  --background-color: #FFFFFF;
 
   /* Cor do header, footer e outros elementos principais */
-  --primary-color: #181a30;
+  --primary-color: #F9FAFB;
 
   /* Cor dos painéis */
-  --secundary-color: #445361;
+  --secundary-color: #ebe8e8;
 
   /* Cor do texto nos painéis */
-  --text-color-primary-light: #E0E0E0;
+  --text-color-primary-light: #F2F2F2;
 
   /* Cores do botão principal */
-  --button-color-primary: #11549b;
-  --button-color-primary-hover: #0056B3;
-  --button-color-primary-wrong: #D32F2F;
-  --button-color-primary-wrong-hover: #B71C1C;
+  --button-color-primary: #dfdfdf;
+  --button-color-primary-hover: #afafaf;
+  --button-color-primary-wrong: #E53935;
+  --button-color-primary-wrong-hover: #C62828;
 
-  --button-color-primary-right: #388E3C;
-  --button-color-primary-right-hover: #2E7D32;
+  --button-color-primary-right: #43A047;
+  --button-color-primary-right-hover: #388E3C;
 
   /* Cores do botão voltar */
-  --button-color-back: #6C757D;
-  --button-color-back-hover: #5A6268;
+  --button-color-back: #afafaf;
+  --button-color-back-hover: #afafaf;
 
   --text-color-primary: #212529;
-  --text-color-secondary: #FFFFFF;
-  
-  --button-color-secondary: #0056B3;
-  --separator-color-primary: rgba(108, 117, 125, 0.48);
+  --text-color-secondary: #212529;
+
+  --button-color-secondary: #e9e9e9;
+  --separator-color-primary: rgba(107, 114, 128, 0.48);
 
   --block-color: #FFFFFF;
-  --block-color-secundary: #E9ECEF;
+  --block-color-secundary: #F5F5F5;
 
-  --color-surface: #FFFFFF;
-  --color-surface-variant: #343A40;
+  --color-surface: #dfdfdf;
+  --color-surface-variant: #afafaf;
 
-  --loader-color: #0056B3;
-  --panel-border-color: #CED4DA;
+  --loader-color: #2563EB;
+  --panel-border-color: #D1D5DB;
 
   --modal-background-color: rgba(255, 255, 255, 0.95);
 
@@ -63,7 +63,7 @@
 body {
   font-family: sans-serif;
   background-color: var(--background-color);
-  color: var(--text-color-secondary);
+  color: var(--text-color-primary);
   width: 100%;
   height: 100%;
   text-align: justify;
@@ -152,9 +152,9 @@ th{
   font-size: 14px;
   letter-spacing: 3px;
   text-transform: uppercase;
-  color: var(--text-color-secondary);
+  color: var(--text-color-primary);
   font-family: "Nunito Sans", Arial, sans-serif;
-  
+
 }
 
 .paragrafo2 {
@@ -163,7 +163,7 @@ th{
   line-height: 56px;
   margin-top: var(--double-default-spacing);
   margin-bottom: var(--double-default-spacing);
-  color: var(--text-color-secondary);
+  color: var(--text-color-primary);
 
 }
 
@@ -173,7 +173,7 @@ th{
   line-height: 28px;
   margin-top: var(--double-default-spacing);
   margin-bottom: var(--double-default-spacing);
-  color: var(--text-color-secondary);
+  color: var(--text-color-primary);
 }
 
 .mainBlock {
@@ -293,10 +293,6 @@ th{
 
 }
 
-.botao:hover {
-  color: var(--text-color-secondary);
-}
-
 /* HeaderDoc */
 
 .varBarResponsive {
@@ -323,7 +319,7 @@ th{
 
 .varBarResponsive a {
   text-decoration: none;
-  color: var(--text-color-secondary);
+  color: var(--text-color-primary);
   font-size: 19px;
 }
 
@@ -336,13 +332,13 @@ footer {
   left: 0;
   bottom: 0;
   width: 100%;
-  color: var(--text-color-secondary);
+  color: var(--text-color-primary);
   background-color: var(--primary-color);
   text-align: center;
 }
 
 footer a {
-  color: var(--text-color-secondary);
+  color: var(--text-color-primary);
   text-decoration: none;
 }
 
@@ -352,7 +348,7 @@ footer a {
   padding: 8px 16px 8px 16px;
   text-decoration: none;
   border-radius: 4px;
-  color: var(--text-color-secondary);
+  color: var(--text-color-primary);
   border: none;
   transition: all 0.5s;
   box-shadow: var(--mdc-protected-button-container-elevation, 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12));
@@ -361,8 +357,6 @@ footer a {
 
 .button-base:hover {
   background-color: var(--button-color-secondary);
-  ;
-  color: var(--text-color-secondary);
 }
 
 .varBarResponsive {
@@ -384,7 +378,7 @@ footer a {
 
 .varBarResponsive a {
   text-decoration: none;
-  color: var(--text-color-secondary);
+  color: var(--text-color-primary);
   font-size: 19px;
 }
 
