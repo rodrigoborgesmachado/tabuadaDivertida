@@ -8,6 +8,9 @@ import Ranking from './pages/Ranking/Ranking';
 import Instrucoes from './pages/Instrucoes/Instrucoes';
 import Erro from './pages/Erro/Erro';
 import Historico from './pages/Historico/Historico';
+import PoliticaPrivacidade from './pages/PoliticaPrivacidade/PoliticaPrivacidade';
+import Sobre from './pages/Sobre/Sobre';
+import Contato from './pages/Contato/Contato';
 import Header from './components/Header/index';
 
 function RoutesApp(){
@@ -23,6 +26,9 @@ function RoutesApp(){
                 <Route path='/final/:tipo' element={<Final/>}/>
                 <Route path='/instrucoes' element={<Instrucoes/>}/>
                 <Route path='/historico' element={<Historico/>}/>
+                <Route path='/privacidade' element={<PoliticaPrivacidade/>}/>
+                <Route path='/sobre' element={<Sobre/>}/>
+                <Route path='/contato' element={<Contato/>}/>
                 <Route path='*' element={<Erro/>}/>
             </Routes>
         </BrowserRouter>
