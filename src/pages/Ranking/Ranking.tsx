@@ -12,7 +12,6 @@ function Ranking(){
     const[quantidade, setQuantidade] = useState([]);
     const[openQuantidades, setOpenQuantidades] = useState<Record<number, boolean>>({});
     const[quantidadeTetativas, setQuantidadeTentativas] = useState([]);
-    const[quantidadeRanking, setQuantidadeRanking] = useState([]);
     const[type, setType] = useState('M');
     const[loadding, setLoadding] = useState(true);
     const [filtroNome, setFiltroNome] = useState('');
@@ -30,7 +29,6 @@ function Ranking(){
                 });
                 setOpenQuantidades(openObj);
                 setQuantidadeTentativas(response.data.total);
-                setQuantidadeRanking(response.data.quantity);
                 setLoadding(false);
             }).catch(() => {
                 navigate('/', {replace: true});
@@ -74,8 +72,7 @@ function Ranking(){
             </h1>
             <br/>
             <div className='rankingText'>
-                <h3>Conheça nossos melhores jogadores!!😎 🥳</h3>
-                <h3>🔥Apenas {quantidadeRanking} de {quantidadeTetativas} jogadores conseguiram entrar no ranking!!🔥</h3>
+                <h3>🔥Total de jogadores: {quantidadeTetativas}🔥</h3>
                 <br/>
                 <br/>
                 <div className='botoesRanking'>
