@@ -416,10 +416,6 @@ footer a {
   font-size: 19px;
 }
 
-.dadosResumidos{
-  
-}
-
 .dados{
   width: 100%;
 }
@@ -442,9 +438,6 @@ footer a {
 
 .descricao + .descricao{
   margin-top: 16px;
-}
-
-.descricao h4{
 }
 
 .dadosResumidos a{
