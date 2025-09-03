@@ -1,0 +1,28 @@
+.countdown-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100%;
+    background-color: var(--color-surface);
+}
+
+.countdown-text {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: var(--text-color-primary);
+}
+
+.countdown-number {
+    font-size: 120px;
+    font-weight: bold;
+    color: var(--primary-color);
+    animation: pulse 1s ease-in-out;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.4); }
+    100% { transform: scale(1); }
+}
