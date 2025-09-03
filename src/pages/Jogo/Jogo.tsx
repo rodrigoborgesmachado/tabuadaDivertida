@@ -274,7 +274,7 @@ function Jogo(){
                         </div>
                         <div className='info-game'>
                             <Tempo/>
-                            <button className='button-base' onClick={() => window.location.reload()}>Restart</button>
+                            <button className='button-base' onClick={() => navigate('/contagem/' + tipo, {replace: true})}>Restart</button>
                         </div>
                     </div>
                     <div className='divJogo'>
