@@ -18,9 +18,10 @@
 .ranking{
     text-decoration: none;
     cursor: pointer;
-    background-color: var(--button-color-primary-right);
+    background-color: var(--button-color-primary);
     padding: 5px 14px;
-    color: var(--text-color-primary-light);
+    color: var(--text-color-primary);
+    font-weight: bold;
     border-radius: 5px;
 }
 
