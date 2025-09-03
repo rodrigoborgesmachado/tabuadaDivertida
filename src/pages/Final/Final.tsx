@@ -108,7 +108,7 @@ function Final(){
             </div>
 
             <div className='botoes'>
-                <Link className='global-button global-button--full-width' to={`/jogo/` + tipo}>Jogar novamente</Link>
+                <Link className='global-button global-button--full-width' to={`/contagem/` + tipo}>Jogar novamente</Link>
                 <Link className='global-button global-button--full-width' to={`/ranking`}>Ranking</Link>
                 <Link className='global-button global-button--full-width' to="/historico">Histórico</Link>
                 <Link className='global-button global-button--full-width' to="/">Início</Link>

@@ -2,6 +2,7 @@ import {BrowserRouter, Routes, Route} from 'react-router-dom';
 import Home from './pages/Home/Home';
 import Formulario from './pages/Formulario/Formulario';
 import TipoJogo from './pages/TipoJogo/TipoJogo';
+import Contagem from './pages/Contagem/Contagem';
 import Jogo from './pages/Jogo/Jogo';
 import Final from './pages/Final/Final';
 import Ranking from './pages/Ranking/Ranking';
@@ -21,6 +22,7 @@ function RoutesApp(){
                 <Route path='/' element={<Home/>}/>
                 <Route path='/formulario' element={<Formulario/>}/>
                 <Route path='/selecionarjogo' element={<TipoJogo/>}/>
+                <Route path='/contagem/:tipo' element={<Contagem/>}/>
                 <Route path='/jogo/:tipo' element={<Jogo/>}/>
                 <Route path='/ranking' element={<Ranking/>}/>
                 <Route path='/final/:tipo' element={<Final/>}/>
