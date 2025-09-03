@@ -1,4 +1,4 @@
-import {BrowserRouter, Routes, Route} from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home/Home';
 import Formulario from './pages/Formulario/Formulario';
 import TipoJogo from './pages/TipoJogo/TipoJogo';
@@ -14,10 +14,15 @@ import Sobre from './pages/Sobre/Sobre';
 import Contato from './pages/Contato/Contato';
 import Header from './components/Header/index';
 
-function RoutesApp(){
+interface RoutesAppProps {
+  theme: 'light' | 'dark';
+  toggleTheme: () => void;
+}
+
+function RoutesApp({ theme, toggleTheme }: RoutesAppProps) {
     return(
         <BrowserRouter>
-            <Header/>
+            <Header theme={theme} toggleTheme={toggleTheme}/>
             <Routes>
                 <Route path='/' element={<Home/>}/>
                 <Route path='/formulario' element={<Formulario/>}/>

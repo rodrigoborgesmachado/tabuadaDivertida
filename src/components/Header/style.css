@@ -24,7 +24,22 @@
     font-weight: bold;
     border-radius: 5px;
 }
+.opcoes-head {
+    display: flex;
+    align-items: center;
+}
 
-.opcoes-head a{
+.theme-toggle {
+    background-color: var(--button-color-primary);
+    border: none;
+    padding: 5px 14px;
+    color: var(--text-color-primary);
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.opcoes-head a,
+.opcoes-head button{
     margin-right: 8px;
 }
