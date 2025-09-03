@@ -53,14 +53,17 @@
   --default-border-radius: 8px;
   --default-border-radius-extra: 16px;
   --shadow-color-primary: rgba(0, 0, 0, 0.2);
+  --icon-heigth:24px;
+
+  --transient-color-primary: #afafaf;
 }
 
 [data-theme='dark'] {
-  --background-color: #111827;
-  --primary-color: #1F2937;
+  --background-color: #06080e;
+  --primary-color: #131922;
   --secundary-color: #374151;
   --text-color-primary-light: #1F2937;
-  --button-color-primary: #4B5563;
+  --button-color-primary: #38404b;
   --button-color-primary-hover: #6B7280;
   --button-color-primary-wrong: #B91C1C;
   --button-color-primary-wrong-hover: #991B1B;
@@ -80,6 +83,8 @@
   --panel-border-color: #4B5563;
   --modal-background-color: rgba(0, 0, 0, 0.95);
   --shadow-color-primary: rgba(0, 0, 0, 0.7);
+
+  --transient-color-primary: #38404b;
 }
 
 * {

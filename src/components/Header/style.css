@@ -27,6 +27,8 @@
 .opcoes-head {
     display: flex;
     align-items: center;
+    min-width: 16rem;
+    gap: var(--default-spacing);
 }
 
 .theme-toggle {
@@ -42,4 +44,20 @@
 .opcoes-head a,
 .opcoes-head button{
     margin-right: 8px;
+}
+
+@media screen and (max-width: 1000px){
+    .opcoes-head a,
+    .opcoes-head button{
+        display: none;
+    }
+
+    .opcoes-head {
+        justify-content: end;
+        margin-right: var(--default-spacing);
+    }
+
+    .toolNav a {
+        margin-left: var(--default-spacing);
+    }
 }
