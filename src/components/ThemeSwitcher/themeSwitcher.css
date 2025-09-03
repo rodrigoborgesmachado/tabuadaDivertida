@@ -1,0 +1,31 @@
+.change-theme-div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid grey;
+    border-radius: 30%;
+  }
+  
+  input[type="radio"] {
+    display: none;
+  }
+  
+  .theme-label {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--icon-heigth);
+    height: var(--icon-heigth);
+    border-radius: 30%;
+    transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
+  }
+  
+  input[type="radio"]:checked + .theme-label {
+    background-color: var(--transient-color-primary);
+    transform: scale(1.1);
+  }
+  
+  input[type="radio"]:not(:checked) + .theme-label:hover {
+    background-color: var(--transient-color-second);
+  }
