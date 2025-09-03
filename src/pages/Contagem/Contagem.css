@@ -9,15 +9,15 @@
 }
 
 .countdown-text {
-    font-size: 24px;
+    font-size: 4rem;
     margin-bottom: 20px;
     color: var(--text-color-primary);
 }
 
 .countdown-number {
-    font-size: 120px;
+    font-size: 16rem;
     font-weight: bold;
-    color: var(--primary-color);
+    color: var(--text-color-primary);
     animation: pulse 1s ease-in-out;
 }
 
