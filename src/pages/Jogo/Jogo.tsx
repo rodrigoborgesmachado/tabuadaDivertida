@@ -5,6 +5,7 @@ import {Link} from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {toast} from 'react-toastify';
+import PacmanLoader from "../../components/PacmanLoader/PacmanLoader";
 
 function Jogo(){
     const{tipo} = useParams();
@@ -258,9 +259,7 @@ function Jogo(){
 
     if(loadding){
         return(
-            <div className='loaddingDiv'>
-                <div className="lds-ring"><div></div><div></div><div></div><div></div></div>
-            </div>
+            <PacmanLoader dots={7} mouthAngle={40} pellets={[7]} size={64}/>
         )
     }
 

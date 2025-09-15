@@ -1257,6 +1257,14 @@ hr{
   animation: robot-wander 6s linear infinite;
 }
 
+.robot-donkey {
+  width: 150px;
+  position: absolute;
+  bottom: 0;
+  left: -250px;
+  animation: robot-wander 6s linear infinite;
+}
+
 @keyframes robot-wander {
   0% {
     left: -250px;
@@ -1301,6 +1309,24 @@ hr{
 .home-robot-explosion {
   font-size: 64px;
   animation: home-robot-explode 0.6s forwards;
+}
+
+.loader-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; 
+  width: 100%;
+}
+
+.congrats-final {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.congrats-final img{
+  max-width: 100px;
 }
 
 @keyframes home-robot-bounce {

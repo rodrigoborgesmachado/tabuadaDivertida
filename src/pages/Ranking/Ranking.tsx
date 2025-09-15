@@ -4,6 +4,7 @@ import {Link} from 'react-router-dom';
 import api from '../../services/api';
 import { Table } from 'react-bootstrap';
 import Config from '../../Config.json';
+import PacmanLoader from '../../components/PacmanLoader/PacmanLoader';
 
 function Ranking(){
     const navigate = useNavigate();
@@ -29,7 +30,7 @@ function Ranking(){
                 });
                 setOpenQuantidades(openObj);
                 setQuantidadeTentativas(response.data.total);
-                setLoadding(false);
+                //setLoadding(false);
             }).catch(() => {
                 navigate('/', {replace: true});
                 return;
@@ -59,9 +60,7 @@ function Ranking(){
 
     if(loadding){
         return(
-            <div className='loaddingDiv'>
-                <div className="lds-ring"><div></div><div></div><div></div><div></div></div>
-            </div>
+            <PacmanLoader dots={7} mouthAngle={40} pellets={[1, 2, 3, 4, 5, 6]} size={64}/>
         )
     }
 

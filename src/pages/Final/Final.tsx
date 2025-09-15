@@ -3,6 +3,8 @@ import configData from "../../Config.json";
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import happyRobot from '../../assets/robot-happy.svg';
+import great from '../../assets/great.png';
+import donkey from '../../assets/donkey.png';
 import sadRobot from '../../assets/robot-sad.svg';
 
 
@@ -10,6 +12,7 @@ function Final(){
     const{tipo} = useParams();
     const[questoes , setQuestoes] = useState([]);
     const isPerfect = localStorage.getItem(configData.QUANTIDADE_ACERTOS) === localStorage.getItem(configData.QUANTIDADE_PARAM);
+    const isWorst = localStorage.getItem(configData.QUANTIDADE_ACERTOS) === '1';
 
     const launchFireworks = () => {
         const confetti = (window as any).confetti;
@@ -57,14 +60,20 @@ function Final(){
             <h2>
                 {
                     isPerfect ?
-                    <b>🎉Parabéns {localStorage.getItem(configData.NOME_PARAM)}!!!🎉</b>
+                    <div className='congrats-final'>
+                        <img src={great}/>
+                        <b>🎉Parabéns {localStorage.getItem(configData.NOME_PARAM)}, você é de outro planeta!!!🎉</b>
+                    </div>
                     :
-                    <b>💥Não foi dessa vez {localStorage.getItem(configData.NOME_PARAM)}, continue tentando!!!💥</b>
+                    isWorst ?
+                    <b>Você errou todas KKKKKKKKKKK</b>
+                    :
+                    <b>🎉Parabéns {localStorage.getItem(configData.NOME_PARAM)}, você é fera!!!🎉</b>
                 }
             </h2>
             <br/>
             <div className='robot-container'>
-                <img src={isPerfect ? happyRobot : sadRobot} alt={isPerfect ? 'Robô feliz' : 'Robô triste'} className='robot'/>
+                <img src={isPerfect ? happyRobot : isWorst ? donkey : sadRobot} alt={isPerfect ? 'Robô feliz' : 'Robô triste'} className={isWorst ? 'robot-donkey' : 'robot'}/>
             </div>
             {
                 isPerfect ?
