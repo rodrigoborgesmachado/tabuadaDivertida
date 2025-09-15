@@ -30,7 +30,7 @@ function Ranking(){
                 });
                 setOpenQuantidades(openObj);
                 setQuantidadeTentativas(response.data.total);
-                //setLoadding(false);
+                setLoadding(false);
             }).catch(() => {
                 navigate('/', {replace: true});
                 return;
