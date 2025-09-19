@@ -3,6 +3,9 @@ import './style.css';
 function Footer(){
     return(
         <footer>
+            <div className='support-option'>
+                <a className='support-option__link' href='/contribua'>💜 Contribua com o projeto</a>
+            </div>
             <h1><a target='_blank' rel='noreferrer' href='http://www.sunsalesystem.com.br/' >SunSale System</a></h1>
             <div className='links'>
                 <h3>

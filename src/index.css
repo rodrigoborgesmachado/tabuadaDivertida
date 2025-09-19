@@ -41,7 +41,7 @@
 
   --modal-background-color: rgba(255, 255, 255, 0.95);
 
-  --footer-heigth: 48px;
+  --footer-heigth: 128px;
 
   /* Espaçamentos padrões */
   --default-spacing: 8px;
@@ -711,7 +711,7 @@ footer a {
   flex-direction: column;
   margin-top: 8px;
   height: 100%;
-  margin-bottom: 48px;
+  margin-bottom: var(--footer-heigth);
   padding: 20px 8px;
   color: var(--text-color-primary);
   max-width: 1080px;
@@ -722,7 +722,7 @@ footer a {
   display: flex;
   flex-direction: column;
   margin-top: 8px;
-  margin-bottom: 48px;
+  margin-bottom: var(--footer-heigth);
   padding: 20px 8px;
   color: var(--text-color-primary);
   max-width: 1080px;
@@ -733,7 +733,7 @@ footer a {
   display: flex;
   flex-direction: column;
   margin-top: 8px;
-  margin-bottom: 48px;
+  margin-bottom: var(--footer-heigth);
   padding: 20px 8px;
   color: var(--text-color-primary);
   width: 100%;
@@ -741,7 +741,7 @@ footer a {
 }
 
 .global-extraBottom{
-  margin-bottom: 80px;
+  margin-bottom: calc(var(--footer-heigth) + 32px);
 }
 
 .todasRespostas{
