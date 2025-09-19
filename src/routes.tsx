@@ -13,6 +13,7 @@ import PoliticaPrivacidade from './pages/PoliticaPrivacidade/PoliticaPrivacidade
 import Sobre from './pages/Sobre/Sobre';
 import Contato from './pages/Contato/Contato';
 import Header from './components/Header/index';
+import AprenderMatematicaJogos from './pages/Artigos/AprenderMatematicaJogos';
 
 interface RoutesAppProps {
   theme: 'light' | 'dark';
@@ -36,6 +37,7 @@ function RoutesApp({ theme, toggleTheme }: RoutesAppProps) {
                 <Route path='/privacidade' element={<PoliticaPrivacidade/>}/>
                 <Route path='/sobre' element={<Sobre/>}/>
                 <Route path='/contato' element={<Contato/>}/>
+                <Route path='/artigos/aprender-matematica-com-jogos' element={<AprenderMatematicaJogos/>}/>
                 <Route path='*' element={<Erro/>}/>
             </Routes>
         </BrowserRouter>

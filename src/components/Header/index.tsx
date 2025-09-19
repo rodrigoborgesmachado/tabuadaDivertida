@@ -15,6 +15,7 @@ function Header({ theme, toggleTheme }: HeaderProps){
                 <div className='opcoes-head'>
                     <Link className='ranking' to='/ranking'>🔝Ranking🔝</Link>
                     <Link className='ranking' to='/historico'>🔝Histórico🔝</Link>
+                    <Link className='ranking' to='/artigos/aprender-matematica-com-jogos'>🧠Artigos🧠</Link>
                     <ThemeSwitcher theme={theme} toggleTheme={toggleTheme} />
                 </div>
             </div>
