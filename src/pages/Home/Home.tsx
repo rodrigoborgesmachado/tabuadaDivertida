@@ -37,7 +37,7 @@ function Home() {
                         Aprender brincando transforma o estudo em um desafio prazeroso, mantém a motivação em alta e ajuda a consolidar o conhecimento por meio de repetições significativas.
                         No nosso artigo especial compartilhamos evidências, boas práticas e dicas para aproveitar atividades lúdicas em sala de aula ou em casa.
                     </p>
-                    <Link className='home-article-link' to='/artigos/aprender-matematica-com-jogos'>
+                    <Link className='global-button' to='/artigos/aprender-matematica-com-jogos'>
                         Leia o artigo completo
                     </Link>
                 </section>
