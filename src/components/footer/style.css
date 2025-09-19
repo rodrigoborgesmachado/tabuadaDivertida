@@ -42,6 +42,10 @@ footer a{
     margin-top: 5px;
 }
 
-.links a{
-    margin: 0 10px;
+.links h3{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    margin: 0;
 }
