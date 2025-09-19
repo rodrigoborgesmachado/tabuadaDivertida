@@ -1114,6 +1114,98 @@ hr{
   max-width: 300px; /* Limita a largura dos botões */
 }
 
+.home-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--triple-default-spacing);
+  padding: var(--triple-default-spacing) var(--double-default-spacing);
+  width: 100%;
+  max-width: var(--default-max-width);
+}
+
+.home-description,
+.home-article-preview {
+  width: 100%;
+  background-color: var(--block-color);
+  color: var(--text-color-primary);
+  border-radius: var(--default-border-radius);
+  box-shadow: 0 2px 5px var(--shadow-color-primary);
+  padding: var(--triple-default-spacing);
+  line-height: 1.6;
+  text-align: left;
+}
+
+.home-description h1,
+.home-article-preview h2 {
+  margin-bottom: var(--double-default-spacing);
+  text-align: left;
+}
+
+.home-description p + p,
+.home-article-preview p + p {
+  margin-top: var(--default-spacing);
+}
+
+.home-article-link {
+  display: inline-block;
+  margin-top: var(--double-default-spacing);
+  font-weight: bold;
+  color: var(--text-color-primary);
+  text-decoration: none;
+  border-bottom: 2px solid var(--button-color-primary);
+  padding-bottom: 4px;
+}
+
+.home-article-link:hover {
+  color: var(--text-color-primary);
+  border-color: var(--button-color-primary-hover);
+}
+
+.article-page {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  padding: var(--triple-default-spacing) var(--double-default-spacing);
+}
+
+.article-content {
+  width: 100%;
+  max-width: 840px;
+  background-color: var(--block-color);
+  color: var(--text-color-primary);
+  border-radius: var(--default-border-radius);
+  box-shadow: 0 2px 6px var(--shadow-color-primary);
+  padding: var(--triple-default-spacing);
+  line-height: 1.8;
+}
+
+.article-content h1 {
+  margin-bottom: var(--double-default-spacing);
+}
+
+.article-content h2 {
+  margin-top: var(--triple-default-spacing);
+  margin-bottom: var(--default-spacing);
+}
+
+.article-content ul {
+  margin-left: var(--triple-default-spacing);
+  margin-top: var(--default-spacing);
+  display: grid;
+  gap: var(--default-spacing);
+}
+
+.article-content p {
+  margin-top: var(--default-spacing);
+}
+
+.article-content a {
+  color: var(--text-color-primary);
+  font-weight: bold;
+  text-decoration: underline;
+}
+
 .game{
   margin-top: 2rem;
 }
