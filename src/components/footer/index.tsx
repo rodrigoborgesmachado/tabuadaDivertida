@@ -9,6 +9,7 @@ function Footer(){
                     <a href='/privacidade'>Política de Privacidade</a>
                     <a href='/sobre'>Sobre</a>
                     <a href='/contato'>Contato</a>
+                    <a href='/contribua'>💜 Contribua com o projeto</a>
                 </h3>
             </div>
         </footer>

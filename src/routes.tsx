@@ -12,6 +12,7 @@ import Historico from './pages/Historico/Historico';
 import PoliticaPrivacidade from './pages/PoliticaPrivacidade/PoliticaPrivacidade';
 import Sobre from './pages/Sobre/Sobre';
 import Contato from './pages/Contato/Contato';
+import Contribua from './pages/Contribua/Contribua';
 import Header from './components/Header/index';
 import AprenderMatematicaJogos from './pages/Artigos/AprenderMatematicaJogos';
 
@@ -38,6 +39,7 @@ function RoutesApp({ theme, toggleTheme }: RoutesAppProps) {
                 <Route path='/sobre' element={<Sobre/>}/>
                 <Route path='/contato' element={<Contato/>}/>
                 <Route path='/artigos/aprender-matematica-com-jogos' element={<AprenderMatematicaJogos/>}/>
+                <Route path='/contribua' element={<Contribua/>}/>
                 <Route path='*' element={<Erro/>}/>
             </Routes>
         </BrowserRouter>

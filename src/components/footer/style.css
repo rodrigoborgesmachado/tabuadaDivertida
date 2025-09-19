@@ -9,11 +9,33 @@ footer{
     background-color: #121212;
     opacity : 0.9;
     box-shadow: 0 -3px 5px -1px #0003, 0 -6px 10px #00000024, 0 -1px 18px #0000001f;
+    padding: 16px 12px 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
 }
 
 footer a{
     color: white;
     text-decoration: none;
+}
+
+.support-option__link{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 8px 20px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #7c3aed, #ec4899);
+    font-size: 14px;
+    font-weight: 600;
+    transition: filter 0.3s ease;
+}
+
+.support-option__link:hover{
+    filter: brightness(1.1);
 }
 
 .links{
