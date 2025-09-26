@@ -65,7 +65,7 @@ function Ranking(){
     }
 
     return(
-        <div className='global-pageContainer-left'>
+        <div className='global-pageContainer-left options-preview'>
             <h1>
                 Ranking
             </h1>

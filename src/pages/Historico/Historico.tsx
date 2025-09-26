@@ -62,7 +62,7 @@ function Historico(){
 
     return (
         <div>
-            <div className='pageContainer'>
+            <div className='pageContainer options-preview'>
                 <h1>Seus Jogos📍</h1>
                 <table className='admin-table'>
                     <thead>
@@ -145,7 +145,11 @@ function Historico(){
                     </tbody>
                 </table>
                 <div className='botoes'>
-                    <Link className='global-button global-button--full-width global-button--back' to="/">Voltar</Link>
+                    <Link className='global-button global-button--full-width global-button--back' to="/">
+                        <span className='option-link'>
+                            Voltar
+                        </span>
+                    </Link>
                 </div>
             </div>
         </div>

@@ -31,7 +31,7 @@ function Formulario(){
 
         return(
             <div className='center'>
-                <div className='global-pageContainer-left'>
+                <div className='global-pageContainer-left options-preview'>
                     <div className='formulario'>
                         <h3>
                             Como você gostaria de ser chamado?🙃
@@ -43,8 +43,16 @@ function Formulario(){
                         <input type="text" value={quantidade} onChange={(e) => chageText(e.target.value)}/>
                     </div>
                     <div className='botoes'>
-                        <button className='global-button global-button--full-width' onClick={() => {salvarDados()}}>Continuar▶️</button>
-                        <button className='global-button global-button--full-width global-button--back' onClick={() => {navigate('/', {replace: true})}}>Voltar</button>
+                        <button className='global-button global-button--full-width' onClick={() => {salvarDados()}}>
+                            <span className='option-link'>
+                                Continuar▶️
+                            </span>
+                        </button>
+                        <button className='global-button global-button--full-width global-button--back' onClick={() => {navigate('/', {replace: true})}}>
+                            <span className='option-link'>
+                                Voltar
+                            </span>
+                        </button>
                     </div>
                 </div>
             </div>

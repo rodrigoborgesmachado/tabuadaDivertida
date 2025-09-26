@@ -16,7 +16,7 @@ function Instrucoes(){
     };
 
     return(
-    <div className='global-pageContainer-left'>
+    <div className='global-pageContainer-left options-preview'>
         <div
             className='home-robot-container'
             style={
@@ -56,7 +56,11 @@ function Instrucoes(){
 
         Vamos lá, mostre suas habilidades e deixe todos boquiabertos com seu conhecimento matemágico! 💥 <br/><br/>   
         </h3>    
-        <Link className='global-button global-button--full-width global-button--back' to="/">Voltar</Link>
+        <Link className='global-button global-button--full-width global-button--back' to="/">
+            <span className='option-link'>
+                Voltar
+            </span>
+        </Link>
     </div>
     )
 }

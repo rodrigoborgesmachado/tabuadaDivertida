@@ -265,7 +265,7 @@ function Jogo(){
 
         return(
             <div className="game">
-                <div className='global-pageContainer-left'>
+                <div className='global-pageContainer-left options-preview'>
                     <div className='game-header'>
                         <div className='info-game'>
                             <h1>🏋️ {contador-1} de {localStorage.getItem(configData.QUANTIDADE_PARAM) || 20}</h1>

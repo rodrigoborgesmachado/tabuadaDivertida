@@ -5,21 +5,31 @@ function Home() {
     return (
         <div className='center'>
             <div className='home-wrapper'>
-                <HappyRobot />
-                <div className='botoes-home'>
-                    <Link className='global-button global-button--full-width' to={`/formulario`}>
-                        🎮 Jogar Agora
-                    </Link>
-                    <Link className='global-button global-button--full-width' to={`/instrucoes`}>
-                        🤔 Como Jogar?
-                    </Link>
-                    <Link className='global-button global-button--full-width' to={`/ranking`}>
-                        🏆 Ranking
-                    </Link>
-                    <Link className='global-button global-button--full-width' to={`/historico`}>
-                        📝 Minhas Partidas
-                    </Link>
-                </div>
+                <section className='options-preview'>
+                    <HappyRobot />
+                    <div className='botoes-home'>
+                        <Link className='global-button global-button--full-width' to={`/formulario`}>
+                            <span className='option-link'>
+                                🎮 Jogar Agora
+                            </span>
+                        </Link>
+                        <Link className='global-button global-button--full-width' to={`/instrucoes`}>
+                            <span className='option-link'>
+                                🤔 Como Jogar?
+                            </span>
+                        </Link>
+                        <Link className='global-button global-button--full-width' to={`/ranking`}>
+                            <span className='option-link'>
+                                🏆 Ranking
+                            </span>
+                        </Link>
+                        <Link className='global-button global-button--full-width' to={`/historico`}>
+                            <span className='option-link'>
+                                📝 Minhas Partidas
+                            </span>
+                        </Link>
+                    </div>
+                </section>
                 <section className='home-description'>
                     <h1>Matemática divertida para todas as idades</h1>
                     <p>
@@ -38,7 +48,9 @@ function Home() {
                         No nosso artigo especial compartilhamos evidências, boas práticas e dicas para aproveitar atividades lúdicas em sala de aula ou em casa.
                     </p>
                     <Link className='global-button' to='/artigos/aprender-matematica-com-jogos'>
-                        Leia o artigo completo
+                        <span className='option-link'>
+                            Leia o artigo completo
+                        </span>
                     </Link>
                 </section>
             </div>

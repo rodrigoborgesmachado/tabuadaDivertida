@@ -21,7 +21,7 @@ function Contagem(){
     }, [contador, navigate, tipo]);
 
     return (
-        <div className='countdown-container global-pageContainer-left'>
+        <div className='global-pageContainer-left options-preview'>
             <h2 className='countdown-text'>Prepare-se!</h2>
             {contador > 0 && (
                 <div key={contador} className='countdown-number'>{contador}</div>

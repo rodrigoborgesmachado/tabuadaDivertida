@@ -56,7 +56,7 @@ function Final(){
     }, []);
 
     return(
-        <div className='global-pageContainer-left'>
+        <div className='global-pageContainer-left options-preview'>
             <h2>
                 {
                     isPerfect ?
@@ -117,10 +117,26 @@ function Final(){
             </div>
 
             <div className='botoes'>
-                <Link className='global-button global-button--full-width' to={`/contagem/` + tipo}>Jogar novamente</Link>
-                <Link className='global-button global-button--full-width' to={`/ranking`}>Ranking</Link>
-                <Link className='global-button global-button--full-width' to="/historico">Histórico</Link>
-                <Link className='global-button global-button--full-width' to="/">Início</Link>
+                <Link className='global-button global-button--full-width' to={`/contagem/` + tipo}>
+                    <span className='option-link'>
+                        Jogar novamente
+                    </span>
+                </Link>
+                <Link className='global-button global-button--full-width' to={`/ranking`}>
+                    <span className='option-link'>
+                        Ranking 
+                    </span>
+                </Link>
+                <Link className='global-button global-button--full-width' to="/historico">
+                    <span className='option-link'>
+                        Histórico
+                    </span>
+                </Link>
+                <Link className='global-button global-button--full-width' to="/">
+                    <span className='option-link'>
+                        Início
+                    </span>
+                </Link>
             </div>
         </div>
     )
