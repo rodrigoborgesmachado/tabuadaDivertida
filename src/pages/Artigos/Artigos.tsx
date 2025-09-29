@@ -6,7 +6,7 @@ function Artigos(){
         <div className='center'>
             <div className='global-pageContainer-left options-preview'>
                 <div className='botoes'>
-                    <Link to={`/aprender-matematica-com-jogos`} className='global-button global-button--full-width'>
+                    <Link to={`/artigos/aprender-matematica-com-jogos`} className='global-button global-button--full-width'>
                         <span className='option-link'>
                             Aprenda Matemática com jogos
                         </span>
@@ -16,7 +16,7 @@ function Artigos(){
                             História da Tabuada
                         </span>
                     </Link>
-                    <Link to={`/tabuada`} className='global-button global-button--full-width'>
+                    <Link to={`/artigos/tabuada`} className='global-button global-button--full-width'>
                         <span className='option-link'>
                             Tabuada de Multiplicação e Divisão
                         </span>
