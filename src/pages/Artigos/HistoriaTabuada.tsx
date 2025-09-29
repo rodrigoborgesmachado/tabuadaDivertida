@@ -63,7 +63,7 @@ function HistoriaTabuada() {
                 </p>
             </section>
 
-            <footer className='tabuada-description'>
+            <section className='tabuada-description'>
                 <h2>🚀 Continue praticando</h2>
                 <p>
                     Quer colocar todo esse conhecimento em prática? Explore a tabuada interativa disponível em nosso site e
@@ -74,7 +74,7 @@ function HistoriaTabuada() {
                         Acesse a tabuada completa
                     </span>
                 </Link>
-            </footer>
+            </section>
         </div>
     );
 }

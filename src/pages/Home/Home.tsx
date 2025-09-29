@@ -28,6 +28,11 @@ function Home() {
                                 📝 Minhas Partidas
                             </span>
                         </Link>
+                        <Link className='global-button global-button--full-width' to={`/artigos`}>
+                            <span className='option-link'>
+                                🧠 Artigos
+                            </span>
+                        </Link>
                     </div>
                 </section>
                 <section className='home-description'>
@@ -88,7 +93,7 @@ function Home() {
                     <p>
                         No <strong>Tabuada Divertida</strong>, nossa missão é resgatar esse conhecimento de forma moderna, usando jogos e desafios que tornam o aprendizado mais leve, envolvente e divertido. Afinal, aprender pode — e deve — ser uma experiência prazerosa!
                     </p>
-                    <div>
+                    <div className='gap-default'>
                         <Link className='global-button' to='/artigos/historia-da-tabuada'>
                             <span className='option-link'>
                                 Leia a história completa

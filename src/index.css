@@ -1531,6 +1531,7 @@ hr{
     display: flex;
     flex-direction: column;
     gap: 4px;
+    max-width: 100%;
     background-color: var(--surface);
     border-radius: var(--radius);
     padding: var(--default-spacing);
@@ -1647,6 +1648,12 @@ hr{
   50% {
     transform: translateY(-20px);
   }
+}
+
+.gap-default{
+  display: flex;
+  flex-direction: column;
+  gap: var(--default-spacing);
 }
 
 @keyframes home-robot-explode {
