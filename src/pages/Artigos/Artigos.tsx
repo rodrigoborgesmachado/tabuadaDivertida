@@ -11,6 +11,11 @@ function Artigos(){
                             Aprenda Matemática com jogos
                         </span>
                     </Link>
+                    <Link to={`/artigos/historia-da-tabuada`} className='global-button global-button--full-width'>
+                        <span className='option-link'>
+                            História da Tabuada
+                        </span>
+                    </Link>
                     <Link to={`/tabuada`} className='global-button global-button--full-width'>
                         <span className='option-link'>
                             Tabuada de Multiplicação e Divisão

@@ -28,10 +28,15 @@ function Home() {
                                 📝 Minhas Partidas
                             </span>
                         </Link>
+                        <Link className='global-button global-button--full-width' to={`/artigos`}>
+                            <span className='option-link'>
+                                🧠 Artigos
+                            </span>
+                        </Link>
                     </div>
                 </section>
                 <section className='home-description'>
-                    <h1>Matemática divertida para todas as idades</h1>
+                    <h1>🎯 Matemática divertida para todas as idades</h1>
                     <p>
                         Tabuada Divertida é uma plataforma educacional criada para ajudar estudantes de todas as idades a praticarem matemática de maneira leve e envolvente.
                         Exercícios de multiplicação, divisão, adição e subtração são apresentados em formato de jogo, incentivando o aprendizado contínuo com rankings, objetivos claros e acompanhamento de progresso.
@@ -42,7 +47,7 @@ function Home() {
                     </p>
                 </section>
                 <section className='home-article-preview'>
-                    <h2>Por que aprender matemática com jogos funciona?</h2>
+                    <h2>🧠 Por que aprender matemática com jogos funciona?</h2>
                     <p>
                         Aprender brincando transforma o estudo em um desafio prazeroso, mantém a motivação em alta e ajuda a consolidar o conhecimento por meio de repetições significativas.
                         No nosso artigo especial compartilhamos evidências, boas práticas e dicas para aproveitar atividades lúdicas em sala de aula ou em casa.
@@ -54,7 +59,7 @@ function Home() {
                     </Link>
                 </section>
                 <section className='home-article-preview'>
-                    <h2>O que você encontra por aqui</h2>
+                    <h2>🧩 O que você encontra por aqui</h2>
                     <ul>
                         <li>✔️ Jogos de matemática para diferentes níveis</li>
                         <li>✔️ Histórico para acompanhar o desempenho</li>
@@ -63,7 +68,7 @@ function Home() {
                     </ul>
                 </section>
                 <section className='home-article-preview'>
-                    <h2>Seguro para crianças</h2>
+                    <h2>🛡️ Seguro para crianças</h2>
                     <p>
                         O Tabuada Divertida foi desenvolvido com foco total em segurança e privacidade. Nenhuma informação sensível é coletada, e todas as atividades são acessíveis sem login obrigatório.
                     </p>
@@ -88,11 +93,18 @@ function Home() {
                     <p>
                         No <strong>Tabuada Divertida</strong>, nossa missão é resgatar esse conhecimento de forma moderna, usando jogos e desafios que tornam o aprendizado mais leve, envolvente e divertido. Afinal, aprender pode — e deve — ser uma experiência prazerosa!
                     </p>
-                    <Link className='global-button' to='/artigos/tabuada'>
-                        <span className='option-link'>
-                            Acesse a tabuada
-                        </span>
-                    </Link>
+                    <div className='gap-default'>
+                        <Link className='global-button' to='/artigos/historia-da-tabuada'>
+                            <span className='option-link'>
+                                Leia a história completa
+                            </span>
+                        </Link>
+                        <Link className='global-button' to='/artigos/tabuada'>
+                            <span className='option-link'>
+                                Acesse a tabuada
+                            </span>
+                        </Link>
+                    </div>
                 </section>
             </div>
         </div>
