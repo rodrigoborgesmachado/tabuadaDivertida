@@ -16,6 +16,7 @@ import Contribua from './pages/Contribua/Contribua';
 import Header from './components/Header/index';
 import AprenderMatematicaJogos from './pages/Artigos/AprenderMatematicaJogos';
 import TabuadaPage from './pages/Artigos/TabuadaPage';
+import HistoriaTabuada from './pages/Artigos/HistoriaTabuada';
 import Artigos from './pages/Artigos/Artigos';
 
 interface RoutesAppProps {
@@ -42,6 +43,7 @@ function RoutesApp({ theme, toggleTheme }: RoutesAppProps) {
                 <Route path='/contato' element={<Contato/>}/>
                 <Route path='/artigos' element={<Artigos/>}/>
                 <Route path='/artigos/aprender-matematica-com-jogos' element={<AprenderMatematicaJogos/>}/>
+                <Route path='/artigos/historia-da-tabuada' element={<HistoriaTabuada/>}/>
                 <Route path='/artigos/tabuada' element={<TabuadaPage/>}/>
                 <Route path='/contribua' element={<Contribua/>}/>
                 <Route path='*' element={<Erro/>}/>
