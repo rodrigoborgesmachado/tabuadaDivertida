@@ -53,6 +53,47 @@ function Home() {
                         </span>
                     </Link>
                 </section>
+                <section className='home-article-preview'>
+                    <h2>O que você encontra por aqui</h2>
+                    <ul>
+                        <li>✔️ Jogos de matemática para diferentes níveis</li>
+                        <li>✔️ Histórico para acompanhar o desempenho</li>
+                        <li>✔️ Rankings com os melhores jogadores</li>
+                        <li>✔️ Conteúdo gratuito, sem anúncios invasivos</li>
+                    </ul>
+                </section>
+                <section className='home-article-preview'>
+                    <h2>Seguro para crianças</h2>
+                    <p>
+                        O Tabuada Divertida foi desenvolvido com foco total em segurança e privacidade. Nenhuma informação sensível é coletada, e todas as atividades são acessíveis sem login obrigatório.
+                    </p>
+                </section>
+                <section className='home-article-preview'>
+                    <h2>📜 A História da Tabuada</h2>
+                    <p>
+                        A tabuada é uma ferramenta matemática que ajuda a memorizar os resultados das operações básicas, especialmente a multiplicação. Mas você sabia que ela existe há milhares de anos?
+                    </p>
+                    <p>
+                        A origem da tabuada remonta às civilizações antigas, como os <strong>babilônios</strong> e <strong>egípcios</strong>, que já utilizavam tabelas para facilitar os cálculos comerciais e astronômicos. Porém, a tabuada como conhecemos hoje foi sistematizada por um dos matemáticos mais famosos da Grécia Antiga: <strong>Pitágoras</strong>.
+                    </p>
+                    <p>
+                        A chamada <strong>Tabuada de Pitágoras</strong> é uma matriz onde as linhas e colunas representam números, e as células contêm o resultado da multiplicação entre eles. Esse formato visual ajudava os estudantes da época a entenderem padrões e propriedades da multiplicação.
+                    </p>
+                    <p>
+                        Com o passar dos séculos, a tabuada se tornou parte essencial do ensino da matemática em todo o mundo. Durante a Idade Média, ela era ensinada em escolas monásticas. No século XIX, com a popularização das escolas públicas, passou a ser memorizada por milhões de alunos como uma das primeiras ferramentas para o raciocínio lógico.
+                    </p>
+                    <p>
+                        Hoje em dia, a tabuada continua sendo fundamental. Apesar das calculadoras e da tecnologia, saber fazer contas de cabeça traz mais agilidade, confiança e independência para lidar com números no dia a dia.
+                    </p>
+                    <p>
+                        No <strong>Tabuada Divertida</strong>, nossa missão é resgatar esse conhecimento de forma moderna, usando jogos e desafios que tornam o aprendizado mais leve, envolvente e divertido. Afinal, aprender pode — e deve — ser uma experiência prazerosa!
+                    </p>
+                    <Link className='global-button' to='/artigos/tabuada'>
+                        <span className='option-link'>
+                            Acesse a tabuada
+                        </span>
+                    </Link>
+                </section>
             </div>
         </div>
     );

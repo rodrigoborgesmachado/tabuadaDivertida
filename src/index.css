@@ -1155,6 +1155,12 @@ hr{
   text-align: left;
 }
 
+.home-article-preview ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+}
+
 .home-description p + p,
 .home-article-preview p + p {
   margin-top: var(--default-spacing);
@@ -1506,6 +1512,132 @@ hr{
   
 .option-link:hover::after {
   width: 100%;
+}
+
+.tabuada-title {
+    font-size: 1.8rem;
+    margin-bottom: var(--default-spacing);
+    color: var(--text-color-accent);
+}
+
+.tabuada-description {
+    margin-top: var(--double-default-spacing);
+    margin-bottom: var(--default-spacing);
+    font-size: 1rem;
+    color: var(--text-color-primary);
+}
+
+.tabuada-table {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    background-color: var(--surface);
+    border-radius: var(--radius);
+    padding: var(--default-spacing);
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+    overflow-x: auto;
+}
+
+.tabuada-row,
+.tabuada-header {
+    display: flex;
+}
+
+.tabuada-cell {
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 40px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background-color: var(--bg);
+    color: var(--text-color-primary);
+    font-weight: 500;
+}
+
+.tabuada-header-cell {
+    background-color: var(--brand);
+    color: var(--text-color-button);
+    font-weight: bold;
+}
+
+.tabuada-label {
+    background-color: transparent;
+    border: none;
+}
+
+.tabuada-cards-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--default-spacing);
+    justify-content: center;
+}
+
+.tabuada-card {
+    background-color: var(--surface);
+    border-radius: var(--radius);
+    padding: var(--default-spacing);
+    width: 180px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    color: var(--text-color-primary);
+    transition: transform 0.2s ease;
+}
+
+.tabuada-card:hover {
+    transform: scale(1.03);
+}
+
+.tabuada-card-title {
+    text-align: center;
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+    color: var(--text-color-accent);
+}
+
+.tabuada-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.tabuada-item {
+    text-align: center;
+    font-size: 0.95rem;
+    padding: 2px 0;
+}
+
+.tabuada-footer {
+    margin-top: 2rem;
+    background-color: var(--surface);
+    padding: var(--default-spacing);
+    border-radius: var(--radius);
+    color: var(--text-color-primary);
+    box-shadow: 0 0 8px rgba(0,0,0,0.05);
+}
+
+.tabuada-footer h2 {
+    color: var(--text-color-accent);
+    margin-bottom: 0.5rem;
+}
+
+.tabuada-footer p {
+    margin-bottom: 0.75rem;
+    line-height: 1.6;
+}
+
+.tabuada-description {
+    margin-top: 32px;
+    color: var(--text-color-primary);
+    font-size: 16px;
+    line-height: 1.6;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.tabuada-section {
+    margin-top: 48px;
+    text-align: center;
 }
 
 @keyframes home-robot-bounce {
