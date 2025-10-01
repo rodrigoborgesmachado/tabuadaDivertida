@@ -1,5 +1,4 @@
 import './Artigos.css';
-import { Link } from 'react-router-dom';
 
 function AprenderMatematicaJogos() {
     return (
@@ -46,8 +45,8 @@ function AprenderMatematicaJogos() {
 
                 <p>
                     Quer colocar essas dicas em prática agora mesmo?
-                    Experimente uma partida na <Link to='/'>página inicial</Link> ou acesse o <Link to='/formulario'>formulário de jogo</Link> para escolher o nível e a operação que deseja treinar.
-                    Você também pode acompanhar a evolução no <Link to='/ranking'>ranking da comunidade</Link> e comparar seus resultados com as tentativas anteriores.
+                    Experimente uma partida na <a href='/'>página inicial</a> ou acesse o <a href='/formulario'>formulário de jogo</a> para escolher o nível e a operação que deseja treinar.
+                    Você também pode acompanhar a evolução no <a href='/ranking'>ranking da comunidade</a> e comparar seus resultados com as tentativas anteriores.
                 </p>
             </article>
         </main>

@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom';
 import HappyRobot from '../../components/HappyRobot/HappyRobot';
 
 function Home() {
@@ -8,31 +7,31 @@ function Home() {
                 <section className='options-preview'>
                     <HappyRobot />
                     <div className='botoes-home'>
-                        <Link className='global-button global-button--full-width' to={`/formulario`}>
+                        <a className='global-button global-button--full-width' href={`/formulario`}>
                             <span className='option-link'>
                                 🎮 Jogar Agora
                             </span>
-                        </Link>
-                        <Link className='global-button global-button--full-width' to={`/instrucoes`}>
+                        </a>
+                        <a className='global-button global-button--full-width' href={`/instrucoes`}>
                             <span className='option-link'>
                                 🤔 Como Jogar?
                             </span>
-                        </Link>
-                        <Link className='global-button global-button--full-width' to={`/ranking`}>
+                        </a>
+                        <a className='global-button global-button--full-width' href={`/ranking`}>
                             <span className='option-link'>
                                 🏆 Ranking
                             </span>
-                        </Link>
-                        <Link className='global-button global-button--full-width' to={`/historico`}>
+                        </a>
+                        <a className='global-button global-button--full-width' href={`/historico`}>
                             <span className='option-link'>
                                 📝 Minhas Partidas
                             </span>
-                        </Link>
-                        <Link className='global-button global-button--full-width' to={`/artigos`}>
+                        </a>
+                        <a className='global-button global-button--full-width' href={`/artigos`}>
                             <span className='option-link'>
                                 🧠 Artigos
                             </span>
-                        </Link>
+                        </a>
                     </div>
                 </section>
                 <section className='home-description'>
@@ -52,11 +51,11 @@ function Home() {
                         Aprender brincando transforma o estudo em um desafio prazeroso, mantém a motivação em alta e ajuda a consolidar o conhecimento por meio de repetições significativas.
                         No nosso artigo especial compartilhamos evidências, boas práticas e dicas para aproveitar atividades lúdicas em sala de aula ou em casa.
                     </p>
-                    <Link className='global-button' to='/artigos/aprender-matematica-com-jogos'>
+                    <a className='global-button' href='/artigos/aprender-matematica-com-jogos'>
                         <span className='option-link'>
                             Leia o artigo completo
                         </span>
-                    </Link>
+                    </a>
                 </section>
                 <section className='home-article-preview'>
                     <h2>🧩 O que você encontra por aqui</h2>
@@ -94,16 +93,16 @@ function Home() {
                         No <strong>Tabuada Divertida</strong>, nossa missão é resgatar esse conhecimento de forma moderna, usando jogos e desafios que tornam o aprendizado mais leve, envolvente e divertido. Afinal, aprender pode — e deve — ser uma experiência prazerosa!
                     </p>
                     <div className='gap-default'>
-                        <Link className='global-button' to='/artigos/historia-da-tabuada'>
+                        <a className='global-button' href='/artigos/historia-da-tabuada'>
                             <span className='option-link'>
                                 Leia a história completa
                             </span>
-                        </Link>
-                        <Link className='global-button' to='/artigos/tabuada'>
+                        </a>
+                        <a className='global-button' href='/artigos/tabuada'>
                             <span className='option-link'>
                                 Acesse a tabuada
                             </span>
-                        </Link>
+                        </a>
                     </div>
                 </section>
             </div>
