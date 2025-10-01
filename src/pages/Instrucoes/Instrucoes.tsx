@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import {Link} from 'react-router-dom';
 import happyRobot from '../../assets/robot-happy.svg';
 
 function Instrucoes(){
@@ -56,11 +55,11 @@ function Instrucoes(){
 
         Vamos lá, mostre suas habilidades e deixe todos boquiabertos com seu conhecimento matemágico! 💥 <br/><br/>   
         </h3>    
-        <Link className='global-button global-button--full-width global-button--back' to="/">
+        <a className='global-button global-button--full-width global-button--back' href="/">
             <span className='option-link'>
                 Voltar
             </span>
-        </Link>
+        </a>
     </div>
     )
 }

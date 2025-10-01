@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import configData from "../../Config.json";
 import { Table } from 'react-bootstrap';
-import {Link} from 'react-router-dom';
 
 function Historico(){
     const [historico, setHistorico] = useState(new Array());
@@ -145,11 +144,11 @@ function Historico(){
                     </tbody>
                 </table>
                 <div className='botoes'>
-                    <Link className='global-button global-button--full-width global-button--back' to="/">
+                    <a className='global-button global-button--full-width global-button--back' href="/">
                         <span className='option-link'>
                             Voltar
                         </span>
-                    </Link>
+                    </a>
                 </div>
             </div>
         </div>

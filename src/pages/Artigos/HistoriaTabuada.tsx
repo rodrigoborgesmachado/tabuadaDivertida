@@ -1,5 +1,4 @@
 import './Artigos.css';
-import { Link } from 'react-router-dom';
 
 function HistoriaTabuada() {
     return (
@@ -70,11 +69,11 @@ function HistoriaTabuada() {
                     Quer colocar todo esse conhecimento em prática? Explore a tabuada interativa disponível em nosso site e
                     acompanhe sua evolução com desafios personalizados.
                 </p>
-                <Link className='global-button' to='/artigos/tabuada'>
+                <a className='global-button' href='/artigos/tabuada'>
                     <span className='option-link'>
                         Acesse a tabuada completa
                     </span>
-                </Link>
+                </a>
             </section>
         </div>
     );

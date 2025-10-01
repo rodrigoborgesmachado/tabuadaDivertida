@@ -1,6 +1,5 @@
 import ThemeSwitcher from '../ThemeSwitcher/themeSwitcher';
 import './style.css';
-import { Link } from 'react-router-dom';
 
 interface HeaderProps {
     theme: 'light' | 'dark';
@@ -11,12 +10,12 @@ function Header({ theme, toggleTheme }: HeaderProps){
     return(
         <header className='conNav'>
             <div className='toolNav'>
-                <Link className='logo option-link' to='/'>Tabuada Divertida</Link>
+                <a className='logo option-link' href='/'>Tabuada Divertida</a>
                 <div className='opcoes-head'>
-                    <Link className='ranking option-link' to='/ranking'>🔝Ranking🔝</Link>
-                    <Link className='ranking option-link' to='/historico'>🔝Histórico🔝</Link>
-                    <Link className='ranking option-link' to='/artigos'>🧠Artigos🧠</Link>
-                    <Link className='ranking option-link' to='/artigos/tabuada'>📘Tabuada📘</Link>
+                    <a className='ranking option-link' href='/ranking'>🔝Ranking🔝</a>
+                    <a className='ranking option-link' href='/historico'>🔝Histórico🔝</a>
+                    <a className='ranking option-link' href='/artigos'>🧠Artigos🧠</a>
+                    <a className='ranking option-link' href='/artigos/tabuada'>📘Tabuada📘</a>
                     <ThemeSwitcher theme={theme} toggleTheme={toggleTheme} />
                 </div>
             </div>

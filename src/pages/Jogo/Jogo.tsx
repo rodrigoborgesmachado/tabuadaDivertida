@@ -1,7 +1,6 @@
 import configData from "../../Config.json";
 import Tempo from '../../components/Tempo';
 import api from '../../services/api';
-import {Link} from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {toast} from 'react-toastify';
@@ -251,7 +250,7 @@ function Jogo(){
             <div className='container'>
                 <div className='not-found'>
                     Não existe essa opção.
-                    <Link to="/">Home</Link>
+                    <a href="/">Home</a>
                 </div>
             </div>
         )

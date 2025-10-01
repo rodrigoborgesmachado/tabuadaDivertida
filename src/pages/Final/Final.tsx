@@ -1,4 +1,3 @@
-import {Link} from 'react-router-dom';
 import configData from "../../Config.json";
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
@@ -117,26 +116,26 @@ function Final(){
             </div>
 
             <div className='botoes'>
-                <Link className='global-button global-button--full-width' to={`/contagem/` + tipo}>
+                <a className='global-button global-button--full-width' href={`/contagem/` + tipo}>
                     <span className='option-link'>
                         Jogar novamente
                     </span>
-                </Link>
-                <Link className='global-button global-button--full-width' to={`/ranking`}>
+                </a>
+                <a className='global-button global-button--full-width' href={`/ranking`}>
                     <span className='option-link'>
-                        Ranking 
+                        Ranking
                     </span>
-                </Link>
-                <Link className='global-button global-button--full-width' to="/historico">
+                </a>
+                <a className='global-button global-button--full-width' href="/historico">
                     <span className='option-link'>
                         Histórico
                     </span>
-                </Link>
-                <Link className='global-button global-button--full-width' to="/">
+                </a>
+                <a className='global-button global-button--full-width' href="/">
                     <span className='option-link'>
                         Início
                     </span>
-                </Link>
+                </a>
             </div>
         </div>
     )
