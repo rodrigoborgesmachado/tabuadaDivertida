@@ -1,5 +1,4 @@
 import './Artigos.css';
-import { Link } from 'react-router-dom';
 
 function BeneficiosJogosEducacionais() {
     return (
@@ -55,10 +54,10 @@ function BeneficiosJogosEducacionais() {
                 </ul>
 
                 <p>
-                    Na <strong>Tabuada Divertida</strong>, acreditamos que aprender pode ser tão divertido quanto jogar. 
-                    Experimente uma partida na <Link to='/'>página inicial</Link> ou explore o <Link to='/formulario'>formulário de jogo</Link> 
-                    para escolher o nível e a operação matemática que deseja treinar. 
-                    Você também pode comparar sua evolução no <Link to='/ranking'>ranking da comunidade</Link> e celebrar cada conquista!
+                    Na <strong>Tabuada Divertida</strong>, acreditamos que aprender pode ser tão divertido quanto jogar.
+                    Experimente uma partida na <a href='/'>página inicial</a> ou explore o <a href='/formulario'>formulário de jogo</a>
+                    para escolher o nível e a operação matemática que deseja treinar.
+                    Você também pode comparar sua evolução no <a href='/ranking'>ranking da comunidade</a> e celebrar cada conquista!
                 </p>
             </article>
         </main>

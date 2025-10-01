@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {Link} from 'react-router-dom';
 import api from '../../services/api';
 import { Table } from 'react-bootstrap';
 import Config from '../../Config.json';
@@ -189,8 +188,8 @@ function Ranking(){
                 </div>
             </div>
             <div className='botoes'>
-                <Link className='global-button global-button--full-width' to="/historico">Histórico</Link>
-                <Link className='global-button global-button--full-width global-button--back' to="/">Voltar</Link>
+                <a className='global-button global-button--full-width' href="/historico">Histórico</a>
+                <a className='global-button global-button--full-width global-button--back' href="/">Voltar</a>
             </div>
         </div>
     )
