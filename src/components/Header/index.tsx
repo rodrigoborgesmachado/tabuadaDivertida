@@ -8,7 +8,7 @@ interface HeaderProps {
 
 function Header({ theme, toggleTheme }: HeaderProps){
     return(
-        <header className='conNav'>
+        <header className='conNav navbar'>
             <div className='toolNav'>
                 <a className='logo option-link' href='/'>Tabuada Divertida</a>
                 <div className='opcoes-head'>
