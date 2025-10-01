@@ -1,3 +1,4 @@
+import './Artigos.css';
 import {Link} from 'react-router-dom';
 
 function Artigos(){
@@ -19,6 +20,11 @@ function Artigos(){
                     <Link to={`/artigos/tabuada`} className='global-button global-button--full-width'>
                         <span className='option-link'>
                             Tabuada de Multiplicação e Divisão
+                        </span>
+                    </Link>
+                    <Link to={`/artigos/beneficios-jogos-educacionas`} className='global-button global-button--full-width'>
+                        <span className='option-link'>
+                            Benefício dos Jogos Educacionais
                         </span>
                     </Link>
                 </div>

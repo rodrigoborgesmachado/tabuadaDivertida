@@ -1,3 +1,5 @@
+import './Artigos.css';
+
 function TabuadaPage() {
     const linhas = Array.from({ length: 10 }, (_, i) => i + 1);
     const colunas = Array.from({ length: 10 }, (_, i) => i + 1);
