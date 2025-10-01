@@ -10,7 +10,7 @@ function Home() {
                     <div className='botoes-home'>
                         <Link className='global-button global-button--full-width' to={`/formulario`}>
                             <span className='option-link'>
-                                🎮 Jogar Agora ihrull
+                                🎮 Jogar Agora
                             </span>
                         </Link>
                         <Link className='global-button global-button--full-width' to={`/instrucoes`}>
