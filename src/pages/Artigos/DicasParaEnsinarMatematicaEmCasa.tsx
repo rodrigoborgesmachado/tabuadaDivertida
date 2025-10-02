@@ -1,7 +1,8 @@
-function DicasParaEnsinarMatematicaEmcasa() {
+function DicasParaEnsinarMatematicaEmCasa() {
     return (
-        <main className='article-page'>
+        <main className='global-pageContainer options-preview'>
             <article className='article-content'>
+                
                 <h1>✨Matemática Pode Ser Legal! Dicas para Ensinar com Diversão</h1>
                 <p>
                     Ensinar matemática em casa não precisa ser complicado. 
@@ -39,11 +40,10 @@ function DicasParaEnsinarMatematicaEmcasa() {
                     Eles estimulam o raciocínio lógico, a estratégia e a resolução de problemas, tudo isso enquanto se divertem.
                     Competir de forma saudável também ajuda a desenvolver habilidades sociais e a lidar com desafios.
                 </p>
-                
             </article>
         </main>
     );
 }
 
-export default DicasParaEnsinarMatematicaEmcasa;
+export default DicasParaEnsinarMatematicaEmCasa;
 

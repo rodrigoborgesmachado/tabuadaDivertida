@@ -2,7 +2,7 @@ import './Artigos.css';
 
 function BeneficiosJogosEducacionais() {
     return (
-        <main className='article-page'>
+        <main className='global-pageContainer options-preview'>
             <article className='article-content'>
                 <h1>Os benefícios dos jogos educacionais na infância</h1>
                 <p>

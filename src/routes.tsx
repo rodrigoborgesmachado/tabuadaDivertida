@@ -19,7 +19,7 @@ import TabuadaPage from './pages/Artigos/TabuadaPage';
 import HistoriaTabuada from './pages/Artigos/HistoriaTabuada';
 import Artigos from './pages/Artigos/Artigos';
 import BeneficiosJogosEducacionais from './pages/Artigos/BeneficiosJogosEducacionais';
-import DicasParaEnsinarMatematicaEmcasa from './pages/Artigos/DicasParaEnsinarMatematicaEmcasa';
+import DicasParaEnsinarMatematicaEmCasa from './pages/Artigos/DicasParaEnsinarMatematicaEmCasa';
 
 interface RoutesAppProps {
   theme: 'light' | 'dark';
@@ -48,7 +48,7 @@ function RoutesApp({ theme, toggleTheme }: RoutesAppProps) {
                 <Route path='/artigos/historia-da-tabuada' element={<HistoriaTabuada/>}/>
                 <Route path='/artigos/tabuada' element={<TabuadaPage/>}/>
                 <Route path='/artigos/beneficios-jogos-educacionas' element={<BeneficiosJogosEducacionais/>}/>
-                <Route path='/artigos/dicas-para-ensinar-matematica-em-casa' element={<DicasParaEnsinarMatematicaEmcasa/>}/>
+                <Route path='/artigos/dicas-para-ensinar-matematica-em-casa' element={<DicasParaEnsinarMatematicaEmCasa/>}/>
                 <Route path='/contribua' element={<Contribua/>}/>
                 <Route path='*' element={<Erro/>}/>
             </Routes>
