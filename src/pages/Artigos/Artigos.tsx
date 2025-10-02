@@ -26,6 +26,11 @@ function Artigos(){
                             Benefício dos Jogos Educacionais
                         </span>
                     </a>
+                    <a href={`/artigos/dicas-para-ensinar-matematica-em-casa`} className='global-button global-button--full-width'>
+                        <span className='option-link'>
+                            Dicas para Ensinar Matemática em Casa
+                        </span>
+                    </a>
                 </div>
             </div>
         </div>
