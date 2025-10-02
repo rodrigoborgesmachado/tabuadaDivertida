@@ -2,7 +2,7 @@ import './Artigos.css';
 
 function AprenderMatematicaJogos() {
     return (
-        <main className='article-page'>
+        <main className='global-pageContainer options-preview'>
             <article className='article-content'>
                 <h1>Por que aprender matemática com jogos funciona</h1>
                 <p>
