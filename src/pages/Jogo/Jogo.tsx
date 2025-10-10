@@ -71,7 +71,7 @@ function Jogo(){
     function MontaConta(){
         let n1 = contas1[contador];
         let n2 = contas2[contador];
-        let t = ['x', '-', '+', '/'];
+        let t = ['x', '-', '+', '÷'];
         let temp = '';
 
         if(tipo === 'D'){
@@ -144,8 +144,8 @@ function Jogo(){
                     respostaCerta = true;
                 }
             }
-            else if(contasCorrente.includes('/')){
-                if(parseInt(resposta) == parseInt(contasCorrente.split('/')[0]) / parseInt(contasCorrente.split('/')[1])){
+            else if(contasCorrente.includes('÷')){
+                if(parseInt(resposta) == parseInt(contasCorrente.split('÷')[0]) / parseInt(contasCorrente.split('÷')[1])){
                     respostaCerta = true;
                 }
             }
