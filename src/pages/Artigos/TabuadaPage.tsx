@@ -7,7 +7,7 @@ function TabuadaPage() {
 
     return (
         <div className='global-pageContainer options-preview'>
-            <h1 className='tabuada-title'>📊 Tabuada de Multiplicação</h1>
+            <h1 className='tabuada-title'>📊 Tabuada de Multiplicação e Divisão</h1>
             <p className='tabuada-description'>
                 Consulte e pratique a tabuada de multiplicação de 1 a 10.
                 Essa é uma ótima maneira de reforçar o raciocínio matemático e a memorização de contas básicas.
