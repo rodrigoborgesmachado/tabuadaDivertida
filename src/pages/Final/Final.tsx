@@ -4,8 +4,6 @@ import { useEffect, useState } from 'react';
 import happyRobot from '../../assets/robot-happy.svg';
 import great from '../../assets/great.png';
 import donkey from '../../assets/donkey.png';
-import sadRobot from '../../assets/robot-sad.svg';
-
 
 function Final(){
     const{tipo} = useParams();
@@ -72,7 +70,7 @@ function Final(){
             </h2>
             <br/>
             <div className='robot-container'>
-                <img src={isPerfect ? happyRobot : isWorst ? donkey : sadRobot} alt={isPerfect ? 'Robô feliz' : 'Robô triste'} className={isWorst ? 'robot-donkey' : 'robot'}/>
+                <img src={isPerfect ? happyRobot : isWorst ? donkey : happyRobot} alt={isPerfect ? 'Robô feliz' : 'Robô triste'} className={isWorst ? 'robot-donkey' : 'robot'}/>
             </div>
             {
                 isPerfect ?
