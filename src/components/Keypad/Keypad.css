@@ -1,0 +1,47 @@
+.keypad-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--default-spacing);
+  width: 100%;
+  max-width: 360px;
+  margin: 12px auto 0;
+}
+
+.keypad-row {
+  display: flex;
+  gap: var(--default-spacing);
+}
+
+.keypad-btn {
+  flex: 1;
+  padding: 12px 0;
+  font-size: 18px;
+  border: 1px solid var(--panel-border-color);
+  border-radius: var(--default-border-radius);
+  background: var(--button-color-secondary);
+  color: var(--text-color-primary);
+  transition: border-color 120ms ease, background-color 120ms ease, transform 60ms ease;
+}
+
+.keypad-btn:hover,
+.keypad-btn:focus-visible {
+  border-color: var(--loader-color);
+}
+
+.keypad-btn:active {
+  transform: scale(0.98);
+  border-color: var(--loader-color);
+}
+
+.keypad-enter {
+  background: var(--button-color-primary-right);
+  border-color: var(--button-color-primary-right);
+  color: #fff;
+  font-weight: 600;
+}
+
+.keypad-enter:hover,
+.keypad-enter:focus-visible {
+  background: var(--button-color-primary-right-hover);
+  border-color: var(--button-color-primary-right-hover);
+}
