@@ -1,10 +1,11 @@
 import configData from "../../Config.json";
 import Tempo from '../../components/Tempo';
 import api from '../../services/api';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {toast} from 'react-toastify';
 import PacmanLoader from "../../components/PacmanLoader/PacmanLoader";
+import Keypad from "../../components/Keypad/Keypad";
 
 function Jogo(){
     const{tipo} = useParams();
@@ -19,6 +20,12 @@ function Jogo(){
     const[loadding, setLoadding] = useState(false);
     const[pontuacao, setPontuacao] = useState(0);
     const[recorde, setRecorde] = useState(parseInt(localStorage.getItem(configData.RECORDE) || '0'));
+    const isMobile = useMemo(() => {
+        if (typeof navigator === 'undefined') return false;
+        const ua = navigator.userAgent || '';
+        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua) ||
+               (typeof window !== 'undefined' && (window as any).matchMedia && (window as any).matchMedia('(pointer: coarse)').matches);
+    }, []);
 
     useEffect(() => {
         localStorage.setItem(configData.QUESTOES, JSON.stringify([]));
@@ -122,8 +129,8 @@ function Jogo(){
         }
     }
 
-    const handleKeyDown = (event) => {
-        if (event.key === 'Enter' && resposta != '') {
+    const submitAnswer = () => {
+        if (resposta != '') {
             var questoes = JSON.parse(localStorage.getItem(configData.QUESTOES));
 
             let respostaCerta = false;
@@ -189,6 +196,12 @@ function Jogo(){
             }else{
                 setContasCorrente(MontaConta());
             }
+        }
+      }
+
+    const handleKeyDown = (event) => {
+        if (event.key === 'Enter') {
+            submitAnswer();
         }
       }
 
@@ -280,12 +293,22 @@ function Jogo(){
                             {contasCorrente}
                         </h3>
                         <input
-                            type="number"
+                            type={isMobile ? 'text' : 'number'}
+                            inputMode={isMobile ? 'none' : 'numeric'}
                             value={resposta}
                             onChange={(e) => respondeu(e.target.value)}
                             onKeyDown={handleKeyDown}
                             autoFocus
+                            readOnly={isMobile}
+                            disabled={isMobile}
                         />
+                        {isMobile && (
+                            <Keypad
+                                value={resposta}
+                                onChange={(val) => respondeu(val)}
+                                onEnter={submitAnswer}
+                            />
+                        )}
                     </div>
                 </div>
             </div>
