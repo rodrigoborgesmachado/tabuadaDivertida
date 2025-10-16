@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import happyRobot from '../../assets/robot-happy.svg';
 import great from '../../assets/great.png';
 import donkey from '../../assets/donkey.png';
+import WalkingRobot from "./../../components/WalkingRobot/WalkingRobot";
 
 function Final(){
     const{tipo} = useParams();
@@ -54,6 +55,7 @@ function Final(){
 
     return(
         <div className='global-pageContainer-left options-preview'>
+            <WalkingRobot />
             <h2>
                 {
                     isPerfect ?

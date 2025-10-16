@@ -2,10 +2,11 @@ import { useEffect, useState } from 'react';
 import configData from "../../Config.json";
 import { useNavigate } from 'react-router-dom';
 import {toast} from 'react-toastify';
+import WalkingRobot from '../../components/WalkingRobot/WalkingRobot';
 
 function Formulario(){
         const[nome, setNome] = useState(localStorage.getItem(configData.NOME_PARAM) || '');
-        const[quantidade, setQuantidade] = useState(localStorage.getItem(configData.QUANTIDADE_PARAM) || 20);
+        const[quantidade, setQuantidade] = useState(parseInt(localStorage.getItem(configData.QUANTIDADE_PARAM) || '20'));
         const navigate = useNavigate();
 
         useEffect(() => {
@@ -31,6 +32,7 @@ function Formulario(){
 
         return(
             <div className='center'>
+                <WalkingRobot />
                 <div className='global-pageContainer-left options-preview'>
                     <div className='formulario'>
                         <h3>

@@ -1,0 +1,11 @@
+.walking-robot {
+    position: absolute;
+    width: 80px;
+    height: auto;
+    transition: all 2s ease-in-out;
+    z-index: 999;
+}
+
+.walking-robot.flip {
+    transform: scaleX(-1); 
+}

@@ -1,8 +1,10 @@
 import HappyRobot from '../../components/HappyRobot/HappyRobot';
+import WalkingRobot from '../../components/WalkingRobot/WalkingRobot';
 
 function Home() {
     return (
         <div className='center'>
+            <WalkingRobot />
             <div className='home-wrapper'>
                 <section className='options-preview'>
                     <HappyRobot />
