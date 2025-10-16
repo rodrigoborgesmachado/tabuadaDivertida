@@ -1417,7 +1417,7 @@ hr{
 }
 
 .home-robot {
-  width: 200px;
+  width: 16rem;
   cursor: pointer;
   transition: transform 0.2s;
 }
