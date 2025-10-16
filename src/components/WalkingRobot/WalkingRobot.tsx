@@ -5,6 +5,7 @@ import HappyRobot from '../HappyRobot/HappyRobot';
 export default function WalkingRobot() {
 	const robotRef = useRef<HTMLImageElement | null>(null);
 	const [direction, setDirection] = useState<'left' | 'right'>('right');
+	const [clicked, setClicked] = useState(0);
 
 	useEffect(() => {
 		const moveRobot = () => {
@@ -30,8 +31,8 @@ export default function WalkingRobot() {
 	}, []);
 
 	return (
-		<div ref={robotRef} className={`walking-robot ${direction === 'left' ? 'flip' : ''}`}>
-            <HappyRobot />
+		<div onClick={(e) => setClicked(prev => prev+1)} ref={robotRef} className={`walking-robot ${direction === 'left' ? 'flip' : ''}`}>
+            <HappyRobot happy={clicked <= 3}/>
         </div>
 	);
 }

@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import happyRobot from '../../assets/robot-happy.svg';
+import sadRobot from '../../assets/robot-sad.svg';
 
-function HappyRobot(){
+function HappyRobot({happy = true}){
     const [clickCount, setClickCount] = useState(0);
     const [exploded, setExploded] = useState(false);
 
@@ -25,7 +26,7 @@ function HappyRobot(){
             <span className='home-robot-explosion'>💥</span>
         ) : (
             <img
-                src={happyRobot}
+                src={happy ? happyRobot : sadRobot}
                 alt='Robô feliz'
                 className='home-robot'
                 style={{ transform: `scale(${1 + clickCount * 0.1})` }}
