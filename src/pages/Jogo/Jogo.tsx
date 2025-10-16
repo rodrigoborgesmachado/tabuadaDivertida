@@ -6,7 +6,6 @@ import { useParams, useNavigate } from 'react-router-dom';
 import {toast} from 'react-toastify';
 import PacmanLoader from "../../components/PacmanLoader/PacmanLoader";
 import Keypad from "../../components/Keypad/Keypad";
-import WalkingRobot from "../../components/WalkingRobot/WalkingRobot";
 
 function Jogo(){
     const{tipo} = useParams();
@@ -278,7 +277,6 @@ function Jogo(){
 
         return(
             <div className="game">
-                <WalkingRobot />
                 <div className='global-pageContainer-left options-preview'>
                     <div className='game-header'>
                         <div className='info-game'>
