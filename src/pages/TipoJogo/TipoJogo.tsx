@@ -1,9 +1,11 @@
 import {Link} from 'react-router-dom';
+import WalkingRobot from '../../components/WalkingRobot/WalkingRobot';
 
 function TipoJogo(){
 
     return(
         <div className='center'>
+            <WalkingRobot />
             <div className='global-pageContainer-left options-preview'>
                 <div className='botoes'>
                     <h3> Selecione a operação matemática que deseja jogar ➕ ➖ ✖️ ➗ 🔢</h3>

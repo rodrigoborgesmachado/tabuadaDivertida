@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import happyRobot from '../../assets/robot-happy.svg';
+import WalkingRobot from '../../components/WalkingRobot/WalkingRobot';
 
 function Instrucoes(){
     const [clickCount, setClickCount] = useState(0);
@@ -16,6 +17,7 @@ function Instrucoes(){
 
     return(
     <div className='global-pageContainer-left options-preview'>
+        <WalkingRobot />
         <div
             className='home-robot-container'
             style={

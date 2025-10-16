@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import configData from "../../Config.json";
 import { Table } from 'react-bootstrap';
+import WalkingRobot from '../../components/WalkingRobot/WalkingRobot';
 
 function Historico(){
     const [historico, setHistorico] = useState(new Array());
@@ -39,6 +40,7 @@ function Historico(){
     if(detail){
         return(
             <div className='global-pageContainer-left'>
+                <WalkingRobot />
                 <h3>Respostas</h3>
                 <h3>
                     {
