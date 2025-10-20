@@ -24,9 +24,9 @@ function Home() {
                                 🏆 Ranking
                             </span>
                         </a>
-                        <a className='global-button global-button--full-width' href={`/historico`}>
+                        <a className='global-button global-button--full-width' href={`/resultados`}>
                             <span className='option-link'>
-                                📝 Minhas Partidas
+                                ✨Meus Resultados
                             </span>
                         </a>
                         <a className='global-button global-button--full-width' href={`/artigos`}>

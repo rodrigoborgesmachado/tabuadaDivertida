@@ -17,6 +17,7 @@ function Breadcrumbs() {
     'formulario': 'Formulário',
     'selecionarjogo': 'Selecionar Jogo',
     'ranking': 'Ranking',
+    'resultados': 'Resultados',
     'instrucoes': 'Instruções',
     'historico': 'Histórico',
     'privacidade': 'Privacidade',
@@ -72,4 +73,3 @@ function Breadcrumbs() {
 }
 
 export default Breadcrumbs;
-

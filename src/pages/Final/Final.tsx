@@ -53,7 +53,7 @@ function Final(){
         return() =>{
 
         }
-    }, []);
+    }, [isPerfect]);
 
     const handleShare = async () => {
         if (!canShare) return;
@@ -92,7 +92,7 @@ function Final(){
                 {
                     isPerfect ?
                     <div className='congrats-final'>
-                        <img src={great}/>
+                        <img src={great} alt="great"/>
                         <b>🎉Parabéns {localStorage.getItem(configData.NOME_PARAM)}, você é de outro planeta!!!🎉</b>
                     </div>
                     :
@@ -165,9 +165,9 @@ function Final(){
                         Ranking
                     </span>
                 </a>
-                <a className='global-button global-button--full-width' href="/historico">
+                <a className='global-button global-button--full-width' href="/resultados">
                     <span className='option-link'>
-                        Histórico
+                        Meus Resultados
                     </span>
                 </a>
                 <a className='global-button global-button--full-width' href="/">

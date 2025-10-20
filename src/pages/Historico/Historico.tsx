@@ -1,16 +1,37 @@
 import { useEffect, useState } from 'react';
 import configData from "../../Config.json";
-import { Table } from 'react-bootstrap';
 import WalkingRobot from '../../components/WalkingRobot/WalkingRobot';
+import HappyRobot from '../../components/HappyRobot/HappyRobot';
+
+type Questao = {
+  questao: string;
+  resposta: string;
+  correta: boolean;
+};
+
+type HistoricoItem = {
+  quantidadeQuestoes: number | string;
+  quantidadeAcertos: number | string;
+  tempo: number | string;
+  nome: string;
+  tipo: 'M' | 'D' | 'A' | 'S' | 'R' | string;
+  questoes?: Questao[] | null;
+};
 
 function Historico(){
-    const [historico, setHistorico] = useState(new Array());
-    const [questoesModal, setQuestoesModal] = useState<any[]>([]);
+    const [historico, setHistorico] = useState<HistoricoItem[]>([]);
+    const [questoesModal, setQuestoesModal] = useState<Questao[]>([]);
     const [detail, setDetail] = useState(false);
+    const [itemSelecionado, setItemSelecionado] = useState<HistoricoItem | null>(null);
 
     useEffect(() =>{
-        var temp = JSON.parse(localStorage.getItem(configData.HISTORICO));
-        setHistorico(temp);
+        try {
+            const raw = localStorage.getItem(configData.HISTORICO);
+            const temp = raw ? JSON.parse(raw) : [];
+            setHistorico(Array.isArray(temp) ? temp : []);
+        } catch {
+            setHistorico([]);
+        }
     }, []);
 
     function RetornaTipo(tipo){
@@ -32,28 +53,48 @@ function Historico(){
         return retorno;
     }
 
-    function OpenModal(questoes){
-        setQuestoesModal(questoes);
+    function OpenModal(questoes?: Questao[] | null, item?: HistoricoItem){
+        setQuestoesModal(questoes || []);
+        setItemSelecionado(item || null);
         setDetail(true);
     }
 
     if(detail){
         return(
-            <div className='global-pageContainer-left'>
+            <div className='global-pageContainer-left  options-preview'>
                 <WalkingRobot />
-                <h3>Respostas</h3>
-                <h3>
-                    {
-                        questoesModal.map((questao, index) => {
-                            return(
-                                <>
-                                    {questao.questao} = {questao.resposta} {questao.correta ? '🎉' : '😫'}
-                                    <br/>
-                                </>
-                            )
-                        })
-                    }
-                </h3>
+                <div className='article-content'>
+                    {itemSelecionado && (
+                        <div className='resumo-kpis-wrap'>
+                            <div>
+                                <h2>Resultado:</h2>
+                                <h3>Nome: {itemSelecionado.nome || '—'}</h3>
+                                <h3>
+                                    Acertos: {parseInt(String(itemSelecionado.quantidadeAcertos || '0'))}/{parseInt(String(itemSelecionado.quantidadeQuestoes || '0'))}
+                                </h3>
+                                <h3>Tempo: {itemSelecionado.tempo || 0}s</h3>
+                                <h3>Tipo: {RetornaTipo(String(itemSelecionado.tipo))}</h3>
+                            </div>
+                            <HappyRobot happy={true} />
+                        </div>
+                    )}
+                </div>
+
+                {questoesModal && questoesModal.length > 0 && (
+                    <div className='respostasQuestoes'>
+                        <h2>Respostas</h2>
+                        <div className='resultados-lista'>
+                            {questoesModal.map((q, idx) => (
+                                <div className='resultados-item' key={idx}>
+                                    <h3>
+                                        {q.questao} = {q.resposta} {q.correta ? '✓' : '✗'}
+                                    </h3>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
                 <div className='botoes'>
                     <button className='global-button global-button--full-width' onClick={() => setDetail(false)}>Histórico</button>
                 </div>
@@ -94,6 +135,11 @@ function Historico(){
                                 </h3>
                             </th>
                             <th>
+                                <h3>
+                                Taxa
+                                </h3>
+                            </th>
+                            <th>
                             </th>
                         </tr>
                     </thead>
@@ -127,10 +173,19 @@ function Historico(){
                                                 {RetornaTipo(item.tipo)}
                                             </h4>
                                         </td>
+                                        <td data-label='Taxa'>
+                                            <h4>
+                                                {(() => {
+                                                    const q = parseInt(String(item.quantidadeQuestoes || '0')) || 0;
+                                                    const a = parseInt(String(item.quantidadeAcertos || '0')) || 0;
+                                                    return q > 0 ? `${((a / q) * 100).toFixed(1)}%` : '0.0%';
+                                                })()}
+                                            </h4>
+                                        </td>
                                         <td>
                                             {
                                                 item.questoes != null ?
-                                                <button className='global-button global-button--full-width' onClick={() => OpenModal(item.questoes)}>
+                                                <button className='global-button global-button--full-width' onClick={() => OpenModal(item.questoes, item)}>
                                                     Respostas
                                                 </button>
                                                 :
@@ -146,7 +201,7 @@ function Historico(){
                     </tbody>
                 </table>
                 <div className='botoes'>
-                    <a className='global-button global-button--full-width global-button--back' href="/">
+                    <a className='global-button global-button--full-width global-button--back' href="/resultados">
                         <span className='option-link'>
                             Voltar
                         </span>

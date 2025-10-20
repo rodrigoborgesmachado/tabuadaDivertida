@@ -1,4 +1,4 @@
-import ThemeSwitcher from '../ThemeSwitcher/themeSwitcher';
+﻿import ThemeSwitcher from '../ThemeSwitcher/themeSwitcher';
 import './style.css';
 import { useEffect, useState } from 'react';
 import configData from '../../Config.json';
@@ -35,9 +35,10 @@ function Header({ theme, toggleTheme }: HeaderProps){
                 <a className='logo option-link' href='/'>Tabuada Divertida</a>
                 <div className='opcoes-head'>
                     <a className='ranking option-link' href='/ranking'>🔝Ranking🔝</a>
-                    <a className='ranking option-link' href='/historico'>🔝Histórico🔝</a>
+
                     <a className='ranking option-link' href='/artigos'>🧠Artigos🧠</a>
                     <a className='ranking option-link' href='/artigos/tabuada'>📘Tabuada📘</a>
+                    <a className='ranking option-link' href='/resultados'>✨Resultados✨</a>
                     <ThemeSwitcher theme={theme} toggleTheme={toggleTheme} />
                     <button
                         className='button-base'
