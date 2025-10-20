@@ -1666,3 +1666,16 @@ hr{
     opacity: 0;
   }
 }
+
+.game-robot-fixed {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 10;
+}
+
+@media (max-width: 768px) {
+  .game-robot-fixed {
+    display: none;
+  }
+}

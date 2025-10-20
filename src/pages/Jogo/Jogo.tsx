@@ -6,6 +6,9 @@ import { useParams, useNavigate } from 'react-router-dom';
 import {toast} from 'react-toastify';
 import PacmanLoader from "../../components/PacmanLoader/PacmanLoader";
 import Keypad from "../../components/Keypad/Keypad";
+import happyRobot from '../../assets/robot-happy.svg';
+import neutralRobot from '../../assets/robot-neutral.svg';
+import sadRobot from '../../assets/robot-sad.svg';
 
 function Jogo(){
     const{tipo} = useParams();
@@ -20,6 +23,8 @@ function Jogo(){
     const[loadding, setLoadding] = useState(false);
     const[pontuacao, setPontuacao] = useState(0);
     const[recorde, setRecorde] = useState(parseInt(localStorage.getItem(configData.RECORDE) || '0'));
+    const[wrongStreak, setWrongStreak] = useState(0);
+    const[robotMood, setRobotMood] = useState<'happy' | 'neutral' | 'sad'>('neutral');
     const isMobile = useMemo(() => {
         if (typeof navigator === 'undefined') return false;
         const ua = navigator.userAgent || '';
@@ -171,6 +176,8 @@ function Jogo(){
                 toast.success('Correto 🤩✅');
                 setRespostasCorretas(respostasCorretas+1);
                 novaPontuacao += 10;
+                setWrongStreak(0);
+                setRobotMood('happy');
             }
             else{
                 toast.error('Incorreto 😤💥');
@@ -178,6 +185,9 @@ function Jogo(){
                 if(novaPontuacao >= 5){
                     novaPontuacao -= 5;
                 }
+                const nextStreak = wrongStreak + 1;
+                setWrongStreak(nextStreak);
+                setRobotMood(nextStreak >= 2 ? 'sad' : 'neutral');
             }
 
             if(novaPontuacao > recorde){
@@ -277,6 +287,14 @@ function Jogo(){
 
         return(
             <div className="game">
+                <div className='home-robot-container game-robot-fixed' style={{ pointerEvents: 'none' }}>
+                    <img
+                        src={robotMood === 'happy' ? happyRobot : robotMood === 'sad' ? sadRobot : neutralRobot}
+                        alt='Robô'
+                        className='home-robot'
+                        style={{ cursor: 'default' }}
+                    />
+                </div>
                 <div className='global-pageContainer-left options-preview'>
                     <div className='game-header'>
                         <div className='info-game'>
