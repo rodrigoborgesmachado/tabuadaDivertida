@@ -82,14 +82,31 @@ function Resultados() {
 
     const totalErros = Math.max(0, totalQuestoes - totalAcertos);
     const taxaAcerto = totalQuestoes > 0 ? (totalAcertos / totalQuestoes) : 0;
-    const tempoMedio = totalJogos > 0 ? Math.round(tempoTotal / totalJogos) : 0;
     const qtdMedia = totalJogos > 0 ? (totalQuestoes / totalJogos) : 0;
 
     const topErros = Object.entries(errosPorQuestao)
       .sort((a, b) => b[1] - a[1])
       .slice(0, 10);
+    
+    const tempoPorQuantidade: Record<string, { totalTempo: number; jogos: number }> = {};
 
-    return { totalJogos, totalQuestoes, totalAcertos, totalErros, taxaAcerto, tempoTotal, tempoMedio, qtdMedia, porTipo, topErros };
+    for (const it of items) {
+      const qnt = parseInt(String(it.quantidadeQuestoes || '0')) || 0;
+      const t = parseInt(String(it.tempo || '0')) || 0;
+
+      if (!tempoPorQuantidade[qnt]) tempoPorQuantidade[qnt] = { totalTempo: 0, jogos: 0 };
+      tempoPorQuantidade[qnt].totalTempo += t;
+      tempoPorQuantidade[qnt].jogos += 1;
+    }
+
+    const tempoMedioPorQuantidade = Object.entries(tempoPorQuantidade)
+      .map(([qnt, { totalTempo, jogos }]) => ({
+        quantidade: parseInt(qnt),
+        tempoMedio: Math.round(totalTempo / jogos)
+      }))
+      .sort((a, b) => a.quantidade - b.quantidade);
+
+    return { totalJogos, totalQuestoes, totalAcertos, totalErros, taxaAcerto, tempoTotal, qtdMedia, porTipo, topErros, tempoMedioPorQuantidade };
   }, [historico]);
 
   function labelTipo(t: string) {
@@ -119,7 +136,6 @@ function Resultados() {
               <h3>Acertos: {resumoGeral.totalAcertos}/{resumoGeral.totalQuestoes}</h3>
               <h3>Erros: {resumoGeral.totalErros}</h3>
               <h3>Taxa de acerto: {(resumoGeral.taxaAcerto * 100).toFixed(1)}%</h3>
-              <h3>Tempo médio: {resumoGeral.tempoMedio}s</h3>
               <h3>Quantidade média por jogo: {resumoGeral.qtdMedia.toFixed(1)} questões</h3>
             </div>
             <HappyRobot happy={true} />
@@ -145,6 +161,25 @@ function Resultados() {
                     <td data-label='Acertos'><h4>{v.acertos}</h4></td>
                     <td data-label='Questões'><h4>{v.questoes}</h4></td>
                     <td data-label='Taxa'><h4>{v.questoes ? ((v.acertos / v.questoes) * 100).toFixed(1) : '0.0'}%</h4></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+
+            <br />
+            <h2>Tempo médio por quantidade de questões</h2>
+            <table className='resultados-table'>
+              <thead>
+                <tr>
+                  <th><h3>Quantidade de questões</h3></th>
+                  <th><h3>Tempo médio (s)</h3></th>
+                </tr>
+              </thead>
+              <tbody>
+                {resumoGeral.tempoMedioPorQuantidade.map((item, idx) => (
+                  <tr key={idx}>
+                    <td data-label='Quantidade'><h4>{item.quantidade}</h4></td>
+                    <td data-label='Tempo Médio'><h4>{item.tempoMedio}</h4></td>
                   </tr>
                 ))}
               </tbody>
