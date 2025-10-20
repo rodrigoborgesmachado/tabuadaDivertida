@@ -9,6 +9,7 @@ import WalkingRobot from "./../../components/WalkingRobot/WalkingRobot";
 function Final(){
     const{tipo} = useParams();
     const[questoes , setQuestoes] = useState([]);
+    const [canShare, setCanShare] = useState(false);
     const isPerfect = localStorage.getItem(configData.QUANTIDADE_ACERTOS) === localStorage.getItem(configData.QUANTIDADE_PARAM);
     const isWorst = localStorage.getItem(configData.QUANTIDADE_ACERTOS) === '1';
 
@@ -45,6 +46,7 @@ function Final(){
 
     useEffect(() => {
         setQuestoes(JSON.parse(localStorage.getItem(configData.QUESTOES)));
+        setCanShare(typeof navigator !== 'undefined' && 'share' in navigator);
         if(isPerfect){
             launchFireworks();
         }
@@ -52,6 +54,36 @@ function Final(){
 
         }
     }, []);
+
+    const handleShare = async () => {
+        if (!canShare) return;
+
+        const nome = localStorage.getItem(configData.NOME_PARAM) || 'Eu';
+        const acertos = localStorage.getItem(configData.QUANTIDADE_ACERTOS) || '0';
+        const total = localStorage.getItem(configData.QUANTIDADE_PARAM) || '0';
+        const tempo = localStorage.getItem(configData.TEMPO_PARAM) || '0';
+        const pontuacao = localStorage.getItem(configData.PONTUACAO) || '0';
+        const recorde = localStorage.getItem(configData.RECORDE) || '0';
+
+        const prefix = isPerfect ? 'Uhuu! 🥳🚀' : isWorst ? 'Ops! 😂🐢' : 'Aê! 😄💪';
+        const frase = isPerfect
+            ? 'Mandei bem DEMAIS na Tabuada Divertida!'
+            : isWorst
+            ? 'Dessa vez não rolou, mas eu vou treinar!'
+            : 'Mandei bem na Tabuada Divertida!';
+
+        const text = `${prefix} ${nome} fez ${acertos}/${total} em ${tempo}s.\nPontuação: ${pontuacao} | Recorde: ${recorde}.\n${frase} Vem jogar também! 🎮📲`;
+
+        try {
+            await (navigator as any).share({
+                title: 'Tabuada Divertida',
+                text,
+                url: window.location.origin
+            });
+        } catch (err) {
+            // Usuário cancelou ou não foi possível compartilhar; silencie o erro.
+        }
+    };
 
     return(
         <div className='global-pageContainer-left options-preview'>
@@ -116,6 +148,13 @@ function Final(){
             </div>
 
             <div className='botoes'>
+                {canShare && (
+                    <button type='button' className='global-button global-button--full-width' onClick={handleShare}>
+                        <span className='option-link'>
+                            Compartilhar resultado 📤
+                        </span>
+                    </button>
+                )}
                 <a className='global-button global-button--full-width' href={`/contagem/` + tipo}>
                     <span className='option-link'>
                         Jogar novamente
