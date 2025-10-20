@@ -8,4 +8,6 @@
     "TIPO": "tipo",
     "PONTUACAO": "pontuacao",
     "RECORDE": "recorde"
+    ,
+    "SOUND_MUTED": "soundMuted"
 }

@@ -1,11 +1,14 @@
 import configData from "../../Config.json";
 import Tempo from '../../components/Tempo';
 import api from '../../services/api';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {toast} from 'react-toastify';
 import PacmanLoader from "../../components/PacmanLoader/PacmanLoader";
 import Keypad from "../../components/Keypad/Keypad";
+import happyRobot from '../../assets/robot-happy.svg';
+import neutralRobot from '../../assets/robot-neutral.svg';
+import sadRobot from '../../assets/robot-sad.svg';
 
 function Jogo(){
     const{tipo} = useParams();
@@ -20,6 +23,50 @@ function Jogo(){
     const[loadding, setLoadding] = useState(false);
     const[pontuacao, setPontuacao] = useState(0);
     const[recorde, setRecorde] = useState(parseInt(localStorage.getItem(configData.RECORDE) || '0'));
+    const[wrongStreak, setWrongStreak] = useState(0);
+    const[robotMood, setRobotMood] = useState<'happy' | 'neutral' | 'sad'>('neutral');
+    const audioCtxRef = useRef<AudioContext | null>(null);
+
+    function ensureAudioCtx() {
+        const AnyAudioCtx = (window as any).AudioContext || (window as any).webkitAudioContext;
+        if (!audioCtxRef.current && AnyAudioCtx) {
+            audioCtxRef.current = new AnyAudioCtx();
+        }
+        if (audioCtxRef.current && audioCtxRef.current.state === 'suspended') {
+            audioCtxRef.current.resume().catch(() => {});
+        }
+        return audioCtxRef.current;
+    }
+
+    function playBeep(freq: number, durationMs: number, type: OscillatorType = 'sine', volume = 0.08, delayMs = 0) {
+        try {
+            if (localStorage.getItem(configData.SOUND_MUTED) === '1') return;
+        } catch {}
+        const ctx = ensureAudioCtx();
+        if (!ctx) return;
+        const now = ctx.currentTime + (delayMs / 1000);
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, now);
+        gain.gain.setValueAtTime(0, now);
+        gain.gain.linearRampToValueAtTime(volume, now + 0.01);
+        const endTime = now + durationMs / 1000;
+        gain.gain.exponentialRampToValueAtTime(0.0001, endTime);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now);
+        osc.stop(endTime + 0.01);
+    }
+
+    function playSuccess() {
+        playBeep(660, 90, 'sine', 0.08, 0);
+        playBeep(880, 100, 'sine', 0.08, 80);
+    }
+
+    function playError() {
+        playBeep(220, 220, 'square', 0.06, 0);
+    }
     const isMobile = useMemo(() => {
         if (typeof navigator === 'undefined') return false;
         const ua = navigator.userAgent || '';
@@ -171,6 +218,9 @@ function Jogo(){
                 toast.success('Correto 🤩✅');
                 setRespostasCorretas(respostasCorretas+1);
                 novaPontuacao += 10;
+                setWrongStreak(0);
+                setRobotMood('happy');
+                playSuccess();
             }
             else{
                 toast.error('Incorreto 😤💥');
@@ -178,6 +228,10 @@ function Jogo(){
                 if(novaPontuacao >= 5){
                     novaPontuacao -= 5;
                 }
+                const nextStreak = wrongStreak + 1;
+                setWrongStreak(nextStreak);
+                setRobotMood(nextStreak >= 2 ? 'sad' : 'neutral');
+                playError();
             }
 
             if(novaPontuacao > recorde){
@@ -277,6 +331,14 @@ function Jogo(){
 
         return(
             <div className="game">
+                <div className='home-robot-container game-robot-fixed' style={{ pointerEvents: 'none' }}>
+                    <img
+                        src={robotMood === 'happy' ? happyRobot : robotMood === 'sad' ? sadRobot : neutralRobot}
+                        alt='Robô'
+                        className='home-robot'
+                        style={{ cursor: 'default' }}
+                    />
+                </div>
                 <div className='global-pageContainer-left options-preview'>
                     <div className='game-header'>
                         <div className='info-game'>
