@@ -28,7 +28,7 @@ function Historico(){
         try {
             const raw = localStorage.getItem(configData.HISTORICO);
             const temp = raw ? JSON.parse(raw) : [];
-            setHistorico(Array.isArray(temp) ? temp : []);
+            setHistorico(Array.isArray(temp) ? temp.reverse() : []);
         } catch {
             setHistorico([]);
         }
