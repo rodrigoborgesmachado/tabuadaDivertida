@@ -14,6 +14,7 @@ import Sobre from './pages/Sobre/Sobre';
 import Contato from './pages/Contato/Contato';
 import Contribua from './pages/Contribua/Contribua';
 import Header from './components/Header/index';
+import Breadcrumbs from './components/Breadcrumbs';
 import AprenderMatematicaJogos from './pages/Artigos/AprenderMatematicaJogos';
 import TabuadaPage from './pages/Artigos/TabuadaPage';
 import HistoriaTabuada from './pages/Artigos/HistoriaTabuada';
@@ -30,6 +31,7 @@ function RoutesApp({ theme, toggleTheme }: RoutesAppProps) {
     return(
         <BrowserRouter>
             <Header theme={theme} toggleTheme={toggleTheme}/>
+            <Breadcrumbs />
             <Routes>
                 <Route path='/' element={<Home/>}/>
                 <Route path='/formulario' element={<Formulario/>}/>
