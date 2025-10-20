@@ -1498,6 +1498,173 @@ hr{
   cursor: pointer;
 }
 
+/* Resultados: KPIs layout */
+.resumo-kpis-wrap {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: var(--double-default-spacing);
+}
+
+.resumo-kpis {
+  flex: 1 1 360px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--double-default-spacing);
+  background: var(--block-color);
+  color: var(--text-color-primary);
+  border: 1px solid var(--panel-border-color);
+  border-radius: var(--default-border-radius);
+  padding: var(--triple-default-spacing);
+  box-shadow: 0 2px 5px var(--shadow-color-primary);
+}
+
+.resumo-kpis h3 {
+  margin: 0;
+}
+
+.resumo-kpis-robot .home-robot-container {
+  animation: none;
+  margin: 0;
+}
+
+.resumo-kpis-robot .home-robot {
+  width: 12rem;
+  max-width: 40vw;
+}
+
+@media (max-width: 640px) {
+  .resumo-kpis-robot .home-robot { width: 9rem; }
+}
+
+/* Resultados: prettier table */
+.resultados-table,
+.historico-table {
+  width: 100%;
+  background: var(--block-color);
+  color: var(--text-color-primary);
+  border-collapse: separate;
+  border-spacing: 0;
+  border: 1px solid var(--panel-border-color);
+  border-radius: var(--default-border-radius);
+  overflow: hidden;
+  box-shadow: 0 2px 5px var(--shadow-color-primary);
+}
+
+.resultados-table thead th,
+.historico-table thead th {
+  background: var(--primary-color);
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid var(--panel-border-color);
+}
+
+.resultados-table tbody td,
+.historico-table tbody td {
+  padding: 12px 16px;
+  border-top: 1px solid var(--panel-border-color);
+}
+
+.resultados-table tbody tr:nth-child(even),
+.historico-table tbody tr:nth-child(even) {
+  background: var(--block-color-secundary);
+}
+
+.resultados-table tbody tr:hover,
+.historico-table tbody tr:hover {
+  background: var(--color-surface);
+}
+
+/* Resultados table: mobile-friendly */
+@media (max-width: 1000px) {
+  .resultados-table thead,
+  .historico-table thead {
+    display: none;
+  }
+  .resultados-table,
+  .historico-table,
+  .resultados-table tbody,
+  .historico-table tbody,
+  .resultados-table tr,
+  .historico-table tr,
+  .resultados-table td,
+  .historico-table td {
+    display: block;
+    width: 100%;
+  }
+  .resultados-table tr,
+  .historico-table tr {
+    background: var(--block-color);
+    border: 1px solid var(--panel-border-color);
+    border-radius: var(--default-border-radius);
+    box-shadow: 0 2px 4px var(--shadow-color-primary);
+    margin: 0 0 12px 0;
+    padding: 4px 0;
+  }
+  .resultados-table td,
+  .historico-table td {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--panel-border-color);
+  }
+  .resultados-table td:last-child,
+  .historico-table td:last-child {
+    border-bottom: 0;
+  }
+  .resultados-table td::before,
+  .historico-table td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: var(--text-color-secondary);
+    margin-right: 12px;
+  }
+}
+
+/* Mobile-friendly ranking cards */
+@media (max-width: 768px) {
+  .tableRanking {
+    border: 0;
+  }
+  .tableRanking thead {
+    display: none;
+  }
+  .tableRanking, .tableRanking tbody, .tableRanking tr, .tableRanking td {
+    display: block;
+    width: 100%;
+  }
+  .tableRanking tr {
+    background: var(--block-color);
+    border: 1px solid var(--panel-border-color);
+    border-radius: var(--default-border-radius);
+    box-shadow: 0 2px 4px var(--shadow-color-primary);
+    margin: 0 0 12px 0;
+    padding: 4px 0;
+  }
+  .tableRanking td {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--panel-border-color);
+  }
+  .tableRanking td:last-child {
+    border-bottom: 0;
+  }
+  .tableRanking td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: var(--text-color-secondary);
+    margin-right: 12px;
+  }
+  .tableRanking td:nth-child(1)::before { content: 'Posicao'; }
+  .tableRanking td:nth-child(2)::before { content: 'Nome'; }
+  .tableRanking td:nth-child(3)::before { content: 'Tempo'; }
+  .tableRanking td:nth-child(4)::before { content: 'Pontuacao'; }
+}
+
 .option-link::after {
   content: '';
   position: absolute;

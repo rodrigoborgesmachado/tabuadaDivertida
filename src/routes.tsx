@@ -21,6 +21,7 @@ import HistoriaTabuada from './pages/Artigos/HistoriaTabuada';
 import Artigos from './pages/Artigos/Artigos';
 import BeneficiosJogosEducacionais from './pages/Artigos/BeneficiosJogosEducacionais';
 import DicasParaEnsinarMatematicaEmCasa from './pages/Artigos/DicasParaEnsinarMatematicaEmCasa';
+import Resultados from './pages/Resultados/Resultados';
 
 interface RoutesAppProps {
   theme: 'light' | 'dark';
@@ -39,6 +40,7 @@ function RoutesApp({ theme, toggleTheme }: RoutesAppProps) {
                 <Route path='/contagem/:tipo' element={<Contagem/>}/>
                 <Route path='/jogo/:tipo' element={<Jogo/>}/>
                 <Route path='/ranking' element={<Ranking/>}/>
+                <Route path='/resultados' element={<Resultados/>}/>
                 <Route path='/final/:tipo' element={<Final/>}/>
                 <Route path='/instrucoes' element={<Instrucoes/>}/>
                 <Route path='/historico' element={<Historico/>}/>
