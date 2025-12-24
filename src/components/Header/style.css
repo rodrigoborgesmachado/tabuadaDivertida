@@ -65,10 +65,6 @@
     width: 2rem;
 }
 
-.left-side a{
-
-}
-
 @media screen and (max-width: 1000px){
     .opcoes-head a,
     .opcoes-head button{
