@@ -7,7 +7,7 @@ function Contato() {
                     Se você tiver dúvidas, sugestões ou encontrou algum problema no site <strong>Tabuada Divertida</strong>, entre em contato comigo! Terei o maior prazer em ajudar.
                 </p>
                 <p className="global-mt">
-                    💌 <strong>Email:</strong> <a href="mailto:sunsalesystem@outlook.com">sunsalesystem@outlook.com</a>
+                    💌 <strong>Email:</strong> <a href="mailto:rodrigomachado@sunsalesystem.com">rodrigomachado@sunsalesystem.com</a>
                 </p>
                 <p className="global-mt">
                     Você também pode acompanhar atualizações e novos projetos pelo meu GitHub:
