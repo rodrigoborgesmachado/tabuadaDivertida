@@ -1,71 +1,102 @@
 .navbar {
-    position: fixed;
+    position: sticky;
     top: 0;
     left: 0;
     right: 0;
     z-index: 1000;
+    width: 100%;
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--panel-border-color);
+    background: var(--primary-color);
+    backdrop-filter: blur(10px);
 }
 
 .toolNav{
     display: flex;
     align-items: center;
     justify-content: space-between;
-    width: 100%;
-    height: 50px;
-    opacity : 0.9;
+    width: min(100%, var(--default-max-width));
+    min-height: 48px;
+    margin: 0 auto;
+    gap: var(--double-default-spacing);
 }
 
 .logo{
     text-decoration: none;
-    font-size: 20px;
+    font-size: 1.3rem;
     cursor: pointer;
     color: var(--text-color-primary);
-    font-weight: bold;
+    font-weight: 700;
+    font-family: var(--font-title);
+    letter-spacing: 0.2px;
 }
 
 .ranking{
     text-decoration: none;
     cursor: pointer;
-    background-color: var(--button-color-primary);
-    padding: 5px 14px;
-    color: var(--text-color-primary);
-    font-weight: bold;
-    border-radius: 5px;
+    background: var(--button-color-secondary);
+    border: 1px solid var(--panel-border-color);
+    padding: 8px 12px;
+    color: var(--text-color-secondary);
+    font-weight: 700;
+    border-radius: 10px;
+    transition: transform 0.18s ease, filter 0.18s ease;
 }
+
+.ranking:hover {
+    transform: translateY(-1px);
+    filter: brightness(0.98);
+}
+
 .opcoes-head {
     display: flex;
     align-items: center;
-    min-width: 16rem;
-    gap: var(--default-spacing);
+    justify-content: flex-end;
+    min-width: 0;
+    gap: 6px;
+    flex-wrap: wrap;
 }
 
 .theme-toggle {
-    background-color: var(--button-color-primary);
+    background-color: var(--button-color-secondary);
     border: none;
-    padding: 5px 14px;
+    padding: 5px 12px;
     color: var(--text-color-primary);
-    font-weight: bold;
-    border-radius: 5px;
+    font-weight: 700;
+    border-radius: 10px;
     cursor: pointer;
 }
 
 .opcoes-head a,
 .opcoes-head button{
-    margin-right: 8px;
+    margin-right: 0;
+}
+
+.left-side {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+}
+
+.left-side img{
+    width: 2.25rem;
+    padding: 4px;
+    border-radius: 50%;
+    background: linear-gradient(140deg, var(--button-color-primary), #ffb067);
 }
 
 @media screen and (max-width: 1000px){
-    .opcoes-head a,
-    .opcoes-head button{
+    .opcoes-head a{
         display: none;
     }
 
     .opcoes-head {
         justify-content: end;
-        margin-right: var(--default-spacing);
+        margin-right: 0;
     }
 
     .toolNav a {
-        margin-left: var(--default-spacing);
+        margin-left: 0;
     }
 }

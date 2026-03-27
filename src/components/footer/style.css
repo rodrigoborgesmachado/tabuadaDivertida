@@ -1,24 +1,26 @@
 footer{
-    font-size: 10px;
+    font-size: 11px;
     position: fixed;
     left: 0;
     bottom: 0;
     width: 100%;
-    color: white;
+    color: var(--text-color-primary);
     text-align: center;
-    background-color: #121212;
-    opacity : 0.9;
-    box-shadow: 0 -3px 5px -1px #0003, 0 -6px 10px #00000024, 0 -1px 18px #0000001f;
+    background: var(--primary-color);
+    border-top: 1px solid var(--panel-border-color);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 -8px 22px var(--shadow-color-primary);
     padding: 16px 12px 12px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
 }
 
 footer a{
-    color: white;
+    color: var(--text-color-primary);
     text-decoration: none;
+    font-weight: 700;
 }
 
 .support-option__link{
@@ -28,20 +30,28 @@ footer a{
     gap: 8px;
     padding: 8px 20px;
     border-radius: 999px;
-    background: linear-gradient(135deg, #7c3aed, #ec4899);
+    background: linear-gradient(135deg, var(--button-color-primary), #ffa35e);
+    color: var(--button-text-color);
     font-size: 14px;
-    font-weight: 600;
-    transition: filter 0.3s ease;
+    font-weight: 700;
+    transition: transform 0.18s ease, filter 0.18s ease;
 }
 
 .support-option__link:hover{
-    filter: brightness(1.1);
+    transform: translateY(-1px);
+    filter: brightness(0.98);
 }
 
 .links{
-    margin-top: 5px;
+    margin-top: 0;
 }
 
 .links a{
     margin: 0 10px;
+    color: var(--text-color-secondary);
+    transition: color 0.18s ease;
+}
+
+.links a:hover{
+    color: var(--text-color-accent);
 }

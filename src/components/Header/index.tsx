@@ -1,9 +1,10 @@
-﻿import ThemeSwitcher from '../ThemeSwitcher/themeSwitcher';
+import ThemeSwitcher from '../ThemeSwitcher/themeSwitcher';
 import './style.css';
 import { useEffect, useState } from 'react';
 import configData from '../../Config.json';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faVolumeHigh, faVolumeXmark } from '@fortawesome/free-solid-svg-icons';
+import robo from '../../assets/robot-happy.svg';
 
 interface HeaderProps {
     theme: 'light' | 'dark';
@@ -32,7 +33,10 @@ function Header({ theme, toggleTheme }: HeaderProps){
     return(
         <header className='conNav navbar'>
             <div className='toolNav'>
-                <a className='logo option-link' href='/'>Tabuada Divertida</a>
+                <div className='left-side'>
+                    <img src={robo} alt='robo'/>
+                    <a className='logo option-link' href='/'>Tabuada Divertida</a>
+                </div>
                 <div className='opcoes-head'>
                     <a className='ranking option-link' href='/ranking'>🔝Ranking🔝</a>
 
@@ -47,7 +51,7 @@ function Header({ theme, toggleTheme }: HeaderProps){
                         title={muted ? 'Ativar som' : 'Silenciar som'}
                         style={{ marginLeft: 8, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
                     >
-                        <FontAwesomeIcon icon={muted ? faVolumeXmark : faVolumeHigh} style={{ color: theme === 'light' ? '#000' : '#FFF', fontSize: '16px' }} />
+                        <FontAwesomeIcon icon={muted ? faVolumeXmark : faVolumeHigh} style={{ color: 'var(--text-color-primary)', fontSize: '16px' }} />
                     </button>
                 </div>
             </div>
