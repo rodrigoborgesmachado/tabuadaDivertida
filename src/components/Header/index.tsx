@@ -1,4 +1,4 @@
-﻿import ThemeSwitcher from '../ThemeSwitcher/themeSwitcher';
+import ThemeSwitcher from '../ThemeSwitcher/themeSwitcher';
 import './style.css';
 import { useEffect, useState } from 'react';
 import configData from '../../Config.json';
@@ -51,7 +51,7 @@ function Header({ theme, toggleTheme }: HeaderProps){
                         title={muted ? 'Ativar som' : 'Silenciar som'}
                         style={{ marginLeft: 8, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
                     >
-                        <FontAwesomeIcon icon={muted ? faVolumeXmark : faVolumeHigh} style={{ color: theme === 'light' ? '#000' : '#FFF', fontSize: '16px' }} />
+                        <FontAwesomeIcon icon={muted ? faVolumeXmark : faVolumeHigh} style={{ color: 'var(--text-color-primary)', fontSize: '16px' }} />
                     </button>
                 </div>
             </div>
