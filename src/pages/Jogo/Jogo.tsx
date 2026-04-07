@@ -20,8 +20,8 @@ function Jogo(){
     const { tipo } = useParams();
     const tipoSelecionado = (tipo || '').toUpperCase();
     const [contador, setContador] = useState(0);
-    const [respostasIncorretas, setRespostasIncorretas] = useState(1);
-    const [respostasCorretas, setRespostasCorretas] = useState(1);
+    const [respostasIncorretas, setRespostasIncorretas] = useState(0);
+    const [respostasCorretas, setRespostasCorretas] = useState(0);
     const [contas1, setContas1] = useState<number[]>([]);
     const [contas2, setContas2] = useState<number[]>([]);
     const [contasCorrente, setContasCorrente] = useState('');
@@ -217,7 +217,7 @@ function Jogo(){
 
     function LoadContas(total: number){
         const lista: number[] = [];
-        for(let i = 0; i <= total; i++){
+        for(let i = 0; i < total; i++){
             let num1 = 0;
             while(num1 === 0 || num1 === 1){
                 num1 = Math.floor(Math.random() * RetornaMaximo());
@@ -327,6 +327,7 @@ function Jogo(){
         if (resposta !== '' && respostaEsperada !== null) {
             const questoes = JSON.parse(localStorage.getItem(configData.QUESTOES) || '[]');
 
+            const totalQuestoes = parseInt(localStorage.getItem(configData.QUANTIDADE_PARAM) || '20');
             const respostaNumerica = parseInt(resposta, 10);
             const respostaCerta = respostaNumerica === respostaEsperada;
 
@@ -339,10 +340,13 @@ function Jogo(){
             localStorage.setItem(configData.QUESTOES, JSON.stringify(questoes));
 
             let novaPontuacao = pontuacao;
+            let novosAcertos = respostasCorretas;
+            let novasIncorretas = respostasIncorretas;
 
             if(respostaCerta){
                 toast.success('Correto 🤩✅');
-                setRespostasCorretas(respostasCorretas + 1);
+                novosAcertos += 1;
+                setRespostasCorretas(novosAcertos);
                 novaPontuacao += 10;
                 setWrongStreak(0);
                 setRobotMood('happy');
@@ -350,7 +354,8 @@ function Jogo(){
             }
             else{
                 toast.error('Incorreto 😤💥');
-                setRespostasIncorretas(respostasIncorretas + 1);
+                novasIncorretas += 1;
+                setRespostasIncorretas(novasIncorretas);
                 if(novaPontuacao >= 5){
                     novaPontuacao -= 5;
                 }
@@ -369,10 +374,10 @@ function Jogo(){
             localStorage.setItem(configData.PONTUACAO, String(novaPontuacao));
 
             setResposta('');
-            if(contador === parseInt(localStorage.getItem(configData.QUANTIDADE_PARAM) || '20') + 1){
-                localStorage.setItem(configData.QUANTIDADE_ACERTOS, String(respostasCorretas));
+            if(contador === totalQuestoes){
+                localStorage.setItem(configData.QUANTIDADE_ACERTOS, String(novosAcertos));
                 SetHistorico();
-                Finaliza(novaPontuacao);
+                Finaliza(novaPontuacao, novosAcertos);
             }else{
                 setContasCorrente(MontaConta());
             }
@@ -407,7 +412,7 @@ function Jogo(){
         localStorage.setItem(configData.HISTORICO, JSON.stringify(historico));
     }
 
-    async function Finaliza(novaPontuacao: number){
+    async function Finaliza(novaPontuacao: number, numeroAcertos: number){
         const nome = String(localStorage.getItem(configData.NOME_PARAM) || '');
         if(nome.length > 15){
             toast.warn('Nome deve ter no máximo 15 caracteres.');
@@ -416,7 +421,7 @@ function Jogo(){
 
         const data = {
             nome: nome,
-            numeroAcertos: respostasCorretas,
+            numeroAcertos: numeroAcertos,
             numeroQuestoes: localStorage.getItem(configData.QUANTIDADE_PARAM) || 20,
             tipo: tipoSelecionado,
             tempo: localStorage.getItem(configData.TEMPO_PARAM),
@@ -464,7 +469,7 @@ function Jogo(){
             <div className='global-pageContainer-left options-preview'>
                 <div className='game-header'>
                     <div className='info-game'>
-                        <h1>🏋️ {contador - 1} de {localStorage.getItem(configData.QUANTIDADE_PARAM) || 20}</h1>
+                        <h1>🏋️ {contador} de {localStorage.getItem(configData.QUANTIDADE_PARAM) || 20}</h1>
                         <h1>🎯 Pontuação: {pontuacao}</h1>
                     </div>
                     <div className='info-game'>
