@@ -55,6 +55,9 @@ function Ranking(){
         else if(type === 'R'){
             return 'Aleatório';
         }
+        else if(type === 'E'){
+            return 'Expressões Numéricas';
+        }
     }
 
     if(loadding){
@@ -80,6 +83,7 @@ function Ranking(){
                 </div>
                 <div className='botoesRanking'>
                     <button className='global-button global-button--full-width' onClick={() => setType('S')}>Subtração</button>
+                    <button className='global-button global-button--full-width' onClick={() => setType('E')}>Expressões Numéricas</button>
                     <button className='global-button global-button--full-width' onClick={() => setType('R')}>Aleatório</button>
                 </div>
                 <h2>Filtro</h2>

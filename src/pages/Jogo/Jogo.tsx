@@ -1,30 +1,38 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import configData from "../../Config.json";
 import Tempo from '../../components/Tempo';
 import api from '../../services/api';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { KeyboardEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import {toast} from 'react-toastify';
+import { toast } from 'react-toastify';
 import PacmanLoader from "../../components/PacmanLoader/PacmanLoader";
 import Keypad from "../../components/Keypad/Keypad";
 import happyRobot from '../../assets/robot-happy.svg';
 import neutralRobot from '../../assets/robot-neutral.svg';
 import sadRobot from '../../assets/robot-sad.svg';
 
+type ContaGerada = {
+    texto: string;
+    resposta: number;
+};
+
 function Jogo(){
-    const{tipo} = useParams();
-    const[contador, setContador] = useState(0);
-    const[respostasIncorretas, setRespostasIncorretas] = useState(1);
-    const[respostasCorretas, setRespostasCorretas] = useState(1);
-    const[contas1, setContas1] = useState([]);
-    const[contas2, setContas2] = useState([]);
-    const[contasCorrente, setContasCorrente] = useState('');
-    const[resposta, setResposta] = useState('');
+    const { tipo } = useParams();
+    const tipoSelecionado = (tipo || '').toUpperCase();
+    const [contador, setContador] = useState(0);
+    const [respostasIncorretas, setRespostasIncorretas] = useState(1);
+    const [respostasCorretas, setRespostasCorretas] = useState(1);
+    const [contas1, setContas1] = useState<number[]>([]);
+    const [contas2, setContas2] = useState<number[]>([]);
+    const [contasCorrente, setContasCorrente] = useState('');
+    const [respostaEsperada, setRespostaEsperada] = useState<number | null>(null);
+    const [resposta, setResposta] = useState('');
     const navigate = useNavigate();
-    const[loadding, setLoadding] = useState(false);
-    const[pontuacao, setPontuacao] = useState(0);
-    const[recorde, setRecorde] = useState(parseInt(localStorage.getItem(configData.RECORDE) || '0'));
-    const[wrongStreak, setWrongStreak] = useState(0);
-    const[robotMood, setRobotMood] = useState<'happy' | 'neutral' | 'sad'>('neutral');
+    const [loadding, setLoadding] = useState(false);
+    const [pontuacao, setPontuacao] = useState(0);
+    const [recorde, setRecorde] = useState(parseInt(localStorage.getItem(configData.RECORDE) || '0'));
+    const [wrongStreak, setWrongStreak] = useState(0);
+    const [robotMood, setRobotMood] = useState<'happy' | 'neutral' | 'sad'>('neutral');
     const audioCtxRef = useRef<AudioContext | null>(null);
 
     function ensureAudioCtx() {
@@ -67,6 +75,92 @@ function Jogo(){
     function playError() {
         playBeep(220, 220, 'square', 0.06, 0);
     }
+
+    function numeroAleatorio(min: number, max: number){
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function montaExpressaoNumerica(): ContaGerada {
+        const criaTemplateDivisaoComParenteses = (): ContaGerada => {
+            const a = numeroAleatorio(1, 9);
+            const b = numeroAleatorio(1, 9);
+            const c = numeroAleatorio(2, 10);
+            const numerador = (a + b) * c;
+            const divisores: number[] = [];
+
+            for(let i = 2; i <= 18; i++){
+                if(numerador % i === 0){
+                    divisores.push(i);
+                }
+            }
+
+            if(divisores.length === 0){
+                return { texto: '', resposta: -1 };
+            }
+
+            const denominador = divisores[numeroAleatorio(0, divisores.length - 1)];
+            const menorD = Math.max(1, denominador - 9);
+            const maiorD = Math.min(9, denominador - 1);
+
+            if(menorD > maiorD){
+                return { texto: '', resposta: -1 };
+            }
+
+            const d = numeroAleatorio(menorD, maiorD);
+            const e = denominador - d;
+
+            return {
+                texto: `(${a}+${b}) x ${c} ÷ (${d}+${e})`,
+                resposta: numerador / denominador
+            };
+        };
+
+        const criaTemplateSomaMultiplicacao = (): ContaGerada => {
+            const a = numeroAleatorio(2, 9);
+            const b = numeroAleatorio(2, 9);
+            const c = numeroAleatorio(1, 9);
+            const d = numeroAleatorio(1, 9);
+
+            return {
+                texto: `(${a}x${b}) + (${c}x${d})`,
+                resposta: (a * b) + (c * d)
+            };
+        };
+
+        const criaTemplateMultiplicacaoSubtracao = (): ContaGerada => {
+            const a = numeroAleatorio(1, 9);
+            const b = numeroAleatorio(1, 9);
+            const c = numeroAleatorio(2, 10);
+            const d = numeroAleatorio(1, c - 1);
+
+            return {
+                texto: `(${a}+${b}) x (${c}-${d})`,
+                resposta: (a + b) * (c - d)
+            };
+        };
+
+        const templates = [
+            criaTemplateDivisaoComParenteses,
+            criaTemplateSomaMultiplicacao,
+            criaTemplateMultiplicacaoSubtracao
+        ];
+
+        for(let i = 0; i < 100; i++){
+            const conta = templates[numeroAleatorio(0, templates.length - 1)]();
+
+            if(Number.isInteger(conta.resposta) && conta.resposta >= 0 && conta.resposta <= 100){
+                return conta;
+            }
+        }
+
+        const n1 = numeroAleatorio(2, 10);
+        const n2 = numeroAleatorio(2, 10);
+        return {
+            texto: `${n1}x${n2}`,
+            resposta: n1 * n2
+        };
+    }
+
     const isMobile = useMemo(() => {
         if (typeof navigator === 'undefined') return false;
         const ua = navigator.userAgent || '';
@@ -74,46 +168,57 @@ function Jogo(){
                (typeof window !== 'undefined' && (window as any).matchMedia && (window as any).matchMedia('(pointer: coarse)').matches);
     }, []);
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
         localStorage.setItem(configData.QUESTOES, JSON.stringify([]));
         localStorage.setItem(configData.PONTUACAO, '0');
-        setContas1(LoadContas(parseInt(localStorage.getItem(configData.QUANTIDADE_PARAM) || '20')));
-        setContas2(LoadContas(parseInt(localStorage.getItem(configData.QUANTIDADE_PARAM) || '20')));
-        return() =>{
 
+        if(tipoSelecionado === 'E'){
+            setContasCorrente(MontaConta());
+            return;
         }
+
+        const total = parseInt(localStorage.getItem(configData.QUANTIDADE_PARAM) || '20');
+        setContas1(LoadContas(total));
+        setContas2(LoadContas(total));
     }, []);
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
-        setContasCorrente(MontaConta());
-        return() =>{
-
+        if(tipoSelecionado === 'E'){
+            return;
         }
-    }, [contas1]);
+
+        if(contas1.length === 0 || contas2.length === 0){
+            return;
+        }
+
+        setContasCorrente(MontaConta());
+    }, [contas1, contas2]);
 
     function RetornaMaximo(){
-        var retorno = 11;
+        let retorno = 11;
 
-        if(tipo === 'R'){
+        if(tipoSelecionado === 'R'){
             retorno = 11;
         }
-        else if(tipo === 'D'){
+        else if(tipoSelecionado === 'D'){
             retorno = 11;
         }
-        else if (tipo === 'S'){
+        else if (tipoSelecionado === 'S'){
             retorno = 100;
         }
-        else if (tipo === 'A'){
+        else if (tipoSelecionado === 'A'){
             retorno = 100;
         }
 
         return retorno;
     }
 
-    function LoadContas(total){
-        var lista = [];
-        for(let i = 0; i<= total;i++){
-            var num1 = 0;
+    function LoadContas(total: number){
+        const lista: number[] = [];
+        for(let i = 0; i <= total; i++){
+            let num1 = 0;
             while(num1 === 0 || num1 === 1){
                 num1 = Math.floor(Math.random() * RetornaMaximo());
             }
@@ -123,53 +228,95 @@ function Jogo(){
     }
 
     function MontaConta(){
-        let n1 = contas1[contador];
-        let n2 = contas2[contador];
-        let t = ['x', '-', '+', '÷'];
-        let temp = '';
+        let conta: ContaGerada = {
+            texto: '',
+            resposta: 0
+        };
 
-        if(tipo === 'D'){
-            temp += (n1*n2) + t[3] + n2;
-        }
-        else if (tipo === 'S'){
-            if(n1 > n2){
-                temp += n1 + t[1] + n2;
-            }
-            else{
-                temp += n2 + t[1] + n1;
-            }
-        }
-        else if (tipo === 'A'){
-            temp += n1 + t[2] + n2;
-        }
-        else if (tipo === 'R'){
-            let index = Math.floor(Math.random() * 4);
-            if(index === 3){
-                temp += (n1*n2) + t[3] + n2;
-            }
-            else if(index === 1){
-                if(n1 > n2){
-                    temp += n1 + t[1] + n2;
-                }
-                else{
-                    temp += n2 + t[1] + n1;
-                }
-            }
-            else{
-                temp += n1 + t[index] + n2;
-            }
+        if(tipoSelecionado === 'E'){
+            conta = montaExpressaoNumerica();
         }
         else{
-            temp += n1 + t[0] + n2;
+            const n1 = contas1[contador];
+            const n2 = contas2[contador];
+            const operadores = ['x', '-', '+', '÷'];
+
+            if(tipoSelecionado === 'D'){
+                conta = {
+                    texto: (n1 * n2) + operadores[3] + n2,
+                    resposta: n1
+                };
+            }
+            else if (tipoSelecionado === 'S'){
+                if(n1 > n2){
+                    conta = {
+                        texto: n1 + operadores[1] + n2,
+                        resposta: n1 - n2
+                    };
+                }
+                else{
+                    conta = {
+                        texto: n2 + operadores[1] + n1,
+                        resposta: n2 - n1
+                    };
+                }
+            }
+            else if (tipoSelecionado === 'A'){
+                conta = {
+                    texto: n1 + operadores[2] + n2,
+                    resposta: n1 + n2
+                };
+            }
+            else if (tipoSelecionado === 'R'){
+                const index = Math.floor(Math.random() * 4);
+                if(index === 3){
+                    conta = {
+                        texto: (n1 * n2) + operadores[3] + n2,
+                        resposta: n1
+                    };
+                }
+                else if(index === 1){
+                    if(n1 > n2){
+                        conta = {
+                            texto: n1 + operadores[1] + n2,
+                            resposta: n1 - n2
+                        };
+                    }
+                    else{
+                        conta = {
+                            texto: n2 + operadores[1] + n1,
+                            resposta: n2 - n1
+                        };
+                    }
+                }
+                else{
+                    conta = {
+                        texto: n1 + operadores[index] + n2,
+                        resposta: index === 0 ? (n1 * n2) : (n1 + n2)
+                    };
+                }
+            }
+            else{
+                conta = {
+                    texto: n1 + operadores[0] + n2,
+                    resposta: n1 * n2
+                };
+            }
         }
 
-        setContador(contador+1);
-        return temp;
+        setRespostaEsperada(conta.resposta);
+        setContador(contador + 1);
+        return conta.texto;
     }
 
-    function respondeu(resposta){
-        if (Number.isInteger(parseInt(resposta))) {
-            setResposta(resposta);            
+    function respondeu(valor: string){
+        if (valor === '') {
+            setResposta('');
+            return;
+        }
+
+        if (/^-?\d+$/.test(valor)) {
+            setResposta(valor);
         }
         else{
             setResposta('');
@@ -177,32 +324,11 @@ function Jogo(){
     }
 
     const submitAnswer = () => {
-        if (resposta != '') {
-            var questoes = JSON.parse(localStorage.getItem(configData.QUESTOES));
+        if (resposta !== '' && respostaEsperada !== null) {
+            const questoes = JSON.parse(localStorage.getItem(configData.QUESTOES) || '[]');
 
-            let respostaCerta = false;
-
-            if(contasCorrente.includes('x')){
-                if(parseInt(resposta) == parseInt(contasCorrente.split('x')[0]) * parseInt(contasCorrente.split('x')[1])){
-                    respostaCerta = true;
-                }
-            }
-            else if(contasCorrente.includes('+')){
-                if(parseInt(resposta) == parseInt(contasCorrente.split('+')[0]) + parseInt(contasCorrente.split('+')[1])){
-                    respostaCerta = true;
-                }
-            }
-            else if(contasCorrente.includes('-')){
-                if(parseInt(resposta) == parseInt(contasCorrente.split('-')[0]) - parseInt(contasCorrente.split('-')[1]) ||
-                    parseInt(resposta) == parseInt(contasCorrente.split('-')[1]) - parseInt(contasCorrente.split('-')[0])){
-                    respostaCerta = true;
-                }
-            }
-            else if(contasCorrente.includes('÷')){
-                if(parseInt(resposta) == parseInt(contasCorrente.split('÷')[0]) / parseInt(contasCorrente.split('÷')[1])){
-                    respostaCerta = true;
-                }
-            }
+            const respostaNumerica = parseInt(resposta, 10);
+            const respostaCerta = respostaNumerica === respostaEsperada;
 
             questoes.push({
                 questao: contasCorrente,
@@ -216,7 +342,7 @@ function Jogo(){
 
             if(respostaCerta){
                 toast.success('Correto 🤩✅');
-                setRespostasCorretas(respostasCorretas+1);
+                setRespostasCorretas(respostasCorretas + 1);
                 novaPontuacao += 10;
                 setWrongStreak(0);
                 setRobotMood('happy');
@@ -224,7 +350,7 @@ function Jogo(){
             }
             else{
                 toast.error('Incorreto 😤💥');
-                setRespostasIncorretas(respostasIncorretas+1);
+                setRespostasIncorretas(respostasIncorretas + 1);
                 if(novaPontuacao >= 5){
                     novaPontuacao -= 5;
                 }
@@ -243,7 +369,7 @@ function Jogo(){
             localStorage.setItem(configData.PONTUACAO, String(novaPontuacao));
 
             setResposta('');
-            if(contador === parseInt(localStorage.getItem(configData.QUANTIDADE_PARAM) || '20')+1){
+            if(contador === parseInt(localStorage.getItem(configData.QUANTIDADE_PARAM) || '20') + 1){
                 localStorage.setItem(configData.QUANTIDADE_ACERTOS, String(respostasCorretas));
                 SetHistorico();
                 Finaliza(novaPontuacao);
@@ -251,48 +377,48 @@ function Jogo(){
                 setContasCorrente(MontaConta());
             }
         }
-      }
+    };
 
-    const handleKeyDown = (event) => {
+    const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'Enter') {
             submitAnswer();
         }
-      }
+    };
 
     function SetHistorico(){
-        var historico = JSON.parse(localStorage.getItem(configData.HISTORICO));
-        var questoes = JSON.parse(localStorage.getItem(configData.QUESTOES));
+        let historico = JSON.parse(localStorage.getItem(configData.HISTORICO) || 'null');
+        const questoes = JSON.parse(localStorage.getItem(configData.QUESTOES) || '[]');
 
         if(historico == null){
-            historico = new Array();
+            historico = [];
         }
 
-        var novo = {
+        const novo = {
             quantidadeQuestoes: localStorage.getItem(configData.QUANTIDADE_PARAM),
             quantidadeAcertos: localStorage.getItem(configData.QUANTIDADE_ACERTOS),
             tempo: localStorage.getItem(configData.TEMPO_PARAM),
             nome: localStorage.getItem(configData.NOME_PARAM),
-            tipo: tipo,
+            tipo: tipoSelecionado,
             questoes: questoes
-        }
+        };
 
         historico.push(novo);
 
         localStorage.setItem(configData.HISTORICO, JSON.stringify(historico));
     }
 
-    async function Finaliza(novaPontuacao){
+    async function Finaliza(novaPontuacao: number){
         const nome = String(localStorage.getItem(configData.NOME_PARAM) || '');
         if(nome.length > 15){
             toast.warn('Nome deve ter no máximo 15 caracteres.');
             return;
         }
 
-        var data = {
+        const data = {
             nome: nome,
             numeroAcertos: respostasCorretas,
             numeroQuestoes: localStorage.getItem(configData.QUANTIDADE_PARAM) || 20,
-            tipo: tipo,
+            tipo: tipoSelecionado,
             tempo: localStorage.getItem(configData.TEMPO_PARAM),
             pontuacao: novaPontuacao
         };
@@ -300,19 +426,15 @@ function Jogo(){
         localStorage.setItem(configData.PONTUACAO, String(novaPontuacao));
         setLoadding(true);
         await api.post(`/ResultadosTabuadaDivertida`, data)
-        .then((response) => {
-            navigate('/final/' + tipo, {replace: true});
+        .then(() => {
+            navigate('/final/' + tipoSelecionado, { replace: true });
         }).catch(() => {
-            navigate('/error', {replace: true});
+            navigate('/error', { replace: true });
             return;
         });
     }
 
-    if(tipo.toUpperCase() !== 'M' &&
-       tipo.toUpperCase() !== 'D' &&
-       tipo.toUpperCase() !== 'A' &&
-       tipo.toUpperCase() !== 'R' &&
-       tipo.toUpperCase() !== 'S'  ){
+    if(!['M', 'D', 'A', 'R', 'S', 'E'].includes(tipoSelecionado)){
         return(
             <div className='container'>
                 <div className='not-found'>
@@ -320,61 +442,61 @@ function Jogo(){
                     <a href="/">Home</a>
                 </div>
             </div>
-        )
+        );
     }
 
     if(loadding){
         return(
             <PacmanLoader dots={7} mouthAngle={40} pellets={[7]} size={64}/>
-        )
+        );
     }
 
-        return(
-            <div className="game">
-                <div className='home-robot-container game-robot-fixed' style={{ pointerEvents: 'none' }}>
-                    <img
-                        src={robotMood === 'happy' ? happyRobot : robotMood === 'sad' ? sadRobot : neutralRobot}
-                        alt='Robô'
-                        className='home-robot'
-                        style={{ cursor: 'default' }}
-                    />
+    return(
+        <div className="game">
+            <div className='home-robot-container game-robot-fixed' style={{ pointerEvents: 'none' }}>
+                <img
+                    src={robotMood === 'happy' ? happyRobot : robotMood === 'sad' ? sadRobot : neutralRobot}
+                    alt='Robô'
+                    className='home-robot'
+                    style={{ cursor: 'default' }}
+                />
+            </div>
+            <div className='global-pageContainer-left options-preview'>
+                <div className='game-header'>
+                    <div className='info-game'>
+                        <h1>🏋️ {contador - 1} de {localStorage.getItem(configData.QUANTIDADE_PARAM) || 20}</h1>
+                        <h1>🎯 Pontuação: {pontuacao}</h1>
+                    </div>
+                    <div className='info-game'>
+                        <Tempo/>
+                        <button className='button-base' onClick={() => navigate('/contagem/' + tipoSelecionado, { replace: true })}>Restart</button>
+                    </div>
                 </div>
-                <div className='global-pageContainer-left options-preview'>
-                    <div className='game-header'>
-                        <div className='info-game'>
-                            <h1>🏋️ {contador-1} de {localStorage.getItem(configData.QUANTIDADE_PARAM) || 20}</h1>
-                            <h1>🎯 Pontuação: {pontuacao}</h1>
-                        </div>
-                        <div className='info-game'>
-                            <Tempo/>
-                            <button className='button-base' onClick={() => navigate('/contagem/' + tipo, {replace: true})}>Restart</button>
-                        </div>
-                    </div>
-                    <div className='divJogo'>
-                        <h3>
-                            {contasCorrente}
-                        </h3>
-                        <input
-                            type={isMobile ? 'text' : 'number'}
-                            inputMode={isMobile ? 'none' : 'numeric'}
+                <div className='divJogo'>
+                    <h3>
+                        {contasCorrente}
+                    </h3>
+                    <input
+                        type={isMobile ? 'text' : 'number'}
+                        inputMode={isMobile ? 'none' : 'numeric'}
+                        value={resposta}
+                        onChange={(e) => respondeu(e.target.value)}
+                        onKeyDown={handleKeyDown}
+                        autoFocus
+                        readOnly={isMobile}
+                        disabled={isMobile}
+                    />
+                    {isMobile && (
+                        <Keypad
                             value={resposta}
-                            onChange={(e) => respondeu(e.target.value)}
-                            onKeyDown={handleKeyDown}
-                            autoFocus
-                            readOnly={isMobile}
-                            disabled={isMobile}
+                            onChange={(val) => respondeu(val)}
+                            onEnter={submitAnswer}
                         />
-                        {isMobile && (
-                            <Keypad
-                                value={resposta}
-                                onChange={(val) => respondeu(val)}
-                                onEnter={submitAnswer}
-                            />
-                        )}
-                    </div>
+                    )}
                 </div>
             </div>
-        )
-    }
+        </div>
+    );
+}
 
 export default Jogo;

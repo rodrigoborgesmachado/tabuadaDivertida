@@ -1,14 +1,13 @@
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import WalkingRobot from '../../components/WalkingRobot/WalkingRobot';
 
-function TipoJogo(){
-
-    return(
+function TipoJogo() {
+    return (
         <div className='center'>
             <WalkingRobot />
             <div className='global-pageContainer-left options-preview'>
                 <div className='botoes'>
-                    <h3> Selecione a operação matemática que deseja jogar ➕ ➖ ✖️ ➗ 🔢</h3>
+                    <h3>Selecione a operação matemática que deseja jogar ➕ ➖ ✖️ ➗ 🔢</h3>
                     <Link to={`/contagem/M`} className='global-button global-button--full-width'>
                         <span className='option-link'>
                             Multiplicação✖️
@@ -29,6 +28,11 @@ function TipoJogo(){
                             Divisão➗
                         </span>
                     </Link>
+                    <Link to={`/contagem/E`} className='global-button global-button--full-width'>
+                        <span className='option-link'>
+                            Expressões Numéricas🧩
+                        </span>
+                    </Link>
                     <Link to={`/contagem/R`} className='global-button global-button--full-width'>
                         <span className='option-link'>
                             Aleatório🔀
@@ -42,7 +46,7 @@ function TipoJogo(){
                 </div>
             </div>
         </div>
-    )
+    );
 }
 
 export default TipoJogo;
