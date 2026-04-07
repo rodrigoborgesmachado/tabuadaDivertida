@@ -1,102 +1,153 @@
-.navbar {
+.site-header {
     position: sticky;
     top: 0;
-    left: 0;
-    right: 0;
     z-index: 1000;
     width: 100%;
+    align-self: stretch;
     padding: 10px 16px;
     border-bottom: 1px solid var(--panel-border-color);
     background: var(--primary-color);
     backdrop-filter: blur(10px);
 }
 
-.toolNav{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+.site-header-content {
     width: min(100%, var(--default-max-width));
-    min-height: 48px;
     margin: 0 auto;
-    gap: var(--double-default-spacing);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
 }
 
-.logo{
-    text-decoration: none;
-    font-size: 1.3rem;
-    cursor: pointer;
+.brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
     color: var(--text-color-primary);
-    font-weight: 700;
-    font-family: var(--font-title);
-    letter-spacing: 0.2px;
+    text-decoration: none;
 }
 
-.ranking{
-    text-decoration: none;
-    cursor: pointer;
-    background: var(--button-color-secondary);
+.brand span {
+    display: inline-flex;
+    flex-direction: column;
+    line-height: 1.1;
+}
+
+.brand strong {
+    font-family: var(--font-title);
+    font-size: clamp(1.15rem, 2.3vw, 1.35rem);
+}
+
+.brand small {
+    color: var(--text-color-secondary);
+    font-size: 0.82rem;
+}
+
+.brand-badge {
+    width: 40px;
+    height: 40px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: linear-gradient(140deg, var(--button-color-primary), #ffb067);
+    box-shadow: 0 6px 14px rgba(255, 127, 80, 0.32);
+    justify-content: center;
+}
+
+.brand-badge img {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+}
+
+.site-right {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.site-nav {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
     border: 1px solid var(--panel-border-color);
+    border-radius: 12px;
+    padding: 4px;
+    background: var(--block-color);
+    box-shadow: var(--shadow-card);
+}
+
+.nav-item {
     padding: 8px 12px;
+    border-radius: 10px;
     color: var(--text-color-secondary);
     font-weight: 700;
-    border-radius: 10px;
-    transition: transform 0.18s ease, filter 0.18s ease;
+    text-decoration: none;
+    border: 1px solid transparent;
+    transition: background-color 0.18s ease, color 0.18s ease, transform 0.18s ease;
 }
 
-.ranking:hover {
-    transform: translateY(-1px);
-    filter: brightness(0.98);
-}
-
-.opcoes-head {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    min-width: 0;
-    gap: 6px;
-    flex-wrap: wrap;
-}
-
-.theme-toggle {
-    background-color: var(--button-color-secondary);
-    border: none;
-    padding: 5px 12px;
+.nav-item:hover {
+    background: var(--color-surface);
     color: var(--text-color-primary);
-    font-weight: 700;
-    border-radius: 10px;
-    cursor: pointer;
+    transform: translateY(-1px);
 }
 
-.opcoes-head a,
-.opcoes-head button{
-    margin-right: 0;
+.nav-item.active {
+    background: rgba(255, 127, 80, 0.16);
+    border-color: rgba(255, 127, 80, 0.26);
+    color: var(--button-color-primary);
 }
 
-.left-side {
-    display: flex;
-    justify-content: center;
+.site-controls {
+    display: inline-flex;
     align-items: center;
     gap: 8px;
 }
 
-.left-side img{
-    width: 2.25rem;
-    padding: 4px;
-    border-radius: 50%;
-    background: linear-gradient(140deg, var(--button-color-primary), #ffb067);
+.sound-toggle {
+    min-width: 42px;
+    min-height: 36px;
+    padding: 0 10px;
 }
 
-@media screen and (max-width: 1000px){
-    .opcoes-head a{
-        display: none;
+@media (max-width: 980px) {
+    .site-header-content {
+        flex-direction: column;
+        align-items: flex-start;
     }
 
-    .opcoes-head {
-        justify-content: end;
-        margin-right: 0;
+    .site-right {
+        width: 100%;
+        justify-content: space-between;
+        gap: 12px;
     }
 
-    .toolNav a {
-        margin-left: 0;
+    .site-nav {
+        flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 760px) {
+    .site-header {
+        padding: 8px 10px;
+    }
+
+    .site-right {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .site-nav {
+        width: 100%;
+    }
+
+    .nav-item {
+        flex: 1 1 calc(50% - 6px);
+        text-align: center;
+    }
+
+    .site-controls {
+        justify-content: flex-end;
     }
 }

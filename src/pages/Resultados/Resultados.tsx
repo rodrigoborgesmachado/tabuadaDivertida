@@ -14,7 +14,7 @@ type HistoricoItem = {
   quantidadeAcertos: number | string;
   tempo: number | string;
   nome: string;
-  tipo: 'M' | 'D' | 'A' | 'S' | 'R' | string;
+  tipo: 'M' | 'D' | 'A' | 'S' | 'R' | 'E' | string;
   questoes?: Questao[] | null;
 };
 
@@ -114,6 +114,7 @@ function Resultados() {
     if (t === 'D') return 'Divisão';
     if (t === 'S') return 'Subtração';
     if (t === 'A') return 'Adição';
+    if (t === 'E') return 'Expressões Numéricas';
     return 'Multiplicação';
   }
 

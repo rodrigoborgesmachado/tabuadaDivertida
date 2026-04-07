@@ -14,7 +14,7 @@ type HistoricoItem = {
   quantidadeAcertos: number | string;
   tempo: number | string;
   nome: string;
-  tipo: 'M' | 'D' | 'A' | 'S' | 'R' | string;
+  tipo: 'M' | 'D' | 'A' | 'S' | 'R' | 'E' | string;
   questoes?: Questao[] | null;
 };
 
@@ -48,6 +48,9 @@ function Historico(){
         }
         else if (tipo === 'A'){
             retorno = 'Adição';
+        }
+        else if (tipo === 'E'){
+            retorno = 'Expressões Numéricas';
         }
 
         return retorno;
