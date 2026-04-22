@@ -1,0 +1,84 @@
+.contato-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--double-default-spacing);
+  background: var(--secundary-color);
+  color: var(--text-color-primary);
+  border: 1px solid var(--panel-border-color);
+  border-radius: var(--default-border-radius-extra);
+  padding: var(--triple-default-spacing);
+  max-width: 760px;
+  width: 100%;
+  margin: 0 auto;
+  box-shadow: var(--shadow-soft);
+}
+
+.contato-card p {
+  line-height: 1.6;
+}
+
+.contato-direct-links {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.contato-direct-links a {
+  color: var(--text-color-primary);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.contato-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--double-default-spacing);
+}
+
+.contato-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--double-default-spacing);
+}
+
+.contato-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-weight: 700;
+  color: var(--text-color-primary);
+}
+
+.contato-field .global-input {
+  font-weight: 500;
+}
+
+.contato-textarea {
+  min-height: 180px;
+  resize: vertical;
+}
+
+.contato-submit {
+  min-width: 180px;
+}
+
+.contato-privacy {
+  font-size: 14px;
+  color: var(--text-color-secondary);
+}
+
+@media (max-width: 768px) {
+  .contato-card {
+    padding: var(--double-default-spacing);
+  }
+
+  .contato-grid {
+    grid-template-columns: 1fr;
+    gap: var(--default-spacing);
+  }
+
+  .contato-submit {
+    width: 100%;
+  }
+}
