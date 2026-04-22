@@ -31,6 +31,11 @@ function Artigos(){
                             Dicas para Ensinar Matemática em Casa
                         </span>
                     </a>
+                    <a href={`/artigos/expressoes-numericas`} className='global-button global-button--full-width'>
+                        <span className='option-link'>
+                            Expressões Numéricas
+                        </span>
+                    </a>
                 </div>
             </div>
         </div>
