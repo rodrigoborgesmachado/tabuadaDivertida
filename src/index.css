@@ -965,6 +965,18 @@ table{
   gap: var(--default-spacing);
 }
 
+.tipo-jogo-help-inline{
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: help;
+}
+
+.tipo-jogo-help-inline:focus-visible{
+  outline: 2px solid rgba(255, 255, 255, 0.6);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
 .container a{
   text-decoration: none;
   background: linear-gradient(135deg, var(--button-color-back), #53beff);
