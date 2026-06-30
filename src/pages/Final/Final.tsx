@@ -1,17 +1,71 @@
 import configData from "../../Config.json";
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 import happyRobot from '../../assets/robot-happy.svg';
 import great from '../../assets/great.png';
 import donkey from '../../assets/donkey.png';
 import WalkingRobot from "./../../components/WalkingRobot/WalkingRobot";
 
+type Questao = {
+    questao: string;
+    resposta: string;
+    correta: boolean;
+};
+
 function Final(){
     const{tipo} = useParams();
-    const[questoes , setQuestoes] = useState([]);
+    const[questoes , setQuestoes] = useState<Questao[]>([]);
     const [canShare, setCanShare] = useState(false);
     const isPerfect = localStorage.getItem(configData.QUANTIDADE_ACERTOS) === localStorage.getItem(configData.QUANTIDADE_PARAM);
-    const isWorst = localStorage.getItem(configData.QUANTIDADE_ACERTOS) === '1';
+    const isWorst = localStorage.getItem(configData.QUANTIDADE_ACERTOS) === '0';
+
+    const labelTipo = (valor?: string) => {
+        const tipoSelecionado = (valor || '').toUpperCase();
+
+        if (tipoSelecionado === 'R') return 'Aleatório';
+        if (tipoSelecionado === 'D') return 'Divisão';
+        if (tipoSelecionado === 'S') return 'Subtração';
+        if (tipoSelecionado === 'A') return 'Adição';
+        if (tipoSelecionado === 'E') return 'Expressões Numéricas';
+        return 'Multiplicação';
+    };
+
+    const formatDate = () => {
+        return new Intl.DateTimeFormat('pt-BR', {
+            day: 'numeric',
+            month: 'long'
+        }).format(new Date());
+    };
+
+    const pluralize = (valor: number, singular: string, plural: string) => {
+        return `${valor} ${valor === 1 ? singular : plural}`;
+    };
+
+    const buildShareText = () => {
+        const nome = localStorage.getItem(configData.NOME_PARAM) || 'Jogador';
+        const acertos = parseInt(localStorage.getItem(configData.QUANTIDADE_ACERTOS) || '0');
+        const total = parseInt(localStorage.getItem(configData.QUANTIDADE_PARAM) || '0');
+        const erros = Math.max(total - acertos, 0);
+        const tempo = parseInt(localStorage.getItem(configData.TEMPO_PARAM) || '0');
+        const pontuacao = localStorage.getItem(configData.PONTUACAO) || '0';
+        const recorde = localStorage.getItem(configData.RECORDE) || '0';
+        const percentual = total > 0 ? Math.round((acertos / total) * 100) : 0;
+        const url = window.location.origin || 'https://www.tabuadadivertida.com';
+
+        return [
+            `Este foi meu resultado na Tabuada Divertida de ${formatDate()}!`,
+            `👤 Jogador: ${nome}`,
+            `🧮 Modo: ${labelTipo(tipo)}`,
+            `🎯 Acertos: ${acertos}/${total} (${percentual}%)`,
+            `❌ Erros: ${pluralize(erros, 'erro', 'erros')}`,
+            `⏱️ Tempo: ${pluralize(tempo, 'segundo', 'segundos')}`,
+            `⭐ Pontuação: ${pontuacao}`,
+            `🏆 Recorde: ${recorde}`,
+            '',
+            `Você consegue fazer melhor? ${url}`
+        ].join('\n');
+    };
 
     const launchFireworks = () => {
         const confetti = (window as any).confetti;
@@ -45,7 +99,7 @@ function Final(){
     };
 
     useEffect(() => {
-        setQuestoes(JSON.parse(localStorage.getItem(configData.QUESTOES)));
+        setQuestoes(JSON.parse(localStorage.getItem(configData.QUESTOES) || '[]'));
         setCanShare(typeof navigator !== 'undefined' && 'share' in navigator);
         if(isPerfect){
             launchFireworks();
@@ -56,30 +110,24 @@ function Final(){
     }, [isPerfect]);
 
     const handleShare = async () => {
-        if (!canShare) return;
-
-        const nome = localStorage.getItem(configData.NOME_PARAM) || 'Eu';
-        const acertos = localStorage.getItem(configData.QUANTIDADE_ACERTOS) || '0';
-        const total = localStorage.getItem(configData.QUANTIDADE_PARAM) || '0';
-        const tempo = localStorage.getItem(configData.TEMPO_PARAM) || '0';
-        const pontuacao = localStorage.getItem(configData.PONTUACAO) || '0';
-        const recorde = localStorage.getItem(configData.RECORDE) || '0';
-
-        const prefix = isPerfect ? 'Uhuu! 🥳🚀' : isWorst ? 'Ops! 😂🐢' : 'Aê! 😄💪';
-        const frase = isPerfect
-            ? 'Mandei bem DEMAIS na Tabuada Divertida!'
-            : isWorst
-            ? 'Dessa vez não rolou, mas eu vou treinar!'
-            : 'Mandei bem na Tabuada Divertida!';
-
-        const text = `${prefix} ${nome} fez ${acertos}/${total} em ${tempo}s.\nPontuação: ${pontuacao} | Recorde: ${recorde}.\n${frase} Vem jogar também! 🎮📲`;
+        const text = buildShareText();
 
         try {
-            await (navigator as any).share({
-                title: 'Tabuada Divertida',
-                text,
-                url: window.location.origin
-            });
+            if (canShare) {
+                await (navigator as any).share({
+                    title: 'Tabuada Divertida',
+                    text
+                });
+                return;
+            }
+
+            if (navigator.clipboard) {
+                await navigator.clipboard.writeText(text);
+                toast.success('Resultado copiado para compartilhar.');
+                return;
+            }
+
+            window.prompt('Copie seu resultado:', text);
         } catch (err) {
             // Usuário cancelou ou não foi possível compartilhar; silencie o erro.
         }
@@ -148,13 +196,11 @@ function Final(){
             </div>
 
             <div className='botoes'>
-                {canShare && (
-                    <button type='button' className='global-button global-button--full-width' onClick={handleShare}>
-                        <span className='option-link'>
-                            Compartilhar resultado 📤
-                        </span>
-                    </button>
-                )}
+                <button type='button' className='global-button global-button--full-width' onClick={handleShare}>
+                    <span className='option-link'>
+                        {canShare ? 'Compartilhar resultado' : 'Copiar resultado'}
+                    </span>
+                </button>
                 <a className='global-button global-button--full-width' href={`/contagem/` + tipo}>
                     <span className='option-link'>
                         Jogar novamente
