@@ -18,6 +18,7 @@ function Breadcrumbs() {
     'selecionarjogo': 'Selecionar Jogo',
     'ranking': 'Ranking',
     'resultados': 'Resultados',
+    'jogo2048': 'Jogo 2048',
     'instrucoes': 'Instruções',
     'historico': 'Histórico',
     'privacidade': 'Privacidade',
