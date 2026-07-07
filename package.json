@@ -21,7 +21,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build && cp routes.json build/",
+    "build": "react-scripts build && node -e \"const fs=require('fs'); fs.copyFileSync('routes.json','build/routes.json');\"",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

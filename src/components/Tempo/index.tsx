@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 
 function Tempo(){
     const[tempo, setTempo] = useState(1);
-    const[start, setStart] = useState(true);
+    const[start] = useState(true);
 
     useEffect(() =>
     {
@@ -12,15 +12,18 @@ function Tempo(){
 
         if(start){
             intervalId = setInterval(() => {
-                setTempo(tempo+1);
-                localStorage.setItem(configData.TEMPO_PARAM, tempo.toString());
+                setTempo((prevTempo) => {
+                    const nextTempo = prevTempo + 1;
+                    localStorage.setItem(configData.TEMPO_PARAM, nextTempo.toString());
+                    return nextTempo;
+                });
             }, 1000);
         }
 
         return() => {
             clearInterval(intervalId);
         };
-    }, [tempo])
+    }, [start])
 
     return(
         <div className='timerdiv'>

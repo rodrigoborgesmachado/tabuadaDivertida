@@ -23,6 +23,7 @@ import BeneficiosJogosEducacionais from './pages/Artigos/BeneficiosJogosEducacio
 import DicasParaEnsinarMatematicaEmCasa from './pages/Artigos/DicasParaEnsinarMatematicaEmCasa';
 import ExpressoesNumericas from './pages/Artigos/ExpressoesNumericas';
 import Resultados from './pages/Resultados/Resultados';
+import Jogo2048 from './pages/Jogo2048/Jogo2048';
 
 interface RoutesAppProps {
   theme: 'light' | 'dark';
@@ -42,6 +43,7 @@ function RoutesApp({ theme, toggleTheme }: RoutesAppProps) {
                 <Route path='/jogo/:tipo' element={<Jogo/>}/>
                 <Route path='/ranking' element={<Ranking/>}/>
                 <Route path='/resultados' element={<Resultados/>}/>
+                <Route path='/jogo2048' element={<Jogo2048/>}/>
                 <Route path='/final/:tipo' element={<Final/>}/>
                 <Route path='/instrucoes' element={<Instrucoes/>}/>
                 <Route path='/historico' element={<Historico/>}/>

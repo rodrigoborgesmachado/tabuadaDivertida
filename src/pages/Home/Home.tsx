@@ -34,6 +34,11 @@ function Home() {
                                 🧠 Artigos
                             </span>
                         </a>
+                        <a className='global-button global-button--full-width' href={`/jogo2048`}>
+                            <span className='option-link'>
+                                🧩 Jogar 2048
+                            </span>
+                        </a>
                     </div>
                 </section>
                 <section className='home-description'>
