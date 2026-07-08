@@ -35,4 +35,33 @@ describe('2048 move logic', () => {
     expect(result.board).toEqual(board);
     expect(result.scoreDelta).toBe(0);
   });
+
+  it('merges tiles correctly when moving up and down', () => {
+    const board = [
+      [2, 0, 0, 0],
+      [2, 0, 0, 0],
+      [4, 0, 0, 0],
+      [4, 0, 0, 0],
+    ];
+
+    const upResult = moveBoard(board, 'up');
+    expect(upResult.moved).toBe(true);
+    expect(upResult.board).toEqual([
+      [4, 0, 0, 0],
+      [8, 0, 0, 0],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
+    ]);
+    expect(upResult.scoreDelta).toBe(12);
+
+    const downResult = moveBoard(board, 'down');
+    expect(downResult.moved).toBe(true);
+    expect(downResult.board).toEqual([
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
+      [4, 0, 0, 0],
+      [8, 0, 0, 0],
+    ]);
+    expect(downResult.scoreDelta).toBe(12);
+  });
 });

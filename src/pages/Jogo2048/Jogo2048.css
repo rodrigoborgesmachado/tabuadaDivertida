@@ -110,6 +110,12 @@
 .game2048-tile--512 { background: #3d7cff; color: #fff; }
 .game2048-tile--1024 { background: #1ba9a4; color: #fff; }
 .game2048-tile--2048 { background: #2dbb7f; color: #fff; }
+.game2048-tile--4096 { background: #7c7950; color: #fff; }
+.game2048-tile--8192 { background: #3fa5e9; color: #fff; }
+.game2048-tile--16384 { background: #6c3fe9; color: #fff; }
+.game2048-tile--32768 { background: #e93fe1; color: #fff; }
+.game2048-tile--65536 { background: #e93f80; color: #fff; }
+.game2048-tile--131072 { background: #e93f3f; color: #fff; }
 
 .game2048-help {
   color: var(--text-color-secondary);
