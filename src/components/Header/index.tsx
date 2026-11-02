@@ -1,9 +1,9 @@
 import ThemeSwitcher from '../ThemeSwitcher/themeSwitcher';
 import './style.css';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import configData from '../../Config.json';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faVolumeHigh, faVolumeXmark } from '@fortawesome/free-solid-svg-icons';
+import { faBars, faVolumeHigh, faVolumeXmark, faXmark } from '@fortawesome/free-solid-svg-icons';
 import robo from '../../assets/robot-happy.svg';
 import { NavLink, useLocation } from 'react-router-dom';
 import { isJogoPath } from '../../pages/Jogos/jogosConfig';
@@ -15,6 +15,10 @@ interface HeaderProps {
 
 function Header({ theme, toggleTheme }: HeaderProps){
     const [muted, setMuted] = useState<boolean>(false);
+    const [menuOpen, setMenuOpen] = useState<boolean>(false);
+    const menuRef = useRef<HTMLDivElement>(null);
+    const toggleRef = useRef<HTMLButtonElement>(null);
+    const wasMenuOpen = useRef<boolean>(false);
     const location = useLocation();
 
     useEffect(() => {
@@ -23,6 +27,34 @@ function Header({ theme, toggleTheme }: HeaderProps){
             setMuted(init === '1');
         } catch {}
     }, []);
+
+    useEffect(() => {
+        if (!menuOpen) {
+            if (wasMenuOpen.current) {
+                toggleRef.current?.focus();
+            }
+            wasMenuOpen.current = false;
+            return;
+        }
+
+        wasMenuOpen.current = true;
+        document.body.style.overflow = 'hidden';
+        menuRef.current?.querySelector<HTMLElement>('.nav-item')?.focus();
+
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.key === 'Escape') {
+                setMenuOpen(false);
+            }
+        };
+
+        document.addEventListener('keydown', handleKeyDown);
+        return () => {
+            document.body.style.overflow = '';
+            document.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [menuOpen]);
+
+    const closeMenu = () => setMenuOpen(false);
 
     const toggleMute = () => {
         const next = !muted;
@@ -52,21 +84,32 @@ function Header({ theme, toggleTheme }: HeaderProps){
                     </span>
                 </NavLink>
 
-                <div className='site-right'>
+                <button
+                    ref={toggleRef}
+                    className='button-base menu-toggle'
+                    onClick={() => setMenuOpen(!menuOpen)}
+                    aria-expanded={menuOpen}
+                    aria-controls='site-menu'
+                    aria-label={menuOpen ? 'Fechar menu' : 'Abrir menu'}
+                >
+                    <FontAwesomeIcon icon={menuOpen ? faXmark : faBars} />
+                </button>
+
+                <div id='site-menu' ref={menuRef} className={`site-right ${menuOpen ? 'open' : ''}`}>
                     <nav className='site-nav' aria-label='Navegacao principal'>
-                        <NavLink to='/ranking' className={`nav-item ${isRankingActive ? 'active' : ''}`}>
+                        <NavLink to='/ranking' onClick={closeMenu} className={`nav-item ${isRankingActive ? 'active' : ''}`}>
                             Ranking
                         </NavLink>
-                        <NavLink to='/artigos' className={`nav-item ${isArtigosActive ? 'active' : ''}`}>
+                        <NavLink to='/artigos' onClick={closeMenu} className={`nav-item ${isArtigosActive ? 'active' : ''}`}>
                             Artigos
                         </NavLink>
-                        <NavLink to='/artigos/tabuada' className={`nav-item ${isTabuadaActive ? 'active' : ''}`}>
+                        <NavLink to='/artigos/tabuada' onClick={closeMenu} className={`nav-item ${isTabuadaActive ? 'active' : ''}`}>
                             Tabuada
                         </NavLink>
-                        <NavLink to='/resultados' className={`nav-item ${isResultadosActive ? 'active' : ''}`}>
+                        <NavLink to='/resultados' onClick={closeMenu} className={`nav-item ${isResultadosActive ? 'active' : ''}`}>
                             Resultados
                         </NavLink>
-                        <NavLink to='/jogos' className={`nav-item ${isJogosActive ? 'active' : ''}`}>
+                        <NavLink to='/jogos' onClick={closeMenu} className={`nav-item ${isJogosActive ? 'active' : ''}`}>
                             Jogos
                         </NavLink>
                     </nav>
@@ -84,6 +127,7 @@ function Header({ theme, toggleTheme }: HeaderProps){
                     </div>
                 </div>
             </div>
+            {menuOpen && <div className='site-menu-backdrop' onClick={closeMenu} aria-hidden='true' />}
         </header>
     )
 }

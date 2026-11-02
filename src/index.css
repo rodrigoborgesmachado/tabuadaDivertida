@@ -44,7 +44,7 @@
   --panel-border-color: #d7e2ef;
   --modal-background-color: rgba(255, 255, 255, 0.9);
 
-  --footer-heigth: 128px;
+  --footer-heigth: 24px;
 
   --default-spacing: 8px;
   --double-default-spacing: 16px;
@@ -436,9 +436,6 @@ th{
 footer {
   font-size: 11px;
   padding: 16px;
-  position: fixed;
-  left: 0;
-  bottom: 0;
   width: 100%;
   color: var(--text-color-primary);
   background: var(--primary-color);
@@ -1948,6 +1945,14 @@ hr{
 @media (max-width: 768px) {
   .game-robot-fixed {
     display: none;
+  }
+
+  .game .options-preview {
+    margin-top: 16px;
+  }
+
+  .game .info-game {
+    gap: 8px 16px;
   }
 }
 

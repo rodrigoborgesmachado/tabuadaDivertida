@@ -163,8 +163,18 @@
 }
 
 @media (max-width: 760px) {
+  .options-preview.game2048-page {
+    margin-top: 16px;
+  }
+
   .game2048-card {
     padding: 16px;
+  }
+
+  .game2048-actions,
+  .game2048-toolbar,
+  .game2048-help {
+    order: 1;
   }
 
   .game2048-board {
