@@ -3,6 +3,7 @@ import configData from "../../Config.json";
 import Tempo from '../../components/Tempo';
 import api from '../../services/api';
 import { playError, playSuccess } from '../../services/sons';
+import { salvarPartida, type Questao } from '../../services/historico';
 import { contasDaTabuada, partidaFinalizada, type Conquista } from '../../gamificacao/progresso';
 import { KeyboardEvent, useEffect, useMemo, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -337,7 +338,7 @@ function Jogo(){
             setResposta('');
             if(contador === totalQuestoes){
                 localStorage.setItem(configData.QUANTIDADE_ACERTOS, String(novosAcertos));
-                SetHistorico();
+                SetHistorico(questoes, novaPontuacao);
                 const tempo = parseInt(localStorage.getItem(configData.TEMPO_PARAM) || '0');
                 const conquistas = partidaFinalizada({
                     jogo: 'tabuada',
@@ -360,26 +361,17 @@ function Jogo(){
         }
     };
 
-    function SetHistorico(){
-        let historico = JSON.parse(localStorage.getItem(configData.HISTORICO) || 'null');
-        const questoes = JSON.parse(localStorage.getItem(configData.QUESTOES) || '[]');
-
-        if(historico == null){
-            historico = [];
-        }
-
-        const novo = {
+    function SetHistorico(questoes: Questao[], novaPontuacao: number){
+        salvarPartida({
             quantidadeQuestoes: localStorage.getItem(configData.QUANTIDADE_PARAM),
             quantidadeAcertos: localStorage.getItem(configData.QUANTIDADE_ACERTOS),
             tempo: localStorage.getItem(configData.TEMPO_PARAM),
             nome: localStorage.getItem(configData.NOME_PARAM),
             tipo: tipoSelecionado,
-            questoes: questoes
-        };
-
-        historico.push(novo);
-
-        localStorage.setItem(configData.HISTORICO, JSON.stringify(historico));
+            questoes: questoes,
+            data: new Date().toISOString(),
+            pontuacao: novaPontuacao
+        });
     }
 
     async function Finaliza(novaPontuacao: number, numeroAcertos: number, conquistas: Conquista[]){

@@ -2,21 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import configData from "../../Config.json";
 import WalkingRobot from "../../components/WalkingRobot/WalkingRobot";
 import HappyRobot from "../../components/HappyRobot/HappyRobot";
-
-type Questao = {
-  questao: string;
-  resposta: string;
-  correta: boolean;
-};
-
-type HistoricoItem = {
-  quantidadeQuestoes: number | string;
-  quantidadeAcertos: number | string;
-  tempo: number | string;
-  nome: string;
-  tipo: 'M' | 'D' | 'A' | 'S' | 'R' | 'E' | string;
-  questoes?: Questao[] | null;
-};
+import { lerHistorico, type HistoricoItem, type Questao } from '../../services/historico';
 
 function Resultados() {
   const [nome, setNome] = useState<string>('');
@@ -39,8 +25,7 @@ function Resultados() {
       setRecorde(parseInt(localStorage.getItem(configData.RECORDE) || '0'));
       const q = localStorage.getItem(configData.QUESTOES);
       setQuestoes(q ? JSON.parse(q) : []);
-      const h = localStorage.getItem(configData.HISTORICO);
-      setHistorico(h ? JSON.parse(h) : []);
+      setHistorico(lerHistorico());
     } catch {
     }
   }, []);

@@ -1,22 +1,7 @@
 import { useEffect, useState } from 'react';
-import configData from "../../Config.json";
 import WalkingRobot from '../../components/WalkingRobot/WalkingRobot';
 import HappyRobot from '../../components/HappyRobot/HappyRobot';
-
-type Questao = {
-  questao: string;
-  resposta: string;
-  correta: boolean;
-};
-
-type HistoricoItem = {
-  quantidadeQuestoes: number | string;
-  quantidadeAcertos: number | string;
-  tempo: number | string;
-  nome: string;
-  tipo: 'M' | 'D' | 'A' | 'S' | 'R' | 'E' | string;
-  questoes?: Questao[] | null;
-};
+import { formatarData, lerHistorico, type HistoricoItem, type Questao } from '../../services/historico';
 
 function Historico(){
     const [historico, setHistorico] = useState<HistoricoItem[]>([]);
@@ -25,13 +10,7 @@ function Historico(){
     const [itemSelecionado, setItemSelecionado] = useState<HistoricoItem | null>(null);
 
     useEffect(() =>{
-        try {
-            const raw = localStorage.getItem(configData.HISTORICO);
-            const temp = raw ? JSON.parse(raw) : [];
-            setHistorico(Array.isArray(temp) ? temp.reverse() : []);
-        } catch {
-            setHistorico([]);
-        }
+        setHistorico(lerHistorico().reverse());
     }, []);
 
     function RetornaTipo(tipo){
@@ -72,11 +51,13 @@ function Historico(){
                             <div>
                                 <h2>Resultado:</h2>
                                 <h3>Nome: {itemSelecionado.nome || '—'}</h3>
+                                <h3>Data: {formatarData(itemSelecionado.data)}</h3>
                                 <h3>
                                     Acertos: {parseInt(String(itemSelecionado.quantidadeAcertos || '0'))}/{parseInt(String(itemSelecionado.quantidadeQuestoes || '0'))}
                                 </h3>
                                 <h3>Tempo: {itemSelecionado.tempo || 0}s</h3>
                                 <h3>Tipo: {RetornaTipo(String(itemSelecionado.tipo))}</h3>
+                                <h3>Pontuação: {itemSelecionado.pontuacao ?? '—'}</h3>
                             </div>
                             <HappyRobot happy={true} />
                         </div>
@@ -112,6 +93,11 @@ function Historico(){
                 <table className='admin-table'>
                     <thead>
                         <tr>
+                            <th>
+                                <h3>
+                                Data
+                                </h3>
+                            </th>
                             <th>
                                 <h3>
                                 Nome
@@ -151,6 +137,11 @@ function Historico(){
                         historico?.map((item, index) => {
                                 return(
                                     <tr key={index}>
+                                        <td data-label='Data'>
+                                            <h4>
+                                                {formatarData(item.data)}
+                                            </h4>
+                                        </td>
                                         <td key={item.nome} data-label='Nome'>
                                             <h4>
                                                 {item.nome}
