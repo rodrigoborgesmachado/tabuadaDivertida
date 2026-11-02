@@ -4,7 +4,7 @@ import Tempo from '../../components/Tempo';
 import api from '../../services/api';
 import { playError, playSuccess } from '../../services/sons';
 import { salvarPartida, type Questao } from '../../services/historico';
-import { contasDaTabuada, partidaFinalizada, type Conquista } from '../../gamificacao/progresso';
+import { contasDaTabuada, lerProgresso, partidaFinalizada, type Conquista } from '../../gamificacao/progresso';
 import { KeyboardEvent, useEffect, useMemo, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -344,6 +344,7 @@ function Jogo(){
                 localStorage.setItem(configData.QUANTIDADE_ACERTOS, String(novosAcertos));
                 SetHistorico(questoes, novaPontuacao);
                 const tempo = parseInt(localStorage.getItem(configData.TEMPO_PARAM) || '0');
+                const xpAnterior = lerProgresso().xp;
                 const conquistas = partidaFinalizada({
                     jogo: 'tabuada',
                     modo: tipoSelecionado,
@@ -352,7 +353,7 @@ function Jogo(){
                     pontuacao: novaPontuacao,
                     recorde: recordeAnterior
                 });
-                Finaliza(novaPontuacao, novosAcertos, conquistas);
+                Finaliza(novaPontuacao, novosAcertos, conquistas, lerProgresso().xp - xpAnterior);
             }else{
                 setContasCorrente(MontaConta());
             }
@@ -378,7 +379,7 @@ function Jogo(){
         });
     }
 
-    async function Finaliza(novaPontuacao: number, numeroAcertos: number, conquistas: Conquista[]){
+    async function Finaliza(novaPontuacao: number, numeroAcertos: number, conquistas: Conquista[], ganhoXp: number){
         const nome = String(localStorage.getItem(configData.NOME_PARAM) || '');
         if(nome.length > 15){
             toast.warn('Nome deve ter no máximo 15 caracteres.');
@@ -398,7 +399,7 @@ function Jogo(){
         const irParaFinal = () => {
             navigate('/final/' + tipoSelecionado, {
                 replace: true,
-                state: { conquistas: conquistas.map((conquista) => ({ id: conquista.medalha.id, nivel: conquista.nivel })) }
+                state: { conquistas: conquistas.map((conquista) => ({ id: conquista.medalha.id, nivel: conquista.nivel })), ganhoXp }
             });
         };
 

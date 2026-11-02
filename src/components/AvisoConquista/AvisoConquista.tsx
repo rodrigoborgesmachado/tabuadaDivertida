@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
-import happyRobot from '../../assets/robot-happy.svg';
 import type { Desafio } from '../../gamificacao/desafios';
 import { nomeNivel } from '../../gamificacao/medalhas';
-import { EVENTO_CONQUISTAS, EVENTO_DESAFIOS, type Conquista } from '../../gamificacao/progresso';
+import { EVENTO_CONQUISTAS, EVENTO_DESAFIOS, EVENTO_NIVEL, type Conquista } from '../../gamificacao/progresso';
+import type { NivelXp } from '../../gamificacao/xp';
 import { playConquista } from '../../services/sons';
+import RoboPersonalizado from '../RoboPersonalizado/RoboPersonalizado';
 import './AvisoConquista.css';
 
 const TEMPO_AVISO = 4000;
@@ -25,6 +26,12 @@ const avisoDoDesafio = (desafio: Desafio): Aviso => ({
   texto: `${desafio.icone} ${desafio.texto}`,
 });
 
+const avisoDoNivel = ({ nivel, titulo }: NivelXp): Aviso => ({
+  id: `nivel-${nivel}`,
+  titulo: 'Subiu de nível!',
+  texto: `⬆️ Nível ${nivel} · ${titulo}`,
+});
+
 function AvisoConquista() {
   const [fila, setFila] = useState<Aviso[]>([]);
 
@@ -39,11 +46,18 @@ function AvisoConquista() {
       playConquista();
     };
 
+    const onNivel = (event: Event) => {
+      setFila((atual) => [...atual, avisoDoNivel((event as CustomEvent<NivelXp>).detail)]);
+      playConquista();
+    };
+
     window.addEventListener(EVENTO_CONQUISTAS, onConquistas);
     window.addEventListener(EVENTO_DESAFIOS, onDesafios);
+    window.addEventListener(EVENTO_NIVEL, onNivel);
     return () => {
       window.removeEventListener(EVENTO_CONQUISTAS, onConquistas);
       window.removeEventListener(EVENTO_DESAFIOS, onDesafios);
+      window.removeEventListener(EVENTO_NIVEL, onNivel);
     };
   }, []);
 
@@ -64,7 +78,7 @@ function AvisoConquista() {
 
   return (
     <div key={aviso.id} className='aviso-conquista' role='status' aria-live='polite'>
-      <img src={happyRobot} alt='' className='aviso-conquista__robo' />
+      <RoboPersonalizado titulo='' className='aviso-conquista__robo' />
       <div className='aviso-conquista__texto'>
         <strong>{aviso.titulo}</strong>
         <span>{aviso.texto}</span>

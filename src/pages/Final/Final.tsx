@@ -2,11 +2,12 @@ import configData from "../../Config.json";
 import { useLocation, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import happyRobot from '../../assets/robot-happy.svg';
 import great from '../../assets/great.png';
 import donkey from '../../assets/donkey.png';
 import WalkingRobot from "./../../components/WalkingRobot/WalkingRobot";
 import SequenciaDias from "./../../components/SequenciaDias/SequenciaDias";
+import RoboPersonalizado from "./../../components/RoboPersonalizado/RoboPersonalizado";
+import BarraXp from "./../../components/BarraXp/BarraXp";
 import { buscarMedalha, nomeNivel } from '../../gamificacao/medalhas';
 
 type Questao = {
@@ -17,6 +18,7 @@ type Questao = {
 
 type EstadoFinal = {
     conquistas?: { id: string; nivel: number }[];
+    ganhoXp?: number;
 };
 
 function Final(){
@@ -28,6 +30,7 @@ function Final(){
         const medalha = buscarMedalha(id);
         return medalha ? [{ medalha, nivel }] : [];
     });
+    const ganhoXp = (location.state as EstadoFinal | null)?.ganhoXp;
     const isPerfect = localStorage.getItem(configData.QUANTIDADE_ACERTOS) === localStorage.getItem(configData.QUANTIDADE_PARAM);
     const isWorst = localStorage.getItem(configData.QUANTIDADE_ACERTOS) === '0';
 
@@ -164,8 +167,9 @@ function Final(){
             </h2>
             <br/>
             <div className='robot-container'>
-                <img src={isPerfect ? happyRobot : isWorst ? donkey : happyRobot} alt={isPerfect ? 'Robô feliz' : 'Robô triste'} className={isWorst ? 'robot-donkey' : 'robot'}/>
+                {isWorst ? <img src={donkey} alt='Robô triste' className='robot-donkey'/> : <RoboPersonalizado titulo='Robô feliz' className='robot'/>}
             </div>
+            {ganhoXp !== undefined && <BarraXp ganho={ganhoXp} />}
             <SequenciaDias />
             <br/>
             {

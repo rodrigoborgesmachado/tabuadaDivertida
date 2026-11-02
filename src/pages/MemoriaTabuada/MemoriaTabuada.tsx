@@ -2,7 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { playError, playSuccess } from '../../services/sons';
-import { partidaFinalizada } from '../../gamificacao/progresso';
+import { lerProgresso, partidaFinalizada } from '../../gamificacao/progresso';
+import BarraXp from '../../components/BarraXp/BarraXp';
 import { criarTabuleiro, formamPar, formatarTempo, isMelhorResultado, PARES_POR_NIVEL, TABUADAS, type Carta, type Nivel, type Resultado, type Tabuada } from './logic';
 import './MemoriaTabuada.css';
 
@@ -47,7 +48,7 @@ function MemoriaTabuada() {
   const [cartasErradas, setCartasErradas] = useState<string[]>([]);
   const [segundos, setSegundos] = useState(0);
   const [melhores, setMelhores] = useState<Melhores>(() => readMelhores());
-  const [resultadoFinal, setResultadoFinal] = useState<(Resultado & { novoRecorde: boolean }) | null>(null);
+  const [resultadoFinal, setResultadoFinal] = useState<(Resultado & { novoRecorde: boolean; ganhoXp: number }) | null>(null);
   const desvirarRef = useRef<number | null>(null);
 
   const terminou = cartas.length > 0 && encontradas.length === cartas.length;
@@ -99,7 +100,7 @@ function MemoriaTabuada() {
       saveMelhores(novosMelhores);
     }
 
-    setResultadoFinal({ ...resultado, novoRecorde });
+    const xpAnterior = lerProgresso().xp;
     partidaFinalizada({
       jogo: 'memoria',
       nivel,
@@ -107,6 +108,7 @@ function MemoriaTabuada() {
       tempo: segundos,
       desperdicio: new Set(cartasErradas).size < cartasErradas.length,
     });
+    setResultadoFinal({ ...resultado, novoRecorde, ganhoXp: lerProgresso().xp - xpAnterior });
   };
 
   const handleVirar = (carta: Carta) => {
@@ -303,6 +305,7 @@ function MemoriaTabuada() {
                     ? `🏆 Novo recorde no nível ${labelNivel(nivel).toLowerCase()}!`
                     : `🏆 Melhor resultado: ${melhorDoNivel?.jogadas} jogadas em ${formatarTempo(melhorDoNivel?.segundos || 0)}`}
                 </p>
+                <BarraXp ganho={resultadoFinal.ganhoXp} />
                 <div className='memoria-modal__actions'>
                   <button type='button' className='global-button' onClick={iniciarJogo}>
                     Jogar de novo

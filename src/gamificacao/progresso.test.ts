@@ -1,5 +1,5 @@
 import { buscarMedalha, FATORES, medalhas, MODOS } from './medalhas';
-import { contasDaTabuada, criarProgresso, EVENTO_CONQUISTAS, EVENTO_DESAFIOS, lerProgresso, partidaFinalizada, registrarProgresso, STORAGE_KEY, VERSAO_PROGRESSO } from './progresso';
+import { contasDaTabuada, criarProgresso, EVENTO_CONQUISTAS, EVENTO_DESAFIOS, EVENTO_NIVEL, lerProgresso, partidaFinalizada, registrarProgresso, STORAGE_KEY, VERSAO_PROGRESSO } from './progresso';
 
 const dia = new Date(2026, 10, 2, 15, 0);
 const noite = new Date(2026, 10, 2, 23, 30);
@@ -367,6 +367,39 @@ describe('progresso', () => {
     expect(ids(novas)).toContain('desafios-concluidos:1');
     expect(lerProgresso().desafiosConcluidos).toEqual(['dia:2026-11-02']);
     window.removeEventListener(EVENTO_DESAFIOS, ouvinte);
+  });
+
+  it('earns XP for every finished match and keeps it between sessions', () => {
+    partidaFinalizada({ jogo: 'memoria' }, dia);
+    registrarProgresso({ jogo: '2048', maiorPeca: 64 }, dia);
+
+    expect(lerProgresso().xp).toBe(10);
+  });
+
+  it('adds the XP of right answers, completed challenges and new medals', () => {
+    partidaFinalizada({ jogo: 'tabuada', contas: contasCorretas(5) }, dia);
+
+    expect(lerProgresso().xp).toBe(10 + 5 + 30 + 20);
+  });
+
+  it('rebuilds the XP of progress saved before the levels existed', () => {
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify({ partidas: 3, acertos: 12 }));
+
+    expect(lerProgresso().xp).toBe(42);
+  });
+
+  it('notifies the screen when the player levels up', () => {
+    const ouvinte = jest.fn();
+    window.addEventListener(EVENTO_NIVEL, ouvinte);
+    salvarProgresso({ xp: 85 });
+
+    partidaFinalizada({ jogo: 'memoria' }, dia);
+    expect(ouvinte).not.toHaveBeenCalled();
+
+    partidaFinalizada({ jogo: 'memoria' }, dia);
+    expect(ouvinte).toHaveBeenCalledTimes(1);
+    expect((ouvinte.mock.calls[0][0] as CustomEvent).detail).toEqual({ nivel: 2, titulo: 'Aprendiz', xpNoNivel: 5, xpDoNivel: 150 });
+    window.removeEventListener(EVENTO_NIVEL, ouvinte);
   });
 
   it('reads the multiplication factors from the times table questions', () => {

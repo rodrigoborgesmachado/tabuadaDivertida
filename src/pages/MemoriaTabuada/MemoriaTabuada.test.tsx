@@ -69,6 +69,7 @@ describe('MemoriaTabuada', () => {
     expect(JSON.parse(window.localStorage.getItem('tabuada-divertida-memoria-melhores') || '{}').facil.jogadas).toBe(2);
     expect(JSON.parse(window.localStorage.getItem('tabuada-divertida-progresso') || '{}').jogosJogados).toEqual(['memoria']);
     expect(JSON.parse(window.localStorage.getItem('tabuada-divertida-progresso') || '{}').memoriasSemDesperdicio).toBe(1);
+    expect(screen.getByText(`+${JSON.parse(window.localStorage.getItem('tabuada-divertida-progresso') || '{}').xp} XP`)).toBeTruthy();
   });
 
   it('does not count a game where the same card was wrong twice as without waste', () => {

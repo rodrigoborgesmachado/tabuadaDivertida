@@ -1,6 +1,7 @@
 import HappyRobot from '../../components/HappyRobot/HappyRobot';
 import WalkingRobot from '../../components/WalkingRobot/WalkingRobot';
 import DesafiosDoDia from '../../components/DesafiosDoDia/DesafiosDoDia';
+import BarraXp from '../../components/BarraXp/BarraXp';
 
 function Home() {
     return (
@@ -9,6 +10,7 @@ function Home() {
             <div className='home-wrapper'>
                 <section className='options-preview'>
                     <HappyRobot />
+                    <BarraXp />
                     <div className='botoes-home'>
                         <a className='global-button global-button--full-width' href={`/formulario`}>
                             <span className='option-link'>
@@ -38,6 +40,11 @@ function Home() {
                         <a className='global-button global-button--full-width' href={`/jogos`}>
                             <span className='option-link'>
                                 🧩 Mais Jogos
+                            </span>
+                        </a>
+                        <a className='global-button global-button--full-width' href={`/personalizar`}>
+                            <span className='option-link'>
+                                🎨 Personalizar
                             </span>
                         </a>
                     </div>

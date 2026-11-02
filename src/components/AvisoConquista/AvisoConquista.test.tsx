@@ -39,6 +39,12 @@ describe('AvisoConquista', () => {
       });
     }
 
+    expect(screen.getByRole('status').textContent).toContain('Subiu de nível!⬆️ Nível 3 · Contador');
+
+    act(() => {
+      jest.advanceTimersByTime(4000);
+    });
+
     expect(screen.queryByRole('status')).toBeNull();
   });
 

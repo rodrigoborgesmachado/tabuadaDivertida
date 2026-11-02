@@ -23,6 +23,7 @@ function Breadcrumbs() {
     'jogos': 'Jogos',
     'memoria-da-tabuada': 'Memória da tabuada',
     'conquistas': 'Minhas conquistas',
+    'personalizar': 'Personalizar',
     'instrucoes': 'Instruções',
     'historico': 'Histórico',
     'privacidade': 'Privacidade',

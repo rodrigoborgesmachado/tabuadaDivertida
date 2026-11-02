@@ -1,0 +1,125 @@
+.barra-xp {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  background: var(--secundary-color);
+  border: 2px solid var(--panel-border-color);
+  border-radius: 20px;
+  box-shadow: var(--shadow-card);
+  padding: 14px 16px;
+  color: var(--text-color-primary);
+}
+
+.barra-xp__topo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.barra-xp__nivel {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-family: var(--font-title);
+  font-size: 1.3rem;
+  color: #ffffff;
+  background: linear-gradient(135deg, var(--button-color-primary), #ffb067);
+}
+
+.barra-xp__texto {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.barra-xp__texto strong {
+  font-family: var(--font-title);
+  font-size: 1.1rem;
+}
+
+.barra-xp__texto small {
+  color: var(--text-color-secondary);
+}
+
+.barra-xp__ganho {
+  flex-shrink: 0;
+  font-weight: 800;
+  color: var(--text-color-accent);
+  animation: barra-xp-ganho 0.6s ease;
+}
+
+.barra-xp__barra {
+  height: 12px;
+  border-radius: 999px;
+  background: var(--transient-color-primary);
+  overflow: hidden;
+}
+
+.barra-xp__barra span {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--button-color-primary), #ffb067);
+  animation: barra-xp-encher 1s ease-out;
+}
+
+.barra-xp__subiu {
+  margin: 0;
+  font-weight: 800;
+  text-align: center;
+  color: var(--text-color-accent);
+  animation: barra-xp-subiu 0.8s ease;
+}
+
+.barra-xp--subiu {
+  border-color: #ffd66a;
+}
+
+.barra-xp--subiu .barra-xp__nivel {
+  animation: barra-xp-nivel 1s ease 2;
+}
+
+@keyframes barra-xp-encher {
+  from {
+    width: 0;
+  }
+}
+
+@keyframes barra-xp-ganho {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+@keyframes barra-xp-subiu {
+  0% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  70% {
+    transform: scale(1.1);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes barra-xp-nivel {
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(255, 214, 106, 0.8);
+  }
+  50% {
+    transform: scale(1.25) rotate(-8deg);
+    box-shadow: 0 0 0 10px rgba(255, 214, 106, 0);
+  }
+}

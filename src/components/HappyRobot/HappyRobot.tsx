@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import happyRobot from '../../assets/robot-happy.svg';
-import sadRobot from '../../assets/robot-sad.svg';
+import RoboPersonalizado from '../RoboPersonalizado/RoboPersonalizado';
 
 function HappyRobot({happy = true}){
     const [clickCount, setClickCount] = useState(0);
@@ -25,9 +24,9 @@ function HappyRobot({happy = true}){
         {exploded ? (
             <span className='home-robot-explosion'>💥</span>
         ) : (
-            <img
-                src={happy ? happyRobot : sadRobot}
-                alt='Robô feliz'
+            <RoboPersonalizado
+                triste={!happy}
+                titulo='Robô feliz'
                 className='home-robot'
                 style={{ transform: `scale(${1 + clickCount * 0.1})` }}
                 onClick={handleRobotClick}

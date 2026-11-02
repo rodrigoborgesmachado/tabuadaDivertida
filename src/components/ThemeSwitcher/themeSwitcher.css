@@ -38,3 +38,13 @@
   input[type="radio"]:not(:checked) + .theme-label:hover {
     background-color: var(--transient-color-second);
   }
+
+  .theme-color {
+    border: none;
+    background: transparent;
+    color: var(--button-color-primary);
+  }
+
+  .theme-color:hover {
+    background-color: var(--transient-color-second);
+  }

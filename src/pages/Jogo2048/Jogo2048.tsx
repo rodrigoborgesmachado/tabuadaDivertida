@@ -2,7 +2,8 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { addRandomTile, createInitialBoard, getSwipeDirection, hasNoMoves, moveBoard, type Board, type Direction } from './logic';
-import { partidaFinalizada, registrarProgresso } from '../../gamificacao/progresso';
+import { lerProgresso, partidaFinalizada, registrarProgresso } from '../../gamificacao/progresso';
+import BarraXp from '../../components/BarraXp/BarraXp';
 import './Jogo2048.css';
 
 interface HistoryEntry {
@@ -103,6 +104,7 @@ function Jogo2048() {
   const maiorPecaRef = useRef(getMaiorPeca(initialState.board));
   const partidaRegistradaRef = useRef(false);
   const desfezRef = useRef(false);
+  const [xpPartida, setXpPartida] = useState<{ xp: number; ganho: number } | null>(null);
 
   useEffect(() => {
     scoreRef.current = score;
@@ -111,7 +113,10 @@ function Jogo2048() {
   const registrarPartida = useCallback(() => {
     if (!partidaRegistradaRef.current) {
       partidaRegistradaRef.current = true;
+      const xpAnterior = lerProgresso().xp;
       partidaFinalizada({ jogo: '2048', maiorPeca: maiorPecaRef.current, pontuacao: scoreRef.current, desfez: desfezRef.current });
+      const xp = lerProgresso().xp;
+      setXpPartida({ xp, ganho: xp - xpAnterior });
     }
   }, []);
 
@@ -309,6 +314,8 @@ function Jogo2048() {
                 ))}
             </div>
           </div>
+
+          {xpPartida && <BarraXp xp={xpPartida.xp} ganho={xpPartida.ganho} />}
 
           {showWinModal && (
             <div className='game2048-win-modal' role='dialog' aria-modal='true'>
