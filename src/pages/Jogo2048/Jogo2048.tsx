@@ -293,7 +293,7 @@ function Jogo2048() {
             </div>
           )}
 
-          <p className='game2048-help'>Dica: use as setas do teclado, arraste o dedo no tabuleiro ou use os botões acima. A cada movimento, um novo bloco aparece e você pode desfazer o último passo quantas vezes quiser.</p>
+          <p className='game2048-help'>Dica: use as setas do teclado, arraste o dedo no tabuleiro ou use os botões. A cada movimento, um novo bloco aparece e você pode desfazer o último passo quantas vezes quiser.</p>
         </div>
       </div>
     </div>
