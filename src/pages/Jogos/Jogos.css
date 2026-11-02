@@ -1,0 +1,66 @@
+.jogos-page {
+  width: min(100%, 1120px);
+}
+
+.jogos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.jogos-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: var(--secundary-color);
+  border: 1px solid var(--panel-border-color);
+  border-radius: 20px;
+  box-shadow: var(--shadow-card);
+  padding: 18px;
+  color: var(--text-color-primary);
+  text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.jogos-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-soft);
+}
+
+.jogos-card-icon {
+  width: 56px;
+  height: 56px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, var(--button-color-primary), #ffb067);
+}
+
+.jogos-card h2 {
+  margin: 0;
+  font-family: var(--font-title);
+  font-size: 1.3rem;
+}
+
+.jogos-card p {
+  margin: 0;
+  color: var(--text-color-secondary);
+  flex: 1;
+}
+
+.jogos-card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.jogos-card-tag {
+  background: var(--transient-color-second);
+  border: 1px solid var(--panel-border-color);
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 13px;
+  font-weight: 700;
+}

@@ -1,5 +1,6 @@
 import { useLocation } from 'react-router-dom';
 import './style.css';
+import { isJogoPath } from '../../pages/Jogos/jogosConfig';
 
 function Breadcrumbs() {
   const location = useLocation();
@@ -19,6 +20,7 @@ function Breadcrumbs() {
     'ranking': 'Ranking',
     'resultados': 'Resultados',
     'jogo2048': 'Jogo 2048',
+    'jogos': 'Jogos',
     'instrucoes': 'Instruções',
     'historico': 'Histórico',
     'privacidade': 'Privacidade',
@@ -52,6 +54,10 @@ function Breadcrumbs() {
 
     return { href, label };
   });
+
+  if (isJogoPath(path)) {
+    parts.unshift({ href: '/jogos', label: 'Jogos' });
+  }
 
   const homeCrumb = { href: '/', label: 'Início' };
 
