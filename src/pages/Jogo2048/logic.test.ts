@@ -1,4 +1,4 @@
-import { moveBoard } from './logic';
+import { getSwipeDirection, moveBoard } from './logic';
 
 describe('2048 move logic', () => {
   it('merges matching tiles to the left and adds score', () => {
@@ -63,5 +63,19 @@ describe('2048 move logic', () => {
       [8, 0, 0, 0],
     ]);
     expect(downResult.scoreDelta).toBe(12);
+  });
+});
+
+describe('2048 swipe direction', () => {
+  it('uses the largest displacement to define the direction', () => {
+    expect(getSwipeDirection(80, 10)).toBe('right');
+    expect(getSwipeDirection(-80, 10)).toBe('left');
+    expect(getSwipeDirection(10, 80)).toBe('down');
+    expect(getSwipeDirection(10, -80)).toBe('up');
+  });
+
+  it('ignores gestures shorter than the minimum distance', () => {
+    expect(getSwipeDirection(0, 0)).toBeNull();
+    expect(getSwipeDirection(20, -15)).toBeNull();
   });
 });

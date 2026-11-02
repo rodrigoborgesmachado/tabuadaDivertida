@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { addRandomTile, createInitialBoard, hasNoMoves, moveBoard, type Board, type Direction } from './logic';
+import { addRandomTile, createInitialBoard, getSwipeDirection, hasNoMoves, moveBoard, type Board, type Direction } from './logic';
 import './Jogo2048.css';
 
 interface HistoryEntry {
@@ -96,6 +96,7 @@ function Jogo2048() {
   const [showWinModal, setShowWinModal] = useState(false);
   const [winShown, setWinShown] = useState<boolean>(() => readWinShown());
   const scoreRef = useRef(score);
+  const touchStartRef = useRef<{ x: number; y: number } | null>(null);
 
   useEffect(() => {
     scoreRef.current = score;
@@ -200,6 +201,25 @@ function Jogo2048() {
     return () => window.removeEventListener('keydown', onKeyDown);
   }, [handleMove]);
 
+  const handleTouchStart = (event: React.TouchEvent<HTMLDivElement>) => {
+    const touch = event.touches[0];
+    touchStartRef.current = { x: touch.clientX, y: touch.clientY };
+  };
+
+  const handleTouchEnd = (event: React.TouchEvent<HTMLDivElement>) => {
+    const start = touchStartRef.current;
+    touchStartRef.current = null;
+    if (!start || showWinModal || hasNoMoves(board)) {
+      return;
+    }
+
+    const touch = event.changedTouches[0];
+    const direction = getSwipeDirection(touch.clientX - start.x, touch.clientY - start.y);
+    if (direction) {
+      handleMove(direction);
+    }
+  };
+
   return (
     <div className='center'>
       <div className='global-pageContainer-left options-preview game2048-page'>
@@ -243,7 +263,7 @@ function Jogo2048() {
           </div>
 
           <div className='game2048-board-total'>
-            <div className='game2048-board' aria-label='Tabuleiro do jogo 2048'>
+            <div className='game2048-board' aria-label='Tabuleiro do jogo 2048' onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
                 {board.map((row, rowIndex) => (
                 <div key={`row-${rowIndex}`} className='game2048-row'>
                     {row.map((value, colIndex) => (
@@ -273,7 +293,7 @@ function Jogo2048() {
             </div>
           )}
 
-          <p className='game2048-help'>Dica: use as setas do teclado ou os botões acima. A cada movimento, um novo bloco aparece e você pode desfazer o último passo quantas vezes quiser.</p>
+          <p className='game2048-help'>Dica: use as setas do teclado, arraste o dedo no tabuleiro ou use os botões acima. A cada movimento, um novo bloco aparece e você pode desfazer o último passo quantas vezes quiser.</p>
         </div>
       </div>
     </div>
