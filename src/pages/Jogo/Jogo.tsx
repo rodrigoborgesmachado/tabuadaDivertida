@@ -37,6 +37,7 @@ function Jogo(){
     const [recordeAnterior] = useState(recorde);
     const [wrongStreak, setWrongStreak] = useState(0);
     const [robotMood, setRobotMood] = useState<'happy' | 'neutral' | 'sad'>('neutral');
+    const [treino] = useState<ContaGerada[]>(() => tipoSelecionado === 'T' ? JSON.parse(localStorage.getItem(configData.TREINO) || '[]') : []);
 
     function numeroAleatorio(min: number, max: number){
         return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -135,7 +136,7 @@ function Jogo(){
         localStorage.setItem(configData.QUESTOES, JSON.stringify([]));
         localStorage.setItem(configData.PONTUACAO, '0');
 
-        if(tipoSelecionado === 'E'){
+        if(tipoSelecionado === 'E' || tipoSelecionado === 'T'){
             setContasCorrente(MontaConta());
             return;
         }
@@ -147,7 +148,7 @@ function Jogo(){
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
-        if(tipoSelecionado === 'E'){
+        if(tipoSelecionado === 'E' || tipoSelecionado === 'T'){
             return;
         }
 
@@ -197,6 +198,9 @@ function Jogo(){
 
         if(tipoSelecionado === 'E'){
             conta = montaExpressaoNumerica();
+        }
+        else if(tipoSelecionado === 'T'){
+            conta = treino[contador];
         }
         else{
             const n1 = contas1[contador];
@@ -391,20 +395,27 @@ function Jogo(){
         };
 
         localStorage.setItem(configData.PONTUACAO, String(novaPontuacao));
-        setLoadding(true);
-        await api.post(`/ResultadosTabuadaDivertida`, data)
-        .then(() => {
+        const irParaFinal = () => {
             navigate('/final/' + tipoSelecionado, {
                 replace: true,
                 state: { conquistas: conquistas.map((conquista) => ({ id: conquista.medalha.id, nivel: conquista.nivel })) }
             });
-        }).catch(() => {
+        };
+
+        if(tipoSelecionado === 'T'){
+            irParaFinal();
+            return;
+        }
+
+        setLoadding(true);
+        await api.post(`/ResultadosTabuadaDivertida`, data)
+        .then(irParaFinal).catch(() => {
             navigate('/error', { replace: true });
             return;
         });
     }
 
-    if(!['M', 'D', 'A', 'R', 'S', 'E'].includes(tipoSelecionado)){
+    if(!['M', 'D', 'A', 'R', 'S', 'E', 'T'].includes(tipoSelecionado) || (tipoSelecionado === 'T' && treino.length === 0)){
         return(
             <div className='container'>
                 <div className='not-found'>

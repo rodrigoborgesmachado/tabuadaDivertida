@@ -31,6 +31,9 @@ function Historico(){
         else if (tipo === 'E'){
             retorno = 'Expressões Numéricas';
         }
+        else if (tipo === 'T'){
+            retorno = 'Treino dos erros';
+        }
 
         return retorno;
     }

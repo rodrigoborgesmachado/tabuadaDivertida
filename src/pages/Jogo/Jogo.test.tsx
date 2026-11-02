@@ -1,6 +1,7 @@
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import configData from '../../Config.json';
+import api from '../../services/api';
 import Jogo from './Jogo';
 
 jest.mock('../../services/api', () => ({
@@ -13,8 +14,8 @@ jest.mock('../../services/sons', () => ({
   playSuccess: () => {},
 }));
 
-const renderJogo = () => render(
-  <MemoryRouter initialEntries={['/jogo/M']}>
+const renderJogo = (tipo = 'M') => render(
+  <MemoryRouter initialEntries={['/jogo/' + tipo]}>
     <Routes>
       <Route path='/jogo/:tipo' element={<Jogo />} />
       <Route path='/final/:tipo' element={<h1>Tela final</h1>} />
@@ -67,5 +68,25 @@ describe('Jogo', () => {
     expect(window.localStorage.getItem(configData.HISTORICO)).toBeNull();
     expect(progresso().jogosJogados).toEqual(['tabuada']);
     expect(await screen.findByText('Tela final')).toBeTruthy();
+  });
+
+  it('plays only the training questions without sending them to the ranking', async () => {
+    const post = jest.spyOn(api, 'post');
+    window.localStorage.setItem(configData.TREINO, JSON.stringify([{ texto: '56÷8', resposta: 7 }, { texto: '7x8', resposta: 56 }]));
+    window.localStorage.setItem(configData.QUANTIDADE_PARAM, '2');
+
+    renderJogo('T');
+    expect(screen.getByRole('heading', { level: 3 }).textContent).toBe('56÷8');
+    fireEvent.change(screen.getByRole('spinbutton'), { target: { value: '7' } });
+    await act(async () => {
+      fireEvent.keyDown(screen.getByRole('spinbutton'), { key: 'Enter' });
+    });
+
+    expect(screen.getByRole('heading', { level: 3 }).textContent).toBe('7x8');
+    await responderConta();
+
+    expect(await screen.findByText('Tela final')).toBeTruthy();
+    expect(post).not.toHaveBeenCalled();
+    expect(JSON.parse(window.localStorage.getItem(configData.HISTORICO) || '[]')[0]).toMatchObject({ tipo: 'T', quantidadeAcertos: '2' });
   });
 });
