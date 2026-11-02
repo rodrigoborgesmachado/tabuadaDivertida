@@ -39,6 +39,7 @@ function Breadcrumbs() {
     'beneficios-jogos-educacionas': 'Benefícios dos jogos educacionais',
     'dicas-para-ensinar-matematica-em-casa': 'Dicas para ensinar matemática em casa',
     'expressoes-numericas': 'Expressões numéricas',
+    'tabuada-metodos-antigos-x-modernos': 'Tabuada: métodos antigos x modernos',
   };
 
   const parts = segments.map((seg, idx) => {

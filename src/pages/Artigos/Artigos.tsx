@@ -36,6 +36,11 @@ function Artigos(){
                             Expressões Numéricas
                         </span>
                     </a>
+                    <a href={`/artigos/tabuada-metodos-antigos-x-modernos`} className='global-button global-button--full-width'>
+                        <span className='option-link'>
+                            Tabuada: Métodos Antigos x Modernos
+                        </span>
+                    </a>
                 </div>
             </div>
         </div>

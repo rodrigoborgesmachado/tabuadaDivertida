@@ -22,6 +22,7 @@ import Artigos from './pages/Artigos/Artigos';
 import BeneficiosJogosEducacionais from './pages/Artigos/BeneficiosJogosEducacionais';
 import DicasParaEnsinarMatematicaEmCasa from './pages/Artigos/DicasParaEnsinarMatematicaEmCasa';
 import ExpressoesNumericas from './pages/Artigos/ExpressoesNumericas';
+import TabuadaMetodosAntigosModernos from './pages/Artigos/TabuadaMetodosAntigosModernos';
 import Resultados from './pages/Resultados/Resultados';
 import Jogo2048 from './pages/Jogo2048/Jogo2048';
 import Jogos from './pages/Jogos/Jogos';
@@ -65,6 +66,7 @@ function RoutesApp({ theme, toggleTheme }: RoutesAppProps) {
                 <Route path='/artigos/beneficios-jogos-educacionas' element={<BeneficiosJogosEducacionais/>}/>
                 <Route path='/artigos/dicas-para-ensinar-matematica-em-casa' element={<DicasParaEnsinarMatematicaEmCasa/>}/>
                 <Route path='/artigos/expressoes-numericas' element={<ExpressoesNumericas/>}/>
+                <Route path='/artigos/tabuada-metodos-antigos-x-modernos' element={<TabuadaMetodosAntigosModernos/>}/>
                 <Route path='/contribua' element={<Contribua/>}/>
                 <Route path='*' element={<Erro/>}/>
             </Routes>
