@@ -24,6 +24,7 @@ import DicasParaEnsinarMatematicaEmCasa from './pages/Artigos/DicasParaEnsinarMa
 import ExpressoesNumericas from './pages/Artigos/ExpressoesNumericas';
 import Resultados from './pages/Resultados/Resultados';
 import Jogo2048 from './pages/Jogo2048/Jogo2048';
+import Jogos from './pages/Jogos/Jogos';
 
 interface RoutesAppProps {
   theme: 'light' | 'dark';
@@ -44,6 +45,7 @@ function RoutesApp({ theme, toggleTheme }: RoutesAppProps) {
                 <Route path='/ranking' element={<Ranking/>}/>
                 <Route path='/resultados' element={<Resultados/>}/>
                 <Route path='/jogo2048' element={<Jogo2048/>}/>
+                <Route path='/jogos' element={<Jogos/>}/>
                 <Route path='/final/:tipo' element={<Final/>}/>
                 <Route path='/instrucoes' element={<Instrucoes/>}/>
                 <Route path='/historico' element={<Historico/>}/>
