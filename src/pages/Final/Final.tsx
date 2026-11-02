@@ -149,6 +149,10 @@ function Final(){
     };
 
     return(
+        <>
+        <div className='global-pageContainer-left'>
+            {ganhoXp !== undefined && <BarraXp ganho={ganhoXp} />}
+        </div>
         <div className='global-pageContainer-left options-preview'>
             <WalkingRobot />
             <h2>
@@ -169,7 +173,6 @@ function Final(){
             <div className='robot-container'>
                 {isWorst ? <img src={donkey} alt='Robô triste' className='robot-donkey'/> : <RoboPersonalizado titulo='Robô feliz' className='robot'/>}
             </div>
-            {ganhoXp !== undefined && <BarraXp ganho={ganhoXp} />}
             <SequenciaDias />
             <br/>
             {
@@ -267,6 +270,7 @@ function Final(){
                 </a>
             </div>
         </div>
+        </>
     )
 }
 
