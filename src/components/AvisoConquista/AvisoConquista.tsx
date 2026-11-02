@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import type { Desafio } from '../../gamificacao/desafios';
 import { nomeNivel } from '../../gamificacao/medalhas';
-import { EVENTO_CONQUISTAS, EVENTO_DESAFIOS, EVENTO_NIVEL, type Conquista } from '../../gamificacao/progresso';
+import { EVENTO_CONQUISTAS, EVENTO_DESAFIOS, EVENTO_NIVEL, lerProgresso, type Conquista } from '../../gamificacao/progresso';
+import { recompensasLiberadas, type Recompensa } from '../../gamificacao/recompensas';
 import type { NivelXp } from '../../gamificacao/xp';
 import { playConquista } from '../../services/sons';
 import RoboPersonalizado from '../RoboPersonalizado/RoboPersonalizado';
@@ -32,13 +33,31 @@ const avisoDoNivel = ({ nivel, titulo }: NivelXp): Aviso => ({
   texto: `⬆️ Nível ${nivel} · ${titulo}`,
 });
 
+const avisoDaRecompensa = (recompensa: Recompensa): Aviso => ({
+  id: `recompensa-${recompensa.id}`,
+  titulo: recompensa.tipo === 'tema' ? 'Novo tema liberado!' : 'Novo item para o seu robô!',
+  texto: `${recompensa.icone} ${recompensa.nome}`,
+});
+
 function AvisoConquista() {
   const [fila, setFila] = useState<Aviso[]>([]);
 
   useEffect(() => {
+    const liberadas = new Set(recompensasLiberadas(lerProgresso()).map((recompensa) => recompensa.id));
+
+    const verificarRecompensas = () => window.setTimeout(() => {
+      const novas = recompensasLiberadas(lerProgresso()).filter((recompensa) => !liberadas.has(recompensa.id));
+      novas.forEach((recompensa) => liberadas.add(recompensa.id));
+
+      if (novas.length > 0) {
+        setFila((atual) => [...atual, ...novas.map(avisoDaRecompensa)]);
+      }
+    });
+
     const onConquistas = (event: Event) => {
       setFila((atual) => [...atual, ...(event as CustomEvent<Conquista[]>).detail.map(avisoDaConquista)]);
       playConquista();
+      verificarRecompensas();
     };
 
     const onDesafios = (event: Event) => {
@@ -49,6 +68,7 @@ function AvisoConquista() {
     const onNivel = (event: Event) => {
       setFila((atual) => [...atual, avisoDoNivel((event as CustomEvent<NivelXp>).detail)]);
       playConquista();
+      verificarRecompensas();
     };
 
     window.addEventListener(EVENTO_CONQUISTAS, onConquistas);

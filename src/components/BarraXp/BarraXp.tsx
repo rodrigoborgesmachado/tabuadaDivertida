@@ -6,11 +6,12 @@ import './BarraXp.css';
 interface BarraXpProps {
   xp?: number;
   ganho?: number;
+  atalho?: boolean;
 }
 
 const formatarNumero = (valor: number) => valor.toLocaleString('pt-BR');
 
-function BarraXp({ xp, ganho }: BarraXpProps) {
+function BarraXp({ xp, ganho, atalho = true }: BarraXpProps) {
   const [salvo] = useState(() => lerProgresso().xp);
   const total = xp ?? salvo;
   const atual = calcularNivel(total);
@@ -38,6 +39,11 @@ function BarraXp({ xp, ganho }: BarraXpProps) {
         <span style={{ width: `${percentual * 100}%` }} />
       </div>
       {subiu && <p className='barra-xp__subiu' role='status'>⬆️ Subiu para o nível {atual.nivel}!</p>}
+      {atalho && (
+        <a className='global-button global-button--basic barra-xp__atalho' href='/personalizar'>
+          🎨 Personalizar robô
+        </a>
+      )}
     </div>
   );
 }

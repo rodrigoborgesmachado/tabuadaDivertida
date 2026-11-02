@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import BarraXp from '../../components/BarraXp/BarraXp';
 import RoboPersonalizado from '../../components/RoboPersonalizado/RoboPersonalizado';
 import { lerProgresso } from '../../gamificacao/progresso';
-import { condicaoRecompensa, recompensaLiberada, recompensas, salvarPersonalizacao, type TipoRecompensa } from '../../gamificacao/recompensas';
+import { condicaoRecompensa, marcarRecompensasVistas, recompensaLiberada, recompensas, recompensasNaoVistas, salvarPersonalizacao, type TipoRecompensa } from '../../gamificacao/recompensas';
 import { usePersonalizacao } from '../../gamificacao/usePersonalizacao';
 import './Personalizar.css';
 
@@ -16,6 +16,11 @@ const SECOES: { tipo: TipoRecompensa; titulo: string }[] = [
 function Personalizar() {
   const [progresso] = useState(() => lerProgresso());
   const personalizacao = usePersonalizacao();
+  const [novas] = useState(() => recompensasNaoVistas(progresso).map((recompensa) => recompensa.id));
+
+  useEffect(() => {
+    marcarRecompensasVistas(progresso);
+  }, [progresso]);
 
   return (
     <div className='center'>
@@ -27,7 +32,7 @@ function Personalizar() {
 
         <div className='personalizar-topo'>
           <RoboPersonalizado titulo='Seu robô' className='personalizar-robo' />
-          <BarraXp xp={progresso.xp} />
+          <BarraXp xp={progresso.xp} atalho={false} />
         </div>
 
         {SECOES.map((secao) => (
@@ -55,7 +60,7 @@ function Personalizar() {
                       {!liberada ? '🔒' : recompensa.tipo === 'cor' ? '' : recompensa.icone}
                     </span>
                     <strong>{recompensa.nome}</strong>
-                    <small>{ativa ? '✅ Em uso' : liberada ? 'Liberado' : condicaoRecompensa(recompensa)}</small>
+                    <small>{ativa ? '✅ Em uso' : !liberada ? condicaoRecompensa(recompensa) : novas.includes(recompensa.id) ? '✨ Novo!' : 'Liberado'}</small>
                   </button>
                 );
               })}

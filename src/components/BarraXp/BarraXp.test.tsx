@@ -15,6 +15,13 @@ describe('BarraXp', () => {
     expect(screen.getByText('Nível 2 · Aprendiz')).toBeTruthy();
     expect(screen.getByText('75/150 XP para o nível 3')).toBeTruthy();
     expect(screen.getByRole('progressbar').getAttribute('aria-valuenow')).toBe('50');
+    expect(screen.getByText('🎨 Personalizar robô').getAttribute('href')).toBe('/personalizar');
+  });
+
+  it('hides the shortcut when asked', () => {
+    render(<BarraXp xp={0} atalho={false} />);
+
+    expect(screen.queryByText('🎨 Personalizar robô')).toBeNull();
   });
 
   it('shows the XP earned in the match', () => {

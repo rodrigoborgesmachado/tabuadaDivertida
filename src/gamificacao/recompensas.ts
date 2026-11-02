@@ -4,6 +4,8 @@ import { calcularNivel } from './xp';
 
 export const STORAGE_PERSONALIZACAO = 'tabuada-divertida-personalizacao';
 export const EVENTO_PERSONALIZACAO = 'tabuada-divertida-personalizacao';
+export const STORAGE_RECOMPENSAS_VISTAS = 'tabuada-divertida-recompensas-vistas';
+export const EVENTO_RECOMPENSAS_VISTAS = 'tabuada-divertida-recompensas-vistas';
 
 export type TipoRecompensa = 'cor' | 'acessorio' | 'tema';
 
@@ -46,6 +48,40 @@ export const buscarRecompensa = (id: string) => recompensas.find((recompensa) =>
 export const recompensaLiberada = (recompensa: Recompensa, progresso: Progresso) =>
   (!recompensa.nivel || calcularNivel(progresso.xp).nivel >= recompensa.nivel) &&
   (!recompensa.medalha || (progresso.medalhas[recompensa.medalha.id]?.nivel || 0) >= recompensa.medalha.nivel);
+
+export const recompensasLiberadas = (progresso: Progresso) => recompensas.filter((recompensa) => recompensaLiberada(recompensa, progresso));
+
+const salvarVistas = (ids: string[]) => {
+  try {
+    window.localStorage.setItem(STORAGE_RECOMPENSAS_VISTAS, JSON.stringify(ids));
+  } catch {}
+};
+
+const lerVistas = (): string[] | null => {
+  try {
+    const vistas = JSON.parse(window.localStorage.getItem(STORAGE_RECOMPENSAS_VISTAS) || 'null');
+    return Array.isArray(vistas) ? vistas : null;
+  } catch {
+    return null;
+  }
+};
+
+export const recompensasNaoVistas = (progresso = lerProgresso()) => {
+  const liberadas = recompensasLiberadas(progresso);
+  const vistas = lerVistas();
+
+  if (!vistas) {
+    salvarVistas(liberadas.map((recompensa) => recompensa.id));
+    return [];
+  }
+
+  return liberadas.filter((recompensa) => !vistas.includes(recompensa.id));
+};
+
+export const marcarRecompensasVistas = (progresso = lerProgresso()) => {
+  salvarVistas(recompensasLiberadas(progresso).map((recompensa) => recompensa.id));
+  window.dispatchEvent(new Event(EVENTO_RECOMPENSAS_VISTAS));
+};
 
 export const condicaoRecompensa = (recompensa: Recompensa) => {
   if (recompensa.nivel) {

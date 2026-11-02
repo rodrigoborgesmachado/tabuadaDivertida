@@ -7,6 +7,8 @@ import { faBars, faVolumeHigh, faVolumeXmark, faXmark } from '@fortawesome/free-
 import robo from '../../assets/robot-happy.svg';
 import { NavLink, useLocation } from 'react-router-dom';
 import { isJogoPath } from '../../pages/Jogos/jogosConfig';
+import { useRecompensasNaoVistas } from '../../gamificacao/useRecompensasNaoVistas';
+import RoboPersonalizado from '../RoboPersonalizado/RoboPersonalizado';
 
 interface HeaderProps {
     theme: 'light' | 'dark';
@@ -20,6 +22,7 @@ function Header({ theme, toggleTheme }: HeaderProps){
     const toggleRef = useRef<HTMLButtonElement>(null);
     const wasMenuOpen = useRef<boolean>(false);
     const location = useLocation();
+    const recompensasNovas = useRecompensasNaoVistas().length;
 
     useEffect(() => {
         try {
@@ -69,6 +72,7 @@ function Header({ theme, toggleTheme }: HeaderProps){
     const isResultadosActive = location.pathname.startsWith('/resultados');
     const isJogosActive = location.pathname === '/jogos' || isJogoPath(location.pathname);
     const isConquistasActive = location.pathname.startsWith('/conquistas');
+    const isPersonalizarActive = location.pathname.startsWith('/personalizar');
     const isTabuadaActive = location.pathname === '/artigos/tabuada';
     const isArtigosActive = location.pathname.startsWith('/artigos') && !isTabuadaActive;
 
@@ -94,6 +98,7 @@ function Header({ theme, toggleTheme }: HeaderProps){
                     aria-label={menuOpen ? 'Fechar menu' : 'Abrir menu'}
                 >
                     <FontAwesomeIcon icon={menuOpen ? faXmark : faBars} />
+                    {recompensasNovas > 0 && !menuOpen && <span className='nav-item__novo' aria-hidden='true'>{recompensasNovas}</span>}
                 </button>
 
                 <div id='site-menu' ref={menuRef} className={`site-right ${menuOpen ? 'open' : ''}`}>
@@ -119,6 +124,17 @@ function Header({ theme, toggleTheme }: HeaderProps){
                     </nav>
 
                     <div className='site-controls'>
+                        <NavLink
+                            to='/personalizar'
+                            onClick={closeMenu}
+                            className={`button-base personalizar-toggle ${isPersonalizarActive ? 'active' : ''}`}
+                            aria-label={`Personalizar robô${recompensasNovas > 0 ? `, ${recompensasNovas} ${recompensasNovas === 1 ? 'item novo' : 'itens novos'}` : ''}`}
+                            title='Personalizar robô'
+                        >
+                            <RoboPersonalizado titulo='' className='personalizar-toggle__robo' />
+                            <span className='personalizar-toggle__texto'>Personalizar robô</span>
+                            {recompensasNovas > 0 && <span className='nav-item__novo' aria-hidden='true'>{recompensasNovas}</span>}
+                        </NavLink>
                         <ThemeSwitcher theme={theme} toggleTheme={toggleTheme} />
                         <button
                             className='button-base sound-toggle'

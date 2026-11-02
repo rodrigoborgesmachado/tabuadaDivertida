@@ -1,5 +1,7 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
+import { criarProgresso, STORAGE_KEY } from '../../gamificacao/progresso';
+import { marcarRecompensasVistas, STORAGE_RECOMPENSAS_VISTAS } from '../../gamificacao/recompensas';
 import Header from './index';
 
 const renderHeader = () => render(
@@ -53,5 +55,23 @@ describe('Header', () => {
 
     expect(toggle.getAttribute('aria-expanded')).toBe('false');
     expect(container.querySelector('.site-menu-backdrop')).toBeNull();
+  });
+
+  it('shows the new robot items in the menu until they are seen', () => {
+    window.localStorage.clear();
+    window.localStorage.setItem(STORAGE_RECOMPENSAS_VISTAS, JSON.stringify(['cor-prata', 'sem-acessorio', 'tema-padrao']));
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...criarProgresso(), xp: 250 }));
+    renderHeader();
+
+    const link = screen.getByRole('link', { name: 'Personalizar robô, 2 itens novos' });
+    expect(link.getAttribute('href')).toBe('/personalizar');
+    expect(link.querySelector('.nav-item__novo')?.textContent).toBe('2');
+    expect(screen.getByRole('button', { name: 'Abrir menu' }).querySelector('.nav-item__novo')?.textContent).toBe('2');
+
+    act(() => {
+      marcarRecompensasVistas();
+    });
+
+    expect(screen.getByRole('link', { name: 'Personalizar robô' }).querySelector('.nav-item__novo')).toBeNull();
   });
 });
