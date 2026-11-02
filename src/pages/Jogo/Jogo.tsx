@@ -3,6 +3,7 @@ import configData from "../../Config.json";
 import Tempo from '../../components/Tempo';
 import api from '../../services/api';
 import { playError, playSuccess } from '../../services/sons';
+import { salvarPartida, type Questao } from '../../services/historico';
 import { contasDaTabuada, partidaFinalizada, type Conquista } from '../../gamificacao/progresso';
 import { KeyboardEvent, useEffect, useMemo, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -36,6 +37,7 @@ function Jogo(){
     const [recordeAnterior] = useState(recorde);
     const [wrongStreak, setWrongStreak] = useState(0);
     const [robotMood, setRobotMood] = useState<'happy' | 'neutral' | 'sad'>('neutral');
+    const [treino] = useState<ContaGerada[]>(() => tipoSelecionado === 'T' ? JSON.parse(localStorage.getItem(configData.TREINO) || '[]') : []);
 
     function numeroAleatorio(min: number, max: number){
         return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -134,7 +136,7 @@ function Jogo(){
         localStorage.setItem(configData.QUESTOES, JSON.stringify([]));
         localStorage.setItem(configData.PONTUACAO, '0');
 
-        if(tipoSelecionado === 'E'){
+        if(tipoSelecionado === 'E' || tipoSelecionado === 'T'){
             setContasCorrente(MontaConta());
             return;
         }
@@ -146,7 +148,7 @@ function Jogo(){
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
-        if(tipoSelecionado === 'E'){
+        if(tipoSelecionado === 'E' || tipoSelecionado === 'T'){
             return;
         }
 
@@ -196,6 +198,9 @@ function Jogo(){
 
         if(tipoSelecionado === 'E'){
             conta = montaExpressaoNumerica();
+        }
+        else if(tipoSelecionado === 'T'){
+            conta = treino[contador];
         }
         else{
             const n1 = contas1[contador];
@@ -337,7 +342,7 @@ function Jogo(){
             setResposta('');
             if(contador === totalQuestoes){
                 localStorage.setItem(configData.QUANTIDADE_ACERTOS, String(novosAcertos));
-                SetHistorico();
+                SetHistorico(questoes, novaPontuacao);
                 const tempo = parseInt(localStorage.getItem(configData.TEMPO_PARAM) || '0');
                 const conquistas = partidaFinalizada({
                     jogo: 'tabuada',
@@ -360,26 +365,17 @@ function Jogo(){
         }
     };
 
-    function SetHistorico(){
-        let historico = JSON.parse(localStorage.getItem(configData.HISTORICO) || 'null');
-        const questoes = JSON.parse(localStorage.getItem(configData.QUESTOES) || '[]');
-
-        if(historico == null){
-            historico = [];
-        }
-
-        const novo = {
+    function SetHistorico(questoes: Questao[], novaPontuacao: number){
+        salvarPartida({
             quantidadeQuestoes: localStorage.getItem(configData.QUANTIDADE_PARAM),
             quantidadeAcertos: localStorage.getItem(configData.QUANTIDADE_ACERTOS),
             tempo: localStorage.getItem(configData.TEMPO_PARAM),
             nome: localStorage.getItem(configData.NOME_PARAM),
             tipo: tipoSelecionado,
-            questoes: questoes
-        };
-
-        historico.push(novo);
-
-        localStorage.setItem(configData.HISTORICO, JSON.stringify(historico));
+            questoes: questoes,
+            data: new Date().toISOString(),
+            pontuacao: novaPontuacao
+        });
     }
 
     async function Finaliza(novaPontuacao: number, numeroAcertos: number, conquistas: Conquista[]){
@@ -399,20 +395,27 @@ function Jogo(){
         };
 
         localStorage.setItem(configData.PONTUACAO, String(novaPontuacao));
-        setLoadding(true);
-        await api.post(`/ResultadosTabuadaDivertida`, data)
-        .then(() => {
+        const irParaFinal = () => {
             navigate('/final/' + tipoSelecionado, {
                 replace: true,
                 state: { conquistas: conquistas.map((conquista) => ({ id: conquista.medalha.id, nivel: conquista.nivel })) }
             });
-        }).catch(() => {
+        };
+
+        if(tipoSelecionado === 'T'){
+            irParaFinal();
+            return;
+        }
+
+        setLoadding(true);
+        await api.post(`/ResultadosTabuadaDivertida`, data)
+        .then(irParaFinal).catch(() => {
             navigate('/error', { replace: true });
             return;
         });
     }
 
-    if(!['M', 'D', 'A', 'R', 'S', 'E'].includes(tipoSelecionado)){
+    if(!['M', 'D', 'A', 'R', 'S', 'E', 'T'].includes(tipoSelecionado) || (tipoSelecionado === 'T' && treino.length === 0)){
         return(
             <div className='container'>
                 <div className='not-found'>

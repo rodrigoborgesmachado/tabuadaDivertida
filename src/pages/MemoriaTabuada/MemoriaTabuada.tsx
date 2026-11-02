@@ -11,7 +11,7 @@ type Melhores = Partial<Record<Nivel, Resultado>>;
 const STORAGE_KEY = 'tabuada-divertida-memoria-melhores';
 const TEMPO_PARA_DESVIRAR = 900;
 
-const NIVEIS: { nivel: Nivel; label: string }[] = [
+export const NIVEIS: { nivel: Nivel; label: string }[] = [
   { nivel: 'facil', label: 'Fácil' },
   { nivel: 'medio', label: 'Médio' },
   { nivel: 'dificil', label: 'Difícil' },
@@ -21,7 +21,7 @@ const labelNivel = (nivel: Nivel) => NIVEIS.find((item) => item.nivel === nivel)
 
 const labelTabuada = (tabuada: Tabuada) => (tabuada === 'misturado' ? 'Misturado' : `Tabuada do ${tabuada}`);
 
-const readMelhores = (): Melhores => {
+export const readMelhores = (): Melhores => {
   try {
     const stored = window.localStorage.getItem(STORAGE_KEY);
     return stored ? (JSON.parse(stored) as Melhores) : {};

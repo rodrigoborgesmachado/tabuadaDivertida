@@ -9,5 +9,6 @@
     "PONTUACAO": "pontuacao",
     "RECORDE": "recorde"
     ,
-    "SOUND_MUTED": "soundMuted"
+    "SOUND_MUTED": "soundMuted",
+    "TREINO": "treino"
 }

@@ -39,6 +39,7 @@ function Final(){
         if (tipoSelecionado === 'S') return 'Subtração';
         if (tipoSelecionado === 'A') return 'Adição';
         if (tipoSelecionado === 'E') return 'Expressões Numéricas';
+        if (tipoSelecionado === 'T') return 'Treino dos erros';
         return 'Multiplicação';
     };
 
