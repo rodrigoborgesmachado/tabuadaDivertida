@@ -1,11 +1,12 @@
 import configData from "../../Config.json";
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import happyRobot from '../../assets/robot-happy.svg';
 import great from '../../assets/great.png';
 import donkey from '../../assets/donkey.png';
 import WalkingRobot from "./../../components/WalkingRobot/WalkingRobot";
+import { buscarMedalha, nomeNivel } from '../../gamificacao/medalhas';
 
 type Questao = {
     questao: string;
@@ -13,10 +14,19 @@ type Questao = {
     correta: boolean;
 };
 
+type EstadoFinal = {
+    conquistas?: { id: string; nivel: number }[];
+};
+
 function Final(){
     const{tipo} = useParams();
+    const location = useLocation();
     const[questoes , setQuestoes] = useState<Questao[]>([]);
     const [canShare, setCanShare] = useState(false);
+    const conquistas = ((location.state as EstadoFinal | null)?.conquistas || []).flatMap(({ id, nivel }) => {
+        const medalha = buscarMedalha(id);
+        return medalha ? [{ medalha, nivel }] : [];
+    });
     const isPerfect = localStorage.getItem(configData.QUANTIDADE_ACERTOS) === localStorage.getItem(configData.QUANTIDADE_PARAM);
     const isWorst = localStorage.getItem(configData.QUANTIDADE_ACERTOS) === '0';
 
@@ -176,6 +186,27 @@ function Final(){
                     🔥 Quão rápido você pode ser? Descubra em Tabuada Divertida! 💥
                 </h3>
             }
+            {
+                conquistas.length > 0 &&
+                <div className='respostasQuestoes'>
+                    <h2>
+                        🏅 Medalhas desta partida:
+                    </h2>
+                    <div className='resultados-lista'>
+                        {
+                            conquistas.map(({ medalha, nivel }) => {
+                                return(
+                                    <div className='resultados-item' key={medalha.id}>
+                                        <h3>
+                                            {medalha.icone} {medalha.nome}{nomeNivel(medalha, nivel) && ` · ${nomeNivel(medalha, nivel)}`}
+                                        </h3>
+                                    </div>
+                                )
+                            })
+                        }
+                    </div>
+                </div>
+            }
             <div className='respostasQuestoes'>
                 <h2>
                     Respostas:
@@ -214,6 +245,11 @@ function Final(){
                 <a className='global-button global-button--full-width' href="/resultados">
                     <span className='option-link'>
                         Meus Resultados
+                    </span>
+                </a>
+                <a className='global-button global-button--full-width' href="/conquistas">
+                    <span className='option-link'>
+                        Minhas conquistas
                     </span>
                 </a>
                 <a className='global-button global-button--full-width' href="/">

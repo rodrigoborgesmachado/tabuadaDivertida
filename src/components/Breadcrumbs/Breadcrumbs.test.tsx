@@ -22,4 +22,10 @@ describe('Breadcrumbs', () => {
     expect(screen.getAllByText('Jogos')).toHaveLength(1);
     expect(screen.getByText('Memória da tabuada')).toBeTruthy();
   });
+
+  it('shows the achievements page', () => {
+    renderBreadcrumbs('/conquistas');
+
+    expect(screen.getByText('Minhas conquistas')).toBeTruthy();
+  });
 });

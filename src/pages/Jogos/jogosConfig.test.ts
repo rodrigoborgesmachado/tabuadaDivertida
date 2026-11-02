@@ -8,6 +8,11 @@ describe('jogosConfig', () => {
     expect(paths).toContain('/jogos/memoria-da-tabuada');
   });
 
+  it('gives each game a unique id', () => {
+    const ids = jogos.map((jogo) => jogo.id);
+    expect(new Set(ids).size).toBe(jogos.length);
+  });
+
   it('recognizes game paths', () => {
     expect(isJogoPath('/jogo2048')).toBe(true);
     expect(isJogoPath('/selecionarjogo')).toBe(true);

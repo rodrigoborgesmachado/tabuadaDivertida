@@ -26,6 +26,8 @@ import Resultados from './pages/Resultados/Resultados';
 import Jogo2048 from './pages/Jogo2048/Jogo2048';
 import Jogos from './pages/Jogos/Jogos';
 import MemoriaTabuada from './pages/MemoriaTabuada/MemoriaTabuada';
+import Conquistas from './pages/Conquistas/Conquistas';
+import AvisoConquista from './components/AvisoConquista/AvisoConquista';
 
 interface RoutesAppProps {
   theme: 'light' | 'dark';
@@ -37,6 +39,7 @@ function RoutesApp({ theme, toggleTheme }: RoutesAppProps) {
         <BrowserRouter>
             <Header theme={theme} toggleTheme={toggleTheme}/>
             <Breadcrumbs />
+            <AvisoConquista />
             <Routes>
                 <Route path='/' element={<Home/>}/>
                 <Route path='/formulario' element={<Formulario/>}/>
@@ -48,6 +51,7 @@ function RoutesApp({ theme, toggleTheme }: RoutesAppProps) {
                 <Route path='/jogo2048' element={<Jogo2048/>}/>
                 <Route path='/jogos' element={<Jogos/>}/>
                 <Route path='/jogos/memoria-da-tabuada' element={<MemoriaTabuada/>}/>
+                <Route path='/conquistas' element={<Conquistas/>}/>
                 <Route path='/final/:tipo' element={<Final/>}/>
                 <Route path='/instrucoes' element={<Instrucoes/>}/>
                 <Route path='/historico' element={<Historico/>}/>

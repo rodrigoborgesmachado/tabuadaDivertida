@@ -1,4 +1,5 @@
 export interface JogoConfig {
+  id: string;
   path: string;
   nome: string;
   icone: string;
@@ -9,6 +10,7 @@ export interface JogoConfig {
 
 export const jogos: JogoConfig[] = [
   {
+    id: 'tabuada',
     path: '/selecionarjogo',
     nome: 'Tabuada Divertida',
     icone: '✖️',
@@ -17,6 +19,7 @@ export const jogos: JogoConfig[] = [
     idade: '6+ anos',
   },
   {
+    id: '2048',
     path: '/jogo2048',
     nome: '2048',
     icone: '🎲',
@@ -25,6 +28,7 @@ export const jogos: JogoConfig[] = [
     idade: '8+ anos',
   },
   {
+    id: 'memoria',
     path: '/jogos/memoria-da-tabuada',
     nome: 'Memória da tabuada',
     icone: '🧠',

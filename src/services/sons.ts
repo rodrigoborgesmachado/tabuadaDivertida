@@ -42,3 +42,10 @@ export const playSuccess = () => {
 export const playError = () => {
   playBeep(220, 220, 'square', 0.06, 0);
 };
+
+export const playConquista = () => {
+  playBeep(523, 110, 'triangle', 0.08, 0);
+  playBeep(659, 110, 'triangle', 0.08, 110);
+  playBeep(784, 110, 'triangle', 0.08, 220);
+  playBeep(1047, 260, 'triangle', 0.08, 330);
+};

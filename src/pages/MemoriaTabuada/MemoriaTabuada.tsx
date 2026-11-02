@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { playError, playSuccess } from '../../services/sons';
+import { partidaFinalizada } from '../../gamificacao/progresso';
 import { criarTabuleiro, formamPar, formatarTempo, isMelhorResultado, PARES_POR_NIVEL, TABUADAS, type Carta, type Nivel, type Resultado, type Tabuada } from './logic';
 import './MemoriaTabuada.css';
 
@@ -97,6 +98,7 @@ function MemoriaTabuada() {
     }
 
     setResultadoFinal({ ...resultado, novoRecorde });
+    partidaFinalizada({ jogo: 'memoria' });
   };
 
   const handleVirar = (carta: Carta) => {
