@@ -286,6 +286,15 @@ const outrasMedalhas: Medalha[] = [
     valor: (progresso) => progresso.semTitubear,
   },
   {
+    id: 'mais-rapido-que-a-maquina',
+    nome: 'Mais rápido que a máquina',
+    descricao: 'Na Corrida contra o robô, vença o Robô campeão.',
+    icone: '🏎️',
+    metas: [1],
+    unidade: 'corridas',
+    valor: (progresso) => progresso.vitoriasContraCampeao,
+  },
+  {
     id: 'semana-perfeita',
     nome: 'Semana perfeita',
     descricao: 'Conclua os 7 desafios do dia de uma mesma semana.',

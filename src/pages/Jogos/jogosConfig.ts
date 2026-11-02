@@ -54,6 +54,15 @@ export const jogos: JogoConfig[] = [
     habilidade: 'Lógica e padrões numéricos',
     idade: '8+ anos',
   },
+  {
+    id: 'corrida-robo',
+    path: '/jogos/corrida-contra-o-robo',
+    nome: 'Corrida contra o robô',
+    icone: '🏁',
+    descricao: 'Aposte corrida contra o robô do site: cada conta certa faz o seu robô avançar uma casa até a linha de chegada.',
+    habilidade: 'Tabuada e agilidade',
+    idade: '6+ anos',
+  },
 ];
 
 export const isJogoPath = (pathname: string) =>
