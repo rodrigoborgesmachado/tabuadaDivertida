@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { medalhas, NIVEIS, nomeNivel, type Medalha } from '../../gamificacao/medalhas';
 import { lerProgresso, type Progresso } from '../../gamificacao/progresso';
 import { compartilhar } from '../../services/compartilhar';
+import BarraXp from '../../components/BarraXp/BarraXp';
+import RoboPersonalizado from '../../components/RoboPersonalizado/RoboPersonalizado';
 import './Conquistas.css';
 
 const CLASSES_NIVEIS = ['bronze', 'prata', 'ouro', 'diamante'];
@@ -51,6 +53,11 @@ function Conquistas() {
         <p className='paragrafo3'>
           Você conquistou {conquistadas} de {medalhas.length} medalhas. Continue jogando para liberar todas!
         </p>
+
+        <div className='conquistas-perfil'>
+          <RoboPersonalizado titulo='Seu robô' className='conquistas-perfil__robo' />
+          <BarraXp xp={progresso.xp} />
+        </div>
 
         <div className='conquistas-grid'>
           {medalhas.map((medalha) => {
@@ -115,6 +122,9 @@ function Conquistas() {
         <div className='conquistas-toolbar'>
           <Link to='/jogos' className='global-button'>
             Ir para os jogos
+          </Link>
+          <Link to='/personalizar' className='global-button global-button--back'>
+            Personalizar robô
           </Link>
         </div>
       </div>

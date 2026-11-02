@@ -1,0 +1,111 @@
+.personalizar-page {
+  width: min(100%, 1120px);
+}
+
+.personalizar-topo {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  width: 100%;
+  margin-bottom: 24px;
+}
+
+.personalizar-robo {
+  width: 10rem;
+  height: auto;
+  flex-shrink: 0;
+  margin-top: 16px;
+  animation: home-robot-bounce 1s ease-in-out infinite;
+}
+
+.personalizar-secao {
+  width: 100%;
+  margin-bottom: 24px;
+}
+
+.personalizar-secao h2 {
+  margin: 0 0 12px;
+  font-family: var(--font-title);
+  font-size: 1.4rem;
+}
+
+.personalizar-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 12px;
+}
+
+.personalizar-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 14px 10px;
+  border: 2px solid var(--panel-border-color);
+  border-radius: 20px;
+  background: var(--secundary-color);
+  box-shadow: var(--shadow-card);
+  color: var(--text-color-primary);
+  font-family: var(--font-body);
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.personalizar-item:not(:disabled):hover {
+  transform: translateY(-2px);
+  border-color: var(--button-color-primary);
+}
+
+.personalizar-item--ativo {
+  border-color: var(--button-color-primary);
+  background: var(--transient-color-second);
+}
+
+.personalizar-item:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.personalizar-item__icone {
+  width: 48px;
+  height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 2px solid var(--panel-border-color);
+  background: var(--block-color-secundary);
+  font-size: 24px;
+}
+
+.personalizar-item:disabled .personalizar-item__icone {
+  filter: grayscale(0.6);
+}
+
+.personalizar-item small {
+  color: var(--text-color-secondary);
+}
+
+.personalizar-toolbar {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+@media (max-width: 640px) {
+  .personalizar-topo {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .personalizar-robo {
+    width: 8rem;
+  }
+
+  .personalizar-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

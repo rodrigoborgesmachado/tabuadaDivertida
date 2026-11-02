@@ -3,8 +3,11 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Footer from './components/footer';
 import { useEffect, useState } from 'react';
+import { buscarRecompensa } from './gamificacao/recompensas';
+import { usePersonalizacao } from './gamificacao/usePersonalizacao';
 
 function App() {
+  const { tema } = usePersonalizacao();
   const [theme, setTheme] = useState<'light' | 'dark'>(() => {
     const saved = localStorage.getItem('theme');
     return saved === 'dark' ? 'dark' : 'light';
@@ -14,6 +17,15 @@ function App() {
     document.body.setAttribute('data-theme', theme);
     localStorage.setItem('theme', theme);
   }, [theme]);
+
+  useEffect(() => {
+    const cor = buscarRecompensa(tema)?.valor;
+    if (cor) {
+      document.body.setAttribute('data-cor', cor);
+    } else {
+      document.body.removeAttribute('data-cor');
+    }
+  }, [tema]);
 
   const toggleTheme = () => {
     setTheme(prev => (prev === 'light' ? 'dark' : 'light'));
