@@ -6,6 +6,7 @@ describe('jogosConfig', () => {
     expect(paths).toContain('/selecionarjogo');
     expect(paths).toContain('/jogo2048');
     expect(paths).toContain('/jogos/memoria-da-tabuada');
+    expect(paths).toContain('/jogos/maior-ou-menor');
   });
 
   it('gives each game a unique id', () => {

@@ -308,8 +308,9 @@ describe('progresso', () => {
   it('unlocks the explorer medal after playing every game', () => {
     partidaFinalizada({ jogo: 'tabuada', contas: [{ correta: false }] }, dia);
     partidaFinalizada({ jogo: '2048', maiorPeca: 32 }, dia);
+    partidaFinalizada({ jogo: 'memoria' }, dia);
 
-    expect(ids(partidaFinalizada({ jogo: 'memoria' }, dia))).toContain('explorador:1');
+    expect(ids(partidaFinalizada({ jogo: 'maior-ou-menor' }, dia))).toContain('explorador:1');
   });
 
   it('unlocks the 2048 medals while playing without counting a match', () => {

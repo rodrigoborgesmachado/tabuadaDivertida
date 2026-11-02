@@ -36,6 +36,15 @@ export const jogos: JogoConfig[] = [
     habilidade: 'Tabuada e memória',
     idade: '5+ anos',
   },
+  {
+    id: 'maior-ou-menor',
+    path: '/jogos/maior-ou-menor',
+    nome: 'Maior ou menor',
+    icone: '⚖️',
+    descricao: 'Compare contas, frações e decimais e escolha o maior valor antes do tempo acabar.',
+    habilidade: 'Cálculo mental, frações e decimais',
+    idade: '7+ anos',
+  },
 ];
 
 export const isJogoPath = (pathname: string) =>

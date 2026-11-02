@@ -27,6 +27,7 @@ import Resultados from './pages/Resultados/Resultados';
 import Jogo2048 from './pages/Jogo2048/Jogo2048';
 import Jogos from './pages/Jogos/Jogos';
 import MemoriaTabuada from './pages/MemoriaTabuada/MemoriaTabuada';
+import MaiorOuMenor from './pages/MaiorOuMenor/MaiorOuMenor';
 import Conquistas from './pages/Conquistas/Conquistas';
 import Personalizar from './pages/Personalizar/Personalizar';
 import AvisoConquista from './components/AvisoConquista/AvisoConquista';
@@ -53,6 +54,7 @@ function RoutesApp({ theme, toggleTheme }: RoutesAppProps) {
                 <Route path='/jogo2048' element={<Jogo2048/>}/>
                 <Route path='/jogos' element={<Jogos/>}/>
                 <Route path='/jogos/memoria-da-tabuada' element={<MemoriaTabuada/>}/>
+                <Route path='/jogos/maior-ou-menor' element={<MaiorOuMenor/>}/>
                 <Route path='/conquistas' element={<Conquistas/>}/>
                 <Route path='/personalizar' element={<Personalizar/>}/>
                 <Route path='/final/:tipo' element={<Final/>}/>
