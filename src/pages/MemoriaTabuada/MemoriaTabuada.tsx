@@ -44,6 +44,7 @@ function MemoriaTabuada() {
   const [abertas, setAbertas] = useState<string[]>([]);
   const [encontradas, setEncontradas] = useState<string[]>([]);
   const [jogadas, setJogadas] = useState(0);
+  const [cartasErradas, setCartasErradas] = useState<string[]>([]);
   const [segundos, setSegundos] = useState(0);
   const [melhores, setMelhores] = useState<Melhores>(() => readMelhores());
   const [resultadoFinal, setResultadoFinal] = useState<(Resultado & { novoRecorde: boolean }) | null>(null);
@@ -74,6 +75,7 @@ function MemoriaTabuada() {
     setAbertas([]);
     setEncontradas([]);
     setJogadas(0);
+    setCartasErradas([]);
     setSegundos(0);
     setResultadoFinal(null);
     setJogando(true);
@@ -98,7 +100,13 @@ function MemoriaTabuada() {
     }
 
     setResultadoFinal({ ...resultado, novoRecorde });
-    partidaFinalizada({ jogo: 'memoria' });
+    partidaFinalizada({
+      jogo: 'memoria',
+      nivel,
+      jogadas: totalJogadas,
+      tempo: segundos,
+      desperdicio: new Set(cartasErradas).size < cartasErradas.length,
+    });
   };
 
   const handleVirar = (carta: Carta) => {
@@ -130,6 +138,7 @@ function MemoriaTabuada() {
     }
 
     playError();
+    setCartasErradas([...cartasErradas, primeira.id, carta.id]);
     desvirarRef.current = window.setTimeout(() => {
       setAbertas([]);
       desvirarRef.current = null;

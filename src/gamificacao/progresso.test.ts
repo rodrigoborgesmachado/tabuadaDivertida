@@ -1,5 +1,5 @@
-import { buscarMedalha, FATORES } from './medalhas';
-import { contasDaTabuada, EVENTO_CONQUISTAS, EVENTO_DESAFIOS, lerProgresso, partidaFinalizada, registrarProgresso, STORAGE_KEY, VERSAO_PROGRESSO } from './progresso';
+import { buscarMedalha, FATORES, medalhas, MODOS } from './medalhas';
+import { contasDaTabuada, criarProgresso, EVENTO_CONQUISTAS, EVENTO_DESAFIOS, lerProgresso, partidaFinalizada, registrarProgresso, STORAGE_KEY, VERSAO_PROGRESSO } from './progresso';
 
 const dia = new Date(2026, 10, 2, 15, 0);
 const noite = new Date(2026, 10, 2, 23, 30);
@@ -9,6 +9,12 @@ const contasCorretas = (quantidade: number) => Array.from({ length: quantidade }
 const tabuadaInteira = (tabuada: number) => FATORES.map((fator) => ({ correta: true, fatores: [tabuada, fator] as [number, number] }));
 
 const ids = (novas: ReturnType<typeof partidaFinalizada>) => novas.map((conquista) => `${conquista.medalha.id}:${conquista.nivel}`);
+
+const acertadas = (tabuada: number) => Object.keys(lerProgresso().tabuadas[tabuada] || {}).map(Number);
+
+const salvarProgresso = (dados: object) => {
+  window.localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...criarProgresso(), ...dados }));
+};
 
 describe('progresso', () => {
   beforeEach(() => {
@@ -62,21 +68,37 @@ describe('progresso', () => {
     const novas = partidaFinalizada({ jogo: 'tabuada', contas: [{ correta: true, fatores: [10, 7] }] }, dia);
 
     expect(ids(novas)).toContain('mestre-do-7:1');
-    expect(lerProgresso().tabuadas[7]).toEqual(FATORES);
+    expect(acertadas(7)).toEqual(FATORES);
   });
 
   it('counts both factors of a multiplication', () => {
     partidaFinalizada({ jogo: 'tabuada', contas: [{ correta: true, fatores: [3, 8] }] }, dia);
 
-    expect(lerProgresso().tabuadas[3]).toEqual([8]);
-    expect(lerProgresso().tabuadas[8]).toEqual([3]);
+    expect(acertadas(3)).toEqual([8]);
+    expect(acertadas(8)).toEqual([3]);
   });
 
   it('removes an account from the times table when it is answered wrong', () => {
     partidaFinalizada({ jogo: 'tabuada', contas: tabuadaInteira(6).slice(0, 3) }, dia);
     partidaFinalizada({ jogo: 'tabuada', contas: [{ correta: false, fatores: [6, 3] }] }, dia);
 
-    expect(lerProgresso().tabuadas[6]).toEqual([2, 4]);
+    expect(acertadas(6)).toEqual([2, 4]);
+  });
+
+  it('only counts the master medal accounts answered in the last 7 days', () => {
+    partidaFinalizada({ jogo: 'tabuada', contas: tabuadaInteira(4).slice(0, 4) }, new Date(2026, 10, 1, 15, 0));
+    partidaFinalizada({ jogo: 'tabuada', contas: tabuadaInteira(4).slice(4, 6) }, new Date(2026, 10, 5, 15, 0));
+
+    expect(ids(partidaFinalizada({ jogo: 'tabuada', contas: tabuadaInteira(4).slice(6) }, new Date(2026, 10, 8, 15, 0)))).not.toContain('mestre-do-4:1');
+    expect(acertadas(4)).toEqual([6, 7, 8, 9, 10]);
+
+    expect(ids(partidaFinalizada({ jogo: 'tabuada', contas: tabuadaInteira(4).slice(0, 4) }, new Date(2026, 10, 9, 15, 0)))).toContain('mestre-do-4:1');
+  });
+
+  it('unlocks the master medal with every account in the same match', () => {
+    partidaFinalizada({ jogo: 'tabuada', contas: tabuadaInteira(9).slice(0, 8) }, new Date(2026, 9, 1, 15, 0));
+
+    expect(ids(partidaFinalizada({ jogo: 'tabuada', contas: tabuadaInteira(9) }, dia))).toContain('mestre-do-9:1');
   });
 
   it('unlocks the complete times table after every master medal', () => {
@@ -99,19 +121,180 @@ describe('progresso', () => {
     expect(lerProgresso().medalhas['acertos-seguidos'].nivel).toBe(2);
   });
 
-  it('counts perfect matches and the best average time', () => {
-    partidaFinalizada({ jogo: 'tabuada', contas: contasCorretas(5), tempoMedio: 1 }, dia);
-    expect(lerProgresso().partidasPerfeitas).toBe(1);
+  it('counts perfect matches and the best average time only with at least 20 accounts', () => {
+    const curta = partidaFinalizada({ jogo: 'tabuada', contas: contasCorretas(19), tempoMedio: 1 }, dia);
+    expect(ids(curta)).not.toContain('partida-perfeita:1');
+    expect(lerProgresso().partidasPerfeitas).toBe(0);
     expect(lerProgresso().melhorTempoMedio).toBe(0);
 
-    const novas = partidaFinalizada({ jogo: 'tabuada', contas: contasCorretas(10), tempoMedio: 1.8 }, dia);
+    const novas = partidaFinalizada({ jogo: 'tabuada', contas: contasCorretas(20), tempoMedio: 1.8 }, dia);
 
-    expect(ids(novas)).toEqual(expect.arrayContaining(['resposta-rapida:2', 'acertos-seguidos:1']));
+    expect(ids(novas)).toEqual(expect.arrayContaining(['resposta-rapida:2', 'partida-perfeita:1']));
     expect(lerProgresso().melhorTempoMedio).toBe(1.8);
 
-    partidaFinalizada({ jogo: 'tabuada', contas: [...contasCorretas(9), { correta: false }], tempoMedio: 1 }, dia);
+    partidaFinalizada({ jogo: 'tabuada', contas: [...contasCorretas(19), { correta: false }], tempoMedio: 1 }, dia);
     expect(lerProgresso().melhorTempoMedio).toBe(1.8);
-    expect(lerProgresso().partidasPerfeitas).toBe(2);
+    expect(lerProgresso().partidasPerfeitas).toBe(1);
+
+    expect(ids(partidaFinalizada({ jogo: 'tabuada', contas: contasCorretas(20), tempoMedio: 1 }, dia))).toContain('resposta-rapida:4');
+  });
+
+  it('reaches the diamond level', () => {
+    salvarProgresso({ partidasPerfeitas: 24, partidas: 499, melhorDiasSeguidos: 100 });
+
+    const novas = partidaFinalizada({ jogo: 'tabuada', contas: contasCorretas(100) }, dia);
+
+    expect(ids(novas)).toEqual(expect.arrayContaining(['partida-perfeita:4', 'partidas-jogadas:4', 'constancia:4', 'acertos-seguidos:4']));
+    expect(buscarMedalha('partida-perfeita')?.metas).toHaveLength(4);
+  });
+
+  it('keeps the conquered medals and resets the old times table progress when migrating', () => {
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      versao: 1,
+      partidas: 7,
+      tabuadas: { 7: FATORES },
+      medalhas: { 'mestre-do-7': { nivel: 1, data: '2026-10-01T15:00:00.000Z' }, 'partida-perfeita': { nivel: 3, data: '2026-10-01T15:00:00.000Z' } },
+    }));
+
+    const progresso = lerProgresso();
+
+    expect(progresso.versao).toBe(VERSAO_PROGRESSO);
+    expect(progresso.partidas).toBe(7);
+    expect(progresso.tabuadas).toEqual({});
+    expect(progresso.acertos).toBe(0);
+    expect(progresso.perfeitasPorModo).toEqual({});
+
+    partidaFinalizada({ jogo: 'memoria' }, dia);
+
+    expect(lerProgresso().medalhas['mestre-do-7'].nivel).toBe(1);
+    expect(lerProgresso().medalhas['partida-perfeita'].nivel).toBe(3);
+  });
+
+  it('unlocks the medals of each mode with perfect matches of at least 20 accounts', () => {
+    expect(ids(partidaFinalizada({ jogo: 'tabuada', modo: 'A', contas: contasCorretas(19) }, dia))).not.toContain('mestre-da-soma:1');
+    expect(ids(partidaFinalizada({ jogo: 'tabuada', modo: 'A', contas: contasCorretas(20) }, dia))).toContain('mestre-da-soma:1');
+    expect(ids(partidaFinalizada({ jogo: 'tabuada', modo: 'S', contas: contasCorretas(20) }, dia))).toContain('mestre-da-subtracao:1');
+    expect(ids(partidaFinalizada({ jogo: 'tabuada', modo: 'D', contas: contasCorretas(20) }, dia))).toContain('rei-da-divisao:1');
+    expect(ids(partidaFinalizada({ jogo: 'tabuada', modo: 'E', contas: contasCorretas(20) }, dia))).toContain('genio-das-expressoes:1');
+    expect(ids(partidaFinalizada({ jogo: 'tabuada', modo: 'M', contas: contasCorretas(20) }, dia))).not.toContain('quatro-operacoes:1');
+    expect(ids(partidaFinalizada({ jogo: 'tabuada', modo: 'R', contas: contasCorretas(20) }, dia))).toContain('quatro-operacoes:1');
+    expect(Object.keys(lerProgresso().perfeitasPorModo).sort()).toEqual([...MODOS].sort());
+  });
+
+  it('unlocks the marathon medal only with a perfect match of 100 accounts', () => {
+    expect(ids(partidaFinalizada({ jogo: 'tabuada', contas: [...contasCorretas(99), { correta: false }] }, dia))).not.toContain('maratonista:1');
+    expect(ids(partidaFinalizada({ jogo: 'tabuada', contas: contasCorretas(100) }, dia))).toContain('maratonista:1');
+  });
+
+  it('counts the beaten records', () => {
+    partidaFinalizada({ jogo: 'tabuada', contas: [{ correta: true }], pontuacao: 10, recorde: 0 }, dia);
+    partidaFinalizada({ jogo: 'tabuada', contas: [{ correta: true }], pontuacao: 10, recorde: 10 }, dia);
+    expect(lerProgresso().recordesBatidos).toBe(0);
+
+    for (let i = 0; i < 4; i++) {
+      partidaFinalizada({ jogo: 'tabuada', contas: [{ correta: true }], pontuacao: 20 + i, recorde: 10 }, dia);
+    }
+
+    expect(ids(partidaFinalizada({ jogo: 'tabuada', contas: [{ correta: true }], pontuacao: 30, recorde: 20 }, dia))).toContain('recordista:1');
+  });
+
+  it('adds every right answer to the total', () => {
+    salvarProgresso({ acertos: 990 });
+
+    const novas = partidaFinalizada({ jogo: 'tabuada', contas: [...contasCorretas(10), { correta: false }] }, dia);
+
+    expect(ids(novas)).toContain('sem-pressa-sem-erro:1');
+    expect(lerProgresso().acertos).toBe(1000);
+  });
+
+  it('unlocks the comeback medal after missing the first 3 accounts', () => {
+    const erros = [{ correta: false }, { correta: false }, { correta: false }];
+
+    expect(ids(partidaFinalizada({ jogo: 'tabuada', contas: [...erros, ...contasCorretas(26)] }, dia))).not.toContain('volta-por-cima:1');
+    expect(ids(partidaFinalizada({ jogo: 'tabuada', contas: [...erros, ...contasCorretas(27)] }, dia))).toContain('volta-por-cima:1');
+  });
+
+  it('reads the level, moves, time and wasted cards from the memory game', () => {
+    let novas = partidaFinalizada({ jogo: 'memoria', nivel: 'dificil', jogadas: 19, tempo: 90, desperdicio: true }, dia);
+    expect(ids(novas)).not.toContain('memoria-de-elefante:1');
+    expect(ids(novas)).not.toContain('sem-desperdicio:1');
+
+    novas = partidaFinalizada({ jogo: 'memoria', nivel: 'dificil', jogadas: 18, tempo: 90, desperdicio: true }, dia);
+    expect(ids(novas)).toContain('memoria-de-elefante:1');
+
+    expect(ids(partidaFinalizada({ jogo: 'memoria', nivel: 'medio', jogadas: 20, tempo: 60, desperdicio: true }, dia))).not.toContain('relampago-da-memoria:1');
+    expect(ids(partidaFinalizada({ jogo: 'memoria', nivel: 'facil', jogadas: 20, tempo: 59, desperdicio: true }, dia))).not.toContain('relampago-da-memoria:1');
+    expect(ids(partidaFinalizada({ jogo: 'memoria', nivel: 'medio', jogadas: 20, tempo: 59, desperdicio: true }, dia))).toContain('relampago-da-memoria:1');
+
+    expect(ids(partidaFinalizada({ jogo: 'memoria', nivel: 'facil', jogadas: 9, tempo: 40, desperdicio: false }, dia))).toContain('sem-desperdicio:1');
+  });
+
+  it('reads the score and the undo from the 2048', () => {
+    expect(ids(registrarProgresso({ jogo: '2048', maiorPeca: 1024, pontuacao: 9000, desfez: true }, dia))).not.toContain('minimalista:1');
+    expect(ids(registrarProgresso({ jogo: '2048', maiorPeca: 1024, pontuacao: 10000, desfez: false }, dia))).toEqual(expect.arrayContaining(['minimalista:1', 'pontuador:1']));
+    expect(ids(partidaFinalizada({ jogo: '2048', maiorPeca: 2048, pontuacao: 21000, desfez: true }, dia))).toContain('pontuador:2');
+    expect(lerProgresso().maiorPecaSemDesfazer).toBe(1024);
+    expect(lerProgresso().maiorPontuacao2048).toBe(21000);
+  });
+
+  it('unlocks the perfect week after the 7 daily challenges of the same week', () => {
+    salvarProgresso({ desafiosConcluidos: ['dia:2026-11-01', 'dia:2026-11-02', 'dia:2026-11-03', 'dia:2026-11-04', 'dia:2026-11-05', 'dia:2026-11-06', 'semana:2026-S45'] });
+    expect(ids(partidaFinalizada({ jogo: 'memoria' }, new Date(2026, 10, 7, 15, 0)))).not.toContain('semana-perfeita:1');
+
+    salvarProgresso({ desafiosConcluidos: ['dia:2026-11-02', 'dia:2026-11-03', 'dia:2026-11-04', 'dia:2026-11-05', 'dia:2026-11-06', 'dia:2026-11-07', 'dia:2026-11-08'] });
+    expect(ids(partidaFinalizada({ jogo: 'memoria' }, new Date(2026, 10, 9, 15, 0)))).toContain('semana-perfeita:1');
+  });
+
+  it('counts the weekends played on saturday and sunday', () => {
+    partidaFinalizada({ jogo: 'memoria' }, new Date(2026, 10, 7, 15, 0));
+    partidaFinalizada({ jogo: 'memoria' }, new Date(2026, 10, 7, 18, 0));
+    expect(lerProgresso().finsDeSemana).toBe(0);
+
+    partidaFinalizada({ jogo: 'memoria' }, new Date(2026, 10, 8, 15, 0));
+    partidaFinalizada({ jogo: 'memoria' }, new Date(2026, 10, 15, 15, 0));
+    partidaFinalizada({ jogo: 'memoria' }, new Date(2026, 10, 21, 15, 0));
+    expect(lerProgresso().finsDeSemana).toBe(1);
+
+    salvarProgresso({ finsDeSemana: 3 });
+    partidaFinalizada({ jogo: 'memoria' }, new Date(2026, 10, 28, 15, 0));
+    expect(ids(partidaFinalizada({ jogo: 'memoria' }, new Date(2026, 10, 29, 15, 0)))).toContain('fim-de-semana-estudioso:1');
+  });
+
+  it('unlocks the secret medal for matches early in the morning', () => {
+    expect(ids(partidaFinalizada({ jogo: 'memoria' }, new Date(2026, 10, 2, 7, 0)))).not.toContain('madrugador:1');
+    expect(ids(partidaFinalizada({ jogo: 'memoria' }, new Date(2026, 10, 2, 5, 30)))).toContain('madrugador:1');
+  });
+
+  it('unlocks the stubborn medal after missing an account 3 times and getting it right 5 times in a row', () => {
+    const conta = (correta: boolean) => contasDaTabuada([{ questao: '7x8', correta }]);
+
+    for (let i = 0; i < 3; i++) {
+      partidaFinalizada({ jogo: 'tabuada', contas: conta(false) }, dia);
+    }
+    for (let i = 0; i < 4; i++) {
+      partidaFinalizada({ jogo: 'tabuada', contas: conta(true) }, dia);
+    }
+    partidaFinalizada({ jogo: 'tabuada', contas: conta(false) }, dia);
+    for (let i = 0; i < 4; i++) {
+      expect(ids(partidaFinalizada({ jogo: 'tabuada', contas: conta(true) }, dia))).not.toContain('teimoso:1');
+    }
+
+    expect(ids(partidaFinalizada({ jogo: 'tabuada', contas: conta(true) }, dia))).toContain('teimoso:1');
+    expect(lerProgresso().teimosia).toEqual({});
+  });
+
+  it('unlocks the secret medal for a palindrome score', () => {
+    expect(ids(partidaFinalizada({ jogo: '2048', pontuacao: 5 }, dia))).not.toContain('palindromo:1');
+    expect(ids(partidaFinalizada({ jogo: '2048', pontuacao: 1220 }, dia))).not.toContain('palindromo:1');
+    expect(ids(partidaFinalizada({ jogo: '2048', pontuacao: 1221 }, dia))).toContain('palindromo:1');
+  });
+
+  it('unlocks the perfectionist medal after every other medal', () => {
+    const outras = medalhas.filter((medalha) => medalha.id !== 'perfeccionista' && medalha.id !== 'coruja-noturna');
+    salvarProgresso({ medalhas: Object.fromEntries(outras.map((medalha) => [medalha.id, { nivel: 1, data: dia.toISOString() }])) });
+
+    expect(ids(partidaFinalizada({ jogo: 'memoria' }, dia))).not.toContain('perfeccionista:1');
+    expect(ids(partidaFinalizada({ jogo: 'memoria' }, noite))).toEqual(expect.arrayContaining(['coruja-noturna:1', 'perfeccionista:1']));
   });
 
   it('counts matches from every game', () => {
@@ -192,9 +375,9 @@ describe('progresso', () => {
       { questao: '56÷8', correta: false },
       { questao: '(2x3) + (4x5)', correta: true },
     ])).toEqual([
-      { correta: true, fatores: [7, 8] },
-      { correta: false },
-      { correta: true },
+      { correta: true, fatores: [7, 8], texto: '7x8' },
+      { correta: false, texto: '56÷8' },
+      { correta: true, texto: '(2x3) + (4x5)' },
     ]);
   });
 });

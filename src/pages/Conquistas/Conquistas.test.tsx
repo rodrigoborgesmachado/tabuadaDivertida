@@ -60,4 +60,19 @@ describe('Conquistas', () => {
     expect(screen.getByText('Conquistada em 02/11/2026')).toBeTruthy();
     expect(share.mock.calls[0][0].text).toContain('Conquistei a medalha 🦉 Coruja noturna na Tabuada Divertida!');
   });
+
+  it('shows the diamond level only for medals with four levels', () => {
+    salvarProgresso({
+      melhorSequencia: 100,
+      medalhas: { 'acertos-seguidos': { nivel: 4, data: '2026-11-02T15:00:00.000Z' } },
+    });
+
+    const { container } = renderConquistas();
+
+    expect(container.querySelector('.conquistas-card--diamante h2')?.textContent).toBe('Sequência de fogo');
+    expect(container.querySelector('.conquistas-card__etapa--diamante')?.textContent).toBe('Diamante');
+    expect(screen.getAllByText('Diamante')).toHaveLength(medalhas.filter((medalha) => medalha.metas.length === 4).length + 1);
+    expect(screen.getByText('Mestre da soma')).toBeTruthy();
+    expect(screen.getByText('Memória de elefante')).toBeTruthy();
+  });
 });

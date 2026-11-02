@@ -37,6 +37,10 @@
   border-color: #f2b632;
 }
 
+.conquistas-card--diamante {
+  border-color: #4fc3e8;
+}
+
 .conquistas-card__topo {
   display: flex;
   align-items: center;
@@ -103,6 +107,12 @@
 .conquistas-card__etapa--ouro {
   background: #e0a21f;
   border-color: #e0a21f;
+  color: #ffffff;
+}
+
+.conquistas-card__etapa--diamante {
+  background: #1f9fcc;
+  border-color: #1f9fcc;
   color: #ffffff;
 }
 
