@@ -68,6 +68,7 @@ function Header({ theme, toggleTheme }: HeaderProps){
     const isRankingActive = location.pathname.startsWith('/ranking');
     const isResultadosActive = location.pathname.startsWith('/resultados');
     const isJogosActive = location.pathname === '/jogos' || isJogoPath(location.pathname);
+    const isConquistasActive = location.pathname.startsWith('/conquistas');
     const isTabuadaActive = location.pathname === '/artigos/tabuada';
     const isArtigosActive = location.pathname.startsWith('/artigos') && !isTabuadaActive;
 
@@ -111,6 +112,9 @@ function Header({ theme, toggleTheme }: HeaderProps){
                         </NavLink>
                         <NavLink to='/jogos' onClick={closeMenu} className={`nav-item ${isJogosActive ? 'active' : ''}`}>
                             Jogos
+                        </NavLink>
+                        <NavLink to='/conquistas' onClick={closeMenu} className={`nav-item ${isConquistasActive ? 'active' : ''}`}>
+                            Conquistas
                         </NavLink>
                     </nav>
 

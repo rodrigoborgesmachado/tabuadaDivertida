@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { addRandomTile, createInitialBoard, getSwipeDirection, hasNoMoves, moveBoard, type Board, type Direction } from './logic';
+import { partidaFinalizada, registrarProgresso } from '../../gamificacao/progresso';
 import './Jogo2048.css';
 
 interface HistoryEntry {
@@ -60,6 +61,8 @@ const launchFireworks = () => {
   }, 250);
 };
 
+const getMaiorPeca = (board: Board) => Math.max(...board.flat());
+
 const buildEmptyState = (): PersistedState => ({
   board: createInitialBoard(),
   score: 0,
@@ -97,10 +100,31 @@ function Jogo2048() {
   const [winShown, setWinShown] = useState<boolean>(() => readWinShown());
   const scoreRef = useRef(score);
   const touchStartRef = useRef<{ x: number; y: number } | null>(null);
+  const maiorPecaRef = useRef(getMaiorPeca(initialState.board));
+  const partidaRegistradaRef = useRef(false);
 
   useEffect(() => {
     scoreRef.current = score;
   }, [score]);
+
+  const registrarPartida = useCallback(() => {
+    if (!partidaRegistradaRef.current) {
+      partidaRegistradaRef.current = true;
+      partidaFinalizada({ jogo: '2048', maiorPeca: maiorPecaRef.current });
+    }
+  }, []);
+
+  useEffect(() => {
+    const maiorPeca = getMaiorPeca(board);
+    if (maiorPeca > maiorPecaRef.current) {
+      maiorPecaRef.current = maiorPeca;
+      registrarProgresso({ jogo: '2048', maiorPeca });
+    }
+
+    if (hasNoMoves(board)) {
+      registrarPartida();
+    }
+  }, [board, registrarPartida]);
 
   const persistState = useCallback((nextBoard: Board, nextScore: number, nextHistory: HistoryEntry[]) => {
     if (typeof window !== 'undefined') {
@@ -162,7 +186,13 @@ function Jogo2048() {
   };
 
   const handleRestart = () => {
+    if (history.length > 0) {
+      registrarPartida();
+    }
+
     const freshBoard = createInitialBoard();
+    maiorPecaRef.current = getMaiorPeca(freshBoard);
+    partidaRegistradaRef.current = false;
     setBoard(freshBoard);
     setScore(0);
     setHistory([]);
@@ -177,6 +207,7 @@ function Jogo2048() {
   };
 
   const handleFinishGame = () => {
+    registrarPartida();
     setShowWinModal(false);
     toast.info('Fim da partida!');
   };

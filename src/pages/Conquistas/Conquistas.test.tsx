@@ -1,0 +1,63 @@
+import { fireEvent, render, screen } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
+import { medalhas } from '../../gamificacao/medalhas';
+import { criarProgresso, STORAGE_KEY } from '../../gamificacao/progresso';
+import Conquistas from './Conquistas';
+
+const renderConquistas = () => render(
+  <MemoryRouter>
+    <Conquistas />
+  </MemoryRouter>
+);
+
+const salvarProgresso = (dados: object) => {
+  window.localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...criarProgresso(), ...dados }));
+};
+
+describe('Conquistas', () => {
+  beforeEach(() => {
+    window.localStorage.clear();
+  });
+
+  afterEach(() => {
+    delete (navigator as any).share;
+  });
+
+  it('shows every medal still to conquer with hidden secrets', () => {
+    renderConquistas();
+
+    expect(screen.getByText(`Você conquistou 0 de ${medalhas.length} medalhas. Continue jogando para liberar todas!`)).toBeTruthy();
+    expect(screen.getAllByText('???')).toHaveLength(medalhas.filter((medalha) => medalha.secreta).length);
+    expect(screen.queryByText('Coruja noturna')).toBeNull();
+    expect(screen.queryByText('Compartilhar')).toBeNull();
+  });
+
+  it('shows the progress to the next level', () => {
+    salvarProgresso({
+      melhorSequencia: 32,
+      medalhas: { 'acertos-seguidos': { nivel: 2, data: '2026-11-02T15:00:00.000Z' } },
+    });
+
+    const { container } = renderConquistas();
+
+    expect(screen.getByText('32/50 acertos seguidos')).toBeTruthy();
+    expect(container.querySelector('.conquistas-card__nivel')?.textContent).toBe('Prata');
+    expect(screen.getByRole('progressbar', { name: 'Progresso de Sequência de fogo' }).getAttribute('aria-valuenow')).toBe('64');
+  });
+
+  it('shows a conquered secret medal with its date and shares it', () => {
+    const share = jest.fn().mockResolvedValue(undefined);
+    (navigator as any).share = share;
+    salvarProgresso({
+      partidasNoturnas: 1,
+      medalhas: { 'coruja-noturna': { nivel: 1, data: '2026-11-02T15:00:00.000Z' } },
+    });
+
+    renderConquistas();
+    fireEvent.click(screen.getByText('Compartilhar'));
+
+    expect(screen.getByText('Coruja noturna')).toBeTruthy();
+    expect(screen.getByText('Conquistada em 02/11/2026')).toBeTruthy();
+    expect(share.mock.calls[0][0].text).toContain('Conquistei a medalha 🦉 Coruja noturna na Tabuada Divertida!');
+  });
+});

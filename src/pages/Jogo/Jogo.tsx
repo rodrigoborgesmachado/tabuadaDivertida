@@ -3,6 +3,7 @@ import configData from "../../Config.json";
 import Tempo from '../../components/Tempo';
 import api from '../../services/api';
 import { playError, playSuccess } from '../../services/sons';
+import { contasDaTabuada, partidaFinalizada, type Conquista } from '../../gamificacao/progresso';
 import { KeyboardEvent, useEffect, useMemo, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -336,7 +337,13 @@ function Jogo(){
             if(contador === totalQuestoes){
                 localStorage.setItem(configData.QUANTIDADE_ACERTOS, String(novosAcertos));
                 SetHistorico();
-                Finaliza(novaPontuacao, novosAcertos);
+                const tempo = parseInt(localStorage.getItem(configData.TEMPO_PARAM) || '0');
+                const conquistas = partidaFinalizada({
+                    jogo: 'tabuada',
+                    contas: contasDaTabuada(questoes),
+                    tempoMedio: Math.round((tempo / questoes.length) * 10) / 10
+                });
+                Finaliza(novaPontuacao, novosAcertos, conquistas);
             }else{
                 setContasCorrente(MontaConta());
             }
@@ -371,7 +378,7 @@ function Jogo(){
         localStorage.setItem(configData.HISTORICO, JSON.stringify(historico));
     }
 
-    async function Finaliza(novaPontuacao: number, numeroAcertos: number){
+    async function Finaliza(novaPontuacao: number, numeroAcertos: number, conquistas: Conquista[]){
         const nome = String(localStorage.getItem(configData.NOME_PARAM) || '');
         if(nome.length > 15){
             toast.warn('Nome deve ter no máximo 15 caracteres.');
@@ -391,7 +398,10 @@ function Jogo(){
         setLoadding(true);
         await api.post(`/ResultadosTabuadaDivertida`, data)
         .then(() => {
-            navigate('/final/' + tipoSelecionado, { replace: true });
+            navigate('/final/' + tipoSelecionado, {
+                replace: true,
+                state: { conquistas: conquistas.map((conquista) => ({ id: conquista.medalha.id, nivel: conquista.nivel })) }
+            });
         }).catch(() => {
             navigate('/error', { replace: true });
             return;

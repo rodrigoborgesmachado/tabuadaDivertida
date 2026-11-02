@@ -67,6 +67,7 @@ describe('MemoriaTabuada', () => {
     expect(screen.getByRole('dialog')).toBeTruthy();
     expect(screen.getByText('🏆 Novo recorde no nível fácil!')).toBeTruthy();
     expect(JSON.parse(window.localStorage.getItem('tabuada-divertida-memoria-melhores') || '{}').facil.jogadas).toBe(2);
+    expect(JSON.parse(window.localStorage.getItem('tabuada-divertida-progresso') || '{}').jogosJogados).toEqual(['memoria']);
   });
 
   it('ignores a third card while two are open', () => {

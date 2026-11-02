@@ -1,0 +1,58 @@
+.aviso-conquista {
+  position: fixed;
+  top: 12px;
+  left: 50%;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: max-content;
+  max-width: calc(100% - 32px);
+  padding: 10px 18px 10px 10px;
+  border-radius: 999px;
+  border: 2px solid #ffd66a;
+  background: var(--block-color);
+  color: var(--text-color-primary);
+  box-shadow: var(--shadow-soft);
+  pointer-events: none;
+  animation: aviso-conquista-entrada 4s ease forwards;
+}
+
+.aviso-conquista__robo {
+  width: 52px;
+  height: 52px;
+  flex-shrink: 0;
+  animation: home-robot-bounce 1s ease-in-out infinite;
+}
+
+.aviso-conquista__texto {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.aviso-conquista__texto strong {
+  font-family: var(--font-title);
+  font-size: 1.1rem;
+  color: var(--text-color-accent);
+}
+
+.aviso-conquista__texto span {
+  font-weight: 700;
+}
+
+@keyframes aviso-conquista-entrada {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -120%) scale(0.8);
+  }
+  10%,
+  85% {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -120%) scale(0.9);
+  }
+}
