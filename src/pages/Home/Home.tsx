@@ -1,5 +1,6 @@
 import HappyRobot from '../../components/HappyRobot/HappyRobot';
 import WalkingRobot from '../../components/WalkingRobot/WalkingRobot';
+import DesafiosDoDia from '../../components/DesafiosDoDia/DesafiosDoDia';
 
 function Home() {
     return (
@@ -41,6 +42,7 @@ function Home() {
                         </a>
                     </div>
                 </section>
+                <DesafiosDoDia />
                 <section className='home-description'>
                     <h1>🎯 Matemática divertida para todas as idades</h1>
                     <p>

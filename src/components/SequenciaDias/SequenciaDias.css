@@ -1,0 +1,53 @@
+.sequencia-dias {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-align: left;
+  color: var(--text-color-primary);
+}
+
+.sequencia-dias__fogo {
+  width: 56px;
+  height: 56px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--button-color-primary), #ffb067);
+  animation: sequencia-dias-chama 1.6s ease-in-out infinite;
+}
+
+.sequencia-dias__fogo--apagado {
+  filter: grayscale(1);
+  opacity: 0.6;
+  animation: none;
+}
+
+.sequencia-dias__texto {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.sequencia-dias__texto strong {
+  font-family: var(--font-title);
+  font-size: 1.3rem;
+  color: var(--text-color-accent);
+}
+
+.sequencia-dias__texto small {
+  color: var(--text-color-secondary);
+  font-weight: 700;
+}
+
+@keyframes sequencia-dias-chama {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.08);
+  }
+}
