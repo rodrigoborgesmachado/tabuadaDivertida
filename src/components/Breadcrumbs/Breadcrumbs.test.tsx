@@ -28,4 +28,11 @@ describe('Breadcrumbs', () => {
 
     expect(screen.getByText('Minhas conquistas')).toBeTruthy();
   });
+
+  it('shows the old x modern methods article', () => {
+    renderBreadcrumbs('/artigos/tabuada-metodos-antigos-x-modernos');
+
+    expect(screen.getByText('Artigos')).toBeTruthy();
+    expect(screen.getByText('Tabuada: métodos antigos x modernos')).toBeTruthy();
+  });
 });
