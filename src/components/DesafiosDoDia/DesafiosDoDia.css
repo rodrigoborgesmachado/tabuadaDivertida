@@ -1,0 +1,70 @@
+.desafios-do-dia {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--double-default-spacing);
+  background: var(--secundary-color);
+  color: var(--text-color-primary);
+  border: 1px solid var(--panel-border-color);
+  border-radius: var(--default-border-radius-extra);
+  box-shadow: var(--shadow-card);
+  padding: var(--triple-default-spacing);
+}
+
+.desafios-do-dia__lista {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.desafios-do-dia__card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border: 2px solid var(--panel-border-color);
+  border-radius: 20px;
+  padding: 16px;
+  text-align: left;
+  background: var(--transient-color-second);
+}
+
+.desafios-do-dia__card--concluido {
+  border-color: #f2b632;
+}
+
+.desafios-do-dia__rotulo {
+  font-family: var(--font-title);
+  font-size: 1.1rem;
+  color: var(--text-color-accent);
+}
+
+.desafios-do-dia__card p {
+  margin: 0;
+  font-weight: 700;
+  flex: 1;
+}
+
+.desafios-do-dia__barra {
+  height: 12px;
+  border-radius: 999px;
+  background: var(--transient-color-primary);
+  overflow: hidden;
+}
+
+.desafios-do-dia__barra span {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--button-color-primary), #ffb067);
+}
+
+.desafios-do-dia__rodape {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.desafios-do-dia__rodape small {
+  color: var(--text-color-secondary);
+  font-weight: 700;
+}

@@ -6,6 +6,7 @@ import happyRobot from '../../assets/robot-happy.svg';
 import great from '../../assets/great.png';
 import donkey from '../../assets/donkey.png';
 import WalkingRobot from "./../../components/WalkingRobot/WalkingRobot";
+import SequenciaDias from "./../../components/SequenciaDias/SequenciaDias";
 import { buscarMedalha, nomeNivel } from '../../gamificacao/medalhas';
 
 type Questao = {
@@ -164,6 +165,8 @@ function Final(){
             <div className='robot-container'>
                 <img src={isPerfect ? happyRobot : isWorst ? donkey : happyRobot} alt={isPerfect ? 'Robô feliz' : 'Robô triste'} className={isWorst ? 'robot-donkey' : 'robot'}/>
             </div>
+            <SequenciaDias />
+            <br/>
             {
                 isPerfect ?
                 <h3>

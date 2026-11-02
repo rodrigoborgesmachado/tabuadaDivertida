@@ -1,5 +1,5 @@
 import { buscarMedalha, FATORES } from './medalhas';
-import { contasDaTabuada, EVENTO_CONQUISTAS, lerProgresso, partidaFinalizada, registrarProgresso, STORAGE_KEY, VERSAO_PROGRESSO } from './progresso';
+import { contasDaTabuada, EVENTO_CONQUISTAS, EVENTO_DESAFIOS, lerProgresso, partidaFinalizada, registrarProgresso, STORAGE_KEY, VERSAO_PROGRESSO } from './progresso';
 
 const dia = new Date(2026, 10, 2, 15, 0);
 const noite = new Date(2026, 10, 2, 23, 30);
@@ -161,6 +161,29 @@ describe('progresso', () => {
     expect(ouvinte).toHaveBeenCalledTimes(1);
     expect((ouvinte.mock.calls[0][0] as CustomEvent).detail[0].medalha.id).toBe('rumo-ao-2048');
     window.removeEventListener(EVENTO_CONQUISTAS, ouvinte);
+  });
+
+  it('counts the played days only for finished matches and unlocks the constancy medal', () => {
+    registrarProgresso({ jogo: '2048', maiorPeca: 64 }, new Date(2026, 10, 1, 15, 0));
+    partidaFinalizada({ jogo: 'memoria' }, dia);
+    partidaFinalizada({ jogo: 'memoria' }, new Date(2026, 10, 3, 9, 0));
+
+    expect(ids(partidaFinalizada({ jogo: 'memoria' }, new Date(2026, 10, 4, 9, 0)))).toContain('constancia:1');
+    expect(lerProgresso().diasSeguidos).toBe(3);
+    expect(lerProgresso().ultimoDia).toBe('2026-11-04');
+  });
+
+  it('notifies the completed challenge and rewards it with a medal', () => {
+    const ouvinte = jest.fn();
+    window.addEventListener(EVENTO_DESAFIOS, ouvinte);
+
+    const novas = partidaFinalizada({ jogo: 'tabuada', contas: contasCorretas(5) }, dia);
+
+    expect(ouvinte).toHaveBeenCalledTimes(1);
+    expect((ouvinte.mock.calls[0][0] as CustomEvent).detail[0].id).toBe('dia:2026-11-02');
+    expect(ids(novas)).toContain('desafios-concluidos:1');
+    expect(lerProgresso().desafiosConcluidos).toEqual(['dia:2026-11-02']);
+    window.removeEventListener(EVENTO_DESAFIOS, ouvinte);
   });
 
   it('reads the multiplication factors from the times table questions', () => {

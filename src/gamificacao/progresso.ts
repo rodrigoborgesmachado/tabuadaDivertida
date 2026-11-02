@@ -1,7 +1,10 @@
+import { aplicarDesafios, type Desafio, type TipoDesafio } from './desafios';
 import { FATORES, medalhas, nivelAlcancado, type Medalha } from './medalhas';
+import { chaveDia, registrarDia } from './sequenciaDias';
 
 export const STORAGE_KEY = 'tabuada-divertida-progresso';
 export const EVENTO_CONQUISTAS = 'tabuada-divertida-conquistas';
+export const EVENTO_DESAFIOS = 'tabuada-divertida-desafios';
 export const VERSAO_PROGRESSO = 1;
 
 export interface MedalhaObtida {
@@ -21,6 +24,12 @@ export interface Progresso {
   maiorPeca: number;
   tabuadas: Record<string, number[]>;
   medalhas: Record<string, MedalhaObtida>;
+  ultimoDia: string;
+  diasSeguidos: number;
+  melhorDiasSeguidos: number;
+  folgas: number;
+  desafios: Partial<Record<TipoDesafio, { id: string; valor: number }>>;
+  desafiosConcluidos: string[];
 }
 
 export interface ContaRespondida {
@@ -52,6 +61,12 @@ export const criarProgresso = (): Progresso => ({
   maiorPeca: 0,
   tabuadas: {},
   medalhas: {},
+  ultimoDia: '',
+  diasSeguidos: 0,
+  melhorDiasSeguidos: 0,
+  folgas: 0,
+  desafios: {},
+  desafiosConcluidos: [],
 });
 
 const migrarProgresso = (dados: Partial<Progresso>): Progresso => ({
@@ -127,7 +142,7 @@ export const aplicarEvento = (progresso: Progresso, evento: EventoJogo, finaliza
     }
   }
 
-  return proximo;
+  return registrarDia(proximo, data);
 };
 
 export const avaliarMedalhas = (progresso: Progresso, data: Date) => {
@@ -147,8 +162,15 @@ export const avaliarMedalhas = (progresso: Progresso, data: Date) => {
 };
 
 const registrar = (evento: EventoJogo, finalizada: boolean, data: Date) => {
-  const { progresso, novas } = avaliarMedalhas(aplicarEvento(lerProgresso(), evento, finalizada, data), data);
+  const anterior = lerProgresso();
+  const novoDia = finalizada && anterior.ultimoDia !== chaveDia(data);
+  const desafios = aplicarDesafios(aplicarEvento(anterior, evento, finalizada, data), evento, finalizada, novoDia, data);
+  const { progresso, novas } = avaliarMedalhas(desafios.progresso, data);
   salvarProgresso(progresso);
+
+  if (desafios.concluidos.length > 0) {
+    window.dispatchEvent(new CustomEvent<Desafio[]>(EVENTO_DESAFIOS, { detail: desafios.concluidos }));
+  }
 
   if (novas.length > 0) {
     window.dispatchEvent(new CustomEvent<Conquista[]>(EVENTO_CONQUISTAS, { detail: novas }));

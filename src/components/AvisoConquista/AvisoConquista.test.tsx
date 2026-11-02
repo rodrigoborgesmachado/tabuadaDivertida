@@ -21,7 +21,7 @@ describe('AvisoConquista', () => {
     expect(screen.queryByRole('status')).toBeNull();
 
     act(() => {
-      registrarProgresso({ jogo: '2048', maiorPeca: 512 });
+      registrarProgresso({ jogo: '2048', maiorPeca: 512 }, new Date(2026, 10, 2, 22, 0));
       partidaFinalizada({ jogo: '2048', maiorPeca: 4096 }, new Date(2026, 10, 2, 23, 0));
     });
 
@@ -40,5 +40,27 @@ describe('AvisoConquista', () => {
     }
 
     expect(screen.queryByRole('status')).toBeNull();
+  });
+
+  it('shows the completed daily challenge before its medal', () => {
+    render(<AvisoConquista />);
+
+    act(() => {
+      partidaFinalizada({ jogo: 'tabuada', contas: [{ correta: true }] }, new Date(2026, 10, 2, 15, 0));
+    });
+
+    const textos = [screen.getByRole('status').textContent];
+    for (let i = 0; i < 2; i++) {
+      act(() => {
+        jest.advanceTimersByTime(4000);
+      });
+      textos.push(screen.getByRole('status').textContent);
+    }
+
+    expect(textos).toEqual([
+      'Desafio do dia concluído!⭐ Faça uma partida da tabuada sem errar nenhuma conta',
+      'Nova medalha!⭐ Partida perfeita · Bronze',
+      'Nova medalha!🎯 Desafiante · Bronze',
+    ]);
   });
 });
