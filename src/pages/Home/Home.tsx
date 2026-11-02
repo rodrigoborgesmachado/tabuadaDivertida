@@ -10,7 +10,6 @@ function Home() {
             <div className='home-wrapper'>
                 <section className='options-preview'>
                     <HappyRobot />
-                    <BarraXp />
                     <div className='botoes-home'>
                         <a className='global-button global-button--full-width' href={`/formulario`}>
                             <span className='option-link'>
@@ -49,6 +48,7 @@ function Home() {
                         </a>
                     </div>
                 </section>
+                <BarraXp />
                 <DesafiosDoDia />
                 <section className='home-description'>
                     <h1>🎯 Matemática divertida para todas as idades</h1>
