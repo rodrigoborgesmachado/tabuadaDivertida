@@ -45,6 +45,15 @@ export const jogos: JogoConfig[] = [
     habilidade: 'Cálculo mental, frações e decimais',
     idade: '7+ anos',
   },
+  {
+    id: 'teste-qi',
+    path: '/jogos/teste-de-qi',
+    nome: 'Teste de QI com Números',
+    icone: '🧩',
+    descricao: 'Desafio estilo teste de QI: descubra o padrão de sequências, grades, analogias e pirâmides de números.',
+    habilidade: 'Lógica e padrões numéricos',
+    idade: '8+ anos',
+  },
 ];
 
 export const isJogoPath = (pathname: string) =>

@@ -1,0 +1,327 @@
+.teste-qi-page {
+  width: min(100%, 1120px);
+}
+
+.teste-qi-card {
+  width: 100%;
+  background: var(--secundary-color);
+  border: 1px solid var(--panel-border-color);
+  border-radius: 28px;
+  box-shadow: var(--shadow-card);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.teste-qi-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.teste-qi-aviso {
+  margin-top: 6px;
+  color: var(--text-color-secondary);
+  font-size: 0.95rem;
+  font-style: italic;
+}
+
+.teste-qi-badges {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.teste-qi-badge {
+  background: linear-gradient(135deg, var(--button-color-primary), #ffb067);
+  color: white;
+  font-weight: 700;
+  padding: 10px 14px;
+  border-radius: 999px;
+  box-shadow: 0 8px 18px rgba(255, 127, 80, 0.22);
+}
+
+.teste-qi-inicio {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  color: var(--text-color-primary);
+}
+
+.teste-qi-tipos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 8px;
+  padding: 0;
+  list-style: none;
+}
+
+.teste-qi-tipos li {
+  padding: 10px 14px;
+  border-radius: 14px;
+  border: 1px solid var(--panel-border-color);
+  background: var(--block-color);
+  font-weight: 600;
+}
+
+.teste-qi-recorde {
+  color: var(--text-color-secondary);
+  font-weight: 700;
+}
+
+.teste-qi-toolbar {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.teste-qi-toolbar .global-button {
+  flex: 1 1 140px;
+  justify-content: center;
+}
+
+.teste-qi-contagem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 320px;
+}
+
+.teste-qi-contagem .countdown-text {
+  font-size: clamp(2.2rem, 8vw, 4rem);
+}
+
+.teste-qi-contagem .countdown-number {
+  font-size: clamp(7rem, 30vw, 12rem);
+  line-height: 1;
+}
+
+.teste-qi-jogo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.teste-qi-pergunta {
+  font-family: var(--font-title);
+  font-size: clamp(1.3rem, 5vw, 1.8rem);
+  color: var(--text-color-primary);
+  text-align: center;
+}
+
+.teste-qi-questao {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.teste-qi-linha {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.teste-qi-linha--sequencia {
+  flex-wrap: wrap;
+}
+
+.teste-qi-analogia,
+.teste-qi-grade,
+.teste-qi-piramide {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.teste-qi-celula {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 64px;
+  min-height: 64px;
+  padding: 0 10px;
+  border-radius: 16px;
+  border: 3px solid var(--panel-border-color);
+  background: var(--block-color);
+  color: var(--brand);
+  font-family: var(--font-title);
+  font-size: clamp(1.5rem, 6vw, 2.2rem);
+  font-weight: 700;
+  box-shadow: var(--shadow-card);
+}
+
+.teste-qi-celula--faltando {
+  border-style: dashed;
+  border-color: var(--button-color-primary);
+  color: var(--text-color-accent);
+}
+
+.teste-qi-celula--correta {
+  border-color: var(--button-color-primary-right);
+  background: rgba(45, 187, 127, 0.16);
+}
+
+.teste-qi-seta {
+  font-family: var(--font-title);
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--text-color-secondary);
+}
+
+.teste-qi-opcoes {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  width: 100%;
+  max-width: 28rem;
+}
+
+.teste-qi-opcao {
+  min-height: 72px;
+  border-radius: 20px;
+  border: 3px solid var(--panel-border-color);
+  background: var(--block-color);
+  color: var(--brand);
+  font-family: var(--font-title);
+  font-size: clamp(1.6rem, 6vw, 2.2rem);
+  font-weight: 700;
+  box-shadow: var(--shadow-card);
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.15s ease, border-color 0.15s ease;
+}
+
+.teste-qi-opcao:hover {
+  transform: translateY(-3px);
+  border-color: var(--button-color-primary);
+}
+
+.teste-qi-feedback {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 32rem;
+  padding: 16px;
+  border-radius: 20px;
+  border: 2px solid var(--button-color-primary-wrong);
+  background: rgba(224, 88, 106, 0.1);
+  color: var(--text-color-primary);
+  text-align: center;
+}
+
+.teste-qi-feedback__titulo {
+  font-weight: 700;
+  color: var(--button-color-primary-wrong);
+}
+
+.teste-qi-help {
+  color: var(--text-color-secondary);
+  font-size: 0.95rem;
+  text-align: center;
+}
+
+.teste-qi-resultado {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  color: var(--text-color-primary);
+}
+
+.teste-qi-resultado h3 {
+  font-family: var(--font-title);
+  font-size: 1.25rem;
+  margin-top: 8px;
+}
+
+.teste-qi-resultado__titulo {
+  font-family: var(--font-title);
+  font-size: clamp(1.8rem, 7vw, 2.6rem);
+  text-align: center;
+  color: var(--brand);
+}
+
+.teste-qi-resultado__qi {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: var(--text-color-secondary);
+  font-weight: 700;
+}
+
+.teste-qi-resultado__qi strong {
+  font-family: var(--font-title);
+  font-size: clamp(3.5rem, 15vw, 5rem);
+  line-height: 1.1;
+  color: var(--button-color-primary);
+}
+
+.teste-qi-desempenho,
+.teste-qi-revisao {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 0;
+  list-style: none;
+}
+
+.teste-qi-desempenho li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 14px;
+  border: 1px solid var(--panel-border-color);
+  background: var(--block-color);
+}
+
+.teste-qi-revisao li {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border-left: 4px solid var(--button-color-primary-wrong);
+  background: var(--block-color);
+  overflow-wrap: anywhere;
+}
+
+.teste-qi-revisao span {
+  color: var(--text-color-secondary);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .teste-qi-opcao {
+    transition: none;
+  }
+}
+
+@media (max-width: 760px) {
+  .options-preview.teste-qi-page {
+    margin-top: 16px;
+  }
+
+  .teste-qi-card {
+    padding: 16px;
+  }
+
+  .teste-qi-celula {
+    min-width: 40px;
+    min-height: 48px;
+    padding: 0 4px;
+    border-radius: 12px;
+    font-size: 1.3rem;
+  }
+
+  .teste-qi-linha {
+    gap: 4px;
+  }
+}

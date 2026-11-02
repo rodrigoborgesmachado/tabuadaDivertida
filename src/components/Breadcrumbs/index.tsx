@@ -23,6 +23,7 @@ function Breadcrumbs() {
     'jogos': 'Jogos',
     'memoria-da-tabuada': 'Memória da tabuada',
     'maior-ou-menor': 'Maior ou menor',
+    'teste-de-qi': 'Teste de QI com Números',
     'conquistas': 'Minhas conquistas',
     'personalizar': 'Personalizar',
     'instrucoes': 'Instruções',

@@ -41,6 +41,7 @@ function labelTipo(t: string) {
   if (t === 'E') return 'Expressões Numéricas';
   if (t === 'T') return 'Treino dos erros';
   if (t === 'MM') return 'Maior ou menor';
+  if (t === 'QI') return 'Teste de QI com Números';
   return 'Multiplicação';
 }
 

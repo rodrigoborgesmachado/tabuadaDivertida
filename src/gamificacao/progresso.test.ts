@@ -309,8 +309,20 @@ describe('progresso', () => {
     partidaFinalizada({ jogo: 'tabuada', contas: [{ correta: false }] }, dia);
     partidaFinalizada({ jogo: '2048', maiorPeca: 32 }, dia);
     partidaFinalizada({ jogo: 'memoria' }, dia);
+    partidaFinalizada({ jogo: 'maior-ou-menor' }, dia);
 
-    expect(ids(partidaFinalizada({ jogo: 'maior-ou-menor' }, dia))).toContain('explorador:1');
+    expect(ids(partidaFinalizada({ jogo: 'teste-qi' }, dia))).toContain('explorador:1');
+  });
+
+  it('unlocks the IQ test medals', () => {
+    const questoes = (acertos: number) => [...contasCorretas(acertos), ...Array.from({ length: 15 - acertos }, () => ({ correta: false }))];
+
+    expect(ids(partidaFinalizada({ jogo: 'teste-qi', tempo: 100, contas: questoes(14) }, dia))).toEqual(expect.arrayContaining(['mestre-dos-padroes:1']));
+    expect(ids(partidaFinalizada({ jogo: 'teste-qi', tempo: 151, contas: questoes(15) }, dia))).toContain('gabarito:1');
+    expect(lerProgresso().semTitubear).toBe(0);
+    expect(ids(partidaFinalizada({ jogo: 'teste-qi', tempo: 150, contas: questoes(15) }, dia))).toContain('sem-titubear:1');
+    expect(ids(partidaFinalizada({ jogo: 'tabuada', contas: contasCorretas(15) }, dia))).not.toContain('mestre-dos-padroes:2');
+    expect(lerProgresso().padroesAcertados).toBe(44);
   });
 
   it('unlocks the 2048 medals while playing without counting a match', () => {

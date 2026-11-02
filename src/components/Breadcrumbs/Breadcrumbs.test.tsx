@@ -30,6 +30,13 @@ describe('Breadcrumbs', () => {
     expect(screen.getByText('Maior ou menor')).toBeTruthy();
   });
 
+  it('shows the IQ test game', () => {
+    renderBreadcrumbs('/jogos/teste-de-qi');
+
+    expect(screen.getAllByText('Jogos')).toHaveLength(1);
+    expect(screen.getByText('Teste de QI com Números')).toBeTruthy();
+  });
+
   it('shows the achievements page', () => {
     renderBreadcrumbs('/conquistas');
 
