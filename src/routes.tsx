@@ -42,7 +42,7 @@ function RoutesApp({ theme, toggleTheme }: RoutesAppProps) {
             <Header theme={theme} toggleTheme={toggleTheme}/>
             <Breadcrumbs />
             <AvisoConquista />
-            <Routes>
+            <Routes>                
                 <Route path='/' element={<Home/>}/>
                 <Route path='/formulario' element={<Formulario/>}/>
                 <Route path='/selecionarjogo' element={<TipoJogo/>}/>
