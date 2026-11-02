@@ -46,11 +46,11 @@ describe('AvisoConquista', () => {
     render(<AvisoConquista />);
 
     act(() => {
-      partidaFinalizada({ jogo: 'tabuada', contas: [{ correta: true }] }, new Date(2026, 10, 2, 15, 0));
+      partidaFinalizada({ jogo: 'tabuada', contas: Array.from({ length: 20 }, () => ({ correta: true })) }, new Date(2026, 10, 2, 15, 0));
     });
 
     const textos = [screen.getByRole('status').textContent];
-    for (let i = 0; i < 2; i++) {
+    for (let i = 0; i < 3; i++) {
       act(() => {
         jest.advanceTimersByTime(4000);
       });
@@ -59,8 +59,28 @@ describe('AvisoConquista', () => {
 
     expect(textos).toEqual([
       'Desafio do dia concluído!⭐ Faça uma partida da tabuada sem errar nenhuma conta',
+      'Nova medalha!🔥 Sequência de fogo · Bronze',
       'Nova medalha!⭐ Partida perfeita · Bronze',
       'Nova medalha!🎯 Desafiante · Bronze',
     ]);
+  });
+
+  it('shows the diamond level and the new medals', () => {
+    render(<AvisoConquista />);
+
+    act(() => {
+      partidaFinalizada({ jogo: 'tabuada', contas: Array.from({ length: 100 }, () => ({ correta: true })) }, new Date(2026, 10, 2, 15, 0));
+    });
+
+    const textos = [screen.getByRole('status').textContent];
+    for (let i = 0; i < 4; i++) {
+      act(() => {
+        jest.advanceTimersByTime(4000);
+      });
+      textos.push(screen.getByRole('status').textContent);
+    }
+
+    expect(textos).toContain('Nova medalha!🔥 Sequência de fogo · Diamante');
+    expect(textos).toContain('Nova medalha!🏃 Maratonista');
   });
 });

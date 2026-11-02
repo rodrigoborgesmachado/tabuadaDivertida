@@ -33,6 +33,7 @@ function Jogo(){
     const [loadding, setLoadding] = useState(false);
     const [pontuacao, setPontuacao] = useState(0);
     const [recorde, setRecorde] = useState(parseInt(localStorage.getItem(configData.RECORDE) || '0'));
+    const [recordeAnterior] = useState(recorde);
     const [wrongStreak, setWrongStreak] = useState(0);
     const [robotMood, setRobotMood] = useState<'happy' | 'neutral' | 'sad'>('neutral');
 
@@ -340,8 +341,11 @@ function Jogo(){
                 const tempo = parseInt(localStorage.getItem(configData.TEMPO_PARAM) || '0');
                 const conquistas = partidaFinalizada({
                     jogo: 'tabuada',
+                    modo: tipoSelecionado,
                     contas: contasDaTabuada(questoes),
-                    tempoMedio: Math.round((tempo / questoes.length) * 10) / 10
+                    tempoMedio: Math.round((tempo / questoes.length) * 10) / 10,
+                    pontuacao: novaPontuacao,
+                    recorde: recordeAnterior
                 });
                 Finaliza(novaPontuacao, novosAcertos, conquistas);
             }else{

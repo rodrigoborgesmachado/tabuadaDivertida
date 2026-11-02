@@ -5,7 +5,7 @@ import { lerProgresso, type Progresso } from '../../gamificacao/progresso';
 import { compartilhar } from '../../services/compartilhar';
 import './Conquistas.css';
 
-const CLASSES_NIVEIS = ['bronze', 'prata', 'ouro'];
+const CLASSES_NIVEIS = ['bronze', 'prata', 'ouro', 'diamante'];
 
 const formatarNumero = (valor: number) => valor.toLocaleString('pt-BR');
 
@@ -75,7 +75,7 @@ function Conquistas() {
 
                 {!oculta && medalha.metas.length > 1 && (
                   <div className='conquistas-card__niveis'>
-                    {NIVEIS.map((item, index) => (
+                    {NIVEIS.slice(0, medalha.metas.length).map((item, index) => (
                       <span key={item} className={`conquistas-card__etapa${index < nivel ? ` conquistas-card__etapa--${CLASSES_NIVEIS[index]}` : ''}`}>
                         {item}
                       </span>

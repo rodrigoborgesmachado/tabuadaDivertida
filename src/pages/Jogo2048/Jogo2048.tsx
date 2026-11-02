@@ -102,6 +102,7 @@ function Jogo2048() {
   const touchStartRef = useRef<{ x: number; y: number } | null>(null);
   const maiorPecaRef = useRef(getMaiorPeca(initialState.board));
   const partidaRegistradaRef = useRef(false);
+  const desfezRef = useRef(false);
 
   useEffect(() => {
     scoreRef.current = score;
@@ -110,7 +111,7 @@ function Jogo2048() {
   const registrarPartida = useCallback(() => {
     if (!partidaRegistradaRef.current) {
       partidaRegistradaRef.current = true;
-      partidaFinalizada({ jogo: '2048', maiorPeca: maiorPecaRef.current });
+      partidaFinalizada({ jogo: '2048', maiorPeca: maiorPecaRef.current, pontuacao: scoreRef.current, desfez: desfezRef.current });
     }
   }, []);
 
@@ -118,7 +119,7 @@ function Jogo2048() {
     const maiorPeca = getMaiorPeca(board);
     if (maiorPeca > maiorPecaRef.current) {
       maiorPecaRef.current = maiorPeca;
-      registrarProgresso({ jogo: '2048', maiorPeca });
+      registrarProgresso({ jogo: '2048', maiorPeca, pontuacao: scoreRef.current, desfez: desfezRef.current });
     }
 
     if (hasNoMoves(board)) {
@@ -178,6 +179,7 @@ function Jogo2048() {
       return;
     }
 
+    desfezRef.current = true;
     const previousState = history[history.length - 1];
     setBoard(previousState.board.map((row) => [...row]));
     setScore(previousState.score);
@@ -193,6 +195,7 @@ function Jogo2048() {
     const freshBoard = createInitialBoard();
     maiorPecaRef.current = getMaiorPeca(freshBoard);
     partidaRegistradaRef.current = false;
+    desfezRef.current = false;
     setBoard(freshBoard);
     setScore(0);
     setHistory([]);

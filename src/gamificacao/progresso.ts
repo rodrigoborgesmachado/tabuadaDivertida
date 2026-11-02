@@ -1,11 +1,15 @@
 import { aplicarDesafios, type Desafio, type TipoDesafio } from './desafios';
 import { FATORES, medalhas, nivelAlcancado, type Medalha } from './medalhas';
-import { chaveDia, registrarDia } from './sequenciaDias';
+import { PARES_POR_NIVEL, type Nivel } from '../pages/MemoriaTabuada/logic';
+import { chaveDia, chaveSemana, diasEntre, registrarDia } from './sequenciaDias';
 
 export const STORAGE_KEY = 'tabuada-divertida-progresso';
 export const EVENTO_CONQUISTAS = 'tabuada-divertida-conquistas';
 export const EVENTO_DESAFIOS = 'tabuada-divertida-desafios';
-export const VERSAO_PROGRESSO = 1;
+export const VERSAO_PROGRESSO = 2;
+export const MINIMO_CONTAS = 20;
+export const MAXIMO_CONTAS = 100;
+export const DIAS_MESTRE = 7;
 
 export interface MedalhaObtida {
   nivel: number;
@@ -17,17 +21,33 @@ export interface Progresso {
   partidas: number;
   partidasPerfeitas: number;
   partidasNoturnas: number;
+  partidasMadrugada: number;
+  partidasPalindromas: number;
+  perfeitasPorModo: Record<string, number>;
+  maratonas: number;
+  voltasPorCima: number;
+  recordesBatidos: number;
+  acertos: number;
+  teimosia: Record<string, { erros: number; acertos: number }>;
+  teimoso: number;
   jogosJogados: string[];
   sequenciaAtual: number;
   melhorSequencia: number;
   melhorTempoMedio: number;
   maiorPeca: number;
-  tabuadas: Record<string, number[]>;
+  maiorPecaSemDesfazer: number;
+  maiorPontuacao2048: number;
+  memoriasDeElefante: number;
+  memoriasRelampago: number;
+  memoriasSemDesperdicio: number;
+  tabuadas: Record<string, Record<string, string>>;
   medalhas: Record<string, MedalhaObtida>;
   ultimoDia: string;
   diasSeguidos: number;
   melhorDiasSeguidos: number;
   folgas: number;
+  fimDeSemana: { semana: string; dias: number[] };
+  finsDeSemana: number;
   desafios: Partial<Record<TipoDesafio, { id: string; valor: number }>>;
   desafiosConcluidos: string[];
 }
@@ -35,6 +55,7 @@ export interface Progresso {
 export interface ContaRespondida {
   correta: boolean;
   fatores?: [number, number];
+  texto?: string;
 }
 
 export interface EventoJogo {
@@ -42,6 +63,14 @@ export interface EventoJogo {
   contas?: ContaRespondida[];
   tempoMedio?: number;
   maiorPeca?: number;
+  modo?: string;
+  pontuacao?: number;
+  recorde?: number;
+  desfez?: boolean;
+  nivel?: Nivel;
+  jogadas?: number;
+  tempo?: number;
+  desperdicio?: boolean;
 }
 
 export interface Conquista {
@@ -54,17 +83,33 @@ export const criarProgresso = (): Progresso => ({
   partidas: 0,
   partidasPerfeitas: 0,
   partidasNoturnas: 0,
+  partidasMadrugada: 0,
+  partidasPalindromas: 0,
+  perfeitasPorModo: {},
+  maratonas: 0,
+  voltasPorCima: 0,
+  recordesBatidos: 0,
+  acertos: 0,
+  teimosia: {},
+  teimoso: 0,
   jogosJogados: [],
   sequenciaAtual: 0,
   melhorSequencia: 0,
   melhorTempoMedio: 0,
   maiorPeca: 0,
+  maiorPecaSemDesfazer: 0,
+  maiorPontuacao2048: 0,
+  memoriasDeElefante: 0,
+  memoriasRelampago: 0,
+  memoriasSemDesperdicio: 0,
   tabuadas: {},
   medalhas: {},
   ultimoDia: '',
   diasSeguidos: 0,
   melhorDiasSeguidos: 0,
   folgas: 0,
+  fimDeSemana: { semana: '', dias: [] },
+  finsDeSemana: 0,
   desafios: {},
   desafiosConcluidos: [],
 });
@@ -72,6 +117,7 @@ export const criarProgresso = (): Progresso => ({
 const migrarProgresso = (dados: Partial<Progresso>): Progresso => ({
   ...criarProgresso(),
   ...dados,
+  ...((dados.versao || 0) < 2 ? { tabuadas: {} } : {}),
   versao: VERSAO_PROGRESSO,
 });
 
@@ -91,36 +137,104 @@ const salvarProgresso = (progresso: Progresso) => {
   } catch {}
 };
 
-const marcarConta = (tabuadas: Record<string, number[]>, tabuada: number, fator: number, correta: boolean) => {
+const descartarVencidas = (tabuadas: Progresso['tabuadas'], hoje: string) =>
+  Object.fromEntries(Object.entries(tabuadas).map(([tabuada, acertadas]) => [
+    tabuada,
+    Object.fromEntries(Object.entries(acertadas).filter(([, dia]) => diasEntre(dia, hoje) < DIAS_MESTRE)),
+  ]));
+
+const marcarConta = (tabuadas: Progresso['tabuadas'], tabuada: number, fator: number, correta: boolean, hoje: string) => {
   if (!FATORES.includes(tabuada) || !FATORES.includes(fator)) {
     return;
   }
 
-  const acertadas = (tabuadas[tabuada] || []).filter((item) => item !== fator);
-  tabuadas[tabuada] = correta ? [...acertadas, fator].sort((a, b) => a - b) : acertadas;
+  const { [fator]: _, ...acertadas } = tabuadas[tabuada] || {};
+  tabuadas[tabuada] = correta ? { ...acertadas, [fator]: hoje } : acertadas;
+};
+
+const marcarTeimosia = (proximo: Progresso, conta: ContaRespondida) => {
+  if (!conta.texto || proximo.teimoso) {
+    return;
+  }
+
+  const atual = proximo.teimosia[conta.texto];
+  if (!conta.correta) {
+    proximo.teimosia = { ...proximo.teimosia, [conta.texto]: { erros: (atual?.erros || 0) + 1, acertos: 0 } };
+  } else if (atual) {
+    const acertos = atual.acertos + 1;
+    proximo.teimoso = atual.erros >= 3 && acertos >= 5 ? 1 : 0;
+    proximo.teimosia = proximo.teimoso ? {} : { ...proximo.teimosia, [conta.texto]: { ...atual, acertos } };
+  }
+};
+
+const ehPalindromo = (valor: number) => valor >= 10 && String(valor) === String(valor).split('').reverse().join('');
+
+const registrarFimDeSemana = (proximo: Progresso, data: Date) => {
+  const diaSemana = data.getDay();
+  if (diaSemana !== 0 && diaSemana !== 6) {
+    return;
+  }
+
+  const semana = chaveSemana(data);
+  const dias = proximo.fimDeSemana.semana === semana ? proximo.fimDeSemana.dias : [];
+  if (dias.includes(diaSemana)) {
+    return;
+  }
+
+  proximo.fimDeSemana = { semana, dias: [...dias, diaSemana] };
+  proximo.finsDeSemana += dias.length === 1 ? 1 : 0;
+};
+
+const registrarMemoria = (proximo: Progresso, evento: EventoJogo) => {
+  if (!evento.nivel) {
+    return;
+  }
+
+  if (evento.nivel === 'dificil' && evento.jogadas && evento.jogadas <= PARES_POR_NIVEL.dificil * 1.5) {
+    proximo.memoriasDeElefante += 1;
+  }
+
+  if (evento.nivel === 'medio' && evento.tempo !== undefined && evento.tempo < 60) {
+    proximo.memoriasRelampago += 1;
+  }
+
+  if (evento.desperdicio === false) {
+    proximo.memoriasSemDesperdicio += 1;
+  }
 };
 
 export const aplicarEvento = (progresso: Progresso, evento: EventoJogo, finalizada: boolean, data: Date): Progresso => {
   const proximo: Progresso = {
     ...progresso,
     jogosJogados: progresso.jogosJogados.includes(evento.jogo) ? progresso.jogosJogados : [...progresso.jogosJogados, evento.jogo],
-    tabuadas: { ...progresso.tabuadas },
+    tabuadas: descartarVencidas(progresso.tabuadas, chaveDia(data)),
   };
   const contas = evento.contas || [];
+  const acertos = contas.filter((conta) => conta.correta).length;
 
   contas.forEach((conta) => {
     proximo.sequenciaAtual = conta.correta ? proximo.sequenciaAtual + 1 : 0;
     proximo.melhorSequencia = Math.max(proximo.melhorSequencia, proximo.sequenciaAtual);
+    marcarTeimosia(proximo, conta);
 
     if (conta.fatores) {
       const [a, b] = conta.fatores;
-      marcarConta(proximo.tabuadas, a, b, conta.correta);
-      marcarConta(proximo.tabuadas, b, a, conta.correta);
+      marcarConta(proximo.tabuadas, a, b, conta.correta, chaveDia(data));
+      marcarConta(proximo.tabuadas, b, a, conta.correta, chaveDia(data));
     }
   });
+  proximo.acertos += acertos;
 
   if (evento.maiorPeca && evento.maiorPeca > proximo.maiorPeca) {
     proximo.maiorPeca = evento.maiorPeca;
+  }
+
+  if (evento.maiorPeca && evento.desfez === false && evento.maiorPeca > proximo.maiorPecaSemDesfazer) {
+    proximo.maiorPecaSemDesfazer = evento.maiorPeca;
+  }
+
+  if (evento.jogo === '2048' && evento.pontuacao && evento.pontuacao > proximo.maiorPontuacao2048) {
+    proximo.maiorPontuacao2048 = evento.pontuacao;
   }
 
   if (!finalizada) {
@@ -134,13 +248,37 @@ export const aplicarEvento = (progresso: Progresso, evento: EventoJogo, finaliza
     proximo.partidasNoturnas += 1;
   }
 
-  if (contas.length > 0 && contas.every((conta) => conta.correta)) {
-    proximo.partidasPerfeitas += 1;
+  if (hora >= 5 && hora < 7) {
+    proximo.partidasMadrugada += 1;
+  }
 
-    if (contas.length >= 10 && evento.tempoMedio && (proximo.melhorTempoMedio === 0 || evento.tempoMedio < proximo.melhorTempoMedio)) {
+  if (evento.pontuacao && ehPalindromo(evento.pontuacao)) {
+    proximo.partidasPalindromas += 1;
+  }
+
+  if (evento.recorde && evento.pontuacao && evento.pontuacao > evento.recorde) {
+    proximo.recordesBatidos += 1;
+  }
+
+  if (contas.length >= MINIMO_CONTAS && acertos === contas.length) {
+    proximo.partidasPerfeitas += 1;
+    proximo.maratonas += contas.length >= MAXIMO_CONTAS ? 1 : 0;
+
+    if (evento.modo) {
+      proximo.perfeitasPorModo = { ...proximo.perfeitasPorModo, [evento.modo]: (proximo.perfeitasPorModo[evento.modo] || 0) + 1 };
+    }
+
+    if (evento.tempoMedio && (proximo.melhorTempoMedio === 0 || evento.tempoMedio < proximo.melhorTempoMedio)) {
       proximo.melhorTempoMedio = evento.tempoMedio;
     }
   }
+
+  if (contas.length > 3 && contas.slice(0, 3).every((conta) => !conta.correta) && acertos / contas.length >= 0.9) {
+    proximo.voltasPorCima += 1;
+  }
+
+  registrarMemoria(proximo, evento);
+  registrarFimDeSemana(proximo, data);
 
   return registrarDia(proximo, data);
 };
@@ -150,7 +288,7 @@ export const avaliarMedalhas = (progresso: Progresso, data: Date) => {
   const novas: Conquista[] = [];
 
   medalhas.forEach((medalha) => {
-    const nivel = nivelAlcancado(medalha, progresso);
+    const nivel = nivelAlcancado(medalha, { ...progresso, medalhas: obtidas });
 
     if (nivel > (obtidas[medalha.id]?.nivel || 0)) {
       obtidas[medalha.id] = { nivel, data: data.toISOString() };
@@ -187,6 +325,6 @@ export const contasDaTabuada = (questoes: { questao: string; correta: boolean }[
   questoes.map((questao) => {
     const multiplicacao = /^(\d+)x(\d+)$/.exec(questao.questao);
     return multiplicacao
-      ? { correta: questao.correta, fatores: [Number(multiplicacao[1]), Number(multiplicacao[2])] }
-      : { correta: questao.correta };
+      ? { correta: questao.correta, fatores: [Number(multiplicacao[1]), Number(multiplicacao[2])], texto: questao.questao }
+      : { correta: questao.correta, texto: questao.questao };
   });

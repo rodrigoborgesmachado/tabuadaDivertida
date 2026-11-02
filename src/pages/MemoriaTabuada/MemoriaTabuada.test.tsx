@@ -68,6 +68,28 @@ describe('MemoriaTabuada', () => {
     expect(screen.getByText('🏆 Novo recorde no nível fácil!')).toBeTruthy();
     expect(JSON.parse(window.localStorage.getItem('tabuada-divertida-memoria-melhores') || '{}').facil.jogadas).toBe(2);
     expect(JSON.parse(window.localStorage.getItem('tabuada-divertida-progresso') || '{}').jogosJogados).toEqual(['memoria']);
+    expect(JSON.parse(window.localStorage.getItem('tabuada-divertida-progresso') || '{}').memoriasSemDesperdicio).toBe(1);
+  });
+
+  it('does not count a game where the same card was wrong twice as without waste', () => {
+    renderJogo();
+    fireEvent.click(screen.getByText('Começar'));
+
+    for (let i = 0; i < 2; i++) {
+      fireEvent.click(cartas()[0]);
+      fireEvent.click(cartas()[1]);
+      act(() => {
+        jest.advanceTimersByTime(900);
+      });
+    }
+
+    fireEvent.click(cartas()[0]);
+    fireEvent.click(cartas()[2]);
+    fireEvent.click(cartas()[1]);
+    fireEvent.click(cartas()[3]);
+
+    expect(screen.getByRole('dialog')).toBeTruthy();
+    expect(JSON.parse(window.localStorage.getItem('tabuada-divertida-progresso') || '{}').memoriasSemDesperdicio).toBe(0);
   });
 
   it('ignores a third card while two are open', () => {
