@@ -40,6 +40,7 @@ function labelTipo(t: string) {
   if (t === 'A') return 'Adição';
   if (t === 'E') return 'Expressões Numéricas';
   if (t === 'T') return 'Treino dos erros';
+  if (t === 'MM') return 'Maior ou menor';
   return 'Multiplicação';
 }
 

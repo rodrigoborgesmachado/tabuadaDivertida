@@ -22,6 +22,7 @@ function Breadcrumbs() {
     'jogo2048': 'Jogo 2048',
     'jogos': 'Jogos',
     'memoria-da-tabuada': 'Memória da tabuada',
+    'maior-ou-menor': 'Maior ou menor',
     'conquistas': 'Minhas conquistas',
     'personalizar': 'Personalizar',
     'instrucoes': 'Instruções',

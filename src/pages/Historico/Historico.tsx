@@ -34,6 +34,9 @@ function Historico(){
         else if (tipo === 'T'){
             retorno = 'Treino dos erros';
         }
+        else if (tipo === 'MM'){
+            retorno = 'Maior ou menor';
+        }
 
         return retorno;
     }

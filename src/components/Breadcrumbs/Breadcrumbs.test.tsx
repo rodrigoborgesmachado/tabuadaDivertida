@@ -23,6 +23,13 @@ describe('Breadcrumbs', () => {
     expect(screen.getByText('Memória da tabuada')).toBeTruthy();
   });
 
+  it('shows the bigger or smaller game', () => {
+    renderBreadcrumbs('/jogos/maior-ou-menor');
+
+    expect(screen.getAllByText('Jogos')).toHaveLength(1);
+    expect(screen.getByText('Maior ou menor')).toBeTruthy();
+  });
+
   it('shows the achievements page', () => {
     renderBreadcrumbs('/conquistas');
 
