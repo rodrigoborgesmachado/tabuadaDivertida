@@ -127,3 +127,15 @@ export const hasNoMoves = (board: Board): boolean => {
 
   return true;
 };
+
+export const getSwipeDirection = (deltaX: number, deltaY: number, minDistance = 30): Direction | null => {
+  if (Math.max(Math.abs(deltaX), Math.abs(deltaY)) < minDistance) {
+    return null;
+  }
+
+  if (Math.abs(deltaX) > Math.abs(deltaY)) {
+    return deltaX > 0 ? 'right' : 'left';
+  }
+
+  return deltaY > 0 ? 'down' : 'up';
+};
