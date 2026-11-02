@@ -5,11 +5,13 @@ describe('jogosConfig', () => {
     const paths = jogos.map((jogo) => jogo.path);
     expect(paths).toContain('/selecionarjogo');
     expect(paths).toContain('/jogo2048');
+    expect(paths).toContain('/jogos/memoria-da-tabuada');
   });
 
   it('recognizes game paths', () => {
     expect(isJogoPath('/jogo2048')).toBe(true);
     expect(isJogoPath('/selecionarjogo')).toBe(true);
+    expect(isJogoPath('/jogos/memoria-da-tabuada')).toBe(true);
   });
 
   it('ignores other paths', () => {

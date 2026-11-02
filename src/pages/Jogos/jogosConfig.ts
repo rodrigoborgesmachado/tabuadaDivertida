@@ -24,6 +24,14 @@ export const jogos: JogoConfig[] = [
     habilidade: 'Lógica e soma',
     idade: '8+ anos',
   },
+  {
+    path: '/jogos/memoria-da-tabuada',
+    nome: 'Memória da tabuada',
+    icone: '🧠',
+    descricao: 'Vire as cartas e junte cada conta da tabuada com o seu resultado.',
+    habilidade: 'Tabuada e memória',
+    idade: '5+ anos',
+  },
 ];
 
 export const isJogoPath = (pathname: string) =>

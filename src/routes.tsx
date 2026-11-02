@@ -25,6 +25,7 @@ import ExpressoesNumericas from './pages/Artigos/ExpressoesNumericas';
 import Resultados from './pages/Resultados/Resultados';
 import Jogo2048 from './pages/Jogo2048/Jogo2048';
 import Jogos from './pages/Jogos/Jogos';
+import MemoriaTabuada from './pages/MemoriaTabuada/MemoriaTabuada';
 
 interface RoutesAppProps {
   theme: 'light' | 'dark';
@@ -46,6 +47,7 @@ function RoutesApp({ theme, toggleTheme }: RoutesAppProps) {
                 <Route path='/resultados' element={<Resultados/>}/>
                 <Route path='/jogo2048' element={<Jogo2048/>}/>
                 <Route path='/jogos' element={<Jogos/>}/>
+                <Route path='/jogos/memoria-da-tabuada' element={<MemoriaTabuada/>}/>
                 <Route path='/final/:tipo' element={<Final/>}/>
                 <Route path='/instrucoes' element={<Instrucoes/>}/>
                 <Route path='/historico' element={<Historico/>}/>
