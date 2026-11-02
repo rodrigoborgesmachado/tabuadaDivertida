@@ -21,6 +21,7 @@ function Breadcrumbs() {
     'resultados': 'Resultados',
     'jogo2048': 'Jogo 2048',
     'jogos': 'Jogos',
+    'memoria-da-tabuada': 'Memória da tabuada',
     'instrucoes': 'Instruções',
     'historico': 'Histórico',
     'privacidade': 'Privacidade',
@@ -55,7 +56,7 @@ function Breadcrumbs() {
     return { href, label };
   });
 
-  if (isJogoPath(path)) {
+  if (isJogoPath(path) && first !== 'jogos') {
     parts.unshift({ href: '/jogos', label: 'Jogos' });
   }
 

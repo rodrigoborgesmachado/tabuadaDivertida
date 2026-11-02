@@ -2,7 +2,8 @@
 import configData from "../../Config.json";
 import Tempo from '../../components/Tempo';
 import api from '../../services/api';
-import { KeyboardEvent, useEffect, useMemo, useRef, useState } from 'react';
+import { playError, playSuccess } from '../../services/sons';
+import { KeyboardEvent, useEffect, useMemo, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import PacmanLoader from "../../components/PacmanLoader/PacmanLoader";
@@ -33,48 +34,6 @@ function Jogo(){
     const [recorde, setRecorde] = useState(parseInt(localStorage.getItem(configData.RECORDE) || '0'));
     const [wrongStreak, setWrongStreak] = useState(0);
     const [robotMood, setRobotMood] = useState<'happy' | 'neutral' | 'sad'>('neutral');
-    const audioCtxRef = useRef<AudioContext | null>(null);
-
-    function ensureAudioCtx() {
-        const AnyAudioCtx = (window as any).AudioContext || (window as any).webkitAudioContext;
-        if (!audioCtxRef.current && AnyAudioCtx) {
-            audioCtxRef.current = new AnyAudioCtx();
-        }
-        if (audioCtxRef.current && audioCtxRef.current.state === 'suspended') {
-            audioCtxRef.current.resume().catch(() => {});
-        }
-        return audioCtxRef.current;
-    }
-
-    function playBeep(freq: number, durationMs: number, type: OscillatorType = 'sine', volume = 0.08, delayMs = 0) {
-        try {
-            if (localStorage.getItem(configData.SOUND_MUTED) === '1') return;
-        } catch {}
-        const ctx = ensureAudioCtx();
-        if (!ctx) return;
-        const now = ctx.currentTime + (delayMs / 1000);
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.type = type;
-        osc.frequency.setValueAtTime(freq, now);
-        gain.gain.setValueAtTime(0, now);
-        gain.gain.linearRampToValueAtTime(volume, now + 0.01);
-        const endTime = now + durationMs / 1000;
-        gain.gain.exponentialRampToValueAtTime(0.0001, endTime);
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.start(now);
-        osc.stop(endTime + 0.01);
-    }
-
-    function playSuccess() {
-        playBeep(660, 90, 'sine', 0.08, 0);
-        playBeep(880, 100, 'sine', 0.08, 80);
-    }
-
-    function playError() {
-        playBeep(220, 220, 'square', 0.06, 0);
-    }
 
     function numeroAleatorio(min: number, max: number){
         return Math.floor(Math.random() * (max - min + 1)) + min;
