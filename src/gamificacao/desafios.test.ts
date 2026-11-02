@@ -73,6 +73,23 @@ describe('desafios', () => {
     expect(resultado.progresso.desafiosConcluidos).toEqual(['dia:2026-11-03']);
   });
 
+  it('counts only the IQ test right answers in its daily challenge', () => {
+    const data = umAno.find((dia) => desafioDoDia(dia).modelo === 'teste-qi') as Date;
+    const desafio = desafioDoDia(data);
+    const questoes = Array.from({ length: 15 }, (_, index) => ({ correta: index < 6 }));
+
+    expect(desafio.texto).toBe('Acerte 10 questões no Teste de QI com Números');
+
+    let resultado = aplicarDesafios(criarProgresso(), { jogo: 'tabuada', contas: questoes }, true, true, data);
+    expect(valorDesafio(resultado.progresso, desafio)).toBe(0);
+
+    resultado = aplicarDesafios(resultado.progresso, { jogo: 'teste-qi', contas: questoes }, true, false, data);
+    expect(valorDesafio(resultado.progresso, desafio)).toBe(6);
+
+    resultado = aplicarDesafios(resultado.progresso, { jogo: 'teste-qi', contas: questoes }, true, false, data);
+    expect(resultado.concluidos.map((item) => item.id)).toEqual([desafio.id]);
+  });
+
   it('starts the progress from zero on a new day', () => {
     const ontem = aplicarDesafios(criarProgresso(), { jogo: 'tabuada', contas: [{ correta: true, fatores: [9, 2] }] }, true, true, diaDeNovembro(3));
 

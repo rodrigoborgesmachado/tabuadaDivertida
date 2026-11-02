@@ -1,6 +1,7 @@
 import { aplicarDesafios, type Desafio, type TipoDesafio } from './desafios';
 import { FATORES, medalhas, nivelAlcancado, type Medalha } from './medalhas';
 import { PARES_POR_NIVEL, type Nivel } from '../pages/MemoriaTabuada/logic';
+import { TEMPO_MEDIO_SEM_TITUBEAR, TOTAL_QUESTOES } from '../pages/TesteQi/logic';
 import { chaveDia, chaveSemana, diasEntre, registrarDia } from './sequenciaDias';
 import { calcularNivel, xpDaPartida, xpDasMedalhas, xpDoDesafio, xpInicial, type NivelXp } from './xp';
 
@@ -42,6 +43,9 @@ export interface Progresso {
   memoriasDeElefante: number;
   memoriasRelampago: number;
   memoriasSemDesperdicio: number;
+  padroesAcertados: number;
+  gabaritos: number;
+  semTitubear: number;
   tabuadas: Record<string, Record<string, string>>;
   medalhas: Record<string, MedalhaObtida>;
   ultimoDia: string;
@@ -105,6 +109,9 @@ export const criarProgresso = (): Progresso => ({
   memoriasDeElefante: 0,
   memoriasRelampago: 0,
   memoriasSemDesperdicio: 0,
+  padroesAcertados: 0,
+  gabaritos: 0,
+  semTitubear: 0,
   tabuadas: {},
   medalhas: {},
   ultimoDia: '',
@@ -211,6 +218,19 @@ const registrarMemoria = (proximo: Progresso, evento: EventoJogo) => {
   }
 };
 
+const registrarTesteQi = (proximo: Progresso, evento: EventoJogo, acertos: number) => {
+  if (evento.jogo !== 'teste-qi') {
+    return;
+  }
+
+  proximo.padroesAcertados += acertos;
+
+  if (acertos === TOTAL_QUESTOES) {
+    proximo.gabaritos += 1;
+    proximo.semTitubear += evento.tempo !== undefined && evento.tempo / TOTAL_QUESTOES <= TEMPO_MEDIO_SEM_TITUBEAR ? 1 : 0;
+  }
+};
+
 export const aplicarEvento = (progresso: Progresso, evento: EventoJogo, finalizada: boolean, data: Date): Progresso => {
   const proximo: Progresso = {
     ...progresso,
@@ -286,6 +306,7 @@ export const aplicarEvento = (progresso: Progresso, evento: EventoJogo, finaliza
   }
 
   registrarMemoria(proximo, evento);
+  registrarTesteQi(proximo, evento, acertos);
   registrarFimDeSemana(proximo, data);
 
   return registrarDia(proximo, data);

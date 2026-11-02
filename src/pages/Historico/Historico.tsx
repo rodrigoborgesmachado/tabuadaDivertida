@@ -37,6 +37,9 @@ function Historico(){
         else if (tipo === 'MM'){
             retorno = 'Maior ou menor';
         }
+        else if (tipo === 'QI'){
+            retorno = 'Teste de QI com Números';
+        }
 
         return retorno;
     }

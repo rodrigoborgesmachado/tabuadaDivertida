@@ -49,6 +49,16 @@ export const modelosDoDia: ModeloDesafio[] = [
     },
   },
   {
+    id: 'teste-qi',
+    jogo: 'teste-qi',
+    icone: '🧩',
+    criar: () => ({
+      texto: 'Acerte 10 questões no Teste de QI com Números',
+      meta: 10,
+      avancar: (valor, evento) => valor + (evento.jogo === 'teste-qi' ? acertos(evento) : 0),
+    }),
+  },
+  {
     id: 'partida-perfeita',
     jogo: 'tabuada',
     icone: '⭐',
