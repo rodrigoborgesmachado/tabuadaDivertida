@@ -99,6 +99,66 @@
     color: var(--button-color-primary);
 }
 
+.personalizar-toggle {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-width: 42px;
+    min-height: 36px;
+    padding: 0 8px;
+    color: var(--text-color-primary);
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.personalizar-toggle.active {
+    border-color: var(--button-color-primary);
+}
+
+.personalizar-toggle__robo {
+    width: 24px;
+    height: 24px;
+}
+
+.personalizar-toggle__texto {
+    display: none;
+}
+
+.site-header .menu-toggle {
+    position: relative;
+}
+
+.nav-item__novo {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    border-radius: 999px;
+    background: var(--button-color-primary-wrong);
+    color: #ffffff;
+    font-size: 11px;
+    line-height: 1;
+    vertical-align: middle;
+    animation: nav-item-novo 1.4s ease-in-out infinite;
+}
+
+@keyframes nav-item-novo {
+    0%,
+    100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.2);
+    }
+}
+
 .site-controls {
     display: inline-flex;
     align-items: center;
@@ -195,6 +255,14 @@
 
     .site-controls {
         justify-content: flex-end;
+    }
+
+    .personalizar-toggle {
+        margin-right: auto;
+    }
+
+    .personalizar-toggle__texto {
+        display: inline;
     }
 
     .site-menu-backdrop {

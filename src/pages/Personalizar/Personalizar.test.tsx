@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { criarProgresso, STORAGE_KEY } from '../../gamificacao/progresso';
-import { STORAGE_PERSONALIZACAO } from '../../gamificacao/recompensas';
+import { STORAGE_PERSONALIZACAO, STORAGE_RECOMPENSAS_VISTAS } from '../../gamificacao/recompensas';
 import Personalizar from './Personalizar';
 
 const renderPersonalizar = () => render(
@@ -41,6 +41,17 @@ describe('Personalizar', () => {
     expect(item('Boné').getAttribute('aria-pressed')).toBe('true');
     expect(container.querySelector('.personalizar-robo')?.getAttribute('data-acessorio')).toBe('bone');
     expect(JSON.parse(window.localStorage.getItem(STORAGE_PERSONALIZACAO) || '{}').acessorio).toBe('bone');
+  });
+
+  it('highlights the new items and marks them as seen', () => {
+    window.localStorage.setItem(STORAGE_RECOMPENSAS_VISTAS, JSON.stringify(['cor-prata', 'sem-acessorio', 'tema-padrao']));
+    salvarProgresso({ xp: 100 });
+    renderPersonalizar();
+
+    expect(item('Azul céu').textContent).toContain('✨ Novo!');
+    expect(item('Prata').textContent).toContain('Em uso');
+    expect(screen.queryByText('🎨 Personalizar robô')).toBeNull();
+    expect(JSON.parse(window.localStorage.getItem(STORAGE_RECOMPENSAS_VISTAS) || '[]')).toContain('cor-azul');
   });
 
   it('unlocks the items of a conquered medal', () => {

@@ -1,5 +1,5 @@
 import { act, render, screen } from '@testing-library/react';
-import { partidaFinalizada, registrarProgresso } from '../../gamificacao/progresso';
+import { criarProgresso, partidaFinalizada, registrarProgresso, STORAGE_KEY } from '../../gamificacao/progresso';
 import AvisoConquista from './AvisoConquista';
 
 jest.mock('../../services/sons', () => ({
@@ -40,6 +40,41 @@ describe('AvisoConquista', () => {
     }
 
     expect(screen.getByRole('status').textContent).toContain('Subiu de nível!⬆️ Nível 3 · Contador');
+
+    act(() => {
+      jest.advanceTimersByTime(4000);
+    });
+
+    expect(screen.getByRole('status').textContent).toBe('Novo item para o seu robô!🔵 Azul céu');
+
+    act(() => {
+      jest.advanceTimersByTime(4000);
+    });
+
+    expect(screen.getByRole('status').textContent).toBe('Novo item para o seu robô!🧢 Boné');
+
+    act(() => {
+      jest.advanceTimersByTime(4000);
+    });
+
+    expect(screen.queryByRole('status')).toBeNull();
+  });
+
+  it('announces only the items unlocked after the site was opened', () => {
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...criarProgresso(), xp: 245 }));
+    render(<AvisoConquista />);
+
+    act(() => {
+      partidaFinalizada({ jogo: 'memoria' }, new Date(2026, 10, 2, 15, 0));
+    });
+
+    expect(screen.getByRole('status').textContent).toBe('Subiu de nível!⬆️ Nível 3 · Contador');
+
+    act(() => {
+      jest.advanceTimersByTime(4000);
+    });
+
+    expect(screen.getByRole('status').textContent).toBe('Novo item para o seu robô!🧢 Boné');
 
     act(() => {
       jest.advanceTimersByTime(4000);

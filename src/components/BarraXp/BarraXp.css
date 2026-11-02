@@ -77,6 +77,10 @@
   animation: barra-xp-subiu 0.8s ease;
 }
 
+.barra-xp__atalho {
+  align-self: center;
+}
+
 .barra-xp--subiu {
   border-color: #ffd66a;
 }
