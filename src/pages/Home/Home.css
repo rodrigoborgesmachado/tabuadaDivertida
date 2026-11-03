@@ -35,6 +35,25 @@
   overflow-wrap: anywhere;
 }
 
+.home-boas-vindas__nome {
+  padding: 0;
+  border: none;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.home-boas-vindas__nome:hover span:last-child {
+  opacity: 1;
+}
+
+.home-boas-vindas__nome span:last-child {
+  font-size: 1rem;
+  opacity: 0.6;
+}
+
 .home-boas-vindas__dias {
   font-weight: 800;
   color: var(--text-color-accent);

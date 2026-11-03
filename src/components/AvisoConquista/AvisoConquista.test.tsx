@@ -17,6 +17,7 @@ describe('AvisoConquista', () => {
   });
 
   it('shows each new medal for a few seconds', () => {
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...criarProgresso(), xp: 300 }));
     render(<AvisoConquista />);
     expect(screen.queryByRole('status')).toBeNull();
 
@@ -45,7 +46,7 @@ describe('AvisoConquista', () => {
       jest.advanceTimersByTime(4000);
     });
 
-    expect(screen.getByRole('status').textContent).toBe('Novo item para o seu robô!🔵 Azul céu');
+    expect(screen.getByRole('status').textContent).toBe('Novo item para o seu robô!🔴 Vermelho tomate');
 
     act(() => {
       jest.advanceTimersByTime(4000);
@@ -61,7 +62,7 @@ describe('AvisoConquista', () => {
   });
 
   it('announces only the items unlocked after the site was opened', () => {
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...criarProgresso(), xp: 245 }));
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...criarProgresso(), xp: 425 }));
     render(<AvisoConquista />);
 
     act(() => {
@@ -69,6 +70,12 @@ describe('AvisoConquista', () => {
     });
 
     expect(screen.getByRole('status').textContent).toBe('Subiu de nível!⬆️ Nível 3 · Contador');
+
+    act(() => {
+      jest.advanceTimersByTime(4000);
+    });
+
+    expect(screen.getByRole('status').textContent).toBe('Novo item para o seu robô!🔴 Vermelho tomate');
 
     act(() => {
       jest.advanceTimersByTime(4000);

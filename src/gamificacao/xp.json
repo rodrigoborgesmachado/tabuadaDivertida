@@ -5,16 +5,22 @@
   "partidaPerfeita": 25,
   "desafioDoDia": 30,
   "desafioDaSemana": 100,
-  "medalhaPorNivel": [20, 40, 80, 150],
-  "medalhaUnica": 80,
-  "primeiroNivel": 100,
-  "aumentoPorNivel": 50,
+  "medalhaPorNivel": [10, 20, 40, 75],
+  "medalhaUnica": 40,
+  "primeiroNivel": 200,
+  "aumentoPorNivel": 30,
   "titulos": [
     { "nivel": 1, "titulo": "Aprendiz" },
     { "nivel": 3, "titulo": "Contador" },
     { "nivel": 6, "titulo": "Calculista" },
     { "nivel": 10, "titulo": "Mestre da Tabuada" },
     { "nivel": 15, "titulo": "Gênio da Matemática" },
-    { "nivel": 20, "titulo": "Lenda dos Números" }
+    { "nivel": 20, "titulo": "Lenda dos Números" },
+    { "nivel": 25, "titulo": "Arquiteto dos Números" },
+    { "nivel": 30, "titulo": "Mago da Matemática" },
+    { "nivel": 35, "titulo": "Explorador do Infinito" },
+    { "nivel": 40, "titulo": "Guardião da Tabuada" },
+    { "nivel": 45, "titulo": "Campeão dos Cálculos" },
+    { "nivel": 50, "titulo": "Lenda Suprema" }
   ]
 }

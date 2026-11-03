@@ -1,0 +1,18 @@
+.robo-brilho {
+  opacity: 0.15;
+  animation: robo-brilho 2.4s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes robo-brilho {
+  50% {
+    opacity: 0.55;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .robo-brilho {
+    animation: none;
+    opacity: 0.35;
+  }
+}

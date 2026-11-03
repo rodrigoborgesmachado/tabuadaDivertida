@@ -4,13 +4,14 @@ import { PARES_POR_NIVEL, type Nivel } from '../pages/MemoriaTabuada/logic';
 import { TEMPO_MEDIO_SEM_TITUBEAR, TOTAL_QUESTOES } from '../pages/TesteQi/logic';
 import { CASAS_PADRAO, type NivelRobo } from '../pages/CorridaRobo/logic';
 import { chaveDia, chaveSemana, diasEntre, registrarDia } from './sequenciaDias';
-import { calcularNivel, xpDaPartida, xpDasMedalhas, xpDoDesafio, xpInicial, type NivelXp } from './xp';
+import { idsLiberados, idsLiberadosNaCurvaAnterior } from './recompensas';
+import { calcularNivel, nivelNaCurvaAnterior, xpDaPartida, xpDasMedalhas, xpDoDesafio, xpInicial, type NivelXp } from './xp';
 
 export const STORAGE_KEY = 'tabuada-divertida-progresso';
 export const EVENTO_CONQUISTAS = 'tabuada-divertida-conquistas';
 export const EVENTO_DESAFIOS = 'tabuada-divertida-desafios';
 export const EVENTO_NIVEL = 'tabuada-divertida-nivel';
-export const VERSAO_PROGRESSO = 3;
+export const VERSAO_PROGRESSO = 4;
 export const MINIMO_CONTAS = 20;
 export const MAXIMO_CONTAS = 100;
 export const DIAS_MESTRE = 7;
@@ -68,6 +69,8 @@ export interface Progresso {
   desafios: Partial<Record<TipoDesafio, { id: string; valor: number }>>;
   desafiosConcluidos: string[];
   xp: number;
+  recompensasLiberadas: string[];
+  nivelDoTitulo: number;
 }
 
 export interface ContaRespondida {
@@ -148,6 +151,8 @@ export const criarProgresso = (): Progresso => ({
   desafios: {},
   desafiosConcluidos: [],
   xp: 0,
+  recompensasLiberadas: [],
+  nivelDoTitulo: 0,
 });
 
 const migrarProgresso = (dados: Partial<Progresso>): Progresso => {
@@ -158,7 +163,11 @@ const migrarProgresso = (dados: Partial<Progresso>): Progresso => {
     versao: VERSAO_PROGRESSO,
   };
 
-  return typeof dados.xp === 'number' ? progresso : { ...progresso, xp: xpInicial(progresso) };
+  const comXp = typeof dados.xp === 'number' ? progresso : { ...progresso, xp: xpInicial(progresso) };
+
+  return (dados.versao || 0) < 4
+    ? { ...comXp, recompensasLiberadas: idsLiberadosNaCurvaAnterior(comXp), nivelDoTitulo: nivelNaCurvaAnterior(comXp.xp) }
+    : comXp;
 };
 
 export const lerProgresso = (): Progresso => {
@@ -411,7 +420,8 @@ const registrar = (evento: EventoJogo, finalizada: boolean, data: Date) => {
   const ganho = (finalizada ? xpDaPartida(avaliado.acertos - anterior.acertos, avaliado.partidasPerfeitas > anterior.partidasPerfeitas) : 0) +
     desafios.concluidos.reduce((total, desafio) => total + xpDoDesafio(desafio.tipo), 0) +
     xpDasMedalhas(avaliado.medalhas) - xpDasMedalhas(anterior.medalhas);
-  const progresso = { ...avaliado, xp: avaliado.xp + ganho };
+  const comXp = { ...avaliado, xp: avaliado.xp + ganho };
+  const progresso = { ...comXp, recompensasLiberadas: idsLiberados(comXp) };
   salvarProgresso(progresso);
 
   if (desafios.concluidos.length > 0) {
@@ -422,7 +432,7 @@ const registrar = (evento: EventoJogo, finalizada: boolean, data: Date) => {
     window.dispatchEvent(new CustomEvent<Conquista[]>(EVENTO_CONQUISTAS, { detail: novas }));
   }
 
-  const nivel = calcularNivel(progresso.xp);
+  const nivel = calcularNivel(progresso.xp, progresso.nivelDoTitulo);
   if (nivel.nivel > calcularNivel(anterior.xp).nivel) {
     window.dispatchEvent(new CustomEvent<NivelXp>(EVENTO_NIVEL, { detail: nivel }));
   }

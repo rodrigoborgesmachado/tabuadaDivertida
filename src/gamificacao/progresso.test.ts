@@ -527,7 +527,7 @@ describe('progresso', () => {
   it('adds the XP of right answers, completed challenges and new medals', () => {
     partidaFinalizada({ jogo: 'tabuada', contas: contasCorretas(5) }, dia);
 
-    expect(lerProgresso().xp).toBe(10 + 5 + 30 + 20);
+    expect(lerProgresso().xp).toBe(10 + 5 + 30 + 10);
   });
 
   it('rebuilds the XP of progress saved before the levels existed', () => {
@@ -539,15 +539,33 @@ describe('progresso', () => {
   it('notifies the screen when the player levels up', () => {
     const ouvinte = jest.fn();
     window.addEventListener(EVENTO_NIVEL, ouvinte);
-    salvarProgresso({ xp: 85 });
+    salvarProgresso({ xp: 185 });
 
     partidaFinalizada({ jogo: 'memoria' }, dia);
     expect(ouvinte).not.toHaveBeenCalled();
 
     partidaFinalizada({ jogo: 'memoria' }, dia);
     expect(ouvinte).toHaveBeenCalledTimes(1);
-    expect((ouvinte.mock.calls[0][0] as CustomEvent).detail).toEqual({ nivel: 2, titulo: 'Aprendiz', xpNoNivel: 5, xpDoNivel: 150 });
+    expect((ouvinte.mock.calls[0][0] as CustomEvent).detail).toEqual({ nivel: 2, titulo: 'Aprendiz', xpNoNivel: 5, xpDoNivel: 230 });
     window.removeEventListener(EVENTO_NIVEL, ouvinte);
+  });
+
+  it('keeps the items and the title unlocked with the previous level curve', () => {
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...criarProgresso(), versao: 3, xp: 2700, recompensasLiberadas: undefined, nivelDoTitulo: undefined }));
+
+    const progresso = lerProgresso();
+
+    expect(progresso.versao).toBe(VERSAO_PROGRESSO);
+    expect(progresso.nivelDoTitulo).toBe(10);
+    expect(progresso.recompensasLiberadas).toEqual(['cor-prata', 'cor-azul', 'cor-verde', 'cor-laranja', 'cor-roxa', 'bone', 'oculos', 'capa', 'tema-padrao']);
+  });
+
+  it('saves the unlocked items with the progress', () => {
+    salvarProgresso({ xp: 425 });
+
+    partidaFinalizada({ jogo: 'memoria' }, dia);
+
+    expect(lerProgresso().recompensasLiberadas).toEqual(['cor-prata', 'cor-azul', 'cor-vermelho', 'bone', 'lapis', 'tema-padrao']);
   });
 
   it('reads the multiplication factors and the divisions from the times table questions', () => {

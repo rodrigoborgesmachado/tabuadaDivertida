@@ -39,14 +39,24 @@ export const xpParaSubir = (nivel: number) => regras.primeiroNivel + regras.aume
 export const tituloDoNivel = (nivel: number) =>
   regras.titulos.reduce((titulo, item) => (nivel >= item.nivel ? item.titulo : titulo), regras.titulos[0].titulo);
 
-export const calcularNivel = (xp: number): NivelXp => {
+export const xpTotalDoNivel = (nivel: number) => somar(Array.from({ length: Math.max(nivel - 1, 0) }, (_, indice) => xpParaSubir(indice + 1)));
+
+const nivelDoXp = (xp: number, paraSubir: (nivel: number) => number) => {
   let nivel = 1;
   let inicio = 0;
 
-  while (xp >= inicio + xpParaSubir(nivel)) {
-    inicio += xpParaSubir(nivel);
+  while (xp >= inicio + paraSubir(nivel)) {
+    inicio += paraSubir(nivel);
     nivel += 1;
   }
 
-  return { nivel, titulo: tituloDoNivel(nivel), xpNoNivel: Math.max(xp - inicio, 0), xpDoNivel: xpParaSubir(nivel) };
+  return { nivel, inicio };
+};
+
+export const nivelNaCurvaAnterior = (xp: number) => nivelDoXp(xp, (nivel) => 100 + 50 * (nivel - 1)).nivel;
+
+export const calcularNivel = (xp: number, nivelDoTitulo = 0): NivelXp => {
+  const { nivel, inicio } = nivelDoXp(xp, xpParaSubir);
+
+  return { nivel, titulo: tituloDoNivel(Math.max(nivel, nivelDoTitulo)), xpNoNivel: Math.max(xp - inicio, 0), xpDoNivel: xpParaSubir(nivel) };
 };
