@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 import { criarProgresso, STORAGE_KEY } from '../../gamificacao/progresso';
 import { jogos } from '../Jogos/jogosConfig';
 import Home from './Home';
@@ -38,6 +39,18 @@ describe('Home', () => {
     expect(screen.getByText('Olá, Ana! 👋')).toBeTruthy();
     expect(screen.getByText('▶️ Continuar: Memória da tabuada').closest('a')?.getAttribute('href')).toBe('/jogos/memoria-da-tabuada');
     expect(screen.getByText('⭐ Seu favorito').closest('a')?.getAttribute('href')).toBe('/selecionarjogo');
+  });
+
+  it('opens the profile to edit the name from the greeting', () => {
+    window.localStorage.setItem('nome', 'Ana');
+    render(<MemoryRouter><Home /></MemoryRouter>);
+
+    fireEvent.click(screen.getByText('Olá, Ana! 👋'));
+    fireEvent.change(screen.getByLabelText('Nome'), { target: { value: 'Bia' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Salvar' }));
+
+    expect(screen.getByText('Olá, Bia! 👋')).toBeTruthy();
+    expect(screen.queryByRole('dialog')).toBeNull();
   });
 
   it('filters the games and remembers the filter', () => {

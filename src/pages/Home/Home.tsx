@@ -3,6 +3,7 @@ import HappyRobot from '../../components/HappyRobot/HappyRobot';
 import WalkingRobot from '../../components/WalkingRobot/WalkingRobot';
 import DesafiosDoDia from '../../components/DesafiosDoDia/DesafiosDoDia';
 import BarraXp from '../../components/BarraXp/BarraXp';
+import PerfilJogador from '../../components/PerfilJogador/PerfilJogador';
 import { useJogador } from '../../services/jogador';
 import { lerProgresso } from '../../gamificacao/progresso';
 import { diasSeguidosAtuais } from '../../gamificacao/sequenciaDias';
@@ -16,6 +17,7 @@ function Home() {
     const [filtro, setFiltro] = useState(lerFiltro);
     const recompensasNovas = useRecompensasNaoVistas().length;
     const { nome } = useJogador();
+    const [editandoNome, setEditandoNome] = useState(false);
     const dias = diasSeguidosAtuais(progresso);
     const continuar = jogoParaContinuar(progresso);
     const favorito = jogoFavorito(progresso);
@@ -35,12 +37,17 @@ function Home() {
                     <div className='home-boas-vindas__topo'>
                         <HappyRobot />
                         <div className='home-boas-vindas__texto'>
-                            <h2>{nome ? `Olá, ${nome}!` : 'Olá!'} 👋</h2>
+                            <h2>
+                                <button type='button' className='home-boas-vindas__nome' title='Editar nome' onClick={() => setEditandoNome(true)}>
+                                    <span>{nome ? `Olá, ${nome}!` : 'Olá!'} 👋</span> <span aria-hidden='true'>✏️</span>
+                                </button>
+                            </h2>
                             <span className={`home-boas-vindas__dias${dias === 0 ? ' home-boas-vindas__dias--apagado' : ''}`}>
                                 🔥 {dias === 0 ? 'Jogue hoje para acender o foguinho!' : `${dias} ${dias === 1 ? 'dia seguido' : 'dias seguidos'}`}
                             </span>
                         </div>
                     </div>
+                    {editandoNome && <PerfilJogador onFechar={() => setEditandoNome(false)} />}
                     <BarraXp atalho={false} compacta />
                     <a className='global-button global-button--full-width' href={continuar ? rotaDoJogo(continuar) : tabuada ? rotaDoJogo(tabuada) : '/jogos'}>
                         <span className='option-link'>

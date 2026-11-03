@@ -3,24 +3,92 @@ import { Link } from 'react-router-dom';
 import BarraXp from '../../components/BarraXp/BarraXp';
 import RoboPersonalizado from '../../components/RoboPersonalizado/RoboPersonalizado';
 import { lerProgresso } from '../../gamificacao/progresso';
-import { condicaoRecompensa, marcarRecompensasVistas, recompensaLiberada, recompensas, recompensasNaoVistas, salvarPersonalizacao, type TipoRecompensa } from '../../gamificacao/recompensas';
+import {
+  chaveDaRecompensa,
+  condicaoRecompensa,
+  ESPACOS,
+  marcarRecompensasVistas,
+  proximaRecompensa,
+  RARIDADES,
+  recompensaLiberada,
+  recompensas,
+  recompensasNaoVistas,
+  salvarPersonalizacao,
+  sortearPersonalizacao,
+  type Espaco,
+  type Recompensa,
+  type TipoRecompensa,
+} from '../../gamificacao/recompensas';
 import { usePersonalizacao } from '../../gamificacao/usePersonalizacao';
+import { calcularNivel } from '../../gamificacao/xp';
 import './Personalizar.css';
 
-const SECOES: { tipo: TipoRecompensa; titulo: string }[] = [
-  { tipo: 'cor', titulo: '🎨 Cores do robô' },
+const ABAS: { tipo: TipoRecompensa; titulo: string }[] = [
+  { tipo: 'cor', titulo: '🎨 Cores' },
   { tipo: 'acessorio', titulo: '🎩 Acessórios' },
-  { tipo: 'tema', titulo: '🌈 Temas de cores do site' },
+  { tipo: 'tema', titulo: '🌈 Temas' },
 ];
+
+const formatarNumero = (valor: number) => valor.toLocaleString('pt-BR');
 
 function Personalizar() {
   const [progresso] = useState(() => lerProgresso());
   const personalizacao = usePersonalizacao();
   const [novas] = useState(() => recompensasNaoVistas(progresso).map((recompensa) => recompensa.id));
+  const [aba, setAba] = useState<TipoRecompensa>('cor');
+  const nivel = calcularNivel(progresso.xp).nivel;
+  const proxima = proximaRecompensa(progresso);
 
   useEffect(() => {
     marcarRecompensasVistas(progresso);
   }, [progresso]);
+
+  const renderItem = (recompensa: Recompensa) => {
+    const liberada = recompensaLiberada(recompensa, progresso);
+    const chave = chaveDaRecompensa(recompensa);
+    const ativa = personalizacao[chave] === recompensa.id;
+
+    return (
+      <button
+        key={recompensa.id}
+        type='button'
+        className={`personalizar-item${ativa ? ' personalizar-item--ativo' : ''}${recompensa.raridade ? ` personalizar-item--${recompensa.raridade}` : ''}`}
+        aria-pressed={ativa}
+        disabled={!liberada}
+        onClick={() => salvarPersonalizacao({ ...personalizacao, [chave]: ativa && recompensa.espaco ? '' : recompensa.id })}
+      >
+        <span
+          className={`personalizar-item__icone${recompensa.tipo === 'tema' && recompensa.valor ? ' personalizar-item__icone--tema' : ''}`}
+          style={recompensa.tipo === 'cor' ? { background: recompensa.degrade ? `linear-gradient(135deg, ${recompensa.degrade.join(', ')})` : recompensa.valor } : undefined}
+          data-cor={recompensa.tipo === 'tema' ? recompensa.valor : undefined}
+          aria-hidden='true'
+        >
+          {!liberada ? '🔒' : recompensa.tipo === 'cor' ? '' : recompensa.icone}
+        </span>
+        <strong>{recompensa.nome}</strong>
+        <small>{ativa ? '✅ Em uso' : !liberada ? condicaoRecompensa(recompensa, nivel) : novas.includes(recompensa.id) ? '✨ Novo!' : 'Liberado'}</small>
+      </button>
+    );
+  };
+
+  const renderEspaco = (espaco: Espaco) => (
+    <section key={espaco} className='personalizar-grupo'>
+      <h3>{ESPACOS.find((item) => item.id === espaco)?.nome}</h3>
+      <div className='personalizar-grid'>
+        <button
+          type='button'
+          className={`personalizar-item${!personalizacao[espaco] ? ' personalizar-item--ativo' : ''}`}
+          aria-pressed={!personalizacao[espaco]}
+          onClick={() => salvarPersonalizacao({ ...personalizacao, [espaco]: '' })}
+        >
+          <span className='personalizar-item__icone' aria-hidden='true'>🚫</span>
+          <strong>Nenhum</strong>
+          <small>{!personalizacao[espaco] ? '✅ Em uso' : 'Tirar'}</small>
+        </button>
+        {recompensas.filter((recompensa) => recompensa.espaco === espaco).map(renderItem)}
+      </div>
+    </section>
+  );
 
   return (
     <div className='center'>
@@ -32,41 +100,50 @@ function Personalizar() {
 
         <div className='personalizar-topo'>
           <RoboPersonalizado titulo='Seu robô' className='personalizar-robo' />
-          <BarraXp xp={progresso.xp} atalho={false} />
+          <div className='personalizar-resumo'>
+            <BarraXp xp={progresso.xp} atalho={false} />
+            {proxima && (
+              <p className='personalizar-proxima'>
+                Faltam {formatarNumero(proxima.xpFaltando)} XP para o {proxima.recompensa.icone} {proxima.recompensa.nome}
+              </p>
+            )}
+            <button type='button' className='global-button global-button--basic' onClick={() => salvarPersonalizacao(sortearPersonalizacao(personalizacao, progresso))}>
+              🎲 Aleatório
+            </button>
+          </div>
         </div>
 
-        {SECOES.map((secao) => (
-          <section key={secao.tipo} className='personalizar-secao'>
-            <h2>{secao.titulo}</h2>
-            <div className='personalizar-grid'>
-              {recompensas.filter((recompensa) => recompensa.tipo === secao.tipo).map((recompensa) => {
-                const liberada = recompensaLiberada(recompensa, progresso);
-                const ativa = personalizacao[recompensa.tipo] === recompensa.id;
+        <div className='personalizar-abas' role='tablist' aria-label='Tipos de itens'>
+          {ABAS.map((item) => (
+            <button
+              key={item.tipo}
+              type='button'
+              role='tab'
+              className={`personalizar-aba${aba === item.tipo ? ' personalizar-aba--ativa' : ''}`}
+              aria-selected={aba === item.tipo}
+              onClick={() => setAba(item.tipo)}
+            >
+              {item.titulo}
+            </button>
+          ))}
+        </div>
 
-                return (
-                  <button
-                    key={recompensa.id}
-                    type='button'
-                    className={`personalizar-item${ativa ? ' personalizar-item--ativo' : ''}`}
-                    aria-pressed={ativa}
-                    disabled={!liberada}
-                    onClick={() => salvarPersonalizacao({ ...personalizacao, [recompensa.tipo]: recompensa.id })}
-                  >
-                    <span
-                      className='personalizar-item__icone'
-                      style={recompensa.tipo === 'cor' ? { background: recompensa.valor } : undefined}
-                      aria-hidden='true'
-                    >
-                      {!liberada ? '🔒' : recompensa.tipo === 'cor' ? '' : recompensa.icone}
-                    </span>
-                    <strong>{recompensa.nome}</strong>
-                    <small>{ativa ? '✅ Em uso' : !liberada ? condicaoRecompensa(recompensa) : novas.includes(recompensa.id) ? '✨ Novo!' : 'Liberado'}</small>
-                  </button>
-                );
-              })}
+        <section className='personalizar-secao' role='tabpanel'>
+          {aba === 'cor' && RARIDADES.map((raridade) => (
+            <section key={raridade.id} className='personalizar-grupo'>
+              <h3 className={`personalizar-raridade personalizar-raridade--${raridade.id}`}>{raridade.nome}</h3>
+              <div className='personalizar-grid'>
+                {recompensas.filter((recompensa) => recompensa.tipo === 'cor' && recompensa.raridade === raridade.id).map(renderItem)}
+              </div>
+            </section>
+          ))}
+          {aba === 'acessorio' && ESPACOS.map((espaco) => renderEspaco(espaco.id))}
+          {aba === 'tema' && (
+            <div className='personalizar-grid'>
+              {recompensas.filter((recompensa) => recompensa.tipo === 'tema').map(renderItem)}
             </div>
-          </section>
-        ))}
+          )}
+        </section>
 
         <div className='personalizar-toolbar'>
           <Link to='/conquistas' className='global-button'>

@@ -8,12 +8,12 @@ describe('BarraXp', () => {
   });
 
   it('shows the saved level and the progress to the next one', () => {
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...criarProgresso(), xp: 175 }));
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...criarProgresso(), xp: 315 }));
 
     render(<BarraXp />);
 
     expect(screen.getByText('Nível 2 · Aprendiz')).toBeTruthy();
-    expect(screen.getByText('75/150 XP para o nível 3')).toBeTruthy();
+    expect(screen.getByText('115/230 XP para o nível 3')).toBeTruthy();
     expect(screen.getByRole('progressbar').getAttribute('aria-valuenow')).toBe('50');
     expect(screen.getByText('🎨 Personalizar robô').getAttribute('href')).toBe('/personalizar');
   });
@@ -31,8 +31,16 @@ describe('BarraXp', () => {
     expect(screen.queryByText(/Subiu para o nível/)).toBeNull();
   });
 
+  it('keeps the title reached before the level curve changed', () => {
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...criarProgresso(), xp: 2700, nivelDoTitulo: 10 }));
+
+    render(<BarraXp />);
+
+    expect(screen.getByText('Nível 9 · Mestre da Tabuada')).toBeTruthy();
+  });
+
   it('celebrates when the match makes the player level up', () => {
-    render(<BarraXp xp={260} ganho={30} />);
+    render(<BarraXp xp={440} ganho={30} />);
 
     expect(screen.getByText('Nível 3 · Contador')).toBeTruthy();
     expect(screen.getByRole('status').textContent).toBe('⬆️ Subiu para o nível 3!');

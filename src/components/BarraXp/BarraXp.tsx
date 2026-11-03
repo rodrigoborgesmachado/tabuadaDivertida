@@ -13,9 +13,9 @@ interface BarraXpProps {
 const formatarNumero = (valor: number) => valor.toLocaleString('pt-BR');
 
 function BarraXp({ xp, ganho, atalho = true, compacta = false }: BarraXpProps) {
-  const [salvo] = useState(() => lerProgresso().xp);
-  const total = xp ?? salvo;
-  const atual = calcularNivel(total);
+  const [salvo] = useState(() => lerProgresso());
+  const total = xp ?? salvo.xp;
+  const atual = calcularNivel(total, salvo.nivelDoTitulo);
   const subiu = ganho !== undefined && atual.nivel > calcularNivel(total - ganho).nivel;
   const percentual = Math.min(atual.xpNoNivel / atual.xpDoNivel, 1);
 

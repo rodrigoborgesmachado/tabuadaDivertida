@@ -18,15 +18,88 @@
   animation: home-robot-bounce 1s ease-in-out infinite;
 }
 
+.personalizar-resumo {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  min-width: 0;
+}
+
+.personalizar-resumo .barra-xp {
+  width: 100%;
+}
+
+.personalizar-proxima {
+  margin: 0;
+  font-weight: 800;
+  color: var(--text-color-accent);
+}
+
+.personalizar-abas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.personalizar-aba {
+  flex: 1 1 120px;
+  min-height: 44px;
+  padding: 8px 14px;
+  border: 2px solid var(--panel-border-color);
+  border-radius: 14px;
+  background: var(--block-color);
+  color: var(--text-color-primary);
+  font-family: var(--font-body);
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.personalizar-aba--ativa {
+  border-color: var(--button-color-primary);
+  background: var(--transient-color-second);
+}
+
 .personalizar-secao {
   width: 100%;
   margin-bottom: 24px;
 }
 
-.personalizar-secao h2 {
-  margin: 0 0 12px;
+.personalizar-grupo {
+  margin-bottom: 20px;
+}
+
+.personalizar-grupo h3 {
+  margin: 0 0 10px;
   font-family: var(--font-title);
-  font-size: 1.4rem;
+  font-size: 1.2rem;
+}
+
+.personalizar-raridade--rara {
+  color: #1f5fd6;
+}
+
+.personalizar-raridade--epica {
+  color: #7244d2;
+}
+
+.personalizar-raridade--lendaria {
+  color: #8f6208;
+}
+
+[data-theme='dark'] .personalizar-raridade--rara {
+  color: #7fb0ff;
+}
+
+[data-theme='dark'] .personalizar-raridade--epica {
+  color: #c3a8ff;
+}
+
+[data-theme='dark'] .personalizar-raridade--lendaria {
+  color: #f2c94c;
 }
 
 .personalizar-grid {
@@ -62,6 +135,18 @@
   background: var(--transient-color-second);
 }
 
+.personalizar-item--rara {
+  border-color: #7fb0ff;
+}
+
+.personalizar-item--epica {
+  border-color: #b79cf0;
+}
+
+.personalizar-item--lendaria {
+  border-color: #f2c94c;
+}
+
 .personalizar-item:disabled {
   cursor: not-allowed;
   opacity: 0.7;
@@ -77,6 +162,12 @@
   border: 2px solid var(--panel-border-color);
   background: var(--block-color-secundary);
   font-size: 24px;
+}
+
+.personalizar-item__icone--tema {
+  border-color: var(--button-color-primary);
+  background: linear-gradient(145deg, var(--background-color), var(--background-color-alt));
+  box-shadow: inset -10px -10px 0 -4px var(--button-color-primary);
 }
 
 .personalizar-item:disabled .personalizar-item__icone {
@@ -99,6 +190,11 @@
   .personalizar-topo {
     flex-direction: column;
     gap: 12px;
+  }
+
+  .personalizar-resumo {
+    align-items: stretch;
+    width: 100%;
   }
 
   .personalizar-robo {
