@@ -2,13 +2,13 @@
 import configData from "../../Config.json";
 import Tempo from '../../components/Tempo';
 import api from '../../services/api';
+import { TIMEOUT_ENVIO } from '../../services/resultadosJogos';
 import { playError, playSuccess } from '../../services/sons';
 import { salvarPartida, type Questao } from '../../services/historico';
 import { contasDaTabuada, lerProgresso, partidaFinalizada, type Conquista } from '../../gamificacao/progresso';
 import { KeyboardEvent, useEffect, useMemo, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import PacmanLoader from "../../components/PacmanLoader/PacmanLoader";
 import Keypad from "../../components/Keypad/Keypad";
 import happyRobot from '../../assets/robot-happy.svg';
 import neutralRobot from '../../assets/robot-neutral.svg';
@@ -31,7 +31,6 @@ function Jogo(){
     const [respostaEsperada, setRespostaEsperada] = useState<number | null>(null);
     const [resposta, setResposta] = useState('');
     const navigate = useNavigate();
-    const [loadding, setLoadding] = useState(false);
     const [pontuacao, setPontuacao] = useState(0);
     const [recorde, setRecorde] = useState(parseInt(localStorage.getItem(configData.RECORDE) || '0'));
     const [recordeAnterior] = useState(recorde);
@@ -379,7 +378,7 @@ function Jogo(){
         });
     }
 
-    async function Finaliza(novaPontuacao: number, numeroAcertos: number, conquistas: Conquista[], ganhoXp: number){
+    function Finaliza(novaPontuacao: number, numeroAcertos: number, conquistas: Conquista[], ganhoXp: number){
         const nome = String(localStorage.getItem(configData.NOME_PARAM) || '');
         if(nome.length > 15){
             toast.warn('Nome deve ter no máximo 15 caracteres.');
@@ -408,12 +407,8 @@ function Jogo(){
             return;
         }
 
-        setLoadding(true);
-        await api.post(`/ResultadosTabuadaDivertida`, data)
-        .then(irParaFinal).catch(() => {
-            navigate('/error', { replace: true });
-            return;
-        });
+        api.post(`/ResultadosTabuadaDivertida`, data, { timeout: TIMEOUT_ENVIO }).catch(() => {});
+        irParaFinal();
     }
 
     if(!['M', 'D', 'A', 'R', 'S', 'E', 'T'].includes(tipoSelecionado) || (tipoSelecionado === 'T' && treino.length === 0)){
@@ -424,12 +419,6 @@ function Jogo(){
                     <a href="/">Home</a>
                 </div>
             </div>
-        );
-    }
-
-    if(loadding){
-        return(
-            <PacmanLoader dots={7} mouthAngle={40} pellets={[7]} size={64}/>
         );
     }
 

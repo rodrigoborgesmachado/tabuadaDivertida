@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import api from '../../services/api';
 import { Table } from 'react-bootstrap';
 import PacmanLoader from '../../components/PacmanLoader/PacmanLoader';
+import { TIMEOUT_ENVIO, TOP_RANKING } from '../../services/resultadosJogos';
 
 interface RankingTabuadaProps {
     filtroNome: string;
@@ -16,10 +17,13 @@ function RankingTabuada({ filtroNome, nomeJogador }: RankingTabuadaProps){
     const[type, setType] = useState('M');
     const[loadding, setLoadding] = useState(true);
     const[erro, setErro] = useState(false);
+    const[tentativa, setTentativa] = useState(0);
 
     useEffect(() => {
         async function CarregaLista(){
-            await api.get(`ResultadosTabuadaDivertida/ranking`)
+            setErro(false);
+            setLoadding(true);
+            await api.get(`ResultadosTabuadaDivertida/ranking?top=${TOP_RANKING}`, { timeout: TIMEOUT_ENVIO })
             .then((response) => {
                 setLista(response.data.object);
                 const qs = response.data.object.map(obj => obj.quantidade).filter((value, index, array) => array.indexOf(value) === index);
@@ -38,7 +42,7 @@ function RankingTabuada({ filtroNome, nomeJogador }: RankingTabuadaProps){
         }
 
         CarregaLista();
-    }, [])
+    }, [tentativa])
 
     function retornaTextoTipo(){
         if(type === 'M'){
@@ -71,6 +75,9 @@ function RankingTabuada({ filtroNome, nomeJogador }: RankingTabuadaProps){
         return(
             <div className='ranking-mensagem' role='alert'>
                 <p>😕 Não foi possível carregar o ranking agora. Tente novamente em instantes.</p>
+                <button type='button' className='global-button' onClick={() => setTentativa((atual) => atual + 1)}>
+                    Tentar novamente
+                </button>
             </div>
         )
     }
