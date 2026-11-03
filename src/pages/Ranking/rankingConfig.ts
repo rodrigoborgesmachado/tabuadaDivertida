@@ -1,4 +1,5 @@
 import { lerExtras, type ItemRanking } from '../../services/resultadosJogos';
+import { NIVEIS_ROBO, type NivelRobo } from '../CorridaRobo/logic';
 
 export interface ColunaRanking {
   titulo: string;
@@ -34,6 +35,16 @@ const MODALIDADES: ModoRanking[] = [
   { id: 'decimais', label: 'Decimais' },
   { id: 'misturado', label: 'Misturado' },
 ];
+
+const OPERACOES: ModoRanking[] = [
+  { id: 'M', label: 'Multiplicação' },
+  { id: 'A', label: 'Adição' },
+  { id: 'S', label: 'Subtração' },
+  { id: 'D', label: 'Divisão' },
+  { id: 'R', label: 'Aleatório' },
+];
+
+const NIVEIS_CORRIDA = Object.keys(NIVEIS_ROBO) as NivelRobo[];
 
 const texto = (valor: unknown) => (valor === null || valor === undefined ? '—' : String(valor));
 
@@ -85,6 +96,17 @@ export const jogosRanking: JogoRanking[] = [
       { titulo: 'Acertos', valor: (item) => `${texto(item.acertos)}/${texto(item.total)}` },
       { titulo: 'Tempo', valor: (item) => segundos(item.tempo) },
       { titulo: 'QI', valor: (item) => texto(lerExtras(item).qi) },
+    ],
+  },
+  {
+    id: 'corrida-robo',
+    nome: 'Corrida',
+    icone: '🏁',
+    path: '/jogos/corrida-contra-o-robo',
+    modos: OPERACOES.flatMap((operacao) => NIVEIS_CORRIDA.map((nivel) => ({ id: `${operacao.id}-${nivel}`, label: `${operacao.label} · ${NIVEIS_ROBO[nivel].nome}` }))),
+    colunas: [
+      { titulo: 'Tempo', valor: (item) => segundos(item.tempo) },
+      { titulo: 'Acertos', valor: (item) => `${texto(item.acertos)}/${texto(item.total)}` },
     ],
   },
 ];

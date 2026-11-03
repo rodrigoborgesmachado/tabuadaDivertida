@@ -63,6 +63,19 @@ describe('Ranking', () => {
     expect(screen.getByText('Bia')).toBeTruthy();
   });
 
+  it('shows the race against the robot ranking by operation and robot', async () => {
+    get.mockResolvedValue({ data: { success: true, object: [{ ...item('Ana', 0), pontuacao: null, tempo: 25, acertos: 20, total: 22 }], total: 1 } });
+
+    renderRanking('/ranking?jogo=corrida-robo&modo=R-campeao');
+
+    await screen.findByText('🏆Ana');
+    expect(get).toHaveBeenCalledWith('ResultadosJogos/ranking?jogo=corrida-robo&modo=R-campeao&top=50', expect.anything());
+    expect((screen.getByRole('combobox') as HTMLSelectElement).value).toBe('R-campeao');
+    expect(screen.getByText('Aleatório · Robô campeão')).toBeTruthy();
+    expect(screen.getByText('25s')).toBeTruthy();
+    expect(screen.getByText('20/22')).toBeTruthy();
+  });
+
   it('shows the empty state', async () => {
     get.mockResolvedValue({ data: { success: true, object: [], total: 0 } });
 
