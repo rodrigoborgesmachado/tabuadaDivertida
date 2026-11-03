@@ -7,6 +7,7 @@ import { compartilhar } from '../../services/compartilhar';
 import { lerProgresso, partidaFinalizada } from '../../gamificacao/progresso';
 import BarraXp from '../../components/BarraXp/BarraXp';
 import RankingFinal from '../../components/RankingFinal/RankingFinal';
+import ComoJogar from '../../components/ComoJogar/ComoJogar';
 import { comparar, CONFIG_NIVEL, explicarRodada, gerarRodada, PENALIDADE_SEGUNDOS, PONTOS_POR_ACERTO, type Modalidade, type Nivel, type Resposta, type Rodada } from './logic';
 import '../Contagem/Contagem.css';
 import './MaiorOuMenor.css';
@@ -260,6 +261,7 @@ function MaiorOuMenor() {
 
           {fase === 'config' && (
             <div className='maior-menor-config'>
+              <ComoJogar jogo='maior-ou-menor' />
               <div className='maior-menor-config__grupo'>
                 <h3>Escolha o que comparar</h3>
                 <div className='maior-menor-opcoes'>

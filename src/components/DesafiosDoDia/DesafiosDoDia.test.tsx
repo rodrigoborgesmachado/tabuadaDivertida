@@ -25,7 +25,7 @@ describe('DesafiosDoDia', () => {
     expect(screen.getByText('Acerte 5 contas da tabuada do 9')).toBeTruthy();
     expect(screen.getByText('Acerte 150 contas esta semana')).toBeTruthy();
     expect(screen.getByText('0/5')).toBeTruthy();
-    expect(screen.getAllByText('Jogar')[0].getAttribute('href')).toBe('/selecionarjogo');
+    expect(screen.getAllByText('Jogar desafio')[0].getAttribute('href')).toBe('/selecionarjogo');
   });
 
   it('shows the streak, the progress and shares a completed challenge', () => {

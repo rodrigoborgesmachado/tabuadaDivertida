@@ -1,0 +1,24 @@
+.como-jogar {
+  width: 100%;
+  border: 1px solid var(--panel-border-color);
+  border-radius: 16px;
+  background: var(--transient-color-second);
+  color: var(--text-color-primary);
+  padding: 10px 14px;
+  text-align: left;
+}
+
+.como-jogar summary {
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.como-jogar ol {
+  margin: 10px 0 0;
+  padding-left: 20px;
+  color: var(--text-color-secondary);
+}
+
+.como-jogar li + li {
+  margin-top: 4px;
+}

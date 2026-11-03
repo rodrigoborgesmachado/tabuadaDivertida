@@ -81,6 +81,28 @@
   align-self: center;
 }
 
+.barra-xp--compacta {
+  gap: 6px;
+  padding: 0;
+  border: none;
+  box-shadow: none;
+  background: transparent;
+}
+
+.barra-xp--compacta .barra-xp__nivel {
+  width: 36px;
+  height: 36px;
+  font-size: 1.1rem;
+}
+
+.barra-xp--compacta .barra-xp__texto strong {
+  font-size: 1rem;
+}
+
+.barra-xp--compacta .barra-xp__barra {
+  height: 10px;
+}
+
 .barra-xp--subiu {
   border-color: #ffd66a;
 }

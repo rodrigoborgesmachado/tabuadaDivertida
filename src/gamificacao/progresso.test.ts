@@ -35,6 +35,19 @@ describe('progresso', () => {
     expect(lerProgresso().jogosJogados).toEqual(['memoria']);
   });
 
+  it('keeps the last game and counts the finished games of each one', () => {
+    partidaFinalizada({ jogo: 'tabuada' }, dia);
+    partidaFinalizada({ jogo: 'tabuada' }, dia);
+    registrarProgresso({ jogo: '2048', maiorPeca: 64 }, dia);
+
+    expect(lerProgresso().ultimoJogo).toBe('2048');
+    expect(lerProgresso().partidasPorJogo).toEqual({ tabuada: 2 });
+
+    partidaFinalizada({ jogo: '2048' }, dia);
+
+    expect(lerProgresso().partidasPorJogo).toEqual({ tabuada: 2, '2048': 1 });
+  });
+
   it('fills missing fields from older saved data', () => {
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify({ partidas: 3 }));
 

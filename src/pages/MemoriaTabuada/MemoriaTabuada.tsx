@@ -5,6 +5,7 @@ import { playError, playSuccess } from '../../services/sons';
 import { lerProgresso, partidaFinalizada } from '../../gamificacao/progresso';
 import BarraXp from '../../components/BarraXp/BarraXp';
 import RankingFinal from '../../components/RankingFinal/RankingFinal';
+import ComoJogar from '../../components/ComoJogar/ComoJogar';
 import { criarTabuleiro, formamPar, formatarTempo, isMelhorResultado, PARES_POR_NIVEL, TABUADAS, type Carta, type Nivel, type Resultado, type Tabuada } from './logic';
 import './MemoriaTabuada.css';
 
@@ -206,6 +207,7 @@ function MemoriaTabuada() {
 
           {!jogando ? (
             <div className='memoria-config'>
+              <ComoJogar jogo='memoria' />
               <div className='memoria-config__grupo'>
                 <h3>Escolha a tabuada</h3>
                 <div className='memoria-opcoes memoria-opcoes--tabuadas'>
