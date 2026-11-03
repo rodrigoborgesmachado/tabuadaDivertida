@@ -24,7 +24,7 @@ describe('xp', () => {
     expect(xpDasMedalhas({ 'acertos-seguidos': medalha(1) })).toBe(20);
     expect(xpDasMedalhas({ 'acertos-seguidos': medalha(3) })).toBe(140);
     expect(xpDasMedalhas({ 'acertos-seguidos': medalha(4) })).toBe(290);
-    expect(xpDasMedalhas({ 'mestre-da-soma': medalha(1) })).toBe(80);
+    expect(xpDasMedalhas({ maratonista: medalha(1) })).toBe(80);
     expect(xpDasMedalhas({ 'medalha-removida': medalha(2) })).toBe(0);
   });
 

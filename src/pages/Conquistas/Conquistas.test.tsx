@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import { medalhas } from '../../gamificacao/medalhas';
+import { GRUPOS, medalhas } from '../../gamificacao/medalhas';
 import { criarProgresso, STORAGE_KEY } from '../../gamificacao/progresso';
 import Conquistas from './Conquistas';
 
@@ -69,10 +69,20 @@ describe('Conquistas', () => {
 
     const { container } = renderConquistas();
 
-    expect(container.querySelector('.conquistas-card--diamante h2')?.textContent).toBe('Sequência de fogo');
+    expect(container.querySelector('.conquistas-card--diamante h3')?.textContent).toBe('Sequência de fogo');
     expect(container.querySelector('.conquistas-card__etapa--diamante')?.textContent).toBe('Diamante');
     expect(screen.getAllByText('Diamante')).toHaveLength(medalhas.filter((medalha) => medalha.metas.length === 4).length + 1);
     expect(screen.getByText('Mestre da soma')).toBeTruthy();
     expect(screen.getByText('Memória de elefante')).toBeTruthy();
+  });
+
+  it('groups the medals by mode', () => {
+    const { container } = renderConquistas();
+    const grupos = Array.from(container.querySelectorAll('.conquistas-grupo'));
+
+    expect(grupos.map((grupo) => grupo.querySelector('h2')?.textContent)).toEqual(GRUPOS);
+    expect(grupos.reduce((total, grupo) => total + grupo.querySelectorAll('.conquistas-card').length, 0)).toBe(medalhas.length);
+    expect(Array.from(grupos[1].querySelectorAll('h3')).map((titulo) => titulo.textContent)).toEqual(expect.arrayContaining(['Mestre da divisão por 7', 'Divisão completa', 'Rei da divisão', 'Divisor']));
+    expect(Array.from(grupos[4].querySelectorAll('h3')).map((titulo) => titulo.textContent)).toEqual(expect.arrayContaining(['Coringa', 'Sortudo', 'Pau pra toda obra']));
   });
 });

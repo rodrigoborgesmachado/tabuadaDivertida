@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { medalhas, NIVEIS, nomeNivel, type Medalha } from '../../gamificacao/medalhas';
+import { GRUPOS, medalhas, NIVEIS, nomeNivel, type Medalha } from '../../gamificacao/medalhas';
 import { lerProgresso, type Progresso } from '../../gamificacao/progresso';
 import { compartilhar } from '../../services/compartilhar';
 import BarraXp from '../../components/BarraXp/BarraXp';
@@ -59,65 +59,70 @@ function Conquistas() {
           <BarraXp xp={progresso.xp} />
         </div>
 
-        <div className='conquistas-grid'>
-          {medalhas.map((medalha) => {
-            const obtida = progresso.medalhas[medalha.id];
-            const nivel = obtida?.nivel || 0;
-            const oculta = medalha.secreta && !obtida;
-            const completa = nivel >= medalha.metas.length;
-            const classeNivel = obtida ? CLASSES_NIVEIS[medalha.metas.length > 1 ? nivel - 1 : 2] : 'pendente';
-            const barra = !oculta && !completa ? calcularProgresso(medalha, progresso, nivel) : null;
+        {GRUPOS.map((grupo) => (
+          <section key={grupo} className='conquistas-grupo'>
+            <h2 className='conquistas-grupo__titulo'>{grupo}</h2>
+            <div className='conquistas-grid'>
+              {medalhas.filter((medalha) => medalha.grupo === grupo).map((medalha) => {
+                const obtida = progresso.medalhas[medalha.id];
+                const nivel = obtida?.nivel || 0;
+                const oculta = medalha.secreta && !obtida;
+                const completa = nivel >= medalha.metas.length;
+                const classeNivel = obtida ? CLASSES_NIVEIS[medalha.metas.length > 1 ? nivel - 1 : 2] : 'pendente';
+                const barra = !oculta && !completa ? calcularProgresso(medalha, progresso, nivel) : null;
 
-            return (
-              <div key={medalha.id} className={`conquistas-card conquistas-card--${classeNivel}`}>
-                <div className='conquistas-card__topo'>
-                  <span className='conquistas-card__icone' aria-hidden='true'>{oculta ? '❓' : medalha.icone}</span>
-                  <div>
-                    <h2>{oculta ? '???' : medalha.nome}</h2>
-                    {obtida && nomeNivel(medalha, nivel) && <span className='conquistas-card__nivel'>{nomeNivel(medalha, nivel)}</span>}
-                  </div>
-                </div>
-
-                <p>{oculta ? 'Medalha secreta. Continue jogando para descobrir!' : medalha.descricao}</p>
-
-                {!oculta && medalha.metas.length > 1 && (
-                  <div className='conquistas-card__niveis'>
-                    {NIVEIS.slice(0, medalha.metas.length).map((item, index) => (
-                      <span key={item} className={`conquistas-card__etapa${index < nivel ? ` conquistas-card__etapa--${CLASSES_NIVEIS[index]}` : ''}`}>
-                        {item}
-                      </span>
-                    ))}
-                  </div>
-                )}
-
-                {barra && (
-                  <div className='conquistas-card__progresso'>
-                    <div
-                      className='conquistas-card__barra'
-                      role='progressbar'
-                      aria-label={`Progresso de ${medalha.nome}`}
-                      aria-valuemin={0}
-                      aria-valuemax={100}
-                      aria-valuenow={Math.round(barra.percentual * 100)}
-                    >
-                      <span style={{ width: `${barra.percentual * 100}%` }} />
+                return (
+                  <div key={medalha.id} className={`conquistas-card conquistas-card--${classeNivel}`}>
+                    <div className='conquistas-card__topo'>
+                      <span className='conquistas-card__icone' aria-hidden='true'>{oculta ? '❓' : medalha.icone}</span>
+                      <div>
+                        <h3>{oculta ? '???' : medalha.nome}</h3>
+                        {obtida && nomeNivel(medalha, nivel) && <span className='conquistas-card__nivel'>{nomeNivel(medalha, nivel)}</span>}
+                      </div>
                     </div>
-                    <small>{barra.texto}</small>
-                  </div>
-                )}
 
-                {obtida && (
-                  <div className='conquistas-card__rodape'>
-                    <small>Conquistada em {formatarData(obtida.data)}</small>
-                    <button type='button' className='global-button global-button--basic' onClick={() => handleShare(medalha, nivel)}>
-                      Compartilhar
-                    </button>
+                    <p>{oculta ? 'Medalha secreta. Continue jogando para descobrir!' : medalha.descricao}</p>
+
+                    {!oculta && medalha.metas.length > 1 && (
+                      <div className='conquistas-card__niveis'>
+                        {NIVEIS.slice(0, medalha.metas.length).map((item, index) => (
+                          <span key={item} className={`conquistas-card__etapa${index < nivel ? ` conquistas-card__etapa--${CLASSES_NIVEIS[index]}` : ''}`}>
+                            {item}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+
+                    {barra && (
+                      <div className='conquistas-card__progresso'>
+                        <div
+                          className='conquistas-card__barra'
+                          role='progressbar'
+                          aria-label={`Progresso de ${medalha.nome}`}
+                          aria-valuemin={0}
+                          aria-valuemax={100}
+                          aria-valuenow={Math.round(barra.percentual * 100)}
+                        >
+                          <span style={{ width: `${barra.percentual * 100}%` }} />
+                        </div>
+                        <small>{barra.texto}</small>
+                      </div>
+                    )}
+
+                    {obtida && (
+                      <div className='conquistas-card__rodape'>
+                        <small>Conquistada em {formatarData(obtida.data)}</small>
+                        <button type='button' className='global-button global-button--basic' onClick={() => handleShare(medalha, nivel)}>
+                          Compartilhar
+                        </button>
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
+                );
+              })}
+            </div>
+          </section>
+        ))}
 
         <div className='conquistas-toolbar'>
           <Link to='/jogos' className='global-button'>

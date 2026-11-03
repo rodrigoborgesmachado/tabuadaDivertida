@@ -10,6 +10,7 @@ export interface Medalha {
   metas: number[];
   unidade: string;
   valor: (progresso: Progresso) => number;
+  grupo: string;
   menorMelhor?: boolean;
   secreta?: boolean;
 }
@@ -20,9 +21,15 @@ export const FATORES = [2, 3, 4, 5, 6, 7, 8, 9, 10];
 
 export const MODOS = ['M', 'D', 'A', 'S', 'R', 'E'];
 
+export const GRUPOS = ['Multiplicação', 'Divisão', 'Adição', 'Subtração', 'Aleatório', 'Expressões', 'Outros jogos', 'Geral'];
+
 const contasAcertadas = (progresso: Progresso, tabuada: number) => Object.keys(progresso.tabuadas[tabuada] || {}).length;
 
+const divisoesAcertadas = (progresso: Progresso, divisor: number) => Object.keys(progresso.divisoes[divisor] || {}).length;
+
 const perfeitasNoModo = (progresso: Progresso, modo: string) => progresso.perfeitasPorModo[modo] || 0;
+
+const listar = (valores: string[]) => `${valores.slice(0, -1).join(', ')} e ${valores[valores.length - 1]}`;
 
 const desafiosDoDiaNaMesmaSemana = (progresso: Progresso) => {
   const porSemana: Record<string, number> = {};
@@ -46,10 +53,75 @@ const mestres: Medalha[] = FATORES.map((tabuada) => ({
   metas: [FATORES.length],
   unidade: 'contas',
   valor: (progresso) => contasAcertadas(progresso, tabuada),
+  grupo: 'Multiplicação',
 }));
+
+const mestresDaDivisao: Medalha[] = FATORES.map((divisor) => ({
+  id: `mestre-da-divisao-por-${divisor}`,
+  nome: `Mestre da divisão por ${divisor}`,
+  descricao: `Acerte todas as divisões por ${divisor} (${divisor * 2}÷${divisor} a ${divisor * 10}÷${divisor}) em até 7 dias. Se errar uma, ela volta a faltar.`,
+  icone: '🍕',
+  metas: [FATORES.length],
+  unidade: 'contas',
+  valor: (progresso) => divisoesAcertadas(progresso, divisor),
+  grupo: 'Divisão',
+}));
+
+const modosDaTabuada = [
+  { modo: 'D', grupo: 'Divisão', contas: 'de divisão', perfeitas: ['rei-da-divisao', 'Rei da divisão', '➗'], acertos: 'Divisor', sequencia: 'Divisão em chamas', velocidade: 'Divisão relâmpago', tempos: [4, 3, 2, 1.5] },
+  { modo: 'A', grupo: 'Adição', contas: 'de adição', perfeitas: ['mestre-da-soma', 'Mestre da soma', '➕'], acertos: 'Somador', sequencia: 'Soma em chamas', velocidade: 'Soma relâmpago', tempos: [4, 3, 2, 1.5] },
+  { modo: 'S', grupo: 'Subtração', contas: 'de subtração', perfeitas: ['mestre-da-subtracao', 'Mestre da subtração', '➖'], acertos: 'Subtrator', sequencia: 'Subtração em chamas', velocidade: 'Subtração relâmpago', tempos: [4, 3, 2, 1.5] },
+  { modo: 'R', grupo: 'Aleatório', contas: 'no modo aleatório', perfeitas: ['coringa', 'Coringa', '🔀'], acertos: 'Sortudo', sequencia: 'Aleatório em chamas', velocidade: 'Aleatório relâmpago', tempos: [4, 3, 2, 1.5] },
+  { modo: 'E', grupo: 'Expressões', contas: 'no modo de expressões numéricas', perfeitas: ['genio-das-expressoes', 'Gênio das expressões', '🧠'], acertos: 'Expressivo', sequencia: 'Expressões em chamas', velocidade: 'Expressões relâmpago', tempos: [15, 10, 7, 5] },
+];
+
+const medalhasDosModos: Medalha[] = modosDaTabuada.flatMap(({ modo, grupo, contas, perfeitas: [id, nome, icone], acertos, sequencia, velocidade, tempos }) => [
+  {
+    id,
+    nome,
+    descricao: `Termine 1, 5, 10 e 25 partidas perfeitas de pelo menos 20 contas ${contas}.`,
+    icone,
+    metas: [1, 5, 10, 25],
+    unidade: 'partidas perfeitas',
+    valor: (progresso: Progresso) => perfeitasNoModo(progresso, modo),
+    grupo,
+  },
+  {
+    id: `acertos-${modo.toLowerCase()}`,
+    nome: acertos,
+    descricao: `Acerte 100, 500, 1.000 e 5.000 contas ${contas}.`,
+    icone: '📚',
+    metas: [100, 500, 1000, 5000],
+    unidade: 'acertos',
+    valor: (progresso: Progresso) => progresso.acertosPorModo[modo] || 0,
+    grupo,
+  },
+  {
+    id: `sequencia-${modo.toLowerCase()}`,
+    nome: sequencia,
+    descricao: `Acerte 15, 30, 50 e 100 contas seguidas ${contas} sem errar, mesmo em partidas diferentes.`,
+    icone: '☄️',
+    metas: [15, 30, 50, 100],
+    unidade: 'acertos seguidos',
+    valor: (progresso: Progresso) => progresso.melhorSequenciaPorModo[modo] || 0,
+    grupo,
+  },
+  {
+    id: `velocidade-${modo.toLowerCase()}`,
+    nome: velocidade,
+    descricao: `Faça uma partida perfeita de pelo menos 20 contas ${contas} respondendo, em média, em até ${listar(tempos.map((tempo) => `${tempo.toLocaleString('pt-BR')}s`))}.`,
+    icone: '⏱️',
+    metas: tempos,
+    unidade: 's',
+    valor: (progresso: Progresso) => progresso.melhorTempoMedioPorModo[modo] || 0,
+    grupo,
+    menorMelhor: true,
+  },
+]);
 
 const outrasMedalhas: Medalha[] = [
   ...mestres,
+  ...mestresDaDivisao,
   {
     id: 'tabuada-completa',
     nome: 'Tabuada completa',
@@ -58,6 +130,48 @@ const outrasMedalhas: Medalha[] = [
     metas: [FATORES.length],
     unidade: 'tabuadas',
     valor: (progresso) => FATORES.filter((tabuada) => contasAcertadas(progresso, tabuada) === FATORES.length).length,
+    grupo: 'Multiplicação',
+  },
+  {
+    id: 'divisao-completa',
+    nome: 'Divisão completa',
+    descricao: 'Seja mestre de todas as divisões, da divisão por 2 à divisão por 10.',
+    icone: '🏅',
+    metas: [FATORES.length],
+    unidade: 'divisores',
+    valor: (progresso) => FATORES.filter((divisor) => divisoesAcertadas(progresso, divisor) === FATORES.length).length,
+    grupo: 'Divisão',
+  },
+  ...medalhasDosModos,
+  {
+    id: 'calculista-mental',
+    nome: 'Calculista mental',
+    descricao: 'Acerte 50, 200, 500 e 1.000 contas de adição ou subtração com resultado acima de 50.',
+    icone: '💭',
+    metas: [50, 200, 500, 1000],
+    unidade: 'contas',
+    valor: (progresso) => progresso.contasAcimaDe50,
+    grupo: 'Adição',
+  },
+  {
+    id: 'sem-parenteses-sem-problema',
+    nome: 'Sem parênteses, sem problema',
+    descricao: 'Acerte 10 expressões numéricas seguidas.',
+    icone: '📐',
+    metas: [10],
+    unidade: 'acertos seguidos',
+    valor: (progresso) => progresso.melhorSequenciaPorModo.E || 0,
+    grupo: 'Expressões',
+  },
+  {
+    id: 'pau-pra-toda-obra',
+    nome: 'Pau pra toda obra',
+    descricao: 'Faça uma partida perfeita de pelo menos 50 contas no modo aleatório.',
+    icone: '🛠️',
+    metas: [50],
+    unidade: 'contas',
+    valor: (progresso) => progresso.maiorPerfeitaPorModo.R || 0,
+    grupo: 'Aleatório',
   },
   {
     id: 'acertos-seguidos',
@@ -67,6 +181,7 @@ const outrasMedalhas: Medalha[] = [
     metas: [10, 25, 50, 100],
     unidade: 'acertos seguidos',
     valor: (progresso) => progresso.melhorSequencia,
+    grupo: 'Geral',
   },
   {
     id: 'partida-perfeita',
@@ -76,6 +191,7 @@ const outrasMedalhas: Medalha[] = [
     metas: [1, 5, 10, 25],
     unidade: 'partidas perfeitas',
     valor: (progresso) => progresso.partidasPerfeitas,
+    grupo: 'Geral',
   },
   {
     id: 'resposta-rapida',
@@ -85,16 +201,18 @@ const outrasMedalhas: Medalha[] = [
     metas: [3, 2, 1.5, 1],
     unidade: 's',
     valor: (progresso) => progresso.melhorTempoMedio,
+    grupo: 'Geral',
     menorMelhor: true,
   },
   {
     id: 'partidas-jogadas',
     nome: 'Jogador dedicado',
-    descricao: 'Termine 10, 50, 100 e 500 partidas em qualquer jogo do site.',
+    descricao: 'Termine 10, 50, 100 e 1.000 partidas em qualquer jogo do site.',
     icone: '🎮',
-    metas: [10, 50, 100, 500],
+    metas: [10, 50, 100, 1000],
     unidade: 'partidas',
     valor: (progresso) => progresso.partidas,
+    grupo: 'Geral',
   },
   {
     id: 'explorador',
@@ -104,6 +222,7 @@ const outrasMedalhas: Medalha[] = [
     metas: [jogos.length],
     unidade: 'jogos',
     valor: (progresso) => jogos.filter((jogo) => progresso.jogosJogados.includes(jogo.id)).length,
+    grupo: 'Geral',
   },
   {
     id: 'constancia',
@@ -113,6 +232,7 @@ const outrasMedalhas: Medalha[] = [
     metas: [3, 7, 30, 100],
     unidade: 'dias seguidos',
     valor: (progresso) => progresso.melhorDiasSeguidos,
+    grupo: 'Geral',
   },
   {
     id: 'desafios-concluidos',
@@ -122,6 +242,7 @@ const outrasMedalhas: Medalha[] = [
     metas: [1, 10, 30, 100],
     unidade: 'desafios',
     valor: (progresso) => progresso.desafiosConcluidos.length,
+    grupo: 'Geral',
   },
   {
     id: 'rumo-ao-2048',
@@ -131,42 +252,7 @@ const outrasMedalhas: Medalha[] = [
     metas: [512, 1024, 2048],
     unidade: 'na maior peça',
     valor: (progresso) => progresso.maiorPeca,
-  },
-  {
-    id: 'mestre-da-soma',
-    nome: 'Mestre da soma',
-    descricao: 'Faça uma partida perfeita de pelo menos 20 contas de adição.',
-    icone: '➕',
-    metas: [1],
-    unidade: 'partidas perfeitas',
-    valor: (progresso) => perfeitasNoModo(progresso, 'A'),
-  },
-  {
-    id: 'mestre-da-subtracao',
-    nome: 'Mestre da subtração',
-    descricao: 'Faça uma partida perfeita de pelo menos 20 contas de subtração.',
-    icone: '➖',
-    metas: [1],
-    unidade: 'partidas perfeitas',
-    valor: (progresso) => perfeitasNoModo(progresso, 'S'),
-  },
-  {
-    id: 'rei-da-divisao',
-    nome: 'Rei da divisão',
-    descricao: 'Faça uma partida perfeita de pelo menos 20 contas de divisão.',
-    icone: '➗',
-    metas: [1],
-    unidade: 'partidas perfeitas',
-    valor: (progresso) => perfeitasNoModo(progresso, 'D'),
-  },
-  {
-    id: 'genio-das-expressoes',
-    nome: 'Gênio das expressões',
-    descricao: 'Faça 1, 5 e 10 partidas perfeitas de pelo menos 20 contas no modo de expressões numéricas.',
-    icone: '🧠',
-    metas: [1, 5, 10],
-    unidade: 'partidas perfeitas',
-    valor: (progresso) => perfeitasNoModo(progresso, 'E'),
+    grupo: 'Outros jogos',
   },
   {
     id: 'quatro-operacoes',
@@ -176,6 +262,7 @@ const outrasMedalhas: Medalha[] = [
     metas: [MODOS.length],
     unidade: 'modos',
     valor: (progresso) => MODOS.filter((modo) => perfeitasNoModo(progresso, modo) > 0).length,
+    grupo: 'Geral',
   },
   {
     id: 'maratonista',
@@ -185,6 +272,7 @@ const outrasMedalhas: Medalha[] = [
     metas: [1],
     unidade: 'partidas',
     valor: (progresso) => progresso.maratonas,
+    grupo: 'Geral',
   },
   {
     id: 'recordista',
@@ -194,6 +282,7 @@ const outrasMedalhas: Medalha[] = [
     metas: [5, 10, 25],
     unidade: 'recordes',
     valor: (progresso) => progresso.recordesBatidos,
+    grupo: 'Geral',
   },
   {
     id: 'sem-pressa-sem-erro',
@@ -203,6 +292,7 @@ const outrasMedalhas: Medalha[] = [
     metas: [1000, 5000, 10000],
     unidade: 'acertos',
     valor: (progresso) => progresso.acertos,
+    grupo: 'Geral',
   },
   {
     id: 'volta-por-cima',
@@ -212,6 +302,7 @@ const outrasMedalhas: Medalha[] = [
     metas: [1],
     unidade: 'partidas',
     valor: (progresso) => progresso.voltasPorCima,
+    grupo: 'Geral',
   },
   {
     id: 'memoria-de-elefante',
@@ -221,6 +312,7 @@ const outrasMedalhas: Medalha[] = [
     metas: [1],
     unidade: 'partidas',
     valor: (progresso) => progresso.memoriasDeElefante,
+    grupo: 'Outros jogos',
   },
   {
     id: 'relampago-da-memoria',
@@ -230,6 +322,7 @@ const outrasMedalhas: Medalha[] = [
     metas: [1],
     unidade: 'partidas',
     valor: (progresso) => progresso.memoriasRelampago,
+    grupo: 'Outros jogos',
   },
   {
     id: 'sem-desperdicio',
@@ -239,6 +332,7 @@ const outrasMedalhas: Medalha[] = [
     metas: [1],
     unidade: 'partidas',
     valor: (progresso) => progresso.memoriasSemDesperdicio,
+    grupo: 'Outros jogos',
   },
   {
     id: 'pontuador',
@@ -248,6 +342,7 @@ const outrasMedalhas: Medalha[] = [
     metas: [10000, 20000, 50000],
     unidade: 'pontos',
     valor: (progresso) => progresso.maiorPontuacao2048,
+    grupo: 'Outros jogos',
   },
   {
     id: 'minimalista',
@@ -257,6 +352,7 @@ const outrasMedalhas: Medalha[] = [
     metas: [1024],
     unidade: 'na maior peça',
     valor: (progresso) => progresso.maiorPecaSemDesfazer,
+    grupo: 'Outros jogos',
   },
   {
     id: 'gabarito',
@@ -266,6 +362,7 @@ const outrasMedalhas: Medalha[] = [
     metas: [1],
     unidade: 'partidas',
     valor: (progresso) => progresso.gabaritos,
+    grupo: 'Outros jogos',
   },
   {
     id: 'mestre-dos-padroes',
@@ -275,6 +372,7 @@ const outrasMedalhas: Medalha[] = [
     metas: [10, 50, 100],
     unidade: 'questões',
     valor: (progresso) => progresso.padroesAcertados,
+    grupo: 'Outros jogos',
   },
   {
     id: 'sem-titubear',
@@ -284,6 +382,7 @@ const outrasMedalhas: Medalha[] = [
     metas: [1],
     unidade: 'partidas',
     valor: (progresso) => progresso.semTitubear,
+    grupo: 'Outros jogos',
   },
   {
     id: 'mais-rapido-que-a-maquina',
@@ -293,6 +392,7 @@ const outrasMedalhas: Medalha[] = [
     metas: [1],
     unidade: 'corridas',
     valor: (progresso) => progresso.vitoriasContraCampeao,
+    grupo: 'Outros jogos',
   },
   {
     id: 'semana-perfeita',
@@ -302,6 +402,7 @@ const outrasMedalhas: Medalha[] = [
     metas: [7],
     unidade: 'desafios do dia',
     valor: desafiosDoDiaNaMesmaSemana,
+    grupo: 'Geral',
   },
   {
     id: 'fim-de-semana-estudioso',
@@ -311,6 +412,7 @@ const outrasMedalhas: Medalha[] = [
     metas: [4],
     unidade: 'fins de semana',
     valor: (progresso) => progresso.finsDeSemana,
+    grupo: 'Geral',
   },
   {
     id: 'coruja-noturna',
@@ -320,6 +422,7 @@ const outrasMedalhas: Medalha[] = [
     metas: [1],
     unidade: 'partidas',
     valor: (progresso) => progresso.partidasNoturnas,
+    grupo: 'Geral',
     secreta: true,
   },
   {
@@ -330,6 +433,7 @@ const outrasMedalhas: Medalha[] = [
     metas: [4096],
     unidade: 'na maior peça',
     valor: (progresso) => progresso.maiorPeca,
+    grupo: 'Outros jogos',
     secreta: true,
   },
   {
@@ -340,6 +444,7 @@ const outrasMedalhas: Medalha[] = [
     metas: [1],
     unidade: 'partidas',
     valor: (progresso) => progresso.partidasMadrugada,
+    grupo: 'Geral',
     secreta: true,
   },
   {
@@ -350,6 +455,7 @@ const outrasMedalhas: Medalha[] = [
     metas: [1],
     unidade: 'contas',
     valor: (progresso) => progresso.teimoso,
+    grupo: 'Geral',
     secreta: true,
   },
   {
@@ -360,6 +466,7 @@ const outrasMedalhas: Medalha[] = [
     metas: [1],
     unidade: 'partidas',
     valor: (progresso) => progresso.partidasPalindromas,
+    grupo: 'Geral',
     secreta: true,
   },
 ];
@@ -374,6 +481,7 @@ export const medalhas: Medalha[] = [
     metas: [outrasMedalhas.length],
     unidade: 'medalhas',
     valor: (progresso) => outrasMedalhas.filter((medalha) => progresso.medalhas[medalha.id]).length,
+    grupo: 'Geral',
     secreta: true,
   },
 ];
