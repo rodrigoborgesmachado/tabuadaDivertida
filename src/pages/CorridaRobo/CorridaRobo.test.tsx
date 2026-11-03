@@ -1,5 +1,7 @@
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
+import configData from '../../Config.json';
+import { buscarRanking, enviarResultado } from '../../services/resultadosJogos';
 import CorridaRobo from './CorridaRobo';
 
 jest.mock('./logic', () => {
@@ -9,6 +11,15 @@ jest.mock('./logic', () => {
     gerarConta: () => ({ texto: '6x7', resposta: 42 }),
   };
 });
+
+jest.mock('../../services/resultadosJogos', () => ({
+  ...jest.requireActual('../../services/resultadosJogos'),
+  enviarResultado: jest.fn(),
+  buscarRanking: jest.fn(),
+}));
+
+const enviar = enviarResultado as jest.Mock;
+const buscar = buscarRanking as jest.Mock;
 
 const renderJogo = () => render(
   <MemoryRouter>
@@ -39,6 +50,8 @@ describe('CorridaRobo', () => {
   beforeEach(() => {
     jest.useFakeTimers();
     window.localStorage.clear();
+    enviar.mockReset().mockResolvedValue(true);
+    buscar.mockReset().mockResolvedValue({ lista: [], total: 0 });
   });
 
   afterEach(() => {
@@ -116,6 +129,8 @@ describe('CorridaRobo', () => {
     expect(historico[0].questoes[0]).toEqual({ questao: '6x7', resposta: '42', correta: true });
     expect(progresso.jogosJogados).toEqual(['corrida-robo']);
     expect(Object.keys(progresso.tabuadas[6])).toEqual(['7']);
+    expect(screen.queryByText('🏆 Ver ranking')).toBeNull();
+    expect(enviar).not.toHaveBeenCalled();
   });
 
   it('gives the win and the medal for beating the champion robot', () => {
@@ -130,10 +145,29 @@ describe('CorridaRobo', () => {
     expect(screen.getByText('🏆 Você venceu!')).toBeTruthy();
     expect(screen.getByText('🏆 Novo recorde contra o Robô campeão!')).toBeTruthy();
     expect(JSON.parse(window.localStorage.getItem('tabuada-divertida-progresso') || '{}').vitoriasContraCampeao).toBe(1);
+    expect(screen.getByText('Quer entrar no ranking? Digite seu nome:')).toBeTruthy();
+    expect(screen.getByText('🏆 Ver ranking').getAttribute('href')).toBe('/ranking?jogo=corrida-robo&modo=M-campeao');
 
     fireEvent.click(screen.getByText('Revanche'));
 
     expect(screen.queryByRole('status')).toBeNull();
     expect(screen.getByText('Prepare-se!')).toBeTruthy();
+  });
+
+  it('sends the winning race to the ranking of the chosen operation and robot', async () => {
+    window.localStorage.setItem(configData.NOME_PARAM, 'Ana');
+    renderJogo();
+    fireEvent.click(screen.getByText('Adição➕'));
+    fireEvent.click(screen.getByText('👀 Robô atento'));
+    comecar();
+
+    responder('40');
+    avancar(2000);
+    for (let casa = 0; casa < 20; casa++) {
+      responder('42');
+    }
+
+    expect(await screen.findByText('Resultado enviado! Continue jogando para entrar no top 50.')).toBeTruthy();
+    expect(enviar).toHaveBeenCalledWith('corrida-robo', 'A-atento', { tempo: 2, acertos: 20, total: 21 }, 'Ana');
   });
 });

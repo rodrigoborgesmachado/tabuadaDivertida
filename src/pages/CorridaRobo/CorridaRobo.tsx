@@ -6,6 +6,7 @@ import { salvarPartida, type Questao } from '../../services/historico';
 import { compartilhar } from '../../services/compartilhar';
 import { contasDaTabuada, lerProgresso, partidaFinalizada } from '../../gamificacao/progresso';
 import BarraXp from '../../components/BarraXp/BarraXp';
+import RankingFinal from '../../components/RankingFinal/RankingFinal';
 import Keypad from '../../components/Keypad/Keypad';
 import RoboPersonalizado from '../../components/RoboPersonalizado/RoboPersonalizado';
 import happyRobot from '../../assets/robot-happy.svg';
@@ -394,6 +395,9 @@ function CorridaRobo() {
                     : recordes[chave] ? `🏆 Recorde: ${formatarTempo(recordes[chave])}` : '🏆 Vença o robô para marcar um recorde.'}
                 </p>
                 <BarraXp ganho={resultado.ganhoXp} />
+                {resultado.vencedor === 'jogador' && (
+                  <RankingFinal jogo='corrida-robo' modo={chave} resultado={{ tempo: Math.round(resultado.tempo / 1000), acertos, total: questoes.length }} />
+                )}
                 <div className='corrida-resultado__actions'>
                   <button type='button' className='global-button' onClick={iniciarCorrida}>
                     Revanche
