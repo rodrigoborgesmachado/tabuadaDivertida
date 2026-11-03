@@ -7,6 +7,7 @@ import SequenciaDias from '../../components/SequenciaDias/SequenciaDias';
 import { buscarMedalha, medalhas, nomeNivel } from '../../gamificacao/medalhas';
 import { lerProgresso } from '../../gamificacao/progresso';
 import { lerHistorico, type HistoricoItem, type Questao } from '../../services/historico';
+import { lerNome } from '../../services/jogador';
 import { formatarTempo } from '../MemoriaTabuada/logic';
 import { NIVEIS, readMelhores } from '../MemoriaTabuada/MemoriaTabuada';
 import { comparacaoSemanal, contasParaTreino, errosMaisComuns, evolucao, filtrarPorPeriodo, mapaTabuada, resumir, respostaCorreta, taxaAcerto, tempoPorConta, type CasaDoMapa, type Periodo, type PontoEvolucao } from './logic';
@@ -116,7 +117,7 @@ function Resultados() {
 
   useEffect(() => {
     try {
-      setNome(localStorage.getItem(configData.NOME_PARAM) || '');
+      setNome(lerNome());
       setQuantidade(parseInt(localStorage.getItem(configData.QUANTIDADE_PARAM) || '0'));
       setAcertos(parseInt(localStorage.getItem(configData.QUANTIDADE_ACERTOS) || '0'));
       setTempo(parseInt(localStorage.getItem(configData.TEMPO_PARAM) || '0'));

@@ -2,7 +2,7 @@ import { aplicarDesafios, type Desafio, type TipoDesafio } from './desafios';
 import { FATORES, medalhas, nivelAlcancado, type Medalha } from './medalhas';
 import { PARES_POR_NIVEL, type Nivel } from '../pages/MemoriaTabuada/logic';
 import { TEMPO_MEDIO_SEM_TITUBEAR, TOTAL_QUESTOES } from '../pages/TesteQi/logic';
-import type { NivelRobo } from '../pages/CorridaRobo/logic';
+import { CASAS_PADRAO, type NivelRobo } from '../pages/CorridaRobo/logic';
 import { chaveDia, chaveSemana, diasEntre, registrarDia } from './sequenciaDias';
 import { calcularNivel, xpDaPartida, xpDasMedalhas, xpDoDesafio, xpInicial, type NivelXp } from './xp';
 
@@ -91,6 +91,7 @@ export interface EventoJogo {
   tempo?: number;
   desperdicio?: boolean;
   nivelRobo?: NivelRobo;
+  casas?: number;
   venceu?: boolean;
 }
 
@@ -279,7 +280,7 @@ const registrarTesteQi = (proximo: Progresso, evento: EventoJogo, acertos: numbe
 };
 
 const registrarCorrida = (proximo: Progresso, evento: EventoJogo) => {
-  if (evento.jogo === 'corrida-robo' && evento.venceu && evento.nivelRobo === 'campeao') {
+  if (evento.jogo === 'corrida-robo' && evento.venceu && evento.nivelRobo === 'campeao' && (evento.casas ?? CASAS_PADRAO) >= CASAS_PADRAO) {
     proximo.vitoriasContraCampeao += 1;
   }
 };

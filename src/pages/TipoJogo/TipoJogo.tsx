@@ -1,8 +1,21 @@
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import WalkingRobot from '../../components/WalkingRobot/WalkingRobot';
+import PerfilJogador from '../../components/PerfilJogador/PerfilJogador';
+import OpcoesQuantidade from '../../components/PerfilJogador/OpcoesQuantidade';
+import { salvarQuantidade, useJogador } from '../../services/jogador';
+import './TipoJogo.css';
 
 function TipoJogo() {
     const navigate = useNavigate();
+    const { nome, quantidade } = useJogador();
+    const [editandoNome, setEditandoNome] = useState(false);
+    const [trocandoQuantidade, setTrocandoQuantidade] = useState(false);
+
+    const escolherQuantidade = (valor: number) => {
+        salvarQuantidade(valor);
+        setTrocandoQuantidade(false);
+    };
 
     const goToExpressoesArticle = () => {
         navigate('/artigos/expressoes-numericas');
@@ -27,6 +40,16 @@ function TipoJogo() {
             <WalkingRobot />
             <div className='global-pageContainer-left options-preview'>
                 <div className='botoes'>
+                    <div className='tipo-jogo-perfil'>
+                        <button type='button' className='tipo-jogo-perfil__item' onClick={() => setEditandoNome(true)}>
+                            Jogando como <strong>{nome || 'Jogador'}</strong> ✏️
+                        </button>
+                        <button type='button' className='tipo-jogo-perfil__item' aria-expanded={trocandoQuantidade} onClick={() => setTrocandoQuantidade(!trocandoQuantidade)}>
+                            <strong>{quantidade} contas</strong> · trocar
+                        </button>
+                        {trocandoQuantidade && <OpcoesQuantidade valor={quantidade} onEscolher={escolherQuantidade} />}
+                    </div>
+                    {editandoNome && <PerfilJogador onFechar={() => setEditandoNome(false)} />}
                     <h3>Selecione a operação matemática que deseja jogar ➕ ➖ ✖️ ➗ 🔢</h3>
                     <Link to={`/contagem/M`} className='global-button global-button--full-width'>
                         <span className='option-link'>
@@ -74,7 +97,7 @@ function TipoJogo() {
                             🤔 Como jogar?
                         </span>
                     </Link>
-                    <Link to={`/formulario`} className='global-button global-button--full-width global-button--back'>
+                    <Link to={`/`} className='global-button global-button--full-width global-button--back'>
                         <span className='option-link'>
                             Voltar
                         </span>

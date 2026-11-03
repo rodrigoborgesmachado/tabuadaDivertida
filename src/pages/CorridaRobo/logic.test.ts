@@ -1,4 +1,4 @@
-import { formatarTempo, gerarConta, NIVEIS_ROBO, posicaoRobo, tempoDoRobo, TOTAL_CASAS, vencedor, type NivelRobo, type Operacao } from './logic';
+import { CASAS_CORRIDA, CASAS_PADRAO, chaveCorrida, formatarTempo, gerarConta, NIVEIS_ROBO, posicaoRobo, tempoDoRobo, vencedor, type NivelRobo, type Operacao } from './logic';
 
 const NIVEIS = Object.keys(NIVEIS_ROBO) as NivelRobo[];
 const GERACOES = 200;
@@ -13,50 +13,66 @@ describe('Corrida contra o robô logic', () => {
     it(`moves the ${nivel} robot at a steady speed`, () => {
       const { msPorCasa } = NIVEIS_ROBO[nivel];
 
-      for (let casa = 0; casa <= TOTAL_CASAS; casa++) {
-        expect(posicaoRobo(nivel, casa * msPorCasa)).toBe(casa);
-        expect(posicaoRobo(nivel, casa * msPorCasa + msPorCasa / 2)).toBe(Math.min(TOTAL_CASAS, casa + 0.5));
+      for (let casa = 0; casa <= CASAS_PADRAO; casa++) {
+        expect(posicaoRobo(nivel, casa * msPorCasa, CASAS_PADRAO)).toBe(casa);
+        expect(posicaoRobo(nivel, casa * msPorCasa + msPorCasa / 2, CASAS_PADRAO)).toBe(Math.min(CASAS_PADRAO, casa + 0.5));
       }
     });
 
     it(`gives the same position to the ${nivel} robot no matter how the time is split`, () => {
-      const total = tempoDoRobo(nivel) / 2;
+      const total = tempoDoRobo(nivel, CASAS_PADRAO) / 2;
       let decorrido = 0;
       let anterior = 0;
 
       while (decorrido < total) {
         decorrido += 97;
-        const posicao = posicaoRobo(nivel, decorrido);
+        const posicao = posicaoRobo(nivel, decorrido, CASAS_PADRAO);
         expect(posicao).toBeGreaterThanOrEqual(anterior);
         anterior = posicao;
       }
 
-      expect(anterior).toBeCloseTo(posicaoRobo(nivel, decorrido));
+      expect(anterior).toBeCloseTo(posicaoRobo(nivel, decorrido, CASAS_PADRAO));
     });
 
-    it(`ends the race when the ${nivel} robot reaches the finish line`, () => {
-      expect(vencedor(TOTAL_CASAS - 1, nivel, tempoDoRobo(nivel) - 1)).toBeNull();
-      expect(vencedor(TOTAL_CASAS - 1, nivel, tempoDoRobo(nivel))).toBe('robo');
-      expect(posicaoRobo(nivel, tempoDoRobo(nivel) * 2)).toBe(TOTAL_CASAS);
+    CASAS_CORRIDA.forEach((casas) => {
+      it(`ends the ${casas} squares race when the ${nivel} robot reaches the finish line`, () => {
+        expect(tempoDoRobo(nivel, casas)).toBe(casas * NIVEIS_ROBO[nivel].msPorCasa);
+        expect(vencedor(casas - 1, nivel, tempoDoRobo(nivel, casas) - 1, casas)).toBeNull();
+        expect(vencedor(casas - 1, nivel, tempoDoRobo(nivel, casas), casas)).toBe('robo');
+        expect(posicaoRobo(nivel, tempoDoRobo(nivel, casas) * 2, casas)).toBe(casas);
+      });
     });
   });
 
   it('keeps the robot still before the start', () => {
-    expect(posicaoRobo('turbo', -500)).toBe(0);
-    expect(posicaoRobo('turbo', 0)).toBe(0);
+    expect(posicaoRobo('turbo', -500, CASAS_PADRAO)).toBe(0);
+    expect(posicaoRobo('turbo', 0, CASAS_PADRAO)).toBe(0);
   });
 
   it('makes each level faster than the previous one', () => {
-    const tempos = NIVEIS.map(tempoDoRobo);
+    const tempos = NIVEIS.map((nivel) => tempoDoRobo(nivel, CASAS_PADRAO));
 
     expect(NIVEIS.map((nivel) => NIVEIS_ROBO[nivel].nome)).toEqual(['Robô sonolento', 'Robô atento', 'Robô turbo', 'Robô campeão']);
     expect([...tempos].sort((a, b) => b - a)).toEqual(tempos);
   });
 
-  it('gives the win to the player who reaches the finish line', () => {
-    expect(vencedor(TOTAL_CASAS, 'campeao', 1000)).toBe('jogador');
-    expect(vencedor(TOTAL_CASAS, 'campeao', tempoDoRobo('campeao'))).toBe('jogador');
-    expect(vencedor(5, 'sonolento', 1000)).toBeNull();
+  it.each(CASAS_CORRIDA)('gives the win to the player who reaches the finish line of %i squares', (casas) => {
+    expect(vencedor(casas, 'campeao', 1000, casas)).toBe('jogador');
+    expect(vencedor(casas, 'campeao', tempoDoRobo('campeao', casas), casas)).toBe('jogador');
+    expect(vencedor(casas - 1, 'sonolento', 1000, casas)).toBeNull();
+  });
+
+  it('needs more squares to win the longer races', () => {
+    expect(vencedor(20, 'sonolento', 1000, 30)).toBeNull();
+    expect(vencedor(30, 'sonolento', 1000, 30)).toBe('jogador');
+    expect(vencedor(10, 'sonolento', 1000, 10)).toBe('jogador');
+  });
+
+  it('keeps the records of each race size apart', () => {
+    expect(chaveCorrida('M', 'campeao', 20)).toBe('M-campeao');
+    expect(chaveCorrida('M', 'campeao', 10)).toBe('M-campeao-10');
+    expect(chaveCorrida('R', 'turbo', 50)).toBe('R-turbo-50');
+    expect(new Set(CASAS_CORRIDA.map((casas) => chaveCorrida('A', 'atento', casas))).size).toBe(CASAS_CORRIDA.length);
   });
 
   (['M', 'A', 'S', 'D', 'R'] as Operacao[]).forEach((operacao) => {

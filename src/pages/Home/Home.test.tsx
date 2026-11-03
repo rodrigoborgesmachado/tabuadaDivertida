@@ -22,7 +22,7 @@ describe('Home', () => {
   it('invites who never played to start with the tabuada and shows every game', () => {
     render(<Home />);
 
-    expect(screen.getByText('🎮 Começar pela Tabuada').closest('a')?.getAttribute('href')).toBe('/formulario');
+    expect(screen.getByText('🎮 Começar pela Tabuada').closest('a')?.getAttribute('href')).toBe('/selecionarjogo');
     expect(screen.queryByText(/Continuar:/)).toBeNull();
     expect(screen.queryByText('⭐ Seu favorito')).toBeNull();
     jogos.forEach((jogo) => expect(screen.getByText(jogo.nome)).toBeTruthy());
@@ -37,7 +37,7 @@ describe('Home', () => {
 
     expect(screen.getByText('Olá, Ana! 👋')).toBeTruthy();
     expect(screen.getByText('▶️ Continuar: Memória da tabuada').closest('a')?.getAttribute('href')).toBe('/jogos/memoria-da-tabuada');
-    expect(screen.getByText('⭐ Seu favorito').closest('a')?.getAttribute('href')).toBe('/formulario');
+    expect(screen.getByText('⭐ Seu favorito').closest('a')?.getAttribute('href')).toBe('/selecionarjogo');
   });
 
   it('filters the games and remembers the filter', () => {

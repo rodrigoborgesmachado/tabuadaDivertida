@@ -387,7 +387,7 @@ const outrasMedalhas: Medalha[] = [
   {
     id: 'mais-rapido-que-a-maquina',
     nome: 'Mais rápido que a máquina',
-    descricao: 'Na Corrida contra o robô, vença o Robô campeão.',
+    descricao: 'Na Corrida contra o robô, vença o Robô campeão em uma pista de 20 casas ou mais.',
     icone: '🏎️',
     metas: [1],
     unidade: 'corridas',

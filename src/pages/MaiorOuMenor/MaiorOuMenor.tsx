@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import configData from '../../Config.json';
+import { lerNome } from '../../services/jogador';
 import { playError, playSuccess } from '../../services/sons';
 import { salvarPartida, type Questao } from '../../services/historico';
 import { compartilhar } from '../../services/compartilhar';
@@ -142,7 +142,7 @@ function MaiorOuMenor() {
         quantidadeQuestoes: questoes.length,
         quantidadeAcertos: questoes.filter((questao) => questao.correta).length,
         tempo: segundos,
-        nome: localStorage.getItem(configData.NOME_PARAM),
+        nome: lerNome(),
         tipo: 'MM',
         questoes,
         data: new Date().toISOString(),

@@ -3,6 +3,7 @@ import configData from "../../Config.json";
 import Tempo from '../../components/Tempo';
 import api from '../../services/api';
 import { TIMEOUT_ENVIO } from '../../services/resultadosJogos';
+import { lerNome } from '../../services/jogador';
 import { playError, playSuccess } from '../../services/sons';
 import { salvarPartida, type Questao } from '../../services/historico';
 import { contasDaTabuada, lerProgresso, partidaFinalizada, type Conquista } from '../../gamificacao/progresso';
@@ -370,7 +371,7 @@ function Jogo(){
             quantidadeQuestoes: localStorage.getItem(configData.QUANTIDADE_PARAM),
             quantidadeAcertos: localStorage.getItem(configData.QUANTIDADE_ACERTOS),
             tempo: localStorage.getItem(configData.TEMPO_PARAM),
-            nome: localStorage.getItem(configData.NOME_PARAM),
+            nome: lerNome(),
             tipo: tipoSelecionado,
             questoes: questoes,
             data: new Date().toISOString(),
@@ -379,7 +380,7 @@ function Jogo(){
     }
 
     function Finaliza(novaPontuacao: number, numeroAcertos: number, conquistas: Conquista[], ganhoXp: number){
-        const nome = String(localStorage.getItem(configData.NOME_PARAM) || '');
+        const nome = lerNome();
         if(nome.length > 15){
             toast.warn('Nome deve ter no máximo 15 caracteres.');
             return;

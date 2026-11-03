@@ -1,5 +1,5 @@
 import { lerExtras, type ItemRanking } from '../../services/resultadosJogos';
-import { NIVEIS_ROBO, type NivelRobo } from '../CorridaRobo/logic';
+import { CASAS_CORRIDA, chaveCorrida, NIVEIS_ROBO, type NivelRobo, type Operacao } from '../CorridaRobo/logic';
 
 export interface ColunaRanking {
   titulo: string;
@@ -103,7 +103,7 @@ export const jogosRanking: JogoRanking[] = [
     nome: 'Corrida',
     icone: '🏁',
     path: '/jogos/corrida-contra-o-robo',
-    modos: OPERACOES.flatMap((operacao) => NIVEIS_CORRIDA.map((nivel) => ({ id: `${operacao.id}-${nivel}`, label: `${operacao.label} · ${NIVEIS_ROBO[nivel].nome}` }))),
+    modos: OPERACOES.flatMap((operacao) => NIVEIS_CORRIDA.flatMap((nivel) => CASAS_CORRIDA.map((casas) => ({ id: chaveCorrida(operacao.id as Operacao, nivel, casas), label: `${operacao.label} · ${NIVEIS_ROBO[nivel].nome} · ${casas} casas` })))),
     colunas: [
       { titulo: 'Tempo', valor: (item) => segundos(item.tempo) },
       { titulo: 'Acertos', valor: (item) => `${texto(item.acertos)}/${texto(item.total)}` },

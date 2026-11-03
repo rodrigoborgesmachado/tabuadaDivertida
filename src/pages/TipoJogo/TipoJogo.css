@@ -1,0 +1,25 @@
+.tipo-jogo-perfil {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.tipo-jogo-perfil__item {
+  flex: 1 1 180px;
+  min-height: 44px;
+  padding: 8px 12px;
+  border-radius: 14px;
+  border: 1px solid var(--panel-border-color);
+  background: var(--block-color);
+  color: var(--text-color-primary);
+  cursor: pointer;
+}
+
+.tipo-jogo-perfil__item:hover {
+  border-color: var(--button-color-primary);
+}
+
+.tipo-jogo-perfil .opcoes-quantidade {
+  flex-basis: 100%;
+}

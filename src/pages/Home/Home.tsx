@@ -3,7 +3,7 @@ import HappyRobot from '../../components/HappyRobot/HappyRobot';
 import WalkingRobot from '../../components/WalkingRobot/WalkingRobot';
 import DesafiosDoDia from '../../components/DesafiosDoDia/DesafiosDoDia';
 import BarraXp from '../../components/BarraXp/BarraXp';
-import configData from '../../Config.json';
+import { useJogador } from '../../services/jogador';
 import { lerProgresso } from '../../gamificacao/progresso';
 import { diasSeguidosAtuais } from '../../gamificacao/sequenciaDias';
 import { useRecompensasNaoVistas } from '../../gamificacao/useRecompensasNaoVistas';
@@ -15,7 +15,7 @@ function Home() {
     const [progresso] = useState(() => lerProgresso());
     const [filtro, setFiltro] = useState(lerFiltro);
     const recompensasNovas = useRecompensasNaoVistas().length;
-    const nome = localStorage.getItem(configData.NOME_PARAM);
+    const { nome } = useJogador();
     const dias = diasSeguidosAtuais(progresso);
     const continuar = jogoParaContinuar(progresso);
     const favorito = jogoFavorito(progresso);

@@ -1,0 +1,102 @@
+.opcoes-quantidade {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.opcoes-quantidade__opcao {
+  flex: 1 1 52px;
+  min-height: 44px;
+  padding: 6px 10px;
+  border-radius: 14px;
+  border: 2px solid var(--panel-border-color);
+  background: var(--block-color);
+  color: var(--text-color-primary);
+  font-family: var(--font-title);
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: transform 0.18s ease, border-color 0.18s ease;
+}
+
+.opcoes-quantidade__opcao:hover {
+  transform: translateY(-2px);
+}
+
+.opcoes-quantidade__opcao--ativa {
+  border-color: var(--button-color-primary);
+  background: linear-gradient(135deg, var(--button-color-primary), #ffb067);
+  color: #ffffff;
+}
+
+.perfil-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: rgba(12, 24, 41, 0.44);
+}
+
+.perfil-modal__conteudo {
+  width: min(100%, 420px);
+  max-height: calc(100svh - 32px);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 24px;
+  border: 1px solid var(--panel-border-color);
+  border-radius: 24px;
+  background: var(--secundary-color);
+  box-shadow: var(--shadow-card);
+  color: var(--text-color-primary);
+  text-align: left;
+}
+
+.perfil-modal__conteudo h3 {
+  font-family: var(--font-title);
+  font-size: 1.6rem;
+  text-align: center;
+}
+
+.perfil-modal__texto {
+  color: var(--text-color-secondary);
+  text-align: center;
+}
+
+.perfil-modal__rotulo {
+  margin-top: 4px;
+  font-weight: 700;
+}
+
+.perfil-modal__personalizar {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  align-self: flex-start;
+  margin-top: 4px;
+  color: var(--button-color-back);
+  font-weight: 700;
+}
+
+.perfil-modal__novo {
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--button-color-primary-wrong);
+  color: #ffffff;
+  font-size: 0.75rem;
+}
+
+.perfil-modal__acoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.perfil-modal__acoes .global-button {
+  flex: 1 1 140px;
+}

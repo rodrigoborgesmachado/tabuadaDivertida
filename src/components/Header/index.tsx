@@ -1,6 +1,6 @@
 import ThemeSwitcher from '../ThemeSwitcher/themeSwitcher';
 import './style.css';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import configData from '../../Config.json';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faVolumeHigh, faVolumeXmark, faXmark } from '@fortawesome/free-solid-svg-icons';
@@ -9,6 +9,8 @@ import { NavLink, useLocation } from 'react-router-dom';
 import { isJogoPath } from '../../pages/Jogos/jogosConfig';
 import { useRecompensasNaoVistas } from '../../gamificacao/useRecompensasNaoVistas';
 import RoboPersonalizado from '../RoboPersonalizado/RoboPersonalizado';
+import PerfilJogador from '../PerfilJogador/PerfilJogador';
+import { marcarPerfilVisto, perfilVisto, useJogador } from '../../services/jogador';
 
 interface HeaderProps {
     theme: 'light' | 'dark';
@@ -23,12 +25,21 @@ function Header({ theme, toggleTheme }: HeaderProps){
     const wasMenuOpen = useRef<boolean>(false);
     const location = useLocation();
     const recompensasNovas = useRecompensasNaoVistas().length;
+    const { nome } = useJogador();
+    const [perfil, setPerfil] = useState<'perfil' | 'primeira-visita' | null>(null);
 
     useEffect(() => {
         try {
             const init = localStorage.getItem(configData.SOUND_MUTED);
             setMuted(init === '1');
         } catch {}
+    }, []);
+
+    useEffect(() => {
+        if (!perfilVisto()) {
+            marcarPerfilVisto();
+            setPerfil('primeira-visita');
+        }
     }, []);
 
     useEffect(() => {
@@ -58,6 +69,14 @@ function Header({ theme, toggleTheme }: HeaderProps){
     }, [menuOpen]);
 
     const closeMenu = () => setMenuOpen(false);
+
+    const abrirPerfil = () => {
+        wasMenuOpen.current = false;
+        setMenuOpen(false);
+        setPerfil('perfil');
+    };
+
+    const fecharPerfil = useCallback(() => setPerfil(null), []);
 
     const toggleMute = () => {
         const next = !muted;
@@ -124,17 +143,17 @@ function Header({ theme, toggleTheme }: HeaderProps){
                     </nav>
 
                     <div className='site-controls'>
-                        <NavLink
-                            to='/personalizar'
-                            onClick={closeMenu}
+                        <button
+                            type='button'
+                            onClick={abrirPerfil}
                             className={`button-base personalizar-toggle ${isPersonalizarActive ? 'active' : ''}`}
-                            aria-label={`Personalizar robô${recompensasNovas > 0 ? `, ${recompensasNovas} ${recompensasNovas === 1 ? 'item novo' : 'itens novos'}` : ''}`}
-                            title='Personalizar robô'
+                            aria-label={`Meu perfil: ${nome || 'Jogador'}${recompensasNovas > 0 ? `, ${recompensasNovas} ${recompensasNovas === 1 ? 'item novo' : 'itens novos'}` : ''}`}
+                            title='Meu perfil'
                         >
                             <RoboPersonalizado titulo='' className='personalizar-toggle__robo' />
-                            <span className='personalizar-toggle__texto'>Personalizar robô</span>
+                            <span className='personalizar-toggle__texto'>{nome || 'Jogador'}</span>
                             {recompensasNovas > 0 && <span className='nav-item__novo' aria-hidden='true'>{recompensasNovas}</span>}
-                        </NavLink>
+                        </button>
                         <ThemeSwitcher theme={theme} toggleTheme={toggleTheme} />
                         <button
                             className='button-base sound-toggle'
@@ -148,6 +167,7 @@ function Header({ theme, toggleTheme }: HeaderProps){
                 </div>
             </div>
             {menuOpen && <div className='site-menu-backdrop' onClick={closeMenu} aria-hidden='true' />}
+            {perfil !== null && <PerfilJogador primeiraVisita={perfil === 'primeira-visita'} onFechar={fecharPerfil} />}
         </header>
     )
 }

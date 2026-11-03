@@ -1,6 +1,5 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Home from './pages/Home/Home';
-import Formulario from './pages/Formulario/Formulario';
 import TipoJogo from './pages/TipoJogo/TipoJogo';
 import Contagem from './pages/Contagem/Contagem';
 import Jogo from './pages/Jogo/Jogo';
@@ -47,7 +46,7 @@ function RoutesApp({ theme, toggleTheme }: RoutesAppProps) {
             <AvisoConquista />
             <Routes>                
                 <Route path='/' element={<Home/>}/>
-                <Route path='/formulario' element={<Formulario/>}/>
+                <Route path='/formulario' element={<Navigate to='/selecionarjogo' replace/>}/>
                 <Route path='/selecionarjogo' element={<TipoJogo/>}/>
                 <Route path='/contagem/:tipo' element={<Contagem/>}/>
                 <Route path='/jogo/:tipo' element={<Jogo/>}/>

@@ -20,7 +20,6 @@ export const jogos: JogoConfig[] = [
     descricao: 'Responda contas de multiplicação, divisão, adição e subtração contra o relógio.',
     habilidade: 'Tabuada',
     idade: '6+ anos',
-    inicio: '/formulario',
   },
   {
     id: '2048',

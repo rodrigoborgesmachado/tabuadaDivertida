@@ -953,29 +953,6 @@ table{
   margin: 16px;
 }
 
-.formulario{
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  margin-top: 20px;
-  width: 70%;
-  align-self: center;
-}
-
-.formulario h3{
-  margin-top: 16px;
-  margin-bottom: 16px;
-}
-
-.formulario input{
-  width: 100%;
-  border-radius: 12px;
-  border: 1px solid var(--panel-border-color);
-  background: var(--block-color);
-  color: var(--text-color-primary);
-  padding: 10px 12px;
-}
-
 .botoes button{
   margin-top: 8px;
 }

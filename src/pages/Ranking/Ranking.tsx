@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import Config from '../../Config.json';
+import { lerNome } from '../../services/jogador';
 import RankingTabuada from './RankingTabuada';
 import RankingJogo from './RankingJogo';
 import { abasRanking, buscarJogoRanking } from './rankingConfig';
@@ -13,7 +13,7 @@ function Ranking(){
     const abaAtiva = jogo ? jogo.id : 'tabuada';
     const modoParam = searchParams.get('modo');
     const modo = jogo && jogo.modos.length > 0 ? (jogo.modos.find((item) => item.id === modoParam) || jogo.modos[0]).id : null;
-    const nomeJogador = localStorage.getItem(Config.NOME_PARAM) || '';
+    const nomeJogador = lerNome();
 
     return(
         <div className='global-pageContainer-left options-preview ranking-page'>
