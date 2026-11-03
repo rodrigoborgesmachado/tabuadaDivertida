@@ -8,6 +8,8 @@ const contasCorretas = (quantidade: number) => Array.from({ length: quantidade }
 
 const tabuadaInteira = (tabuada: number) => FATORES.map((fator) => ({ correta: true, fatores: [tabuada, fator] as [number, number] }));
 
+const divisoesPor = (divisor: number) => contasDaTabuada(FATORES.map((fator) => ({ questao: `${divisor * fator}÷${divisor}`, correta: true })));
+
 const ids = (novas: ReturnType<typeof partidaFinalizada>) => novas.map((conquista) => `${conquista.medalha.id}:${conquista.nivel}`);
 
 const acertadas = (tabuada: number) => Object.keys(lerProgresso().tabuadas[tabuada] || {}).map(Number);
@@ -140,7 +142,7 @@ describe('progresso', () => {
   });
 
   it('reaches the diamond level', () => {
-    salvarProgresso({ partidasPerfeitas: 24, partidas: 499, melhorDiasSeguidos: 100 });
+    salvarProgresso({ partidasPerfeitas: 24, partidas: 999, melhorDiasSeguidos: 100 });
 
     const novas = partidaFinalizada({ jogo: 'tabuada', contas: contasCorretas(100) }, dia);
 
@@ -177,8 +179,105 @@ describe('progresso', () => {
     expect(ids(partidaFinalizada({ jogo: 'tabuada', modo: 'D', contas: contasCorretas(20) }, dia))).toContain('rei-da-divisao:1');
     expect(ids(partidaFinalizada({ jogo: 'tabuada', modo: 'E', contas: contasCorretas(20) }, dia))).toContain('genio-das-expressoes:1');
     expect(ids(partidaFinalizada({ jogo: 'tabuada', modo: 'M', contas: contasCorretas(20) }, dia))).not.toContain('quatro-operacoes:1');
-    expect(ids(partidaFinalizada({ jogo: 'tabuada', modo: 'R', contas: contasCorretas(20) }, dia))).toContain('quatro-operacoes:1');
+    expect(ids(partidaFinalizada({ jogo: 'tabuada', modo: 'R', contas: contasCorretas(20) }, dia))).toEqual(expect.arrayContaining(['quatro-operacoes:1', 'coringa:1']));
     expect(Object.keys(lerProgresso().perfeitasPorModo).sort()).toEqual([...MODOS].sort());
+  });
+
+  it('keeps the conquered medals and the times table progress when migrating from the second version', () => {
+    const data = '2026-10-01T15:00:00.000Z';
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      versao: 2,
+      partidas: 600,
+      perfeitasPorModo: { A: 5 },
+      tabuadas: { 7: { 2: '2026-11-01' } },
+      medalhas: { 'partidas-jogadas': { nivel: 4, data }, 'mestre-da-soma': { nivel: 1, data } },
+    }));
+
+    const progresso = lerProgresso();
+
+    expect(progresso.tabuadas).toEqual({ 7: { 2: '2026-11-01' } });
+    expect(progresso.acertosPorModo).toEqual({});
+    expect(progresso.melhorTempoMedioPorModo).toEqual({});
+    expect(progresso.divisoes).toEqual({});
+    expect(progresso.contasAcimaDe50).toBe(0);
+
+    expect(ids(partidaFinalizada({ jogo: 'memoria' }, dia))).toContain('mestre-da-soma:2');
+    expect(lerProgresso().medalhas['partidas-jogadas']).toEqual({ nivel: 4, data });
+  });
+
+  it('asks for 1000 matches to reach the diamond of the dedicated player', () => {
+    salvarProgresso({ partidas: 500 });
+    expect(ids(partidaFinalizada({ jogo: 'memoria' }, dia))).not.toContain('partidas-jogadas:4');
+    expect(lerProgresso().medalhas['partidas-jogadas'].nivel).toBe(3);
+  });
+
+  it('counts the right answers and the streak of each mode across matches', () => {
+    partidaFinalizada({ jogo: 'tabuada', modo: 'A', contas: contasCorretas(10) }, dia);
+    partidaFinalizada({ jogo: 'tabuada', modo: 'S', contas: [{ correta: false }] }, dia);
+    const novas = ids(partidaFinalizada({ jogo: 'tabuada', modo: 'A', contas: [...contasCorretas(5), { correta: false }, ...contasCorretas(2)] }, dia));
+
+    expect(novas).toContain('sequencia-a:1');
+    expect(novas).not.toContain('acertos-seguidos:1');
+    expect(lerProgresso().acertosPorModo).toEqual({ A: 17, S: 0 });
+    expect(lerProgresso().sequenciaPorModo).toEqual({ A: 2, S: 0 });
+    expect(lerProgresso().melhorSequenciaPorModo).toEqual({ A: 15, S: 0 });
+
+    salvarProgresso({ acertosPorModo: { D: 95 } });
+    expect(ids(partidaFinalizada({ jogo: 'tabuada', modo: 'D', contas: contasCorretas(5) }, dia))).toContain('acertos-d:1');
+  });
+
+  it('keeps the best average time of each mode only in perfect matches', () => {
+    partidaFinalizada({ jogo: 'tabuada', modo: 'A', contas: [...contasCorretas(19), { correta: false }], tempoMedio: 1 }, dia);
+    partidaFinalizada({ jogo: 'tabuada', modo: 'A', contas: contasCorretas(19), tempoMedio: 1 }, dia);
+    expect(lerProgresso().melhorTempoMedioPorModo).toEqual({});
+
+    expect(ids(partidaFinalizada({ jogo: 'tabuada', modo: 'A', contas: contasCorretas(20), tempoMedio: 2.5 }, dia))).toContain('velocidade-a:2');
+    partidaFinalizada({ jogo: 'tabuada', modo: 'A', contas: contasCorretas(20), tempoMedio: 3.5 }, dia);
+    expect(lerProgresso().melhorTempoMedioPorModo).toEqual({ A: 2.5 });
+
+    expect(ids(partidaFinalizada({ jogo: 'tabuada', modo: 'E', contas: contasCorretas(20), tempoMedio: 9 }, dia))).toContain('velocidade-e:2');
+    expect(lerProgresso().medalhas['velocidade-s']).toBeUndefined();
+  });
+
+  it('unlocks the division master medal after every division by the same number is right', () => {
+    expect(ids(partidaFinalizada({ jogo: 'tabuada', modo: 'D', contas: divisoesPor(7).slice(0, -1) }, dia))).not.toContain('mestre-da-divisao-por-7:1');
+
+    partidaFinalizada({ jogo: 'tabuada', modo: 'D', contas: contasDaTabuada([{ questao: '21÷7', correta: false }]) }, dia);
+    expect(Object.keys(lerProgresso().divisoes[7]).map(Number)).toEqual([2, 4, 5, 6, 7, 8, 9]);
+    expect(lerProgresso().tabuadas).toEqual({});
+
+    const novas = ids(partidaFinalizada({ jogo: 'tabuada', modo: 'R', contas: contasDaTabuada([{ questao: '21÷7', correta: true }, { questao: '70÷7', correta: true }]) }, dia));
+    expect(novas).toContain('mestre-da-divisao-por-7:1');
+  });
+
+  it('unlocks the complete division after every division master medal', () => {
+    expect(ids(partidaFinalizada({ jogo: 'tabuada', modo: 'D', contas: FATORES.slice(0, -1).flatMap((divisor) => divisoesPor(divisor)) }, dia))).not.toContain('divisao-completa:1');
+    expect(ids(partidaFinalizada({ jogo: 'tabuada', modo: 'D', contas: divisoesPor(10) }, dia))).toContain('divisao-completa:1');
+  });
+
+  it('counts the additions and subtractions right with a result above 50', () => {
+    salvarProgresso({ contasAcimaDe50: 47 });
+    const questoes = [
+      { questao: '40+11', correta: true },
+      { questao: '99-48', correta: true },
+      { questao: '25+25', correta: true },
+      { questao: '60+30', correta: false },
+      { questao: '9x7', correta: true },
+      { questao: '120÷2', correta: true },
+    ];
+
+    expect(ids(partidaFinalizada({ jogo: 'tabuada', modo: 'R', contas: contasDaTabuada(questoes) }, dia))).not.toContain('calculista-mental:1');
+    expect(lerProgresso().contasAcimaDe50).toBe(49);
+    expect(ids(partidaFinalizada({ jogo: 'tabuada', modo: 'A', contas: contasDaTabuada([{ questao: '70+2', correta: true }]) }, dia))).toContain('calculista-mental:1');
+  });
+
+  it('unlocks the expressions streak and the long random perfect match medals', () => {
+    partidaFinalizada({ jogo: 'tabuada', modo: 'E', contas: contasCorretas(6) }, dia);
+    expect(ids(partidaFinalizada({ jogo: 'tabuada', modo: 'E', contas: contasCorretas(4) }, dia))).toContain('sem-parenteses-sem-problema:1');
+
+    expect(ids(partidaFinalizada({ jogo: 'tabuada', modo: 'R', contas: contasCorretas(49) }, dia))).not.toContain('pau-pra-toda-obra:1');
+    expect(ids(partidaFinalizada({ jogo: 'tabuada', modo: 'R', contas: [...contasCorretas(59), { correta: false }] }, dia))).not.toContain('pau-pra-toda-obra:1');
+    expect(ids(partidaFinalizada({ jogo: 'tabuada', modo: 'R', contas: contasCorretas(50) }, dia))).toContain('pau-pra-toda-obra:1');
   });
 
   it('unlocks the marathon medal only with a perfect match of 100 accounts', () => {
@@ -432,14 +531,14 @@ describe('progresso', () => {
     window.removeEventListener(EVENTO_NIVEL, ouvinte);
   });
 
-  it('reads the multiplication factors from the times table questions', () => {
+  it('reads the multiplication factors and the divisions from the times table questions', () => {
     expect(contasDaTabuada([
       { questao: '7x8', correta: true },
       { questao: '56÷8', correta: false },
       { questao: '(2x3) + (4x5)', correta: true },
     ])).toEqual([
       { correta: true, fatores: [7, 8], texto: '7x8' },
-      { correta: false, texto: '56÷8' },
+      { correta: false, divisao: [56, 8], texto: '56÷8' },
       { correta: true, texto: '(2x3) + (4x5)' },
     ]);
   });

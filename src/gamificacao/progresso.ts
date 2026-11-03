@@ -10,7 +10,7 @@ export const STORAGE_KEY = 'tabuada-divertida-progresso';
 export const EVENTO_CONQUISTAS = 'tabuada-divertida-conquistas';
 export const EVENTO_DESAFIOS = 'tabuada-divertida-desafios';
 export const EVENTO_NIVEL = 'tabuada-divertida-nivel';
-export const VERSAO_PROGRESSO = 2;
+export const VERSAO_PROGRESSO = 3;
 export const MINIMO_CONTAS = 20;
 export const MAXIMO_CONTAS = 100;
 export const DIAS_MESTRE = 7;
@@ -28,6 +28,12 @@ export interface Progresso {
   partidasMadrugada: number;
   partidasPalindromas: number;
   perfeitasPorModo: Record<string, number>;
+  acertosPorModo: Record<string, number>;
+  sequenciaPorModo: Record<string, number>;
+  melhorSequenciaPorModo: Record<string, number>;
+  melhorTempoMedioPorModo: Record<string, number>;
+  maiorPerfeitaPorModo: Record<string, number>;
+  contasAcimaDe50: number;
   maratonas: number;
   voltasPorCima: number;
   recordesBatidos: number;
@@ -49,6 +55,7 @@ export interface Progresso {
   semTitubear: number;
   vitoriasContraCampeao: number;
   tabuadas: Record<string, Record<string, string>>;
+  divisoes: Record<string, Record<string, string>>;
   medalhas: Record<string, MedalhaObtida>;
   ultimoDia: string;
   diasSeguidos: number;
@@ -64,6 +71,7 @@ export interface Progresso {
 export interface ContaRespondida {
   correta: boolean;
   fatores?: [number, number];
+  divisao?: [number, number];
   texto?: string;
 }
 
@@ -97,6 +105,12 @@ export const criarProgresso = (): Progresso => ({
   partidasMadrugada: 0,
   partidasPalindromas: 0,
   perfeitasPorModo: {},
+  acertosPorModo: {},
+  sequenciaPorModo: {},
+  melhorSequenciaPorModo: {},
+  melhorTempoMedioPorModo: {},
+  maiorPerfeitaPorModo: {},
+  contasAcimaDe50: 0,
   maratonas: 0,
   voltasPorCima: 0,
   recordesBatidos: 0,
@@ -118,6 +132,7 @@ export const criarProgresso = (): Progresso => ({
   semTitubear: 0,
   vitoriasContraCampeao: 0,
   tabuadas: {},
+  divisoes: {},
   medalhas: {},
   ultimoDia: '',
   diasSeguidos: 0,
@@ -187,6 +202,29 @@ const marcarTeimosia = (proximo: Progresso, conta: ContaRespondida) => {
   }
 };
 
+const resultadoDaSomaOuSubtracao = (texto = '') => {
+  const conta = /^(\d+)([+-])(\d+)$/.exec(texto);
+  if (!conta) {
+    return 0;
+  }
+
+  return conta[2] === '+' ? Number(conta[1]) + Number(conta[3]) : Number(conta[1]) - Number(conta[3]);
+};
+
+const registrarModo = (proximo: Progresso, modo: string, contas: ContaRespondida[], acertos: number) => {
+  let sequencia = proximo.sequenciaPorModo[modo] || 0;
+  let melhor = proximo.melhorSequenciaPorModo[modo] || 0;
+
+  contas.forEach((conta) => {
+    sequencia = conta.correta ? sequencia + 1 : 0;
+    melhor = Math.max(melhor, sequencia);
+  });
+
+  proximo.acertosPorModo = { ...proximo.acertosPorModo, [modo]: (proximo.acertosPorModo[modo] || 0) + acertos };
+  proximo.sequenciaPorModo = { ...proximo.sequenciaPorModo, [modo]: sequencia };
+  proximo.melhorSequenciaPorModo = { ...proximo.melhorSequenciaPorModo, [modo]: melhor };
+};
+
 const ehPalindromo = (valor: number) => valor >= 10 && String(valor) === String(valor).split('').reverse().join('');
 
 const registrarFimDeSemana = (proximo: Progresso, data: Date) => {
@@ -247,6 +285,7 @@ export const aplicarEvento = (progresso: Progresso, evento: EventoJogo, finaliza
     ...progresso,
     jogosJogados: progresso.jogosJogados.includes(evento.jogo) ? progresso.jogosJogados : [...progresso.jogosJogados, evento.jogo],
     tabuadas: descartarVencidas(progresso.tabuadas, chaveDia(data)),
+    divisoes: descartarVencidas(progresso.divisoes, chaveDia(data)),
   };
   const contas = evento.contas || [];
   const acertos = contas.filter((conta) => conta.correta).length;
@@ -261,8 +300,19 @@ export const aplicarEvento = (progresso: Progresso, evento: EventoJogo, finaliza
       marcarConta(proximo.tabuadas, a, b, conta.correta, chaveDia(data));
       marcarConta(proximo.tabuadas, b, a, conta.correta, chaveDia(data));
     }
+
+    if (conta.divisao) {
+      const [dividendo, divisor] = conta.divisao;
+      marcarConta(proximo.divisoes, divisor, dividendo / divisor, conta.correta, chaveDia(data));
+    }
+
+    proximo.contasAcimaDe50 += conta.correta && resultadoDaSomaOuSubtracao(conta.texto) > 50 ? 1 : 0;
   });
   proximo.acertos += acertos;
+
+  if (evento.modo && contas.length > 0) {
+    registrarModo(proximo, evento.modo, contas, acertos);
+  }
 
   if (evento.maiorPeca && evento.maiorPeca > proximo.maiorPeca) {
     proximo.maiorPeca = evento.maiorPeca;
@@ -305,6 +355,12 @@ export const aplicarEvento = (progresso: Progresso, evento: EventoJogo, finaliza
 
     if (evento.modo) {
       proximo.perfeitasPorModo = { ...proximo.perfeitasPorModo, [evento.modo]: (proximo.perfeitasPorModo[evento.modo] || 0) + 1 };
+      proximo.maiorPerfeitaPorModo = { ...proximo.maiorPerfeitaPorModo, [evento.modo]: Math.max(proximo.maiorPerfeitaPorModo[evento.modo] || 0, contas.length) };
+
+      const melhorTempoNoModo = proximo.melhorTempoMedioPorModo[evento.modo] || 0;
+      if (evento.tempoMedio && (melhorTempoNoModo === 0 || evento.tempoMedio < melhorTempoNoModo)) {
+        proximo.melhorTempoMedioPorModo = { ...proximo.melhorTempoMedioPorModo, [evento.modo]: evento.tempoMedio };
+      }
     }
 
     if (evento.tempoMedio && (proximo.melhorTempoMedio === 0 || evento.tempoMedio < proximo.melhorTempoMedio)) {
@@ -374,6 +430,11 @@ export const registrarProgresso = (evento: EventoJogo, data = new Date()) => reg
 export const contasDaTabuada = (questoes: { questao: string; correta: boolean }[]): ContaRespondida[] =>
   questoes.map((questao) => {
     const multiplicacao = /^(\d+)x(\d+)$/.exec(questao.questao);
+    const divisao = /^(\d+)÷(\d+)$/.exec(questao.questao);
+    if (divisao) {
+      return { correta: questao.correta, divisao: [Number(divisao[1]), Number(divisao[2])], texto: questao.questao };
+    }
+
     return multiplicacao
       ? { correta: questao.correta, fatores: [Number(multiplicacao[1]), Number(multiplicacao[2])], texto: questao.questao }
       : { correta: questao.correta, texto: questao.questao };

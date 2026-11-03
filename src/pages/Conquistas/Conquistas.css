@@ -2,6 +2,17 @@
   width: min(100%, 1120px);
 }
 
+.conquistas-grupo {
+  margin-bottom: 24px;
+}
+
+.conquistas-grupo__titulo {
+  margin: 0 0 12px;
+  font-family: var(--font-title);
+  font-size: 1.6rem;
+  color: var(--text-color-primary);
+}
+
 .conquistas-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
@@ -59,7 +70,7 @@
   background: linear-gradient(135deg, var(--button-color-primary), #ffb067);
 }
 
-.conquistas-card h2 {
+.conquistas-card h3 {
   margin: 0;
   font-family: var(--font-title);
   font-size: 1.3rem;
