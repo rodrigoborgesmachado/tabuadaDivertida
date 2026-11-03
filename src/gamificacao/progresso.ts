@@ -41,6 +41,8 @@ export interface Progresso {
   teimosia: Record<string, { erros: number; acertos: number }>;
   teimoso: number;
   jogosJogados: string[];
+  ultimoJogo: string;
+  partidasPorJogo: Record<string, number>;
   sequenciaAtual: number;
   melhorSequencia: number;
   melhorTempoMedio: number;
@@ -118,6 +120,8 @@ export const criarProgresso = (): Progresso => ({
   teimosia: {},
   teimoso: 0,
   jogosJogados: [],
+  ultimoJogo: '',
+  partidasPorJogo: {},
   sequenciaAtual: 0,
   melhorSequencia: 0,
   melhorTempoMedio: 0,
@@ -284,6 +288,7 @@ export const aplicarEvento = (progresso: Progresso, evento: EventoJogo, finaliza
   const proximo: Progresso = {
     ...progresso,
     jogosJogados: progresso.jogosJogados.includes(evento.jogo) ? progresso.jogosJogados : [...progresso.jogosJogados, evento.jogo],
+    ultimoJogo: evento.jogo,
     tabuadas: descartarVencidas(progresso.tabuadas, chaveDia(data)),
     divisoes: descartarVencidas(progresso.divisoes, chaveDia(data)),
   };
@@ -331,6 +336,7 @@ export const aplicarEvento = (progresso: Progresso, evento: EventoJogo, finaliza
   }
 
   proximo.partidas += 1;
+  proximo.partidasPorJogo = { ...proximo.partidasPorJogo, [evento.jogo]: (proximo.partidasPorJogo[evento.jogo] || 0) + 1 };
 
   const hora = data.getHours();
   if (hora >= 22 || hora < 5) {

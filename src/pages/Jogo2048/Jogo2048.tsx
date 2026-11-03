@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import { addRandomTile, createInitialBoard, getSwipeDirection, hasNoMoves, moveBoard, type Board, type Direction } from './logic';
 import { lerProgresso, partidaFinalizada, registrarProgresso } from '../../gamificacao/progresso';
 import BarraXp from '../../components/BarraXp/BarraXp';
+import ComoJogar from '../../components/ComoJogar/ComoJogar';
 import RankingFinal from '../../components/RankingFinal/RankingFinal';
 import './Jogo2048.css';
 
@@ -276,6 +277,8 @@ function Jogo2048() {
               <span className='game2048-badge'>↩️ Desfazer: {history.length > 0 ? 'sim' : 'não'}</span>
             </div>
           </div>
+
+          <ComoJogar jogo='2048' />
 
           <div className='game2048-actions'>
             <button type='button' className='global-button global-button--full-width' onClick={() => handleMove('left')}>

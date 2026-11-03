@@ -69,6 +69,11 @@ function TipoJogo() {
                             Aleatório🔀
                         </span>
                     </Link>
+                    <Link to={`/instrucoes`} className='global-button global-button--full-width global-button--basic'>
+                        <span className='option-link'>
+                            🤔 Como jogar?
+                        </span>
+                    </Link>
                     <Link to={`/formulario`} className='global-button global-button--full-width global-button--back'>
                         <span className='option-link'>
                             Voltar

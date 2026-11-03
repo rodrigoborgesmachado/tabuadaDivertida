@@ -1,77 +1,138 @@
+import { useState } from 'react';
 import HappyRobot from '../../components/HappyRobot/HappyRobot';
 import WalkingRobot from '../../components/WalkingRobot/WalkingRobot';
 import DesafiosDoDia from '../../components/DesafiosDoDia/DesafiosDoDia';
 import BarraXp from '../../components/BarraXp/BarraXp';
+import configData from '../../Config.json';
+import { lerProgresso } from '../../gamificacao/progresso';
+import { diasSeguidosAtuais } from '../../gamificacao/sequenciaDias';
+import { useRecompensasNaoVistas } from '../../gamificacao/useRecompensasNaoVistas';
+import { jogos } from '../Jogos/jogosConfig';
+import { ehNovo, filtros, jogoFavorito, jogoParaContinuar, lerFiltro, rotaDoJogo, salvarFiltro } from './logic';
+import './Home.css';
 
 function Home() {
+    const [progresso] = useState(() => lerProgresso());
+    const [filtro, setFiltro] = useState(lerFiltro);
+    const recompensasNovas = useRecompensasNaoVistas().length;
+    const nome = localStorage.getItem(configData.NOME_PARAM);
+    const dias = diasSeguidosAtuais(progresso);
+    const continuar = jogoParaContinuar(progresso);
+    const favorito = jogoFavorito(progresso);
+    const tabuada = jogos.find((jogo) => jogo.id === 'tabuada');
+    const filtroAtual = filtros.find((item) => item.id === filtro) || filtros[0];
+
+    const escolherFiltro = (id: string) => {
+        setFiltro(id);
+        salvarFiltro(id);
+    };
+
     return (
         <div className='center'>
             <WalkingRobot />
             <div className='home-wrapper'>
-                <section className='options-preview'>
-                    <HappyRobot />
-                    <div className='botoes-home'>
-                        <a className='global-button global-button--full-width' href={`/formulario`}>
+                <section className='options-preview home-boas-vindas'>
+                    <div className='home-boas-vindas__topo'>
+                        <HappyRobot />
+                        <div className='home-boas-vindas__texto'>
+                            <h2>{nome ? `Olá, ${nome}!` : 'Olá!'} 👋</h2>
+                            <span className={`home-boas-vindas__dias${dias === 0 ? ' home-boas-vindas__dias--apagado' : ''}`}>
+                                🔥 {dias === 0 ? 'Jogue hoje para acender o foguinho!' : `${dias} ${dias === 1 ? 'dia seguido' : 'dias seguidos'}`}
+                            </span>
+                        </div>
+                    </div>
+                    <BarraXp atalho={false} compacta />
+                    <a className='global-button global-button--full-width' href={continuar ? rotaDoJogo(continuar) : tabuada ? rotaDoJogo(tabuada) : '/jogos'}>
+                        <span className='option-link'>
+                            {continuar ? `▶️ Continuar: ${continuar.nome}` : '🎮 Começar pela Tabuada'}
+                        </span>
+                    </a>
+                </section>
+                <DesafiosDoDia sequencia={false} />
+                <section className='home-jogos'>
+                    <div className='home-jogos__topo'>
+                        <h2>🎮 Escolha um jogo</h2>
+                        <a className='home-jogos__todos' href='/jogos'>Ver todos os jogos</a>
+                    </div>
+                    <div className='home-jogos__filtros' role='group' aria-label='Filtrar jogos por habilidade'>
+                        {filtros.map((item) => (
+                            <button
+                                key={item.id}
+                                type='button'
+                                className={`home-jogos__filtro${item.id === filtroAtual.id ? ' home-jogos__filtro--ativo' : ''}`}
+                                aria-pressed={item.id === filtroAtual.id}
+                                onClick={() => escolherFiltro(item.id)}
+                            >
+                                {item.nome}
+                            </button>
+                        ))}
+                    </div>
+                    <div className='home-jogos__grade'>
+                        {jogos.filter(filtroAtual.incluir).map((jogo) => (
+                            <a key={jogo.id} className={`home-jogo${jogo.id === 'tabuada' ? ' home-jogo--destaque' : ''}`} href={rotaDoJogo(jogo)}>
+                                {(ehNovo(jogo) || jogo.id === favorito) && (
+                                    <span className='home-jogo__selos'>
+                                        {ehNovo(jogo) && <span className='home-jogo__selo'>✨ Novo!</span>}
+                                        {jogo.id === favorito && <span className='home-jogo__selo home-jogo__selo--favorito'>⭐ Seu favorito</span>}
+                                    </span>
+                                )}
+                                <span className='home-jogo__icone' aria-hidden='true'>{jogo.icone}</span>
+                                <strong>{jogo.nome}</strong>
+                                <span className='home-jogo__descricao'>{jogo.descricao}</span>
+                                <span className='home-jogo__tags'>
+                                    <span>🧠 {jogo.habilidade}</span>
+                                    <span>👦 {jogo.idade}</span>
+                                </span>
+                            </a>
+                        ))}
+                    </div>
+                </section>
+                <nav className='home-atalhos' aria-label='Atalhos'>
+                    <a className='home-atalho' href='/conquistas'>🏅 Conquistas</a>
+                    <a className='home-atalho' href='/resultados'>📊 Resultados</a>
+                    <a className='home-atalho' href='/ranking'>🏆 Ranking</a>
+                    <a
+                        className='home-atalho'
+                        href='/personalizar'
+                        aria-label={`Personalizar${recompensasNovas > 0 ? `, ${recompensasNovas} ${recompensasNovas === 1 ? 'item novo' : 'itens novos'}` : ''}`}
+                    >
+                        🎨 Personalizar
+                        {recompensasNovas > 0 && <span className='nav-item__novo' aria-hidden='true'>{recompensasNovas}</span>}
+                    </a>
+                </nav>
+                <section className='home-article-preview'>
+                    <h2>👩‍🏫 Use em casa ou na sala de aula</h2>
+                    <p>
+                        Os jogos ajudam a reforçar a tabuada, o cálculo mental e o raciocínio lógico sem cara de lição. Veja por que aprender brincando funciona e dicas para usar os jogos com as crianças.
+                    </p>
+                    <div className='gap-default'>
+                        <a className='global-button' href='/artigos/aprender-matematica-com-jogos'>
                             <span className='option-link'>
-                                🎮 Jogar Agora
+                                Aprender matemática com jogos
                             </span>
                         </a>
-                        <a className='global-button global-button--full-width' href={`/instrucoes`}>
+                        <a className='global-button' href='/artigos/dicas-para-ensinar-matematica-em-casa'>
                             <span className='option-link'>
-                                🤔 Como Jogar?
+                                Dicas para ensinar em casa
                             </span>
                         </a>
-                        <a className='global-button global-button--full-width' href={`/ranking`}>
+                        <a className='global-button' href='/artigos'>
                             <span className='option-link'>
-                                🏆 Ranking
-                            </span>
-                        </a>
-                        <a className='global-button global-button--full-width' href={`/resultados`}>
-                            <span className='option-link'>
-                                ✨Meus Resultados
-                            </span>
-                        </a>
-                        <a className='global-button global-button--full-width' href={`/artigos`}>
-                            <span className='option-link'>
-                                🧠 Artigos
-                            </span>
-                        </a>
-                        <a className='global-button global-button--full-width' href={`/jogos`}>
-                            <span className='option-link'>
-                                🧩 Mais Jogos
-                            </span>
-                        </a>
-                        <a className='global-button global-button--full-width' href={`/personalizar`}>
-                            <span className='option-link'>
-                                🎨 Personalizar
+                                Todos os artigos
                             </span>
                         </a>
                     </div>
                 </section>
-                <BarraXp />
-                <DesafiosDoDia />
                 <section className='home-description'>
                     <h1>🎯 Matemática divertida para todas as idades</h1>
                     <p>
-                        Tabuada Divertida é uma plataforma educacional criada para ajudar estudantes de todas as idades a praticarem matemática de maneira leve e envolvente.
-                        Exercícios de multiplicação, divisão, adição e subtração são apresentados em formato de jogo, incentivando o aprendizado contínuo com rankings, objetivos claros e acompanhamento de progresso.
+                        Tabuada Divertida é uma plataforma educacional com jogos de matemática para estudantes de todas as idades praticarem de maneira leve e envolvente.
+                        Tem tabuada de multiplicação, divisão, adição e subtração contra o relógio, corrida contra o robô, memória da tabuada, 2048, comparação de frações e decimais no Maior ou menor e desafios de lógica e padrões no Teste de QI com Números.
                     </p>
                     <p>
                         O site foi pensado para professores, responsáveis e alunos que buscam uma alternativa interativa para reforçar conteúdos básicos, desenvolver agilidade de raciocínio e ganhar confiança nas resoluções.
-                        Todo o conteúdo fica disponível imediatamente, direto no navegador e sem necessidade de instalação.
+                        Rankings, desafios do dia, conquistas e acompanhamento de progresso incentivam o aprendizado contínuo, e tudo fica disponível direto no navegador, sem necessidade de instalação.
                     </p>
-                </section>
-                <section className='home-article-preview'>
-                    <h2>🧠 Por que aprender matemática com jogos funciona?</h2>
-                    <p>
-                        Aprender brincando transforma o estudo em um desafio prazeroso, mantém a motivação em alta e ajuda a consolidar o conhecimento por meio de repetições significativas.
-                        No nosso artigo especial compartilhamos evidências, boas práticas e dicas para aproveitar atividades lúdicas em sala de aula ou em casa.
-                    </p>
-                    <a className='global-button' href='/artigos/aprender-matematica-com-jogos'>
-                        <span className='option-link'>
-                            Leia o artigo completo
-                        </span>
-                    </a>
                 </section>
                 <section className='home-article-preview'>
                     <h2>🧩 O que você encontra por aqui</h2>
@@ -91,22 +152,7 @@ function Home() {
                 <section className='home-article-preview'>
                     <h2>📜 A História da Tabuada</h2>
                     <p>
-                        A tabuada é uma ferramenta matemática que ajuda a memorizar os resultados das operações básicas, especialmente a multiplicação. Mas você sabia que ela existe há milhares de anos?
-                    </p>
-                    <p>
-                        A origem da tabuada remonta às civilizações antigas, como os <strong>babilônios</strong> e <strong>egípcios</strong>, que já utilizavam tabelas para facilitar os cálculos comerciais e astronômicos. Porém, a tabuada como conhecemos hoje foi sistematizada por um dos matemáticos mais famosos da Grécia Antiga: <strong>Pitágoras</strong>.
-                    </p>
-                    <p>
-                        A chamada <strong>Tabuada de Pitágoras</strong> é uma matriz onde as linhas e colunas representam números, e as células contêm o resultado da multiplicação entre eles. Esse formato visual ajudava os estudantes da época a entenderem padrões e propriedades da multiplicação.
-                    </p>
-                    <p>
-                        Com o passar dos séculos, a tabuada se tornou parte essencial do ensino da matemática em todo o mundo. Durante a Idade Média, ela era ensinada em escolas monásticas. No século XIX, com a popularização das escolas públicas, passou a ser memorizada por milhões de alunos como uma das primeiras ferramentas para o raciocínio lógico.
-                    </p>
-                    <p>
-                        Hoje em dia, a tabuada continua sendo fundamental. Apesar das calculadoras e da tecnologia, saber fazer contas de cabeça traz mais agilidade, confiança e independência para lidar com números no dia a dia.
-                    </p>
-                    <p>
-                        No <strong>Tabuada Divertida</strong>, nossa missão é resgatar esse conhecimento de forma moderna, usando jogos e desafios que tornam o aprendizado mais leve, envolvente e divertido. Afinal, aprender pode — e deve — ser uma experiência prazerosa!
+                        A tabuada existe há milhares de anos: babilônios e egípcios já usavam tabelas para facilitar os cálculos, e a <strong>Tabuada de Pitágoras</strong> organizou a multiplicação no formato de matriz que conhecemos até hoje. Saber fazer contas de cabeça continua trazendo agilidade, confiança e independência no dia a dia.
                     </p>
                     <div className='gap-default'>
                         <a className='global-button' href='/artigos/historia-da-tabuada'>

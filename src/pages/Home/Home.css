@@ -1,0 +1,230 @@
+.home-boas-vindas {
+  gap: 14px;
+  margin-top: 3rem;
+  padding: var(--double-default-spacing) var(--triple-default-spacing);
+}
+
+.home-boas-vindas__topo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.home-boas-vindas .home-robot-container {
+  margin: 0;
+}
+
+.home-boas-vindas .home-robot {
+  width: 4.5rem;
+}
+
+.home-boas-vindas__texto {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  text-align: left;
+}
+
+.home-boas-vindas__texto h2 {
+  margin: 0;
+  font-family: var(--font-title);
+  font-size: 1.5rem;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+
+.home-boas-vindas__dias {
+  font-weight: 800;
+  color: var(--text-color-accent);
+}
+
+.home-boas-vindas__dias--apagado {
+  color: var(--text-color-secondary);
+}
+
+.home-jogos {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--double-default-spacing);
+}
+
+.home-jogos__topo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.home-jogos__topo h2 {
+  margin: 0;
+  font-family: var(--font-title);
+  color: var(--text-color-primary);
+}
+
+.home-jogos__todos {
+  font-weight: 800;
+  color: var(--text-color-primary);
+  text-decoration: none;
+  border-bottom: 2px solid var(--button-color-primary);
+}
+
+.home-jogos__filtros {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.home-jogos__filtro {
+  border: 1px solid var(--panel-border-color);
+  border-radius: 999px;
+  padding: 6px 14px;
+  background: var(--secundary-color);
+  color: var(--text-color-primary);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.home-jogos__filtro--ativo {
+  border-color: var(--button-color-primary);
+  background: var(--button-color-primary);
+  color: var(--button-text-color);
+}
+
+.home-jogos__grade {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.home-jogo {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: var(--secundary-color);
+  border: 1px solid var(--panel-border-color);
+  border-radius: 20px;
+  box-shadow: var(--shadow-card);
+  padding: 14px;
+  color: var(--text-color-primary);
+  text-align: left;
+  text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.home-jogo:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-soft);
+}
+
+.home-jogo--destaque {
+  grid-column: span 2;
+  border: 2px solid var(--button-color-primary);
+}
+
+.home-jogo strong {
+  font-family: var(--font-title);
+  font-size: 1.15rem;
+  line-height: 1.2;
+}
+
+.home-jogo__icone {
+  width: 48px;
+  height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--button-color-primary), #ffb067);
+}
+
+.home-jogo__selos {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.home-jogo__selo {
+  border-radius: 999px;
+  padding: 2px 8px;
+  background: var(--button-color-primary-right);
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.home-jogo__selo--favorito {
+  background: #f2b632;
+  color: #24324a;
+}
+
+.home-jogo__descricao {
+  flex: 1;
+  color: var(--text-color-secondary);
+  font-size: 14px;
+}
+
+.home-jogo__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-color-secondary);
+}
+
+.home-atalhos {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.home-atalho {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--panel-border-color);
+  border-radius: 14px;
+  padding: 10px 6px;
+  background: var(--secundary-color);
+  box-shadow: var(--shadow-card);
+  color: var(--text-color-primary);
+  font-size: 14px;
+  font-weight: 700;
+  text-align: center;
+  text-decoration: none;
+}
+
+.home-atalho:hover {
+  border-color: var(--button-color-primary);
+}
+
+@media (min-width: 768px) {
+  .home-jogos__grade {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .home-jogos__grade {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .home-atalhos {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

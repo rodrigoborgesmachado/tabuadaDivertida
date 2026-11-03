@@ -8,7 +8,11 @@ import './DesafiosDoDia.css';
 
 const formatarNumero = (valor: number) => valor.toLocaleString('pt-BR');
 
-function DesafiosDoDia() {
+interface DesafiosDoDiaProps {
+  sequencia?: boolean;
+}
+
+function DesafiosDoDia({ sequencia = true }: DesafiosDoDiaProps) {
   const [progresso] = useState(() => lerProgresso());
   const [desafios] = useState(() => [desafioDoDia(), desafioDaSemana()]);
 
@@ -25,7 +29,7 @@ function DesafiosDoDia() {
 
   return (
     <section className='desafios-do-dia'>
-      <SequenciaDias />
+      {sequencia && <SequenciaDias />}
       <div className='desafios-do-dia__lista'>
         {desafios.map((desafio) => {
           const concluido = desafioConcluido(progresso, desafio);
@@ -57,7 +61,7 @@ function DesafiosDoDia() {
                   </button>
                 ) : (
                   <a className='global-button global-button--full-width' href={jogo?.path || '/jogos'}>
-                    Jogar
+                    Jogar desafio
                   </a>
                 )}
               </div>
