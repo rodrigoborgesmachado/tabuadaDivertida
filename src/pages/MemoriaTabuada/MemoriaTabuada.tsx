@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import { playError, playSuccess } from '../../services/sons';
 import { lerProgresso, partidaFinalizada } from '../../gamificacao/progresso';
 import BarraXp from '../../components/BarraXp/BarraXp';
+import RankingFinal from '../../components/RankingFinal/RankingFinal';
 import { criarTabuleiro, formamPar, formatarTempo, isMelhorResultado, PARES_POR_NIVEL, TABUADAS, type Carta, type Nivel, type Resultado, type Tabuada } from './logic';
 import './MemoriaTabuada.css';
 
@@ -306,6 +307,7 @@ function MemoriaTabuada() {
                     : `🏆 Melhor resultado: ${melhorDoNivel?.jogadas} jogadas em ${formatarTempo(melhorDoNivel?.segundos || 0)}`}
                 </p>
                 <BarraXp ganho={resultadoFinal.ganhoXp} />
+                <RankingFinal jogo='memoria' modo={nivel} resultado={{ pontuacao: resultadoFinal.jogadas, tempo: resultadoFinal.segundos, extras: { tabuada } }} />
                 <div className='memoria-modal__actions'>
                   <button type='button' className='global-button' onClick={iniciarJogo}>
                     Jogar de novo

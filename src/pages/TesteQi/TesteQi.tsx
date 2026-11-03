@@ -6,6 +6,7 @@ import { salvarPartida } from '../../services/historico';
 import { compartilhar } from '../../services/compartilhar';
 import { lerProgresso, partidaFinalizada } from '../../gamificacao/progresso';
 import BarraXp from '../../components/BarraXp/BarraXp';
+import RankingFinal from '../../components/RankingFinal/RankingFinal';
 import Keypad from '../../components/Keypad/Keypad';
 import { desempenhoPorTipo, gerarPartida, perguntaDoTipo, pontuacaoQi, SEGUNDOS_POR_DIFICULDADE, textoQuestao, TIPOS, tituloQi, TOTAL_QUESTOES, type Celula, type Dificuldade, type Questao } from './logic';
 import '../Contagem/Contagem.css';
@@ -58,7 +59,7 @@ function TesteQi() {
   const [tempo, setTempo] = useState(0);
   const [feedback, setFeedback] = useState<Resposta | null>(null);
   const [recorde, setRecorde] = useState<Recorde | null>(() => readRecorde());
-  const [resultadoFinal, setResultadoFinal] = useState<{ qi: number; novoRecorde: boolean; ganhoXp: number } | null>(null);
+  const [resultadoFinal, setResultadoFinal] = useState<{ qi: number; tempo: number; novoRecorde: boolean; ganhoXp: number } | null>(null);
 
   const questao = questoes[indice];
   const acertos = respostas.filter((resposta) => resposta.correta).length;
@@ -132,7 +133,7 @@ function TesteQi() {
     const xpAnterior = lerProgresso().xp;
     partidaFinalizada({ jogo: 'teste-qi', pontuacao: qi, tempo: tempoTotal, contas: todas.map((resposta) => ({ correta: resposta.correta })) });
 
-    setResultadoFinal({ qi, novoRecorde, ganhoXp: lerProgresso().xp - xpAnterior });
+    setResultadoFinal({ qi, tempo: tempoTotal, novoRecorde, ganhoXp: lerProgresso().xp - xpAnterior });
     setFase('fim');
   }, [recorde]);
 
@@ -398,6 +399,7 @@ function TesteQi() {
                   : `🏆 Melhor resultado: ${recorde?.acertos}/${TOTAL_QUESTOES} (QI de brincadeira ${recorde?.qi})`}
               </p>
               <BarraXp ganho={resultadoFinal.ganhoXp} />
+              <RankingFinal jogo='teste-qi' modo={null} resultado={{ acertos, total: respostas.length, tempo: resultadoFinal.tempo, extras: { qi: resultadoFinal.qi } }} />
 
               <h3>Desempenho por tipo de questão</h3>
               <ul className='teste-qi-desempenho'>
