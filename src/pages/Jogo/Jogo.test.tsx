@@ -2,6 +2,7 @@ import { act, fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import configData from '../../Config.json';
 import api from '../../services/api';
+import { TIMEOUT_ENVIO } from '../../services/resultadosJogos';
 import Jogo from './Jogo';
 
 jest.mock('../../services/api', () => ({
@@ -67,6 +68,26 @@ describe('Jogo', () => {
 
     expect(window.localStorage.getItem(configData.HISTORICO)).toBeNull();
     expect(progresso().jogosJogados).toEqual(['tabuada']);
+    expect(await screen.findByText('Tela final')).toBeTruthy();
+  });
+
+  it('finishes the match and registers the achievements when the api fails', async () => {
+    const post = jest.spyOn(api, 'post').mockRejectedValue(new Error('Network Error'));
+
+    renderJogo();
+    await responderConta();
+
+    expect(await screen.findByText('Tela final')).toBeTruthy();
+    expect(progresso().jogosJogados).toEqual(['tabuada']);
+    expect(post).toHaveBeenCalledWith('/ResultadosTabuadaDivertida', expect.objectContaining({ nome: 'Ana', pontuacao: 10 }), { timeout: TIMEOUT_ENVIO });
+  });
+
+  it('shows the final screen without waiting for the api', async () => {
+    jest.spyOn(api, 'post').mockReturnValue(new Promise(() => {}));
+
+    renderJogo();
+    await responderConta();
+
     expect(await screen.findByText('Tela final')).toBeTruthy();
   });
 

@@ -90,7 +90,20 @@ describe('Ranking', () => {
     renderRanking('/ranking');
 
     expect(await screen.findByText('😕 Não foi possível carregar o ranking agora. Tente novamente em instantes.')).toBeTruthy();
-    expect(get).toHaveBeenCalledWith('ResultadosTabuadaDivertida/ranking');
+    expect(get).toHaveBeenCalledWith('ResultadosTabuadaDivertida/ranking?top=50', expect.anything());
     expect(screen.getByRole('tab', { name: /Tabuada/ }).getAttribute('aria-selected')).toBe('true');
+  });
+
+  it('retries the multiplication table ranking after an error', async () => {
+    get.mockRejectedValueOnce(new Error('Network Error'))
+      .mockResolvedValue({ data: { success: true, object: [{ nome: 'Ana', tempo: 30, quantidade: 20, tipo: 'M', pontuacao: 200 }], total: 3 } });
+
+    renderRanking('/ranking');
+
+    fireEvent.click(await screen.findByText('Tentar novamente'));
+
+    expect(await screen.findByText('🔥Total de jogadores: 3🔥')).toBeTruthy();
+    expect(screen.getByText('20 Questões')).toBeTruthy();
+    expect(get).toHaveBeenCalledTimes(2);
   });
 });
