@@ -67,7 +67,7 @@ function RankingTabuada({ filtroNome, nomeJogador }: RankingTabuadaProps){
 
     if(loadding){
         return(
-            <PacmanLoader dots={7} mouthAngle={40} pellets={[1, 2, 3, 4, 5, 6]} size={64}/>
+            <PacmanLoader />
         )
     }
 

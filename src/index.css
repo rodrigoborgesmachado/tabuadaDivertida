@@ -1588,9 +1588,11 @@ hr{
 
 .loader-container {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 100vh; 
+  gap: var(--double-default-spacing);
+  min-height: 50vh;
   width: 100%;
 }
 

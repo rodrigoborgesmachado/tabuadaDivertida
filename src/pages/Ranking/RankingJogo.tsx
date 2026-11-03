@@ -46,7 +46,7 @@ function RankingJogo({ jogo, modo, filtroNome, nomeJogador }: RankingJogoProps) 
   }, [jogo.id, modo, tentativa]);
 
   if (status === 'carregando') {
-    return <PacmanLoader dots={7} mouthAngle={40} pellets={[1, 2, 3, 4, 5, 6]} size={64}/>;
+    return <PacmanLoader />;
   }
 
   if (status === 'erro') {

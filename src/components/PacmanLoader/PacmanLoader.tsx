@@ -5,40 +5,31 @@ type CSSVarProps = React.CSSProperties & {
 };
 
 interface PacmanLoaderProps {
-  size: number;        // px
-  mouthAngle: number;  // degrees
-  dots: number;
-  pellets: number[];   // ex.: Array.from({ length: dots }, (_, i) => i)
+  size?: number;
+  dots?: number;
 }
 
 const PacmanLoaderTSX: React.FC<PacmanLoaderProps> = ({
-  size,
-  mouthAngle,
-  dots,
-  pellets
+  size = 64,
+  dots = 5
 }) => {
   const loaderStyle: CSSVarProps = {
     '--size': `${size}px`,
-    '--mouth': `${mouthAngle}deg`,
     '--dots': dots
   };
 
   return (
-    <div className="loader-container">
-      <div
-        className="pacman-loader"
-        role="status"
-        aria-label="Carregando…"
-        style={loaderStyle}
-      >
-        <div className="pacman" />
-        <div className="pellets" aria-hidden={true}>
-          {pellets.map((i) => {
+    <div className="loader-container" role="status">
+      <div className="pacman-loader" aria-hidden={true} style={loaderStyle}>
+        <div className="pellets">
+          {Array.from({ length: dots }, (_, i) => {
             const pelletStyle: CSSVarProps = { '--i': i };
             return <span key={i} className="pellet" style={pelletStyle} />;
           })}
         </div>
+        <div className="pacman" />
       </div>
+      <span className="pacman-loader-texto">Carregando...</span>
     </div>
   );
 };
