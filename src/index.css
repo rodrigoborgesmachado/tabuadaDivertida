@@ -1821,10 +1821,6 @@ hr{
     color: var(--text-color-secondary);
     margin-right: 12px;
   }
-  .tableRanking td:nth-child(1)::before { content: 'Posicao'; }
-  .tableRanking td:nth-child(2)::before { content: 'Nome'; }
-  .tableRanking td:nth-child(3)::before { content: 'Tempo'; }
-  .tableRanking td:nth-child(4)::before { content: 'Pontuacao'; }
 }
 
 .option-link::after {

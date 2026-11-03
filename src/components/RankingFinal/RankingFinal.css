@@ -1,0 +1,35 @@
+.ranking-final {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  margin: 12px 0;
+  text-align: center;
+}
+
+.ranking-final__nome {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  font-weight: 700;
+  color: var(--text-color-primary);
+}
+
+.ranking-final__acoes {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.ranking-final .ranking-final__status {
+  margin: 0;
+  font-weight: 700;
+  color: var(--text-color-primary);
+}
+
+.ranking-final__status:empty {
+  display: none;
+}

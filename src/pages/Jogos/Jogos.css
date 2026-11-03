@@ -8,7 +8,14 @@
   gap: 16px;
 }
 
+.jogos-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
 .jogos-card {
+  flex: 1;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -63,4 +70,8 @@
   padding: 4px 10px;
   font-size: 13px;
   font-weight: 700;
+}
+
+.jogos-ranking {
+  text-align: center;
 }

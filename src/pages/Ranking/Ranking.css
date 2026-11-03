@@ -1,0 +1,55 @@
+.ranking-abas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  width: 100%;
+  margin: 16px 0;
+}
+
+.ranking-aba {
+  flex: 1 1 140px;
+  min-height: 44px;
+  padding: 8px 14px;
+  border-radius: 16px;
+  border: 2px solid var(--panel-border-color);
+  background: var(--block-color);
+  color: var(--text-color-primary);
+  font-family: var(--font-title);
+  font-weight: 700;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.ranking-aba--ativa {
+  border-color: var(--button-color-primary);
+  background: linear-gradient(135deg, var(--button-color-primary), #ffb067);
+  color: white;
+}
+
+.ranking-modo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  margin-bottom: 16px;
+  font-weight: 700;
+}
+
+.ranking-mensagem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin: 16px 0;
+  text-align: center;
+  font-weight: 700;
+  color: var(--text-color-secondary);
+}
+
+.ranking-mensagem p {
+  margin: 0;
+}
+
+.ranking-page .tableRanking td {
+  overflow-wrap: anywhere;
+}

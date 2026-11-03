@@ -216,6 +216,8 @@
 
 .memoria-modal__content {
   width: min(100%, 420px);
+  max-height: calc(100vh - 32px);
+  overflow-y: auto;
   background: var(--secundary-color);
   border: 1px solid var(--panel-border-color);
   border-radius: 24px;

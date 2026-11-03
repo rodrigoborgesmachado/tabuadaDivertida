@@ -6,6 +6,7 @@ import { salvarPartida, type Questao } from '../../services/historico';
 import { compartilhar } from '../../services/compartilhar';
 import { lerProgresso, partidaFinalizada } from '../../gamificacao/progresso';
 import BarraXp from '../../components/BarraXp/BarraXp';
+import RankingFinal from '../../components/RankingFinal/RankingFinal';
 import { comparar, CONFIG_NIVEL, explicarRodada, gerarRodada, PENALIDADE_SEGUNDOS, PONTOS_POR_ACERTO, type Modalidade, type Nivel, type Resposta, type Rodada } from './logic';
 import '../Contagem/Contagem.css';
 import './MaiorOuMenor.css';
@@ -359,6 +360,9 @@ function MaiorOuMenor() {
                     : `🏆 Recorde: ${recordes[chave] || 0} pontos`}
                 </p>
                 <BarraXp ganho={resultadoFinal.ganhoXp} />
+                {questoes.length > 0 && (
+                  <RankingFinal jogo='maior-ou-menor' modo={chave} resultado={{ pontuacao: pontos, acertos, total: questoes.length, tempo: segundos }} />
+                )}
                 <div className='maior-menor-modal__actions'>
                   <button type='button' className='global-button' onClick={iniciarJogo}>
                     Jogar de novo
