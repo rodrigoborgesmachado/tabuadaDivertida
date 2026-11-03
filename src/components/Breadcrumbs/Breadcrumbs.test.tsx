@@ -37,6 +37,13 @@ describe('Breadcrumbs', () => {
     expect(screen.getByText('Teste de QI com Números')).toBeTruthy();
   });
 
+  it('shows the race against the robot game', () => {
+    renderBreadcrumbs('/jogos/corrida-contra-o-robo');
+
+    expect(screen.getAllByText('Jogos')).toHaveLength(1);
+    expect(screen.getByText('Corrida contra o robô')).toBeTruthy();
+  });
+
   it('shows the achievements page', () => {
     renderBreadcrumbs('/conquistas');
 

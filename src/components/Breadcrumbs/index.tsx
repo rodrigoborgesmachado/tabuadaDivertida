@@ -24,6 +24,7 @@ function Breadcrumbs() {
     'memoria-da-tabuada': 'Memória da tabuada',
     'maior-ou-menor': 'Maior ou menor',
     'teste-de-qi': 'Teste de QI com Números',
+    'corrida-contra-o-robo': 'Corrida contra o robô',
     'conquistas': 'Minhas conquistas',
     'personalizar': 'Personalizar',
     'instrucoes': 'Instruções',

@@ -2,6 +2,7 @@ import { aplicarDesafios, type Desafio, type TipoDesafio } from './desafios';
 import { FATORES, medalhas, nivelAlcancado, type Medalha } from './medalhas';
 import { PARES_POR_NIVEL, type Nivel } from '../pages/MemoriaTabuada/logic';
 import { TEMPO_MEDIO_SEM_TITUBEAR, TOTAL_QUESTOES } from '../pages/TesteQi/logic';
+import type { NivelRobo } from '../pages/CorridaRobo/logic';
 import { chaveDia, chaveSemana, diasEntre, registrarDia } from './sequenciaDias';
 import { calcularNivel, xpDaPartida, xpDasMedalhas, xpDoDesafio, xpInicial, type NivelXp } from './xp';
 
@@ -46,6 +47,7 @@ export interface Progresso {
   padroesAcertados: number;
   gabaritos: number;
   semTitubear: number;
+  vitoriasContraCampeao: number;
   tabuadas: Record<string, Record<string, string>>;
   medalhas: Record<string, MedalhaObtida>;
   ultimoDia: string;
@@ -78,6 +80,8 @@ export interface EventoJogo {
   jogadas?: number;
   tempo?: number;
   desperdicio?: boolean;
+  nivelRobo?: NivelRobo;
+  venceu?: boolean;
 }
 
 export interface Conquista {
@@ -112,6 +116,7 @@ export const criarProgresso = (): Progresso => ({
   padroesAcertados: 0,
   gabaritos: 0,
   semTitubear: 0,
+  vitoriasContraCampeao: 0,
   tabuadas: {},
   medalhas: {},
   ultimoDia: '',
@@ -231,6 +236,12 @@ const registrarTesteQi = (proximo: Progresso, evento: EventoJogo, acertos: numbe
   }
 };
 
+const registrarCorrida = (proximo: Progresso, evento: EventoJogo) => {
+  if (evento.jogo === 'corrida-robo' && evento.venceu && evento.nivelRobo === 'campeao') {
+    proximo.vitoriasContraCampeao += 1;
+  }
+};
+
 export const aplicarEvento = (progresso: Progresso, evento: EventoJogo, finalizada: boolean, data: Date): Progresso => {
   const proximo: Progresso = {
     ...progresso,
@@ -307,6 +318,7 @@ export const aplicarEvento = (progresso: Progresso, evento: EventoJogo, finaliza
 
   registrarMemoria(proximo, evento);
   registrarTesteQi(proximo, evento, acertos);
+  registrarCorrida(proximo, evento);
   registrarFimDeSemana(proximo, data);
 
   return registrarDia(proximo, data);

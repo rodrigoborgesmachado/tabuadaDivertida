@@ -40,6 +40,9 @@ function Historico(){
         else if (tipo === 'QI'){
             retorno = 'Teste de QI com Números';
         }
+        else if (tipo === 'CR'){
+            retorno = 'Corrida contra o robô';
+        }
 
         return retorno;
     }

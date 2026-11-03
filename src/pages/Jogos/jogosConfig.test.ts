@@ -8,6 +8,7 @@ describe('jogosConfig', () => {
     expect(paths).toContain('/jogos/memoria-da-tabuada');
     expect(paths).toContain('/jogos/maior-ou-menor');
     expect(paths).toContain('/jogos/teste-de-qi');
+    expect(paths).toContain('/jogos/corrida-contra-o-robo');
   });
 
   it('gives each game a unique id', () => {

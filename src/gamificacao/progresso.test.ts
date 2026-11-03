@@ -310,8 +310,25 @@ describe('progresso', () => {
     partidaFinalizada({ jogo: '2048', maiorPeca: 32 }, dia);
     partidaFinalizada({ jogo: 'memoria' }, dia);
     partidaFinalizada({ jogo: 'maior-ou-menor' }, dia);
+    partidaFinalizada({ jogo: 'teste-qi' }, dia);
 
-    expect(ids(partidaFinalizada({ jogo: 'teste-qi' }, dia))).toContain('explorador:1');
+    expect(ids(partidaFinalizada({ jogo: 'corrida-robo' }, dia))).toContain('explorador:1');
+  });
+
+  it('unlocks the race medal only when beating the champion robot', () => {
+    expect(ids(partidaFinalizada({ jogo: 'corrida-robo', nivelRobo: 'turbo', venceu: true }, dia))).not.toContain('mais-rapido-que-a-maquina:1');
+    expect(ids(partidaFinalizada({ jogo: 'corrida-robo', nivelRobo: 'campeao', venceu: false }, dia))).not.toContain('mais-rapido-que-a-maquina:1');
+    expect(ids(partidaFinalizada({ jogo: 'tabuada', nivelRobo: 'campeao', venceu: true }, dia))).not.toContain('mais-rapido-que-a-maquina:1');
+    expect(ids(partidaFinalizada({ jogo: 'corrida-robo', nivelRobo: 'campeao', venceu: true }, dia))).toContain('mais-rapido-que-a-maquina:1');
+    expect(lerProgresso().vitoriasContraCampeao).toBe(1);
+  });
+
+  it('counts the race answers for the times table medals', () => {
+    const questoes = [...FATORES.flatMap((fator) => [{ questao: `7x${fator}`, correta: true }, { questao: `${fator + 10}+3`, correta: true }]), { questao: '2+2', correta: true }, { questao: '3+3', correta: true }];
+    const novas = ids(partidaFinalizada({ jogo: 'corrida-robo', modo: 'M', contas: contasDaTabuada(questoes), nivelRobo: 'atento', venceu: true }, dia));
+
+    expect(novas).toEqual(expect.arrayContaining(['mestre-do-7:1', 'partida-perfeita:1']));
+    expect(lerProgresso().perfeitasPorModo).toEqual({ M: 1 });
   });
 
   it('unlocks the IQ test medals', () => {
