@@ -15,7 +15,6 @@ function Breadcrumbs() {
 
   const labelMap: Record<string, string> = {
     '': 'Início',
-    'formulario': 'Formulário',
     'selecionarjogo': 'Selecionar Jogo',
     'ranking': 'Ranking',
     'resultados': 'Resultados',

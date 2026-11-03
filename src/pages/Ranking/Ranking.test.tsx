@@ -71,9 +71,20 @@ describe('Ranking', () => {
     await screen.findByText('🏆Ana');
     expect(get).toHaveBeenCalledWith('ResultadosJogos/ranking?jogo=corrida-robo&modo=R-campeao&top=50', expect.anything());
     expect((screen.getByRole('combobox') as HTMLSelectElement).value).toBe('R-campeao');
-    expect(screen.getByText('Aleatório · Robô campeão')).toBeTruthy();
+    expect(screen.getByText('Aleatório · Robô campeão · 20 casas')).toBeTruthy();
     expect(screen.getByText('25s')).toBeTruthy();
     expect(screen.getByText('20/22')).toBeTruthy();
+  });
+
+  it('shows the race against the robot ranking by track size', async () => {
+    get.mockResolvedValue({ data: { success: true, object: [], total: 0 } });
+
+    renderRanking('/ranking?jogo=corrida-robo&modo=M-turbo-50');
+
+    await screen.findByText('Ainda não há resultados neste ranking. Jogue e seja o primeiro!');
+    expect(get).toHaveBeenCalledWith('ResultadosJogos/ranking?jogo=corrida-robo&modo=M-turbo-50&top=50', expect.anything());
+    expect((screen.getByRole('combobox') as HTMLSelectElement).value).toBe('M-turbo-50');
+    expect(screen.getByText('Multiplicação · Robô turbo · 50 casas')).toBeTruthy();
   });
 
   it('shows the empty state', async () => {

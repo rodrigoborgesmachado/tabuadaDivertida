@@ -1,6 +1,6 @@
 import { KeyboardEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import configData from '../../Config.json';
+import { casasDaCorrida, lerNome, salvarQuantidade, useJogador } from '../../services/jogador';
 import { playError, playSuccess } from '../../services/sons';
 import { salvarPartida, type Questao } from '../../services/historico';
 import { compartilhar } from '../../services/compartilhar';
@@ -12,7 +12,7 @@ import RoboPersonalizado from '../../components/RoboPersonalizado/RoboPersonaliz
 import happyRobot from '../../assets/robot-happy.svg';
 import neutralRobot from '../../assets/robot-neutral.svg';
 import sadRobot from '../../assets/robot-sad.svg';
-import { formatarTempo, gerarConta, NIVEIS_ROBO, PENALIDADE_MS, posicaoRobo, tempoDoRobo, TOTAL_CASAS, vencedor, type Conta, type NivelRobo, type Operacao, type Vencedor } from './logic';
+import { CASAS_CORRIDA, chaveCorrida, formatarTempo, gerarConta, NIVEIS_ROBO, PENALIDADE_MS, posicaoRobo, tempoDoRobo, vencedor, type Conta, type NivelRobo, type Operacao, type Vencedor } from './logic';
 import '../Contagem/Contagem.css';
 import './CorridaRobo.css';
 
@@ -45,7 +45,7 @@ const NIVEIS = Object.keys(NIVEIS_ROBO) as NivelRobo[];
 
 const labelOperacao = (operacao: Operacao) => OPERACOES.find((item) => item.operacao === operacao)?.label || '';
 
-const posicaoNaPista = (casas: number) => ({ left: `calc((100% - var(--corrida-corredor)) * ${casas / TOTAL_CASAS})` });
+const posicaoNaPista = (casas: number, totalCasas: number) => ({ left: `calc((100% - var(--corrida-corredor)) * ${casas / totalCasas})` });
 
 const readRecordes = (): Record<string, number> => {
   try {
@@ -75,10 +75,12 @@ function CorridaRobo() {
   const [questoes, setQuestoes] = useState<Questao[]>([]);
   const [recordes, setRecordes] = useState<Record<string, number>>(() => readRecordes());
   const [resultado, setResultado] = useState<Resultado | null>(null);
+  const { quantidade } = useJogador();
+  const [totalCasas, setTotalCasas] = useState(() => casasDaCorrida(quantidade));
   const inicioRef = useRef(0);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const chave = `${operacao}-${nivel}`;
+  const chave = chaveCorrida(operacao, nivel, totalCasas);
   const robo = NIVEIS_ROBO[nivel];
   const acertos = questoes.filter((questao) => questao.correta).length;
 
@@ -88,6 +90,12 @@ function CorridaRobo() {
     return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua) ||
            (typeof window !== 'undefined' && (window as any).matchMedia && (window as any).matchMedia('(pointer: coarse)').matches);
   }, []);
+
+  useEffect(() => {
+    if (fase === 'config') {
+      setTotalCasas(casasDaCorrida(quantidade));
+    }
+  }, [fase, quantidade]);
 
   useEffect(() => {
     if (fase !== 'contagem') {
@@ -128,12 +136,12 @@ function CorridaRobo() {
   }, [fase, erro, isMobile]);
 
   useEffect(() => {
-    const ganhador = fase === 'correndo' ? vencedor(casas, nivel, decorrido) : null;
+    const ganhador = fase === 'correndo' ? vencedor(casas, nivel, decorrido, totalCasas) : null;
     if (!ganhador) {
       return;
     }
 
-    const tempo = ganhador === 'jogador' ? decorrido : tempoDoRobo(nivel);
+    const tempo = ganhador === 'jogador' ? decorrido : tempoDoRobo(nivel, totalCasas);
     const novoRecorde = ganhador === 'jogador' && (!recordes[chave] || tempo < recordes[chave]);
     if (novoRecorde) {
       const novosRecordes = { ...recordes, [chave]: tempo };
@@ -147,7 +155,7 @@ function CorridaRobo() {
         quantidadeQuestoes: questoes.length,
         quantidadeAcertos: acertos,
         tempo: Math.round(tempo / 1000),
-        nome: localStorage.getItem(configData.NOME_PARAM),
+        nome: lerNome(),
         tipo: 'CR',
         questoes,
         data: new Date().toISOString(),
@@ -161,6 +169,7 @@ function CorridaRobo() {
         contas: contasDaTabuada(questoes),
         tempoMedio: Math.round((tempo / 1000 / questoes.length) * 10) / 10,
         nivelRobo: nivel,
+        casas: totalCasas,
         venceu: ganhador === 'jogador',
       });
       ganhoXp = lerProgresso().xp - xpAnterior;
@@ -168,7 +177,7 @@ function CorridaRobo() {
 
     setResultado({ vencedor: ganhador, tempo, novoRecorde, ganhoXp });
     setFase('fim');
-  }, [fase, casas, nivel, decorrido, recordes, chave, questoes, acertos, operacao]);
+  }, [fase, casas, nivel, decorrido, totalCasas, recordes, chave, questoes, acertos, operacao]);
 
   const iniciarCorrida = () => {
     setConta(null);
@@ -180,6 +189,13 @@ function CorridaRobo() {
     setResultado(null);
     setContagem(3);
     setFase('contagem');
+  };
+
+  const escolherCasas = (valor: number) => {
+    setTotalCasas(valor);
+    if (casasDaCorrida(quantidade) !== valor) {
+      salvarQuantidade(valor);
+    }
   };
 
   const mudarConfiguracao = () => {
@@ -227,6 +243,7 @@ function CorridaRobo() {
         ? `Venci o ${robo.nome} na Corrida contra o robô!`
         : `Apostei corrida contra o ${robo.nome} na Corrida contra o robô!`,
       `🧮 ${labelOperacao(operacao)}`,
+      `🏁 ${totalCasas} casas`,
       `⏱️ Tempo: ${formatarTempo(resultado?.tempo || 0)}`,
       `✅ Acertos: ${acertos}/${questoes.length}`,
       '',
@@ -235,7 +252,7 @@ function CorridaRobo() {
   };
 
   const imagemRobo = resultado ? (resultado.vencedor === 'robo' ? happyRobot : sadRobot) : neutralRobot;
-  const casasRobo = posicaoRobo(nivel, decorrido);
+  const casasRobo = posicaoRobo(nivel, decorrido, totalCasas);
 
   return (
     <div className='center'>
@@ -249,7 +266,7 @@ function CorridaRobo() {
             {fase === 'correndo' && (
               <div className='corrida-badges'>
                 <span className='corrida-badge'>⏱️ {formatarTempo(decorrido)}</span>
-                <span className='corrida-badge'>🏁 Casas: {casas}/{TOTAL_CASAS}</span>
+                <span className='corrida-badge'>🏁 Casas: {casas}/{totalCasas}</span>
                 <span className='corrida-badge'>✅ Acertos: {acertos}</span>
               </div>
             )}
@@ -259,7 +276,7 @@ function CorridaRobo() {
             <div className='corrida-config'>
               <p className='corrida-regras'>
                 Cada acerto faz o seu robô avançar uma casa. Cada erro deixa você parado por {PENALIDADE_MS / 1000} segundos.
-                O robô do site corre sozinho: quem chegar primeiro às {TOTAL_CASAS} casas vence!
+                O robô do site corre sozinho: quem chegar primeiro às {totalCasas} casas vence!
               </p>
 
               <div className='corrida-config__grupo'>
@@ -274,6 +291,23 @@ function CorridaRobo() {
                       onClick={() => setOperacao(item.operacao)}
                     >
                       {item.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className='corrida-config__grupo'>
+                <h3>Escolha o tamanho da pista</h3>
+                <div className='corrida-opcoes'>
+                  {CASAS_CORRIDA.map((item) => (
+                    <button
+                      key={item}
+                      type='button'
+                      className={`corrida-opcao${totalCasas === item ? ' corrida-opcao--ativa' : ''}`}
+                      aria-pressed={totalCasas === item}
+                      onClick={() => escolherCasas(item)}
+                    >
+                      {item} casas
                     </button>
                   ))}
                 </div>
@@ -324,20 +358,20 @@ function CorridaRobo() {
                 <div className='corrida-raia'>
                   <span className='corrida-raia__nome'>Você</span>
                   <div className='corrida-raia__trilho'>
-                    <div className='corrida-corredor' style={posicaoNaPista(casas)}>
+                    <div className='corrida-corredor' style={posicaoNaPista(casas, totalCasas)}>
                       <RoboPersonalizado titulo='Seu robô' triste={resultado?.vencedor === 'robo'} className='corrida-corredor__robo' />
                     </div>
                   </div>
-                  <span className='corrida-raia__casas'>{casas}/{TOTAL_CASAS}</span>
+                  <span className='corrida-raia__casas'>{casas}/{totalCasas}</span>
                 </div>
                 <div className='corrida-raia'>
                   <span className='corrida-raia__nome'>{robo.icone} Robô</span>
                   <div className='corrida-raia__trilho'>
-                    <div className='corrida-corredor corrida-corredor--robo' style={posicaoNaPista(casasRobo)}>
+                    <div className='corrida-corredor corrida-corredor--robo' style={posicaoNaPista(casasRobo, totalCasas)}>
                       <img src={imagemRobo} alt={robo.nome} className='corrida-corredor__robo' />
                     </div>
                   </div>
-                  <span className='corrida-raia__casas'>{Math.floor(casasRobo)}/{TOTAL_CASAS}</span>
+                  <span className='corrida-raia__casas'>{Math.floor(casasRobo)}/{totalCasas}</span>
                 </div>
               </div>
 
@@ -386,7 +420,7 @@ function CorridaRobo() {
                 <p>
                   {resultado.vencedor === 'jogador'
                     ? `Você cruzou a linha de chegada em ${formatarTempo(resultado.tempo)}, na frente do ${robo.nome}.`
-                    : `O ${robo.nome} chegou primeiro, em ${formatarTempo(resultado.tempo)}. Você avançou ${casas} de ${TOTAL_CASAS} casas.`}
+                    : `O ${robo.nome} chegou primeiro, em ${formatarTempo(resultado.tempo)}. Você avançou ${casas} de ${totalCasas} casas.`}
                 </p>
                 <p>✅ {acertos} {acertos === 1 ? 'acerto' : 'acertos'} em {questoes.length} {questoes.length === 1 ? 'resposta' : 'respostas'}.</p>
                 <p className='corrida-resultado__recorde'>

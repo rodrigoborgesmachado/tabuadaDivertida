@@ -55,7 +55,7 @@ function BeneficiosJogosEducacionais() {
 
                 <p>
                     Na <strong>Tabuada Divertida</strong>, acreditamos que aprender pode ser tão divertido quanto jogar.
-                    Experimente uma partida na <a href='/'>página inicial</a> ou explore o <a href='/formulario'>formulário de jogo</a>
+                    Experimente uma partida na <a href='/'>página inicial</a> ou explore a <a href='/selecionarjogo'>escolha do modo de jogo</a>
                     para escolher o nível e a operação matemática que deseja treinar.
                     Você também pode comparar sua evolução no <a href='/ranking'>ranking da comunidade</a> e celebrar cada conquista!
                 </p>

@@ -45,7 +45,7 @@ function AprenderMatematicaJogos() {
 
                 <p>
                     Quer colocar essas dicas em prática agora mesmo?
-                    Experimente uma partida na <a href='/'>página inicial</a> ou acesse o <a href='/formulario'>formulário de jogo</a> para escolher o nível e a operação que deseja treinar.
+                    Experimente uma partida na <a href='/'>página inicial</a> ou acesse a <a href='/selecionarjogo'>escolha do modo de jogo</a> para escolher o nível e a operação que deseja treinar.
                     Você também pode acompanhar a evolução no <a href='/ranking'>ranking da comunidade</a> e comparar seus resultados com as tentativas anteriores.
                 </p>
             </article>

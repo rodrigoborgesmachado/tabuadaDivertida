@@ -82,6 +82,17 @@ describe('Jogo', () => {
     expect(post).toHaveBeenCalledWith('/ResultadosTabuadaDivertida', expect.objectContaining({ nome: 'Ana', pontuacao: 10 }), { timeout: TIMEOUT_ENVIO });
   });
 
+  it('sends the match to the api when the player never told the name', async () => {
+    window.localStorage.removeItem(configData.NOME_PARAM);
+    const post = jest.spyOn(api, 'post').mockResolvedValue({});
+    renderJogo();
+    await responderConta();
+
+    expect(post).toHaveBeenCalledWith('/ResultadosTabuadaDivertida', expect.objectContaining({ nome: '', numeroQuestoes: '1' }), { timeout: TIMEOUT_ENVIO });
+    expect(JSON.parse(window.localStorage.getItem(configData.HISTORICO) || '[]')[0].nome).toBe('');
+    expect(await screen.findByText('Tela final')).toBeTruthy();
+  });
+
   it('shows the final screen without waiting for the api', async () => {
     jest.spyOn(api, 'post').mockReturnValue(new Promise(() => {}));
 

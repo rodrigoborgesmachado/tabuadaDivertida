@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import configData from '../../Config.json';
+import { lerNome, salvarNome } from '../../services/jogador';
 import { buscarRanking, enviarResultado, normalizarNome, posicaoNoRanking, TOP_RANKING, type DadosResultado, type JogoComRanking } from '../../services/resultadosJogos';
 import './RankingFinal.css';
 
@@ -11,8 +11,6 @@ interface RankingFinalProps {
 }
 
 type Status = 'nome' | 'enviando' | 'enviado' | 'erro' | 'fora';
-
-const lerNome = () => normalizarNome(localStorage.getItem(configData.NOME_PARAM) || '');
 
 function RankingFinal({ jogo, modo, resultado }: RankingFinalProps) {
   const [nome, setNome] = useState('');
@@ -54,7 +52,7 @@ function RankingFinal({ jogo, modo, resultado }: RankingFinalProps) {
       return;
     }
 
-    localStorage.setItem(configData.NOME_PARAM, nomeJogador);
+    salvarNome(nomeJogador);
     enviar(nomeJogador);
   };
 

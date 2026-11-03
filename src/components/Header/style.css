@@ -123,7 +123,10 @@
 }
 
 .personalizar-toggle__texto {
-    display: none;
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .site-header .menu-toggle {
@@ -259,10 +262,6 @@
 
     .personalizar-toggle {
         margin-right: auto;
-    }
-
-    .personalizar-toggle__texto {
-        display: inline;
     }
 
     .site-menu-backdrop {

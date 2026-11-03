@@ -34,7 +34,7 @@ describe('Home logic', () => {
   });
 
   it('opens the tabuada through the current flow', () => {
-    expect(rotaDoJogo(jogo('tabuada'))).toBe('/formulario');
+    expect(rotaDoJogo(jogo('tabuada'))).toBe('/selecionarjogo');
     expect(rotaDoJogo(jogo('2048'))).toBe('/jogo2048');
   });
 

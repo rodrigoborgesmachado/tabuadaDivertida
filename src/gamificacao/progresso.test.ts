@@ -435,6 +435,12 @@ describe('progresso', () => {
     expect(lerProgresso().vitoriasContraCampeao).toBe(1);
   });
 
+  it('unlocks the race medal only on tracks of 20 squares or more', () => {
+    expect(ids(partidaFinalizada({ jogo: 'corrida-robo', nivelRobo: 'campeao', venceu: true, casas: 10 }, dia))).not.toContain('mais-rapido-que-a-maquina:1');
+    expect(lerProgresso().vitoriasContraCampeao).toBe(0);
+    expect(ids(partidaFinalizada({ jogo: 'corrida-robo', nivelRobo: 'campeao', venceu: true, casas: 30 }, dia))).toContain('mais-rapido-que-a-maquina:1');
+  });
+
   it('counts the race answers for the times table medals', () => {
     const questoes = [...FATORES.flatMap((fator) => [{ questao: `7x${fator}`, correta: true }, { questao: `${fator + 10}+3`, correta: true }]), { questao: '2+2', correta: true }, { questao: '3+3', correta: true }];
     const novas = ids(partidaFinalizada({ jogo: 'corrida-robo', modo: 'M', contas: contasDaTabuada(questoes), nivelRobo: 'atento', venceu: true }, dia));

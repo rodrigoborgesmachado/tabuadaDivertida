@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import configData from '../../Config.json';
+import { lerNome } from '../../services/jogador';
 import { playError, playSuccess } from '../../services/sons';
 import { salvarPartida } from '../../services/historico';
 import { compartilhar } from '../../services/compartilhar';
@@ -119,7 +119,7 @@ function TesteQi() {
       quantidadeQuestoes: todas.length,
       quantidadeAcertos: totalAcertos,
       tempo: tempoTotal,
-      nome: localStorage.getItem(configData.NOME_PARAM),
+      nome: lerNome(),
       tipo: 'QI',
       questoes: todas.map((resposta) => ({
         questao: textoQuestao(resposta.questao),

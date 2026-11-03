@@ -2,7 +2,10 @@ import { act, fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import configData from '../../Config.json';
 import { buscarRanking, enviarResultado } from '../../services/resultadosJogos';
+import { lerQuantidade, salvarQuantidade } from '../../services/jogador';
 import CorridaRobo from './CorridaRobo';
+
+const STORAGE_RECORDES = 'tabuada-divertida-corrida-robo-recordes';
 
 jest.mock('./logic', () => {
   const actual = jest.requireActual('./logic');
@@ -169,5 +172,63 @@ describe('CorridaRobo', () => {
 
     expect(await screen.findByText('Resultado enviado! Continue jogando para entrar no top 50.')).toBeTruthy();
     expect(enviar).toHaveBeenCalledWith('corrida-robo', 'A-atento', { tempo: 2, acertos: 20, total: 21 }, 'Ana');
+  });
+
+  it('starts with the track size of the player quantity', () => {
+    salvarQuantidade(100);
+    renderJogo();
+
+    expect(screen.getByRole('button', { name: '50 casas' }).getAttribute('aria-pressed')).toBe('true');
+    expect(screen.getByText(/quem chegar primeiro às 50 casas vence!/)).toBeTruthy();
+  });
+
+  it('keeps the player quantity when choosing the track size that matches it', () => {
+    salvarQuantidade(100);
+    renderJogo();
+
+    fireEvent.click(screen.getByRole('button', { name: '50 casas' }));
+    expect(lerQuantidade()).toBe(100);
+
+    fireEvent.click(screen.getByRole('button', { name: '10 casas' }));
+    expect(lerQuantidade()).toBe(10);
+    expect(screen.getByRole('button', { name: '10 casas' }).getAttribute('aria-pressed')).toBe('true');
+  });
+
+  it('races on the chosen track size with its own records and ranking', async () => {
+    window.localStorage.setItem(configData.NOME_PARAM, 'Ana');
+    window.localStorage.setItem(STORAGE_RECORDES, JSON.stringify({ 'M-campeao': 1000 }));
+    renderJogo();
+    fireEvent.click(screen.getByRole('button', { name: '10 casas' }));
+    fireEvent.click(screen.getByText('🏆 Robô campeão'));
+
+    expect(screen.getByText('🏆 Recorde: ainda não há')).toBeTruthy();
+    comecar();
+    expect(screen.getByText('🏁 Casas: 0/10')).toBeTruthy();
+
+    for (let casa = 0; casa < 10; casa++) {
+      responder('42');
+    }
+
+    expect(screen.getByText('🏆 Você venceu!')).toBeTruthy();
+    expect(screen.getByText('🏆 Novo recorde contra o Robô campeão!')).toBeTruthy();
+    expect(JSON.parse(window.localStorage.getItem(STORAGE_RECORDES) || '{}')).toEqual({ 'M-campeao': 1000, 'M-campeao-10': 0 });
+    expect(JSON.parse(window.localStorage.getItem('tabuada-divertida-progresso') || '{}').vitoriasContraCampeao).toBe(0);
+    expect(await screen.findByText('Resultado enviado! Continue jogando para entrar no top 50.')).toBeTruthy();
+    expect(enviar).toHaveBeenCalledWith('corrida-robo', 'M-campeao-10', { tempo: 0, acertos: 10, total: 10 }, 'Ana');
+    expect(screen.getByText('🏆 Ver ranking').getAttribute('href')).toBe('/ranking?jogo=corrida-robo&modo=M-campeao-10');
+  });
+
+  it('lets the robot win a longer race only at the end of the track', () => {
+    renderJogo();
+    fireEvent.click(screen.getByRole('button', { name: '30 casas' }));
+    fireEvent.click(screen.getByText('🏆 Robô campeão'));
+    comecar();
+
+    avancar(59000);
+    expect(screen.queryByRole('status')).toBeNull();
+
+    avancar(1000);
+
+    expect(screen.getByText('O Robô campeão chegou primeiro, em 60,0s. Você avançou 0 de 30 casas.')).toBeTruthy();
   });
 });

@@ -2,6 +2,7 @@ import configData from "../../Config.json";
 import { useLocation, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+import { lerNome } from '../../services/jogador';
 import great from '../../assets/great.png';
 import donkey from '../../assets/donkey.png';
 import WalkingRobot from "./../../components/WalkingRobot/WalkingRobot";
@@ -58,7 +59,7 @@ function Final(){
     };
 
     const buildShareText = () => {
-        const nome = localStorage.getItem(configData.NOME_PARAM) || 'Jogador';
+        const nome = lerNome() || 'Jogador';
         const acertos = parseInt(localStorage.getItem(configData.QUANTIDADE_ACERTOS) || '0');
         const total = parseInt(localStorage.getItem(configData.QUANTIDADE_PARAM) || '0');
         const erros = Math.max(total - acertos, 0);
@@ -160,13 +161,13 @@ function Final(){
                     isPerfect ?
                     <div className='congrats-final'>
                         <img src={great} alt="great"/>
-                        <b>🎉Parabéns {localStorage.getItem(configData.NOME_PARAM)}, você é de outro planeta!!!🎉</b>
+                        <b>🎉Parabéns {lerNome() || 'Jogador'}, você é de outro planeta!!!🎉</b>
                     </div>
                     :
                     isWorst ?
                     <b>Você errou todas KKKKKKKKKKK</b>
                     :
-                    <b>🎉Parabéns {localStorage.getItem(configData.NOME_PARAM)}, você é fera!!!🎉</b>
+                    <b>🎉Parabéns {lerNome() || 'Jogador'}, você é fera!!!🎉</b>
                 }
             </h2>
             <br/>

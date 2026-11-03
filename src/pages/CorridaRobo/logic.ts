@@ -15,7 +15,8 @@ export interface ConfigNivelRobo {
   msPorCasa: number;
 }
 
-export const TOTAL_CASAS = 20;
+export const CASAS_CORRIDA = [10, 20, 30, 50];
+export const CASAS_PADRAO = 20;
 export const PENALIDADE_MS = 2000;
 
 export const NIVEIS_ROBO: Record<NivelRobo, ConfigNivelRobo> = {
@@ -51,15 +52,18 @@ export const gerarConta = (operacao: Operacao, random: () => number = Math.rando
   return { texto: `${a}x${b}`, resposta: a * b };
 };
 
-export const tempoDoRobo = (nivel: NivelRobo) => TOTAL_CASAS * NIVEIS_ROBO[nivel].msPorCasa;
+export const tempoDoRobo = (nivel: NivelRobo, totalCasas: number) => totalCasas * NIVEIS_ROBO[nivel].msPorCasa;
 
-export const posicaoRobo = (nivel: NivelRobo, decorrido: number) =>
-  Math.min(TOTAL_CASAS, Math.max(0, decorrido) / NIVEIS_ROBO[nivel].msPorCasa);
+export const posicaoRobo = (nivel: NivelRobo, decorrido: number, totalCasas: number) =>
+  Math.min(totalCasas, Math.max(0, decorrido) / NIVEIS_ROBO[nivel].msPorCasa);
 
-export const vencedor = (casasJogador: number, nivel: NivelRobo, decorrido: number): Vencedor | null => {
-  if (casasJogador >= TOTAL_CASAS) return 'jogador';
-  if (decorrido >= tempoDoRobo(nivel)) return 'robo';
+export const vencedor = (casasJogador: number, nivel: NivelRobo, decorrido: number, totalCasas: number): Vencedor | null => {
+  if (casasJogador >= totalCasas) return 'jogador';
+  if (decorrido >= tempoDoRobo(nivel, totalCasas)) return 'robo';
   return null;
 };
+
+export const chaveCorrida = (operacao: Operacao, nivel: NivelRobo, totalCasas: number) =>
+  `${operacao}-${nivel}${totalCasas === CASAS_PADRAO ? '' : `-${totalCasas}`}`;
 
 export const formatarTempo = (ms: number) => `${(Math.floor(ms / 100) / 10).toFixed(1).replace('.', ',')}s`;
