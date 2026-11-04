@@ -6,6 +6,7 @@ import { salvarPartida, type Questao } from '../../services/historico';
 import { conquistasDaPartida, type ConquistaPartida } from '../../services/compartilhar';
 import { lerProgresso, partidaFinalizada } from '../../gamificacao/progresso';
 import BarraXp from '../../components/BarraXp/BarraXp';
+import BotaoSom from '../../components/BotaoSom/BotaoSom';
 import CompartilharResultado from '../../components/CompartilharResultado/CompartilharResultado';
 import RankingFinal from '../../components/RankingFinal/RankingFinal';
 import ComoJogar from '../../components/ComoJogar/ComoJogar';
@@ -252,6 +253,7 @@ function MaiorOuMenor() {
   return (
     <div className='center'>
       <div className='global-pageContainer-left options-preview maior-menor-page'>
+        <BotaoSom />
         <div className='maior-menor-card'>
           <div className='maior-menor-header'>
             <div>
@@ -310,7 +312,7 @@ function MaiorOuMenor() {
                 <button type='button' className='global-button' onClick={iniciarJogo}>
                   Começar
                 </button>
-                <Link to='/jogos' className='global-button global-button--back'>
+                <Link to='/#jogos' className='global-button global-button--back'>
                   Voltar aos jogos
                 </Link>
               </div>

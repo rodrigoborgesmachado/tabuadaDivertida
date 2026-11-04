@@ -6,6 +6,7 @@ import { salvarPartida } from '../../services/historico';
 import { conquistasDaPartida, type ConquistaPartida } from '../../services/compartilhar';
 import { lerProgresso, partidaFinalizada } from '../../gamificacao/progresso';
 import BarraXp from '../../components/BarraXp/BarraXp';
+import BotaoSom from '../../components/BotaoSom/BotaoSom';
 import RankingFinal from '../../components/RankingFinal/RankingFinal';
 import Keypad from '../../components/Keypad/Keypad';
 import CompartilharResultado from '../../components/CompartilharResultado/CompartilharResultado';
@@ -304,6 +305,7 @@ function TesteQi() {
   return (
     <div className='center'>
       <div className='global-pageContainer-left options-preview teste-qi-page'>
+        <BotaoSom />
         <div className='teste-qi-card'>
           <div className='teste-qi-header'>
             <div>
@@ -335,7 +337,7 @@ function TesteQi() {
                 <button type='button' className='global-button' onClick={iniciarJogo}>
                   Começar
                 </button>
-                <Link to='/jogos' className='global-button global-button--back'>
+                <Link to='/#jogos' className='global-button global-button--back'>
                   Voltar aos jogos
                 </Link>
               </div>
@@ -437,7 +439,7 @@ function TesteQi() {
                   Jogar de novo
                 </button>
                 <CompartilharResultado resultado={buildShareResult()} className='global-button global-button--basic' />
-                <Link to='/jogos' className='global-button global-button--back'>
+                <Link to='/#jogos' className='global-button global-button--back'>
                   Voltar aos jogos
                 </Link>
               </div>

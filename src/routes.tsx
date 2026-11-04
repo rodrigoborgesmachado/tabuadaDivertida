@@ -22,26 +22,20 @@ import BeneficiosJogosEducacionais from './pages/Artigos/BeneficiosJogosEducacio
 import DicasParaEnsinarMatematicaEmCasa from './pages/Artigos/DicasParaEnsinarMatematicaEmCasa';
 import ExpressoesNumericas from './pages/Artigos/ExpressoesNumericas';
 import TabuadaMetodosAntigosModernos from './pages/Artigos/TabuadaMetodosAntigosModernos';
-import Resultados from './pages/Resultados/Resultados';
 import Jogo2048 from './pages/Jogo2048/Jogo2048';
 import Jogos from './pages/Jogos/Jogos';
 import MemoriaTabuada from './pages/MemoriaTabuada/MemoriaTabuada';
 import MaiorOuMenor from './pages/MaiorOuMenor/MaiorOuMenor';
 import TesteQi from './pages/TesteQi/TesteQi';
 import CorridaRobo from './pages/CorridaRobo/CorridaRobo';
-import Conquistas from './pages/Conquistas/Conquistas';
+import Progresso from './pages/Progresso/Progresso';
 import Personalizar from './pages/Personalizar/Personalizar';
 import AvisoConquista from './components/AvisoConquista/AvisoConquista';
 
-interface RoutesAppProps {
-  theme: 'light' | 'dark';
-  toggleTheme: () => void;
-}
-
-function RoutesApp({ theme, toggleTheme }: RoutesAppProps) {
+function RoutesApp() {
     return(
         <BrowserRouter>
-            <Header theme={theme} toggleTheme={toggleTheme}/>
+            <Header/>
             <Breadcrumbs />
             <AvisoConquista />
             <Routes>                
@@ -51,14 +45,15 @@ function RoutesApp({ theme, toggleTheme }: RoutesAppProps) {
                 <Route path='/contagem/:tipo' element={<Contagem/>}/>
                 <Route path='/jogo/:tipo' element={<Jogo/>}/>
                 <Route path='/ranking' element={<Ranking/>}/>
-                <Route path='/resultados' element={<Resultados/>}/>
+                <Route path='/progresso' element={<Progresso/>}/>
+                <Route path='/resultados' element={<Navigate to='/progresso?aba=resultados' replace/>}/>
                 <Route path='/jogo2048' element={<Jogo2048/>}/>
                 <Route path='/jogos' element={<Jogos/>}/>
                 <Route path='/jogos/memoria-da-tabuada' element={<MemoriaTabuada/>}/>
                 <Route path='/jogos/maior-ou-menor' element={<MaiorOuMenor/>}/>
                 <Route path='/jogos/teste-de-qi' element={<TesteQi/>}/>
                 <Route path='/jogos/corrida-contra-o-robo' element={<CorridaRobo/>}/>
-                <Route path='/conquistas' element={<Conquistas/>}/>
+                <Route path='/conquistas' element={<Navigate to='/progresso?aba=conquistas' replace/>}/>
                 <Route path='/personalizar' element={<Personalizar/>}/>
                 <Route path='/final/:tipo' element={<Final/>}/>
                 <Route path='/instrucoes' element={<Instrucoes/>}/>

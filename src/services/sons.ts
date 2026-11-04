@@ -1,6 +1,37 @@
+import { useEffect, useState } from 'react';
 import configData from '../Config.json';
 
+export const EVENTO_SOM = 'sound-setting-changed';
+
 let audioCtx: AudioContext | null = null;
+
+const lerMudo = () => {
+  try {
+    return localStorage.getItem(configData.SOUND_MUTED) === '1';
+  } catch {
+    return false;
+  }
+};
+
+export const useSom = () => {
+  const [mudo, setMudo] = useState(lerMudo);
+
+  useEffect(() => {
+    const atualizar = () => setMudo(lerMudo());
+
+    window.addEventListener(EVENTO_SOM, atualizar);
+    return () => window.removeEventListener(EVENTO_SOM, atualizar);
+  }, []);
+
+  const alternarSom = () => {
+    try {
+      localStorage.setItem(configData.SOUND_MUTED, mudo ? '0' : '1');
+    } catch {}
+    window.dispatchEvent(new Event(EVENTO_SOM));
+  };
+
+  return { mudo, alternarSom };
+};
 
 const ensureAudioCtx = () => {
   const AnyAudioCtx = (window as any).AudioContext || (window as any).webkitAudioContext;
@@ -14,9 +45,7 @@ const ensureAudioCtx = () => {
 };
 
 const playBeep = (freq: number, durationMs: number, type: OscillatorType = 'sine', volume = 0.08, delayMs = 0) => {
-  try {
-    if (localStorage.getItem(configData.SOUND_MUTED) === '1') return;
-  } catch {}
+  if (lerMudo()) return;
   const ctx = ensureAudioCtx();
   if (!ctx) return;
   const now = ctx.currentTime + (delayMs / 1000);

@@ -12,6 +12,7 @@ import { KeyboardEvent, useEffect, useMemo, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import Keypad from "../../components/Keypad/Keypad";
+import BotaoSom from "../../components/BotaoSom/BotaoSom";
 import happyRobot from '../../assets/robot-happy.svg';
 import neutralRobot from '../../assets/robot-neutral.svg';
 import sadRobot from '../../assets/robot-sad.svg';
@@ -436,6 +437,7 @@ function Jogo(){
                 />
             </div>
             <div className='global-pageContainer-left options-preview'>
+                <BotaoSom />
                 <div className='game-header'>
                     <div className='info-game'>
                         <h1>🏋️ {contador} de {localStorage.getItem(configData.QUANTIDADE_PARAM) || 20}</h1>

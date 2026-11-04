@@ -1,24 +1,15 @@
-import ThemeSwitcher from '../ThemeSwitcher/themeSwitcher';
 import './style.css';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import configData from '../../Config.json';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBars, faVolumeHigh, faVolumeXmark, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { faBars, faGear, faXmark } from '@fortawesome/free-solid-svg-icons';
 import robo from '../../assets/robot-happy.svg';
 import { NavLink, useLocation } from 'react-router-dom';
-import { isJogoPath } from '../../pages/Jogos/jogosConfig';
 import { useRecompensasNaoVistas } from '../../gamificacao/useRecompensasNaoVistas';
 import RoboPersonalizado from '../RoboPersonalizado/RoboPersonalizado';
 import PerfilJogador from '../PerfilJogador/PerfilJogador';
 import { marcarPerfilVisto, perfilVisto, useJogador } from '../../services/jogador';
 
-interface HeaderProps {
-    theme: 'light' | 'dark';
-    toggleTheme: () => void;
-}
-
-function Header({ theme, toggleTheme }: HeaderProps){
-    const [muted, setMuted] = useState<boolean>(false);
+function Header(){
     const [menuOpen, setMenuOpen] = useState<boolean>(false);
     const menuRef = useRef<HTMLDivElement>(null);
     const toggleRef = useRef<HTMLButtonElement>(null);
@@ -27,13 +18,6 @@ function Header({ theme, toggleTheme }: HeaderProps){
     const recompensasNovas = useRecompensasNaoVistas().length;
     const { nome } = useJogador();
     const [perfil, setPerfil] = useState<'perfil' | 'primeira-visita' | null>(null);
-
-    useEffect(() => {
-        try {
-            const init = localStorage.getItem(configData.SOUND_MUTED);
-            setMuted(init === '1');
-        } catch {}
-    }, []);
 
     useEffect(() => {
         if (!perfilVisto()) {
@@ -78,19 +62,8 @@ function Header({ theme, toggleTheme }: HeaderProps){
 
     const fecharPerfil = useCallback(() => setPerfil(null), []);
 
-    const toggleMute = () => {
-        const next = !muted;
-        setMuted(next);
-        try {
-            localStorage.setItem(configData.SOUND_MUTED, next ? '1' : '0');
-            window.dispatchEvent(new Event('sound-setting-changed'));
-        } catch {}
-    };
-
     const isRankingActive = location.pathname.startsWith('/ranking');
-    const isResultadosActive = location.pathname.startsWith('/resultados');
-    const isJogosActive = location.pathname === '/jogos' || isJogoPath(location.pathname);
-    const isConquistasActive = location.pathname.startsWith('/conquistas');
+    const isProgressoActive = location.pathname.startsWith('/progresso') || location.pathname === '/historico';
     const isPersonalizarActive = location.pathname.startsWith('/personalizar');
     const isTabuadaActive = location.pathname === '/artigos/tabuada';
     const isArtigosActive = location.pathname.startsWith('/artigos') && !isTabuadaActive;
@@ -125,20 +98,14 @@ function Header({ theme, toggleTheme }: HeaderProps){
                         <NavLink to='/ranking' onClick={closeMenu} className={`nav-item ${isRankingActive ? 'active' : ''}`}>
                             Ranking
                         </NavLink>
-                        <NavLink to='/artigos' onClick={closeMenu} className={`nav-item ${isArtigosActive ? 'active' : ''}`}>
-                            Artigos
+                        <NavLink to='/progresso' onClick={closeMenu} className={`nav-item ${isProgressoActive ? 'active' : ''}`}>
+                            Meu progresso
                         </NavLink>
                         <NavLink to='/artigos/tabuada' onClick={closeMenu} className={`nav-item ${isTabuadaActive ? 'active' : ''}`}>
                             Tabuada
                         </NavLink>
-                        <NavLink to='/resultados' onClick={closeMenu} className={`nav-item ${isResultadosActive ? 'active' : ''}`}>
-                            Resultados
-                        </NavLink>
-                        <NavLink to='/jogos' onClick={closeMenu} className={`nav-item ${isJogosActive ? 'active' : ''}`}>
-                            Jogos
-                        </NavLink>
-                        <NavLink to='/conquistas' onClick={closeMenu} className={`nav-item ${isConquistasActive ? 'active' : ''}`}>
-                            Conquistas
+                        <NavLink to='/artigos' onClick={closeMenu} className={`nav-item ${isArtigosActive ? 'active' : ''}`}>
+                            Artigos
                         </NavLink>
                     </nav>
 
@@ -147,21 +114,13 @@ function Header({ theme, toggleTheme }: HeaderProps){
                             type='button'
                             onClick={abrirPerfil}
                             className={`button-base personalizar-toggle ${isPersonalizarActive ? 'active' : ''}`}
-                            aria-label={`Meu perfil: ${nome || 'Jogador'}${recompensasNovas > 0 ? `, ${recompensasNovas} ${recompensasNovas === 1 ? 'item novo' : 'itens novos'}` : ''}`}
-                            title='Meu perfil'
+                            aria-label={`Meu perfil e configurações: ${nome || 'Jogador'}${recompensasNovas > 0 ? `, ${recompensasNovas} ${recompensasNovas === 1 ? 'item novo' : 'itens novos'}` : ''}`}
+                            title='Meu perfil e configurações'
                         >
                             <RoboPersonalizado titulo='' className='personalizar-toggle__robo' />
                             <span className='personalizar-toggle__texto'>{nome || 'Jogador'}</span>
+                            <FontAwesomeIcon icon={faGear} className='personalizar-toggle__engrenagem' />
                             {recompensasNovas > 0 && <span className='nav-item__novo' aria-hidden='true'>{recompensasNovas}</span>}
-                        </button>
-                        <ThemeSwitcher theme={theme} toggleTheme={toggleTheme} />
-                        <button
-                            className='button-base sound-toggle'
-                            onClick={toggleMute}
-                            aria-label={muted ? 'Ativar som' : 'Silenciar som'}
-                            title={muted ? 'Ativar som' : 'Silenciar som'}
-                        >
-                            <FontAwesomeIcon icon={muted ? faVolumeXmark : faVolumeHigh} style={{ color: 'var(--text-color-primary)', fontSize: '16px' }} />
                         </button>
                     </div>
                 </div>

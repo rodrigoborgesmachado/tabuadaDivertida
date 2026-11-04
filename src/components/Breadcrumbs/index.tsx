@@ -1,6 +1,7 @@
 import { useLocation } from 'react-router-dom';
 import './style.css';
 import { isJogoPath } from '../../pages/Jogos/jogosConfig';
+import { abaDoProgresso } from '../../pages/Progresso/Progresso';
 
 function Breadcrumbs() {
   const location = useLocation();
@@ -17,14 +18,13 @@ function Breadcrumbs() {
     '': 'Início',
     'selecionarjogo': 'Selecionar Jogo',
     'ranking': 'Ranking',
-    'resultados': 'Resultados',
+    'progresso': 'Meu progresso',
     'jogo2048': 'Jogo 2048',
     'jogos': 'Jogos',
     'memoria-da-tabuada': 'Memória da tabuada',
     'maior-ou-menor': 'Maior ou menor',
     'teste-de-qi': 'Teste de QI com Números',
     'corrida-contra-o-robo': 'Corrida contra o robô',
-    'conquistas': 'Minhas conquistas',
     'personalizar': 'Personalizar',
     'instrucoes': 'Instruções',
     'historico': 'Histórico',
@@ -63,6 +63,11 @@ function Breadcrumbs() {
 
   if (isJogoPath(path) && first !== 'jogos') {
     parts.unshift({ href: '/jogos', label: 'Jogos' });
+  }
+
+  if (first === 'progresso') {
+    const aba = abaDoProgresso(new URLSearchParams(location.search).get('aba'));
+    parts.push({ href: `/progresso?aba=${aba}`, label: aba === 'conquistas' ? 'Conquistas' : 'Resultados' });
   }
 
   const homeCrumb = { href: '/', label: 'Início' };

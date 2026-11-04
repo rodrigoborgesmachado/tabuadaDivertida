@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import HappyRobot from '../../components/HappyRobot/HappyRobot';
 import WalkingRobot from '../../components/WalkingRobot/WalkingRobot';
 import DesafiosDoDia from '../../components/DesafiosDoDia/DesafiosDoDia';
@@ -23,6 +23,12 @@ function Home() {
     const favorito = jogoFavorito(progresso);
     const tabuada = jogos.find((jogo) => jogo.id === 'tabuada');
     const filtroAtual = filtros.find((item) => item.id === filtro) || filtros[0];
+
+    useEffect(() => {
+        if (window.location.hash === '#jogos') {
+            document.getElementById('jogos')?.scrollIntoView?.();
+        }
+    }, []);
 
     const escolherFiltro = (id: string) => {
         setFiltro(id);
@@ -56,7 +62,7 @@ function Home() {
                     </a>
                 </section>
                 <DesafiosDoDia sequencia={false} />
-                <section className='home-jogos'>
+                <section id='jogos' className='home-jogos'>
                     <div className='home-jogos__topo'>
                         <h2>🎮 Escolha um jogo</h2>
                         <a className='home-jogos__todos' href='/jogos'>Ver todos os jogos</a>
@@ -95,8 +101,8 @@ function Home() {
                     </div>
                 </section>
                 <nav className='home-atalhos' aria-label='Atalhos'>
-                    <a className='home-atalho' href='/conquistas'>🏅 Conquistas</a>
-                    <a className='home-atalho' href='/resultados'>📊 Resultados</a>
+                    <a className='home-atalho' href='/progresso?aba=conquistas'>🏅 Conquistas</a>
+                    <a className='home-atalho' href='/progresso?aba=resultados'>📊 Resultados</a>
                     <a className='home-atalho' href='/ranking'>🏆 Ranking</a>
                     <a
                         className='home-atalho'

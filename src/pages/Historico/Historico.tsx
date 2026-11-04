@@ -207,7 +207,7 @@ function Historico(){
                     </tbody>
                 </table>
                 <div className='botoes'>
-                    <a className='global-button global-button--full-width global-button--back' href="/resultados">
+                    <a className='global-button global-button--full-width global-button--back' href="/progresso?aba=resultados">
                         <span className='option-link'>
                             Voltar
                         </span>

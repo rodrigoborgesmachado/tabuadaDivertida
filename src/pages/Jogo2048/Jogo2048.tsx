@@ -5,6 +5,7 @@ import { addRandomTile, createInitialBoard, getSwipeDirection, hasNoMoves, moveB
 import { lerProgresso, partidaFinalizada, registrarProgresso, type Progresso } from '../../gamificacao/progresso';
 import { conquistasDaPartida, type ConquistaPartida } from '../../services/compartilhar';
 import BarraXp from '../../components/BarraXp/BarraXp';
+import BotaoSom from '../../components/BotaoSom/BotaoSom';
 import ComoJogar from '../../components/ComoJogar/ComoJogar';
 import CompartilharResultado from '../../components/CompartilharResultado/CompartilharResultado';
 import RankingFinal from '../../components/RankingFinal/RankingFinal';
@@ -274,6 +275,7 @@ function Jogo2048() {
   return (
     <div className='center'>
       <div className='global-pageContainer-left options-preview game2048-page'>
+        <BotaoSom />
         <div className='game2048-card'>
           <div className='game2048-header'>
             <div>

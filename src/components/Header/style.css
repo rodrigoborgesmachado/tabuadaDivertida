@@ -129,6 +129,16 @@
     white-space: nowrap;
 }
 
+.personalizar-toggle__engrenagem {
+    color: var(--text-color-secondary);
+    font-size: 0.95rem;
+    transition: transform 0.3s ease;
+}
+
+.personalizar-toggle:hover .personalizar-toggle__engrenagem {
+    transform: rotate(60deg);
+}
+
 .site-header .menu-toggle {
     position: relative;
 }
@@ -166,12 +176,6 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
-}
-
-.sound-toggle {
-    min-width: 42px;
-    min-height: 36px;
-    padding: 0 10px;
 }
 
 .site-header .menu-toggle,
