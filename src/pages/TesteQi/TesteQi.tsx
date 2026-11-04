@@ -3,11 +3,12 @@ import { Link } from 'react-router-dom';
 import { lerNome } from '../../services/jogador';
 import { playError, playSuccess } from '../../services/sons';
 import { salvarPartida } from '../../services/historico';
-import { compartilhar } from '../../services/compartilhar';
+import { conquistasDaPartida, type ConquistaPartida } from '../../services/compartilhar';
 import { lerProgresso, partidaFinalizada } from '../../gamificacao/progresso';
 import BarraXp from '../../components/BarraXp/BarraXp';
 import RankingFinal from '../../components/RankingFinal/RankingFinal';
 import Keypad from '../../components/Keypad/Keypad';
+import CompartilharResultado from '../../components/CompartilharResultado/CompartilharResultado';
 import { desempenhoPorTipo, gerarPartida, perguntaDoTipo, pontuacaoQi, SEGUNDOS_POR_DIFICULDADE, textoQuestao, TIPOS, tituloQi, TOTAL_QUESTOES, type Celula, type Dificuldade, type Questao } from './logic';
 import '../Contagem/Contagem.css';
 import './TesteQi.css';
@@ -59,7 +60,7 @@ function TesteQi() {
   const [tempo, setTempo] = useState(0);
   const [feedback, setFeedback] = useState<Resposta | null>(null);
   const [recorde, setRecorde] = useState<Recorde | null>(() => readRecorde());
-  const [resultadoFinal, setResultadoFinal] = useState<{ qi: number; tempo: number; novoRecorde: boolean; ganhoXp: number } | null>(null);
+  const [resultadoFinal, setResultadoFinal] = useState<{ qi: number; tempo: number; novoRecorde: boolean; ganhoXp: number; conquistas: ConquistaPartida[] } | null>(null);
 
   const questao = questoes[indice];
   const acertos = respostas.filter((resposta) => resposta.correta).length;
@@ -130,10 +131,11 @@ function TesteQi() {
       pontuacao: qi,
     });
 
-    const xpAnterior = lerProgresso().xp;
+    const anterior = lerProgresso();
     partidaFinalizada({ jogo: 'teste-qi', pontuacao: qi, tempo: tempoTotal, contas: todas.map((resposta) => ({ correta: resposta.correta })) });
+    const atual = lerProgresso();
 
-    setResultadoFinal({ qi, tempo: tempoTotal, novoRecorde, ganhoXp: lerProgresso().xp - xpAnterior });
+    setResultadoFinal({ qi, tempo: tempoTotal, novoRecorde, ganhoXp: atual.xp - anterior.xp, conquistas: conquistasDaPartida(anterior, atual) });
     setFase('fim');
   }, [recorde]);
 
@@ -233,16 +235,20 @@ function TesteQi() {
     setFase('contagem');
   };
 
-  const handleShare = () => {
+  const buildShareResult = () => {
     const url = `${window.location.origin || 'https://www.tabuadadivertida.com'}/jogos/teste-de-qi`;
     const qi = resultadoFinal?.qi || 0;
 
-    compartilhar('Teste de QI com Números', [
-      `Fiz ${acertos}/${TOTAL_QUESTOES} no Teste de QI com Números do Tabuada Divertida, e você?`,
-      `🧩 Pontuação estilo QI: ${qi} (${tituloQi(qi)}), só por diversão!`,
-      '',
-      url,
-    ].join('\n'));
+    return {
+      jogo: 'Teste de QI com Números',
+      linhas: [
+        `Fiz ${acertos}/${TOTAL_QUESTOES} no Teste de QI com Números do Tabuada Divertida, e você?`,
+        `🧩 Pontuação estilo QI: ${qi} (${tituloQi(qi)}), só por diversão!`,
+      ],
+      convite: url,
+      resumo: `${acertos}/${TOTAL_QUESTOES} acertos · QI ${qi}`,
+      conquistas: resultadoFinal?.conquistas,
+    };
   };
 
   const renderCelula = (celula: Celula, chave: string) => {
@@ -430,9 +436,7 @@ function TesteQi() {
                 <button type='button' className='global-button' onClick={iniciarJogo}>
                   Jogar de novo
                 </button>
-                <button type='button' className='global-button global-button--basic' onClick={handleShare}>
-                  Compartilhar
-                </button>
+                <CompartilharResultado resultado={buildShareResult()} className='global-button global-button--basic' />
                 <Link to='/jogos' className='global-button global-button--back'>
                   Voltar aos jogos
                 </Link>
