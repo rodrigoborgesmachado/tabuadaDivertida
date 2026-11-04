@@ -101,9 +101,9 @@
   background: rgba(255, 255, 255, 0.45);
 }
 
-.game2048-tile--2 { background: #fff7db; }
-.game2048-tile--4 { background: #ffe9b3; }
-.game2048-tile--8 { background: #ffd486; color: #fff; }
+.game2048-tile--2 { background: #fff7db; color: #5b4a3a; }
+.game2048-tile--4 { background: #ffe9b3; color: #5b4a3a; }
+.game2048-tile--8 { background: #ffd486; color: #5b4a3a; }
 .game2048-tile--16 { background: #ffa85c; color: #fff; }
 .game2048-tile--32 { background: #ff8a4d; color: #fff; }
 .game2048-tile--64 { background: #ff6f47; color: #fff; }
