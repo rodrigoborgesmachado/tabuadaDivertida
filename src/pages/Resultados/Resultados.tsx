@@ -378,7 +378,7 @@ function Resultados() {
             ))}
           </ul>
         )}
-        <Link to='/conquistas'>Ver todas as conquistas</Link>
+        <Link to='/progresso?aba=conquistas'>Ver todas as conquistas</Link>
       </section>
 
       <div className='botoes'>

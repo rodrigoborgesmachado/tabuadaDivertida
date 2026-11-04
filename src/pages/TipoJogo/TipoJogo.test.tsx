@@ -69,7 +69,7 @@ describe('TipoJogo', () => {
     window.localStorage.setItem(STORAGE_PERFIL_VISTO, '1');
     window.history.pushState({}, '', '/formulario');
 
-    render(<RoutesApp theme='light' toggleTheme={() => {}} />);
+    render(<RoutesApp />);
 
     expect(window.location.pathname).toBe('/selecionarjogo');
     expect(screen.getByText('Jogando como', { exact: false })).toBeTruthy();

@@ -146,10 +146,10 @@ function Personalizar() {
         </section>
 
         <div className='personalizar-toolbar'>
-          <Link to='/conquistas' className='global-button'>
+          <Link to='/progresso?aba=conquistas' className='global-button'>
             Minhas conquistas
           </Link>
-          <Link to='/jogos' className='global-button global-button--back'>
+          <Link to='/#jogos' className='global-button global-button--back'>
             Ir para os jogos
           </Link>
         </div>

@@ -5,6 +5,7 @@ import Footer from './components/footer';
 import { useEffect, useState } from 'react';
 import { buscarRecompensa } from './gamificacao/recompensas';
 import { usePersonalizacao } from './gamificacao/usePersonalizacao';
+import { TemaContext } from './components/ThemeSwitcher/temaContext';
 
 function App() {
   const { tema } = usePersonalizacao();
@@ -34,7 +35,9 @@ function App() {
   return (
     <div className="app">
       <ToastContainer autoClose={1000} />
-      <RoutesApp theme={theme} toggleTheme={toggleTheme} />
+      <TemaContext.Provider value={{ theme, toggleTheme }}>
+        <RoutesApp />
+      </TemaContext.Provider>
       <Footer />
     </div>
   );

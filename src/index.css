@@ -11,6 +11,7 @@
 
   --primary-color: rgba(255, 255, 255, 0.84);
   --secundary-color: rgba(255, 255, 255, 0.88);
+  --modal-color: #ffffff;
   --text-color-primary-light: #f6f9ff;
 
   --button-color-primary: #ff7f50;
@@ -71,6 +72,7 @@
 
   --primary-color: rgba(24, 37, 57, 0.9);
   --secundary-color: #1f324d;
+  --modal-color: #1f324d;
   --text-color-primary-light: #203247;
 
   --button-color-primary: #ff8d62;

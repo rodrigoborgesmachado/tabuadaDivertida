@@ -6,6 +6,7 @@ import { salvarPartida, type Questao } from '../../services/historico';
 import { conquistasDaPartida, type ConquistaPartida } from '../../services/compartilhar';
 import { contasDaTabuada, lerProgresso, partidaFinalizada } from '../../gamificacao/progresso';
 import BarraXp from '../../components/BarraXp/BarraXp';
+import BotaoSom from '../../components/BotaoSom/BotaoSom';
 import RankingFinal from '../../components/RankingFinal/RankingFinal';
 import Keypad from '../../components/Keypad/Keypad';
 import CompartilharResultado from '../../components/CompartilharResultado/CompartilharResultado';
@@ -266,6 +267,7 @@ function CorridaRobo() {
   return (
     <div className='center'>
       <div className='global-pageContainer-left options-preview corrida-page'>
+        <BotaoSom />
         <div className='corrida-card'>
           <div className='corrida-header'>
             <div>
@@ -345,7 +347,7 @@ function CorridaRobo() {
                 <button type='button' className='global-button' onClick={iniciarCorrida}>
                   Começar
                 </button>
-                <Link to='/jogos' className='global-button global-button--back'>
+                <Link to='/#jogos' className='global-button global-button--back'>
                   Voltar aos jogos
                 </Link>
               </div>

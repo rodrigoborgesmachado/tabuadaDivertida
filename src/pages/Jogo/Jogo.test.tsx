@@ -11,6 +11,7 @@ jest.mock('../../services/api', () => ({
 }));
 
 jest.mock('../../services/sons', () => ({
+  ...jest.requireActual('../../services/sons'),
   playError: () => {},
   playSuccess: () => {},
 }));

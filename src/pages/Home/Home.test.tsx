@@ -20,6 +20,19 @@ describe('Home', () => {
     jest.useRealTimers();
   });
 
+  it('scrolls to the games grid when opened from the back to games buttons', () => {
+    const scrollIntoView = jest.fn();
+    Element.prototype.scrollIntoView = scrollIntoView;
+    window.history.pushState({}, '', '/#jogos');
+
+    render(<Home />);
+
+    expect(scrollIntoView).toHaveBeenCalledTimes(1);
+    expect(scrollIntoView.mock.instances[0]).toBe(document.getElementById('jogos'));
+    window.history.pushState({}, '', '/');
+    delete (Element.prototype as any).scrollIntoView;
+  });
+
   it('invites who never played to start with the tabuada and shows every game', () => {
     render(<Home />);
 
@@ -66,7 +79,7 @@ describe('Home', () => {
     render(<Home />);
 
     expect(screen.getByRole('navigation', { name: 'Atalhos' })).toBeTruthy();
-    expect(screen.getByText('🏅 Conquistas').getAttribute('href')).toBe('/conquistas');
+    expect(screen.getByText('🏅 Conquistas').getAttribute('href')).toBe('/progresso?aba=conquistas');
     expect(screen.queryByText('🤔 Como Jogar?')).toBeNull();
   });
 });

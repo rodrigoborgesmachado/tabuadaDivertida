@@ -44,10 +44,18 @@ describe('Breadcrumbs', () => {
     expect(screen.getByText('Corrida contra o robô')).toBeTruthy();
   });
 
-  it('shows the achievements page', () => {
-    renderBreadcrumbs('/conquistas');
+  it('shows the achievements tab inside my progress', () => {
+    renderBreadcrumbs('/progresso?aba=conquistas');
 
-    expect(screen.getByText('Minhas conquistas')).toBeTruthy();
+    expect(screen.getByText('Meu progresso').getAttribute('href')).toBe('/progresso');
+    expect(screen.getByText('Conquistas').getAttribute('aria-current')).toBe('page');
+  });
+
+  it('shows the results tab as the default of my progress', () => {
+    renderBreadcrumbs('/progresso');
+
+    expect(screen.getByText('Meu progresso')).toBeTruthy();
+    expect(screen.getByText('Resultados').getAttribute('aria-current')).toBe('page');
   });
 
   it('shows the old x modern methods article', () => {

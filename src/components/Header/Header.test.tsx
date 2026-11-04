@@ -8,7 +8,7 @@ import Header from './index';
 
 const renderHeader = () => render(
   <MemoryRouter>
-    <Header theme='light' toggleTheme={() => {}} />
+    <Header />
   </MemoryRouter>
 );
 
@@ -48,7 +48,7 @@ describe('Header', () => {
     const toggle = screen.getByRole('button', { name: 'Abrir menu' });
 
     fireEvent.click(toggle);
-    fireEvent.click(screen.getByText('Jogos'));
+    fireEvent.click(screen.getByText('Meu progresso'));
 
     expect(toggle.getAttribute('aria-expanded')).toBe('false');
   });
@@ -69,26 +69,26 @@ describe('Header', () => {
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...criarProgresso(), xp: 250 }));
     renderHeader();
 
-    const botao = screen.getByRole('button', { name: 'Meu perfil: Jogador, 2 itens novos' });
+    const botao = screen.getByRole('button', { name: 'Meu perfil e configurações: Jogador, 2 itens novos' });
     expect(botao.querySelector('.nav-item__novo')?.textContent).toBe('2');
     expect(screen.getByRole('button', { name: 'Abrir menu' }).querySelector('.nav-item__novo')?.textContent).toBe('2');
 
     fireEvent.click(botao);
-    expect(screen.getByRole('link', { name: '🎨 Personalizar robô 2 novos' }).getAttribute('href')).toBe('/personalizar');
+    expect(screen.getByRole('link', { name: 'Personalizar robô Cores, acessórios e temas 2 novos' }).getAttribute('href')).toBe('/personalizar');
 
     act(() => {
       marcarRecompensasVistas();
     });
 
-    expect(screen.getByRole('button', { name: 'Meu perfil: Jogador' }).querySelector('.nav-item__novo')).toBeNull();
-    expect(screen.getByRole('link', { name: '🎨 Personalizar robô' })).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Meu perfil e configurações: Jogador' }).querySelector('.nav-item__novo')).toBeNull();
+    expect(screen.getByRole('link', { name: 'Personalizar robô Cores, acessórios e temas' })).toBeTruthy();
   });
 
   it('shows the player name and saves the profile', () => {
     window.localStorage.setItem(configData.NOME_PARAM, 'Ana');
     renderHeader();
 
-    fireEvent.click(screen.getByRole('button', { name: 'Meu perfil: Ana' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Meu perfil e configurações: Ana' }));
 
     const dialog = screen.getByRole('dialog', { name: 'Meu perfil' });
     expect((screen.getByLabelText('Nome') as HTMLInputElement).value).toBe('Ana');
@@ -102,20 +102,20 @@ describe('Header', () => {
     expect(dialog.isConnected).toBe(false);
     expect(lerNome()).toBe('Bia');
     expect(lerQuantidade()).toBe(50);
-    expect(screen.getByRole('button', { name: 'Meu perfil: Bia' })).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Meu perfil e configurações: Bia' })).toBeTruthy();
   });
 
   it('closes the profile without saving', () => {
     renderHeader();
 
-    fireEvent.click(screen.getByRole('button', { name: 'Meu perfil: Jogador' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Meu perfil e configurações: Jogador' }));
     fireEvent.change(screen.getByLabelText('Nome'), { target: { value: 'Caio' } });
     fireEvent.click(screen.getByText('Cancelar'));
 
     expect(screen.queryByRole('dialog')).toBeNull();
     expect(lerNome()).toBe('');
 
-    fireEvent.click(screen.getByRole('button', { name: 'Meu perfil: Jogador' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Meu perfil e configurações: Jogador' }));
     fireEvent.keyDown(document, { key: 'Escape' });
 
     expect(screen.queryByRole('dialog')).toBeNull();
@@ -125,7 +125,7 @@ describe('Header', () => {
     renderHeader();
 
     fireEvent.click(screen.getByRole('button', { name: 'Abrir menu' }));
-    fireEvent.click(screen.getByRole('button', { name: 'Meu perfil: Jogador' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Meu perfil e configurações: Jogador' }));
 
     expect(screen.getByRole('button', { name: 'Abrir menu' }).getAttribute('aria-expanded')).toBe('false');
     expect(screen.getByRole('dialog', { name: 'Meu perfil' })).toBeTruthy();
@@ -143,6 +143,28 @@ describe('Header', () => {
     renderHeader();
 
     expect(screen.queryByRole('dialog')).toBeNull();
+  });
+
+  it('shows only the four main items and keeps theme and sound out of the header', () => {
+    const { container } = renderHeader();
+
+    expect(Array.from(container.querySelectorAll('.nav-item')).map((item) => item.textContent)).toEqual(['Ranking', 'Meu progresso', 'Tabuada', 'Artigos']);
+    expect(screen.getByRole('link', { name: 'Meu progresso' }).getAttribute('href')).toBe('/progresso');
+    expect(container.querySelector('.change-theme-div')).toBeNull();
+    expect(screen.queryByRole('button', { name: 'Silenciar som' })).toBeNull();
+    expect(screen.getByRole('button', { name: 'Meu perfil e configurações: Jogador' }).getAttribute('title')).toBe('Meu perfil e configurações');
+    expect(container.querySelector('.personalizar-toggle__engrenagem')).toBeTruthy();
+  });
+
+  it('marks my progress as active on the progress page', () => {
+    render(
+      <MemoryRouter initialEntries={['/progresso?aba=conquistas']}>
+        <Header />
+      </MemoryRouter>
+    );
+
+    expect(screen.getByRole('link', { name: 'Meu progresso' }).classList.contains('active')).toBe(true);
+    expect(screen.getByRole('link', { name: 'Ranking' }).classList.contains('active')).toBe(false);
   });
 
   it('does not suggest the profile to who already has a name', () => {

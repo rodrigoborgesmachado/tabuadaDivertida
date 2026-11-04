@@ -233,12 +233,12 @@ function Final(){
                         Ranking
                     </span>
                 </a>
-                <a className='global-button global-button--full-width' href="/resultados">
+                <a className='global-button global-button--full-width' href="/progresso?aba=resultados">
                     <span className='option-link'>
                         Meus Resultados
                     </span>
                 </a>
-                <a className='global-button global-button--full-width' href="/conquistas">
+                <a className='global-button global-button--full-width' href="/progresso?aba=conquistas">
                     <span className='option-link'>
                         Minhas conquistas
                     </span>

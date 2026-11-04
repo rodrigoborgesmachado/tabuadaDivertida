@@ -125,7 +125,7 @@ function Conquistas() {
         ))}
 
         <div className='conquistas-toolbar'>
-          <Link to='/jogos' className='global-button'>
+          <Link to='/#jogos' className='global-button'>
             Ir para os jogos
           </Link>
           <Link to='/personalizar' className='global-button global-button--back'>
