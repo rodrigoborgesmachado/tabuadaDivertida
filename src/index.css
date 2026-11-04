@@ -1634,6 +1634,11 @@ hr{
   color: var(--text-color-primary);
 }
 
+.resultados-item--botao{
+  font: inherit;
+  cursor: pointer;
+}
+
 .admin-table {
   width: 100%;
   min-width: 20rem;

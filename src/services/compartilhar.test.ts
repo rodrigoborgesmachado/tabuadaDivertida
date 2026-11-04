@@ -1,0 +1,113 @@
+import { desafioDaSemana, desafioDoDia } from '../gamificacao/desafios';
+import { criarProgresso } from '../gamificacao/progresso';
+import { calcularNivel, xpTotalDoNivel } from '../gamificacao/xp';
+import { compartilharResultado, conquistaDaMedalha, conquistasDaPartida, montarTextoResultado, podeCompartilharArquivos, resultadoDaConquista, type ResultadoCompartilhado } from './compartilhar';
+
+const data = new Date(2026, 10, 4, 15, 0);
+
+const resultado = (conquistas?: ResultadoCompartilhado['conquistas']): ResultadoCompartilhado => ({
+  jogo: 'Tabuada Divertida',
+  linhas: ['🧮 Fiz 20/20 na tabuada do 7 em 38s no Tabuada Divertida!'],
+  convite: 'Duvido você me superar 👉 https://www.tabuadadivertida.com',
+  resumo: '20/20 em 38s',
+  conquistas,
+});
+
+describe('compartilhar', () => {
+  it('keeps the current text when there are no new achievements', () => {
+    const texto = ['🧮 Fiz 20/20 na tabuada do 7 em 38s no Tabuada Divertida!', '', 'Duvido você me superar 👉 https://www.tabuadadivertida.com'].join('\n');
+
+    expect(montarTextoResultado(resultado())).toBe(texto);
+    expect(montarTextoResultado(resultado([]))).toBe(texto);
+  });
+
+  it('adds the achievements of the match before the invite', () => {
+    expect(montarTextoResultado(resultado([
+      { icone: '🔥', texto: 'Sequência de fogo · Ouro' },
+      { icone: '🆙', texto: 'Subi para o nível 12: Mestre da Tabuada' },
+    ]))).toBe([
+      '🧮 Fiz 20/20 na tabuada do 7 em 38s no Tabuada Divertida!',
+      '🏅 Conquistas desta partida:',
+      '🔥 Sequência de fogo · Ouro',
+      '🆙 Subi para o nível 12: Mestre da Tabuada',
+      '',
+      'Duvido você me superar 👉 https://www.tabuadadivertida.com',
+    ].join('\n'));
+  });
+
+  it('shows at most 3 achievements and the count of the others', () => {
+    const conquistas = Array.from({ length: 5 }, (_, indice) => ({ icone: '⭐', texto: `Medalha ${indice + 1}` }));
+    const texto = montarTextoResultado(resultado(conquistas));
+
+    expect(texto).toContain('⭐ Medalha 3\n+2 conquistas');
+    expect(texto).not.toContain('Medalha 4');
+    expect(montarTextoResultado(resultado(conquistas.slice(0, 4)))).toContain('⭐ Medalha 3\n+1 conquista\n');
+    expect(montarTextoResultado(resultado(conquistas.slice(0, 3)))).not.toContain('+');
+  });
+
+  it('describes a medal with icon, name and level', () => {
+    expect(conquistaDaMedalha('partida-perfeita', 3)).toEqual([{ icone: '⭐', texto: 'Partida perfeita · Ouro' }]);
+    expect(conquistaDaMedalha('nao-existe', 1)).toEqual([]);
+  });
+
+  it('lists the new medals, the level up and the challenges completed in the match', () => {
+    const anterior = { ...criarProgresso(), medalhas: { 'partida-perfeita': { nivel: 1, data: '' }, 'partidas-jogadas': { nivel: 1, data: '' } } };
+    const atual = {
+      ...anterior,
+      xp: xpTotalDoNivel(12),
+      medalhas: { ...anterior.medalhas, 'partida-perfeita': { nivel: 2, data: '' } },
+      desafiosConcluidos: [desafioDoDia(data).id, desafioDaSemana(data).id],
+    };
+
+    expect(conquistasDaPartida(anterior, atual, data)).toEqual([
+      { icone: '⭐', texto: 'Partida perfeita · Prata' },
+      { icone: '🆙', texto: `Subi para o nível 12: ${calcularNivel(atual.xp).titulo}` },
+      { icone: desafioDoDia(data).icone, texto: `Desafio do dia concluído: ${desafioDoDia(data).texto}` },
+      { icone: desafioDaSemana(data).icone, texto: `Desafio da semana concluído: ${desafioDaSemana(data).texto}` },
+    ]);
+  });
+
+  it('ignores achievements that already existed before the match', () => {
+    const anterior = { ...criarProgresso(), xp: xpTotalDoNivel(5), desafiosConcluidos: [desafioDoDia(data).id], medalhas: { 'partida-perfeita': { nivel: 2, data: '' } } };
+
+    expect(conquistasDaPartida(anterior, { ...anterior, xp: anterior.xp + 1 }, data)).toEqual([]);
+  });
+
+  describe('native share', () => {
+    const share = jest.fn();
+
+    beforeEach(() => {
+      share.mockReset().mockResolvedValue(undefined);
+      Object.defineProperty(navigator, 'share', { value: share, configurable: true });
+    });
+
+    afterEach(() => {
+      delete (navigator as any).share;
+      delete (navigator as any).canShare;
+    });
+
+    it('sends the image with the text as caption when the browser can share files', async () => {
+      const arquivo = new File(['imagem'], 'tabuada-divertida.png', { type: 'image/png' });
+      Object.defineProperty(navigator, 'canShare', { value: () => true, configurable: true });
+
+      await compartilharResultado(resultado([{ icone: '⭐', texto: 'Partida perfeita · Prata' }]), arquivo);
+
+      expect(share).toHaveBeenCalledWith({ title: 'Tabuada Divertida', text: expect.stringContaining('⭐ Partida perfeita · Prata'), files: [arquivo] });
+    });
+
+    it('shares only the text when files are not supported', async () => {
+      expect(podeCompartilharArquivos()).toBe(false);
+
+      await compartilharResultado(resultado());
+
+      expect(share).toHaveBeenCalledWith({ title: 'Tabuada Divertida', text: montarTextoResultado(resultado()) });
+    });
+  });
+
+  it('shares a single achievement', () => {
+    const texto = montarTextoResultado(resultadoDaConquista({ icone: '🔥', texto: 'Sequência de fogo · Ouro' }));
+
+    expect(texto).toContain('🏅 Conquistas desta partida:\n🔥 Sequência de fogo · Ouro');
+    expect(texto).not.toContain('+');
+  });
+});

@@ -2,9 +2,11 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { addRandomTile, createInitialBoard, getSwipeDirection, hasNoMoves, moveBoard, type Board, type Direction } from './logic';
-import { lerProgresso, partidaFinalizada, registrarProgresso } from '../../gamificacao/progresso';
+import { lerProgresso, partidaFinalizada, registrarProgresso, type Progresso } from '../../gamificacao/progresso';
+import { conquistasDaPartida, type ConquistaPartida } from '../../services/compartilhar';
 import BarraXp from '../../components/BarraXp/BarraXp';
 import ComoJogar from '../../components/ComoJogar/ComoJogar';
+import CompartilharResultado from '../../components/CompartilharResultado/CompartilharResultado';
 import RankingFinal from '../../components/RankingFinal/RankingFinal';
 import './Jogo2048.css';
 
@@ -106,8 +108,13 @@ function Jogo2048() {
   const maiorPecaRef = useRef(getMaiorPeca(initialState.board));
   const partidaRegistradaRef = useRef(false);
   const desfezRef = useRef(false);
+  const progressoInicialRef = useRef<Progresso | null>(null);
   const [xpPartida, setXpPartida] = useState<{ xp: number; ganho: number } | null>(null);
-  const [resultadoPartida, setResultadoPartida] = useState<{ id: number; pontuacao: number; maiorPeca: number } | null>(null);
+  const [resultadoPartida, setResultadoPartida] = useState<{ id: number; pontuacao: number; maiorPeca: number; conquistas: ConquistaPartida[] } | null>(null);
+
+  if (!progressoInicialRef.current) {
+    progressoInicialRef.current = lerProgresso();
+  }
 
   useEffect(() => {
     scoreRef.current = score;
@@ -118,9 +125,9 @@ function Jogo2048() {
       partidaRegistradaRef.current = true;
       const xpAnterior = lerProgresso().xp;
       partidaFinalizada({ jogo: '2048', maiorPeca: maiorPecaRef.current, pontuacao: scoreRef.current, desfez: desfezRef.current });
-      const xp = lerProgresso().xp;
-      setXpPartida({ xp, ganho: xp - xpAnterior });
-      setResultadoPartida({ id: Date.now(), pontuacao: scoreRef.current, maiorPeca: maiorPecaRef.current });
+      const atual = lerProgresso();
+      setXpPartida({ xp: atual.xp, ganho: atual.xp - xpAnterior });
+      setResultadoPartida({ id: Date.now(), pontuacao: scoreRef.current, maiorPeca: maiorPecaRef.current, conquistas: conquistasDaPartida(progressoInicialRef.current || atual, atual) });
     }
   }, []);
 
@@ -205,6 +212,7 @@ function Jogo2048() {
     maiorPecaRef.current = getMaiorPeca(freshBoard);
     partidaRegistradaRef.current = false;
     desfezRef.current = false;
+    progressoInicialRef.current = lerProgresso();
     setBoard(freshBoard);
     setScore(0);
     setHistory([]);
@@ -325,6 +333,21 @@ function Jogo2048() {
 
           {resultadoPartida && (
             <RankingFinal key={resultadoPartida.id} jogo='2048' modo={null} resultado={{ pontuacao: resultadoPartida.pontuacao, extras: { maiorPeca: resultadoPartida.maiorPeca } }} />
+          )}
+
+          {resultadoPartida && (
+            <div className='game2048-toolbar'>
+              <CompartilharResultado
+                className='global-button global-button--basic'
+                resultado={{
+                  jogo: '2048',
+                  linhas: ['Este foi meu resultado no 2048!', `⭐ Pontos: ${resultadoPartida.pontuacao}`, `🎲 Maior peça: ${resultadoPartida.maiorPeca}`],
+                  convite: `Você consegue fazer melhor? ${window.location.origin || 'https://www.tabuadadivertida.com'}/jogo2048`,
+                  resumo: `${resultadoPartida.pontuacao} pontos · peça ${resultadoPartida.maiorPeca}`,
+                  conquistas: resultadoPartida.conquistas,
+                }}
+              />
+            </div>
           )}
 
           {showWinModal && (

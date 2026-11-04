@@ -3,11 +3,12 @@ import { Link } from 'react-router-dom';
 import { casasDaCorrida, lerNome, salvarQuantidade, useJogador } from '../../services/jogador';
 import { playError, playSuccess } from '../../services/sons';
 import { salvarPartida, type Questao } from '../../services/historico';
-import { compartilhar } from '../../services/compartilhar';
+import { conquistasDaPartida, type ConquistaPartida } from '../../services/compartilhar';
 import { contasDaTabuada, lerProgresso, partidaFinalizada } from '../../gamificacao/progresso';
 import BarraXp from '../../components/BarraXp/BarraXp';
 import RankingFinal from '../../components/RankingFinal/RankingFinal';
 import Keypad from '../../components/Keypad/Keypad';
+import CompartilharResultado from '../../components/CompartilharResultado/CompartilharResultado';
 import RoboPersonalizado from '../../components/RoboPersonalizado/RoboPersonalizado';
 import happyRobot from '../../assets/robot-happy.svg';
 import neutralRobot from '../../assets/robot-neutral.svg';
@@ -28,6 +29,7 @@ interface Resultado {
   tempo: number;
   novoRecorde: boolean;
   ganhoXp: number;
+  conquistas: ConquistaPartida[];
 }
 
 const STORAGE_KEY = 'tabuada-divertida-corrida-robo-recordes';
@@ -150,6 +152,7 @@ function CorridaRobo() {
     }
 
     let ganhoXp = 0;
+    let conquistas: ConquistaPartida[] = [];
     if (questoes.length > 0) {
       salvarPartida({
         quantidadeQuestoes: questoes.length,
@@ -162,7 +165,7 @@ function CorridaRobo() {
         pontuacao: acertos * 10,
       });
 
-      const xpAnterior = lerProgresso().xp;
+      const anterior = lerProgresso();
       partidaFinalizada({
         jogo: 'corrida-robo',
         modo: operacao,
@@ -172,10 +175,12 @@ function CorridaRobo() {
         casas: totalCasas,
         venceu: ganhador === 'jogador',
       });
-      ganhoXp = lerProgresso().xp - xpAnterior;
+      const atual = lerProgresso();
+      ganhoXp = atual.xp - anterior.xp;
+      conquistas = conquistasDaPartida(anterior, atual);
     }
 
-    setResultado({ vencedor: ganhador, tempo, novoRecorde, ganhoXp });
+    setResultado({ vencedor: ganhador, tempo, novoRecorde, ganhoXp, conquistas });
     setFase('fim');
   }, [fase, casas, nivel, decorrido, totalCasas, recordes, chave, questoes, acertos, operacao]);
 
@@ -235,20 +240,24 @@ function CorridaRobo() {
     }
   };
 
-  const handleShare = () => {
+  const buildShareResult = () => {
     const url = `${window.location.origin || 'https://www.tabuadadivertida.com'}/jogos/corrida-contra-o-robo`;
 
-    compartilhar('Corrida contra o robô', [
-      resultado?.vencedor === 'jogador'
-        ? `Venci o ${robo.nome} na Corrida contra o robô!`
-        : `Apostei corrida contra o ${robo.nome} na Corrida contra o robô!`,
-      `🧮 ${labelOperacao(operacao)}`,
-      `🏁 ${totalCasas} casas`,
-      `⏱️ Tempo: ${formatarTempo(resultado?.tempo || 0)}`,
-      `✅ Acertos: ${acertos}/${questoes.length}`,
-      '',
-      `Você consegue vencer o robô? ${url}`,
-    ].join('\n'));
+    return {
+      jogo: 'Corrida contra o robô',
+      linhas: [
+        resultado?.vencedor === 'jogador'
+          ? `Venci o ${robo.nome} na Corrida contra o robô!`
+          : `Apostei corrida contra o ${robo.nome} na Corrida contra o robô!`,
+        `🧮 ${labelOperacao(operacao)}`,
+        `🏁 ${totalCasas} casas`,
+        `⏱️ Tempo: ${formatarTempo(resultado?.tempo || 0)}`,
+        `✅ Acertos: ${acertos}/${questoes.length}`,
+      ],
+      convite: `Você consegue vencer o robô? ${url}`,
+      resumo: `${resultado?.vencedor === 'jogador' ? `Venci o ${robo.nome}` : `${totalCasas} casas`} em ${formatarTempo(resultado?.tempo || 0)}`,
+      conquistas: resultado?.conquistas,
+    };
   };
 
   const imagemRobo = resultado ? (resultado.vencedor === 'robo' ? happyRobot : sadRobot) : neutralRobot;
@@ -436,9 +445,7 @@ function CorridaRobo() {
                   <button type='button' className='global-button' onClick={iniciarCorrida}>
                     Revanche
                   </button>
-                  <button type='button' className='global-button global-button--basic' onClick={handleShare}>
-                    Compartilhar
-                  </button>
+                  <CompartilharResultado resultado={buildShareResult()} className='global-button global-button--basic' />
                   <button type='button' className='global-button global-button--back' onClick={mudarConfiguracao}>
                     Mudar configuração
                   </button>

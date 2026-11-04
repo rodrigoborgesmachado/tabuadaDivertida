@@ -6,6 +6,7 @@ import { TIMEOUT_ENVIO } from '../../services/resultadosJogos';
 import { lerNome } from '../../services/jogador';
 import { playError, playSuccess } from '../../services/sons';
 import { salvarPartida, type Questao } from '../../services/historico';
+import { conquistasDaPartida, type ConquistaPartida } from '../../services/compartilhar';
 import { contasDaTabuada, lerProgresso, partidaFinalizada, type Conquista } from '../../gamificacao/progresso';
 import { KeyboardEvent, useEffect, useMemo, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -344,7 +345,7 @@ function Jogo(){
                 localStorage.setItem(configData.QUANTIDADE_ACERTOS, String(novosAcertos));
                 SetHistorico(questoes, novaPontuacao);
                 const tempo = parseInt(localStorage.getItem(configData.TEMPO_PARAM) || '0');
-                const xpAnterior = lerProgresso().xp;
+                const anterior = lerProgresso();
                 const conquistas = partidaFinalizada({
                     jogo: 'tabuada',
                     modo: tipoSelecionado,
@@ -353,7 +354,8 @@ function Jogo(){
                     pontuacao: novaPontuacao,
                     recorde: recordeAnterior
                 });
-                Finaliza(novaPontuacao, novosAcertos, conquistas, lerProgresso().xp - xpAnterior);
+                const atual = lerProgresso();
+                Finaliza(novaPontuacao, novosAcertos, conquistas, atual.xp - anterior.xp, conquistasDaPartida(anterior, atual));
             }else{
                 setContasCorrente(MontaConta());
             }
@@ -379,7 +381,7 @@ function Jogo(){
         });
     }
 
-    function Finaliza(novaPontuacao: number, numeroAcertos: number, conquistas: Conquista[], ganhoXp: number){
+    function Finaliza(novaPontuacao: number, numeroAcertos: number, conquistas: Conquista[], ganhoXp: number, conquistasPartida: ConquistaPartida[]){
         const nome = lerNome();
         if(nome.length > 15){
             toast.warn('Nome deve ter no máximo 15 caracteres.');
@@ -399,7 +401,7 @@ function Jogo(){
         const irParaFinal = () => {
             navigate('/final/' + tipoSelecionado, {
                 replace: true,
-                state: { conquistas: conquistas.map((conquista) => ({ id: conquista.medalha.id, nivel: conquista.nivel })), ganhoXp }
+                state: { conquistas: conquistas.map((conquista) => ({ id: conquista.medalha.id, nivel: conquista.nivel })), ganhoXp, conquistasPartida }
             });
         };
 

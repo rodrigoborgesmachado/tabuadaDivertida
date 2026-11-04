@@ -1,14 +1,15 @@
 import configData from "../../Config.json";
 import { useLocation, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
 import { lerNome } from '../../services/jogador';
+import { compartilharResultado, conquistaDaMedalha, resultadoDaConquista, type ConquistaPartida, type ResultadoCompartilhado } from '../../services/compartilhar';
 import great from '../../assets/great.png';
 import donkey from '../../assets/donkey.png';
 import WalkingRobot from "./../../components/WalkingRobot/WalkingRobot";
 import SequenciaDias from "./../../components/SequenciaDias/SequenciaDias";
 import RoboPersonalizado from "./../../components/RoboPersonalizado/RoboPersonalizado";
 import BarraXp from "./../../components/BarraXp/BarraXp";
+import CompartilharResultado from "./../../components/CompartilharResultado/CompartilharResultado";
 import { buscarMedalha, nomeNivel } from '../../gamificacao/medalhas';
 
 type Questao = {
@@ -20,6 +21,7 @@ type Questao = {
 type EstadoFinal = {
     conquistas?: { id: string; nivel: number }[];
     ganhoXp?: number;
+    conquistasPartida?: ConquistaPartida[];
 };
 
 function Final(){
@@ -58,7 +60,7 @@ function Final(){
         return `${valor} ${valor === 1 ? singular : plural}`;
     };
 
-    const buildShareText = () => {
+    const buildShareResult = (): ResultadoCompartilhado => {
         const nome = lerNome() || 'Jogador';
         const acertos = parseInt(localStorage.getItem(configData.QUANTIDADE_ACERTOS) || '0');
         const total = parseInt(localStorage.getItem(configData.QUANTIDADE_PARAM) || '0');
@@ -69,18 +71,22 @@ function Final(){
         const percentual = total > 0 ? Math.round((acertos / total) * 100) : 0;
         const url = window.location.origin || 'https://www.tabuadadivertida.com';
 
-        return [
-            `Este foi meu resultado na Tabuada Divertida de ${formatDate()}!`,
-            `👤 Jogador: ${nome}`,
-            `🧮 Modo: ${labelTipo(tipo)}`,
-            `🎯 Acertos: ${acertos}/${total} (${percentual}%)`,
-            `❌ Erros: ${pluralize(erros, 'erro', 'erros')}`,
-            `⏱️ Tempo: ${pluralize(tempo, 'segundo', 'segundos')}`,
-            `⭐ Pontuação: ${pontuacao}`,
-            `🏆 Recorde: ${recorde}`,
-            '',
-            `Você consegue fazer melhor? ${url}`
-        ].join('\n');
+        return {
+            jogo: 'Tabuada Divertida',
+            linhas: [
+                `Este foi meu resultado na Tabuada Divertida de ${formatDate()}!`,
+                `👤 Jogador: ${nome}`,
+                `🧮 Modo: ${labelTipo(tipo)}`,
+                `🎯 Acertos: ${acertos}/${total} (${percentual}%)`,
+                `❌ Erros: ${pluralize(erros, 'erro', 'erros')}`,
+                `⏱️ Tempo: ${pluralize(tempo, 'segundo', 'segundos')}`,
+                `⭐ Pontuação: ${pontuacao}`,
+                `🏆 Recorde: ${recorde}`
+            ],
+            convite: `Você consegue fazer melhor? ${url}`,
+            resumo: `${labelTipo(tipo)}: ${acertos}/${total} em ${tempo}s`,
+            conquistas: (location.state as EstadoFinal | null)?.conquistasPartida || []
+        };
     };
 
     const launchFireworks = () => {
@@ -124,30 +130,6 @@ function Final(){
 
         }
     }, [isPerfect]);
-
-    const handleShare = async () => {
-        const text = buildShareText();
-
-        try {
-            if (canShare) {
-                await (navigator as any).share({
-                    title: 'Tabuada Divertida',
-                    text
-                });
-                return;
-            }
-
-            if (navigator.clipboard) {
-                await navigator.clipboard.writeText(text);
-                toast.success('Resultado copiado para compartilhar.');
-                return;
-            }
-
-            window.prompt('Copie seu resultado:', text);
-        } catch (err) {
-            // Usuário cancelou ou não foi possível compartilhar; silencie o erro.
-        }
-    };
 
     return(
         <>
@@ -204,15 +186,16 @@ function Final(){
                     <h2>
                         🏅 Medalhas desta partida:
                     </h2>
+                    <p>Toque numa medalha para compartilhar só ela.</p>
                     <div className='resultados-lista'>
                         {
                             conquistas.map(({ medalha, nivel }) => {
                                 return(
-                                    <div className='resultados-item' key={medalha.id}>
+                                    <button type='button' className='resultados-item resultados-item--botao' key={medalha.id} title='Compartilhar esta conquista' onClick={() => compartilharResultado(resultadoDaConquista(conquistaDaMedalha(medalha.id, nivel)[0]))}>
                                         <h3>
                                             {medalha.icone} {medalha.nome}{nomeNivel(medalha, nivel) && ` · ${nomeNivel(medalha, nivel)}`}
                                         </h3>
-                                    </div>
+                                    </button>
                                 )
                             })
                         }
@@ -239,11 +222,7 @@ function Final(){
             </div>
 
             <div className='botoes'>
-                <button type='button' className='global-button global-button--full-width' onClick={handleShare}>
-                    <span className='option-link'>
-                        {canShare ? 'Compartilhar resultado' : 'Copiar resultado'}
-                    </span>
-                </button>
+                <CompartilharResultado resultado={buildShareResult()} className='global-button global-button--full-width' rotulo={canShare ? 'Compartilhar resultado' : 'Copiar resultado'} classeRotulo='option-link' />
                 <a className='global-button global-button--full-width' href={`/contagem/` + tipo}>
                     <span className='option-link'>
                         Jogar novamente

@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { toast } from 'react-toastify';
 import { playError, playSuccess } from '../../services/sons';
+import { conquistasDaPartida, type ConquistaPartida } from '../../services/compartilhar';
 import { lerProgresso, partidaFinalizada } from '../../gamificacao/progresso';
 import BarraXp from '../../components/BarraXp/BarraXp';
+import CompartilharResultado from '../../components/CompartilharResultado/CompartilharResultado';
 import RankingFinal from '../../components/RankingFinal/RankingFinal';
 import ComoJogar from '../../components/ComoJogar/ComoJogar';
 import { criarTabuleiro, formamPar, formatarTempo, isMelhorResultado, PARES_POR_NIVEL, TABUADAS, type Carta, type Nivel, type Resultado, type Tabuada } from './logic';
@@ -50,7 +51,7 @@ function MemoriaTabuada() {
   const [cartasErradas, setCartasErradas] = useState<string[]>([]);
   const [segundos, setSegundos] = useState(0);
   const [melhores, setMelhores] = useState<Melhores>(() => readMelhores());
-  const [resultadoFinal, setResultadoFinal] = useState<(Resultado & { novoRecorde: boolean; ganhoXp: number }) | null>(null);
+  const [resultadoFinal, setResultadoFinal] = useState<(Resultado & { novoRecorde: boolean; ganhoXp: number; conquistas: ConquistaPartida[] }) | null>(null);
   const desvirarRef = useRef<number | null>(null);
 
   const terminou = cartas.length > 0 && encontradas.length === cartas.length;
@@ -102,7 +103,7 @@ function MemoriaTabuada() {
       saveMelhores(novosMelhores);
     }
 
-    const xpAnterior = lerProgresso().xp;
+    const anterior = lerProgresso();
     partidaFinalizada({
       jogo: 'memoria',
       nivel,
@@ -110,7 +111,8 @@ function MemoriaTabuada() {
       tempo: segundos,
       desperdicio: new Set(cartasErradas).size < cartasErradas.length,
     });
-    setResultadoFinal({ ...resultado, novoRecorde, ganhoXp: lerProgresso().xp - xpAnterior });
+    const atual = lerProgresso();
+    setResultadoFinal({ ...resultado, novoRecorde, ganhoXp: atual.xp - anterior.xp, conquistas: conquistasDaPartida(anterior, atual) });
   };
 
   const handleVirar = (carta: Carta) => {
@@ -149,40 +151,22 @@ function MemoriaTabuada() {
     }, TEMPO_PARA_DESVIRAR);
   };
 
-  const buildShareText = () => {
+  const buildShareResult = () => {
     const url = `${window.location.origin || 'https://www.tabuadadivertida.com'}/jogos/memoria-da-tabuada`;
 
-    return [
-      'Este foi meu resultado na Memória da tabuada!',
-      `🧮 ${labelTabuada(tabuada)}`,
-      `🎚️ Nível: ${labelNivel(nivel)}`,
-      `🔁 Jogadas: ${resultadoFinal?.jogadas ?? jogadas}`,
-      `⏱️ Tempo: ${formatarTempo(resultadoFinal?.segundos ?? segundos)}`,
-      '',
-      `Você consegue fazer melhor? ${url}`,
-    ].join('\n');
-  };
-
-  const handleShare = async () => {
-    const text = buildShareText();
-
-    try {
-      if ('share' in navigator) {
-        await (navigator as any).share({
-          title: 'Memória da tabuada',
-          text,
-        });
-        return;
-      }
-
-      if (navigator.clipboard) {
-        await navigator.clipboard.writeText(text);
-        toast.success('Resultado copiado para compartilhar.');
-        return;
-      }
-
-      window.prompt('Copie seu resultado:', text);
-    } catch {}
+    return {
+      jogo: 'Memória da tabuada',
+      linhas: [
+        'Este foi meu resultado na Memória da tabuada!',
+        `🧮 ${labelTabuada(tabuada)}`,
+        `🎚️ Nível: ${labelNivel(nivel)}`,
+        `🔁 Jogadas: ${resultadoFinal?.jogadas ?? jogadas}`,
+        `⏱️ Tempo: ${formatarTempo(resultadoFinal?.segundos ?? segundos)}`,
+      ],
+      convite: `Você consegue fazer melhor? ${url}`,
+      resumo: `${resultadoFinal?.jogadas ?? jogadas} jogadas em ${formatarTempo(resultadoFinal?.segundos ?? segundos)}`,
+      conquistas: resultadoFinal?.conquistas,
+    };
   };
 
   const melhorDoNivel = melhores[nivel];
@@ -314,9 +298,7 @@ function MemoriaTabuada() {
                   <button type='button' className='global-button' onClick={iniciarJogo}>
                     Jogar de novo
                   </button>
-                  <button type='button' className='global-button global-button--basic' onClick={handleShare}>
-                    Compartilhar
-                  </button>
+                  <CompartilharResultado resultado={buildShareResult()} className='global-button global-button--basic' />
                   <button type='button' className='global-button global-button--back' onClick={mudarConfiguracao}>
                     Mudar configuração
                   </button>

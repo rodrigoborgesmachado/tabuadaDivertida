@@ -3,9 +3,10 @@ import { Link } from 'react-router-dom';
 import { lerNome } from '../../services/jogador';
 import { playError, playSuccess } from '../../services/sons';
 import { salvarPartida, type Questao } from '../../services/historico';
-import { compartilhar } from '../../services/compartilhar';
+import { conquistasDaPartida, type ConquistaPartida } from '../../services/compartilhar';
 import { lerProgresso, partidaFinalizada } from '../../gamificacao/progresso';
 import BarraXp from '../../components/BarraXp/BarraXp';
+import CompartilharResultado from '../../components/CompartilharResultado/CompartilharResultado';
 import RankingFinal from '../../components/RankingFinal/RankingFinal';
 import ComoJogar from '../../components/ComoJogar/ComoJogar';
 import { comparar, CONFIG_NIVEL, explicarRodada, gerarRodada, PENALIDADE_SEGUNDOS, PONTOS_POR_ACERTO, type Modalidade, type Nivel, type Resposta, type Rodada } from './logic';
@@ -72,7 +73,7 @@ function MaiorOuMenor() {
   const [questoes, setQuestoes] = useState<Questao[]>([]);
   const [feedback, setFeedback] = useState<Feedback | null>(null);
   const [recordes, setRecordes] = useState<Record<string, number>>(() => readRecordes());
-  const [resultadoFinal, setResultadoFinal] = useState<{ novoRecorde: boolean; ganhoXp: number } | null>(null);
+  const [resultadoFinal, setResultadoFinal] = useState<{ novoRecorde: boolean; ganhoXp: number; conquistas: ConquistaPartida[] } | null>(null);
   const feedbackRef = useRef<number | null>(null);
 
   const chave = `${modalidade}-${nivel}`;
@@ -137,6 +138,7 @@ function MaiorOuMenor() {
     }
 
     let ganhoXp = 0;
+    let conquistas: ConquistaPartida[] = [];
     if (questoes.length > 0) {
       salvarPartida({
         quantidadeQuestoes: questoes.length,
@@ -149,12 +151,14 @@ function MaiorOuMenor() {
         pontuacao: pontos,
       });
 
-      const xpAnterior = lerProgresso().xp;
+      const anterior = lerProgresso();
       partidaFinalizada({ jogo: 'maior-ou-menor', pontuacao: pontos, contas: questoes.map((questao) => ({ correta: questao.correta })) });
-      ganhoXp = lerProgresso().xp - xpAnterior;
+      const atual = lerProgresso();
+      ganhoXp = atual.xp - anterior.xp;
+      conquistas = conquistasDaPartida(anterior, atual);
     }
 
-    setResultadoFinal({ novoRecorde, ganhoXp });
+    setResultadoFinal({ novoRecorde, ganhoXp, conquistas });
     setFase('fim');
   }, [fase, tempo, pontos, questoes, segundos, recordes, chave]);
 
@@ -218,18 +222,22 @@ function MaiorOuMenor() {
     return () => window.removeEventListener('keydown', onKeyDown);
   }, [fase, responder]);
 
-  const handleShare = () => {
+  const buildShareResult = () => {
     const url = `${window.location.origin || 'https://www.tabuadadivertida.com'}/jogos/maior-ou-menor`;
 
-    compartilhar('Maior ou menor', [
-      'Este foi meu resultado no Maior ou menor!',
-      `🧮 ${labelModalidade(modalidade)}`,
-      `🎚️ Nível: ${labelNivel(nivel)}`,
-      `⭐ Pontos: ${pontos}`,
-      `✅ Acertos: ${acertos}/${questoes.length}`,
-      '',
-      `Você consegue fazer melhor? ${url}`,
-    ].join('\n'));
+    return {
+      jogo: 'Maior ou menor',
+      linhas: [
+        'Este foi meu resultado no Maior ou menor!',
+        `🧮 ${labelModalidade(modalidade)}`,
+        `🎚️ Nível: ${labelNivel(nivel)}`,
+        `⭐ Pontos: ${pontos}`,
+        `✅ Acertos: ${acertos}/${questoes.length}`,
+      ],
+      convite: `Você consegue fazer melhor? ${url}`,
+      resumo: `${pontos} pontos · ${acertos}/${questoes.length} acertos`,
+      conquistas: resultadoFinal?.conquistas,
+    };
   };
 
   const explicacao = rodada && feedback ? explicarRodada(rodada) : null;
@@ -369,9 +377,7 @@ function MaiorOuMenor() {
                   <button type='button' className='global-button' onClick={iniciarJogo}>
                     Jogar de novo
                   </button>
-                  <button type='button' className='global-button global-button--basic' onClick={handleShare}>
-                    Compartilhar
-                  </button>
+                  <CompartilharResultado resultado={buildShareResult()} className='global-button global-button--basic' />
                   <button type='button' className='global-button global-button--back' onClick={mudarConfiguracao}>
                     Mudar configuração
                   </button>
