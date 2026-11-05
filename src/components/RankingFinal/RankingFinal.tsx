@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { lerNome, salvarNome } from '../../services/jogador';
 import { buscarRanking, enviarResultado, normalizarNome, posicaoNoRanking, TOP_RANKING, type DadosResultado, type JogoComRanking } from '../../services/resultadosJogos';
+import { semConexao } from '../../services/plataforma';
 import './RankingFinal.css';
 
 interface RankingFinalProps {
@@ -84,7 +85,7 @@ function RankingFinal({ jogo, modo, resultado }: RankingFinalProps) {
       <p className='ranking-final__status' aria-live='polite'>
         {status === 'enviando' && 'Enviando seu resultado para o ranking...'}
         {status === 'enviado' && (posicao ? `🏆 Você está em ${posicao}º lugar no ranking!` : `Resultado enviado! Continue jogando para entrar no top ${TOP_RANKING}.`)}
-        {status === 'erro' && 'Não foi possível enviar seu resultado ao ranking agora.'}
+        {status === 'erro' && (semConexao() ? '📡 Você está sem internet, então seu resultado não foi para o ranking.' : 'Não foi possível enviar seu resultado ao ranking agora.')}
         {status === 'fora' && 'Tudo bem! Este resultado não vai para o ranking.'}
       </p>
       <Link to={link} className='global-button global-button--basic'>

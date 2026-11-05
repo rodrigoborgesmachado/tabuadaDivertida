@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { GRUPOS, medalhas, NIVEIS, nomeNivel, type Medalha } from '../../gamificacao/medalhas';
 import { lerProgresso, type Progresso } from '../../gamificacao/progresso';
 import { compartilhar } from '../../services/compartilhar';
+import { urlDoSite } from '../../services/plataforma';
 import BarraXp from '../../components/BarraXp/BarraXp';
 import RoboPersonalizado from '../../components/RoboPersonalizado/RoboPersonalizado';
 import './Conquistas.css';
@@ -36,7 +37,7 @@ function Conquistas() {
 
   const handleShare = (medalha: Medalha, nivel: number) => {
     const nivelTexto = nomeNivel(medalha, nivel);
-    const url = window.location.origin || 'https://www.tabuadadivertida.com';
+    const url = urlDoSite();
 
     compartilhar('Tabuada Divertida', [
       `Conquistei a medalha ${medalha.icone} ${medalha.nome}${nivelTexto ? ` (${nivelTexto})` : ''} na Tabuada Divertida!`,

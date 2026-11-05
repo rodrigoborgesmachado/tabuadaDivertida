@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import configData from '../Config.json';
 import { CASAS_CORRIDA } from '../pages/CorridaRobo/logic';
 import { normalizarNome } from './resultadosJogos';
+import { gravarItem } from './armazenamento';
 
 export const QUANTIDADES = [10, 20, 30, 50, 100];
 export const QUANTIDADE_PADRAO = 20;
@@ -23,7 +24,7 @@ const ler = (chave: string) => {
 
 const gravar = (chave: string, valor: string) => {
   try {
-    window.localStorage.setItem(chave, valor);
+    gravarItem(chave, valor);
   } catch {}
   window.dispatchEvent(new Event(EVENTO_JOGADOR));
 };
@@ -45,7 +46,7 @@ export const perfilVisto = () => ler(STORAGE_PERFIL_VISTO) === '1' || !!lerNome(
 
 export const marcarPerfilVisto = () => {
   try {
-    window.localStorage.setItem(STORAGE_PERFIL_VISTO, '1');
+    gravarItem(STORAGE_PERFIL_VISTO, '1');
   } catch {}
 };
 

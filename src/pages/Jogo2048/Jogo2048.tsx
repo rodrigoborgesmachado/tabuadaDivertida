@@ -5,6 +5,7 @@ import confetti from 'canvas-confetti';
 import { addRandomTile, createInitialBoard, getSwipeDirection, hasNoMoves, moveBoard, type Board, type Direction } from './logic';
 import { lerProgresso, partidaFinalizada, registrarProgresso, type Progresso } from '../../gamificacao/progresso';
 import { conquistasDaPartida, type ConquistaPartida } from '../../services/compartilhar';
+import { urlDoSite } from '../../services/plataforma';
 import BarraXp from '../../components/BarraXp/BarraXp';
 import BotaoSom from '../../components/BotaoSom/BotaoSom';
 import ComoJogar from '../../components/ComoJogar/ComoJogar';
@@ -340,7 +341,7 @@ function Jogo2048() {
                 resultado={{
                   jogo: '2048',
                   linhas: ['Este foi meu resultado no 2048!', `⭐ Pontos: ${resultadoPartida.pontuacao}`, `🎲 Maior peça: ${resultadoPartida.maiorPeca}`],
-                  convite: `Você consegue fazer melhor? ${window.location.origin || 'https://www.tabuadadivertida.com'}/jogo2048`,
+                  convite: `Você consegue fazer melhor? ${urlDoSite()}/jogo2048`,
                   resumo: `${resultadoPartida.pontuacao} pontos · peça ${resultadoPartida.maiorPeca}`,
                   conquistas: resultadoPartida.conquistas,
                 }}

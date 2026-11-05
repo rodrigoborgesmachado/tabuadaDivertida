@@ -1,3 +1,5 @@
+import { Directory, Filesystem } from '@capacitor/filesystem';
+import { Share } from '@capacitor/share';
 import { createElement } from 'react';
 import { flushSync } from 'react-dom';
 import { createRoot } from 'react-dom/client';
@@ -8,6 +10,7 @@ import { buscarMedalha, nomeNivel } from '../gamificacao/medalhas';
 import type { Progresso } from '../gamificacao/progresso';
 import { calcularNivel } from '../gamificacao/xp';
 import { lerNome } from './jogador';
+import { ehApp, urlDoSite } from './plataforma';
 
 export const MAXIMO_CONQUISTAS = 3;
 export const TAMANHO_IMAGEM = 1080;
@@ -26,7 +29,34 @@ export interface ResultadoCompartilhado {
   conquistas?: ConquistaPartida[];
 }
 
+const paraBase64 = (arquivo: Blob) => new Promise<string>((resolve, reject) => {
+  const leitor = new FileReader();
+  leitor.onload = () => resolve(String(leitor.result).split(',')[1] || '');
+  leitor.onerror = reject;
+  leitor.readAsDataURL(arquivo);
+});
+
+const imagemNoCache = async (imagem: File) => {
+  try {
+    const { uri } = await Filesystem.writeFile({ path: NOME_IMAGEM, data: await paraBase64(imagem), directory: Directory.Cache });
+    return [uri];
+  } catch {
+    return undefined;
+  }
+};
+
+const compartilharNoApp = async (title: string, text: string, imagem?: File | null) => {
+  try {
+    await Share.share({ title, text, files: imagem ? await imagemNoCache(imagem) : undefined });
+  } catch {}
+};
+
 export const compartilhar = async (title: string, text: string) => {
+  if (ehApp()) {
+    await compartilharNoApp(title, text);
+    return;
+  }
+
   try {
     if (navigator.share) {
       await navigator.share({ title, text });
@@ -78,12 +108,16 @@ export const montarTextoResultado = ({ linhas, convite, conquistas = [] }: Resul
 export const resultadoDaConquista = (conquista: ConquistaPartida): ResultadoCompartilhado => ({
   jogo: 'Tabuada Divertida',
   linhas: ['Ganhei uma nova conquista no Tabuada Divertida!'],
-  convite: `Duvido você me superar 👉 ${window.location.origin || 'https://www.tabuadadivertida.com'}`,
+  convite: `Duvido você me superar 👉 ${urlDoSite()}`,
   resumo: 'Nova conquista!',
   conquistas: [conquista],
 });
 
 export const podeCompartilharArquivos = () => {
+  if (ehApp()) {
+    return true;
+  }
+
   try {
     return typeof File !== 'undefined' && 'canShare' in navigator &&
       (navigator as any).canShare({ files: [new File([''], NOME_IMAGEM, { type: 'image/png' })] });
@@ -174,7 +208,7 @@ export const gerarImagemResultado = async (resultado: ResultadoCompartilhado): P
   escrever(contexto, nome || 'Jogador', 565, 52, titulo, texto);
   escrever(contexto, resultado.resumo, 645, 56, titulo, cor('--button-color-back', '#2d9cdb'), '800');
   conquistas.forEach((linha, indice) => escrever(contexto, linha, 730 + indice * 58, 40, corpo, texto));
-  escrever(contexto, (window.location.host || 'www.tabuadadivertida.com').replace(/^www\./, ''), 985, 34, corpo, cor('--text-color-secondary', '#627489'));
+  escrever(contexto, urlDoSite().replace(/^https?:\/\/(www\.)?/, ''), 985, 34, corpo, cor('--text-color-secondary', '#627489'));
 
   return new Promise((resolve) => canvas.toBlob(resolve, 'image/png'));
 };
@@ -191,6 +225,11 @@ export const arquivoDoResultado = async (resultado: ResultadoCompartilhado) => {
 export const compartilharResultado = async (resultado: ResultadoCompartilhado, arquivo?: File | null) => {
   const texto = montarTextoResultado(resultado);
   const imagem = arquivo === undefined && podeCompartilharArquivos() ? await arquivoDoResultado(resultado) : arquivo;
+
+  if (ehApp()) {
+    await compartilharNoApp(resultado.jogo, texto, imagem);
+    return;
+  }
 
   if (imagem && (navigator as any).canShare?.({ files: [imagem] })) {
     try {

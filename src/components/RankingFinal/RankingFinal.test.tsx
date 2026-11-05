@@ -51,6 +51,17 @@ describe('RankingFinal', () => {
     expect(screen.getByText('🏆 Ver ranking')).toBeTruthy();
   });
 
+  it('explains that the result was not sent when there is no internet', async () => {
+    window.localStorage.setItem(configData.NOME_PARAM, 'Ana');
+    enviar.mockResolvedValue(false);
+    vi.spyOn(navigator, 'onLine', 'get').mockReturnValue(false);
+
+    renderRanking();
+
+    expect(await screen.findByText('📡 Você está sem internet, então seu resultado não foi para o ranking.')).toBeTruthy();
+    vi.restoreAllMocks();
+  });
+
   it('asks the name before sending and saves it', async () => {
     enviar.mockResolvedValue(true);
     buscar.mockResolvedValue({ lista: [], total: 0 });

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import confetti from 'canvas-confetti';
 import { lerProgresso, partidaFinalizada } from '../../gamificacao/progresso';
 import { conquistasDaPartida, type ConquistaPartida } from '../../services/compartilhar';
+import { urlDoSite } from '../../services/plataforma';
 import { playSuccess } from '../../services/sons';
 import BarraXp from '../../components/BarraXp/BarraXp';
 import BotaoSom from '../../components/BotaoSom/BotaoSom';
@@ -383,7 +384,7 @@ function Sudoku() {
                   resultado={{
                     jogo: 'Sudoku',
                     linhas: ['Completei um Sudoku!', `🔢 ${resultado.modo.nome}`, `⏱️ Tempo: ${formatarTempo(resultado.segundos)}`, `💡 Dicas: ${resultado.dicasUsadas}`],
-                    convite: `Você consegue resolver? ${window.location.origin || 'https://www.tabuadadivertida.com'}/jogos/sudoku`,
+                    convite: `Você consegue resolver? ${urlDoSite()}/jogos/sudoku`,
                     resumo: `${resultado.modo.nome} em ${formatarTempo(resultado.segundos)}`,
                     conquistas: resultado.conquistas,
                   }}

@@ -6,6 +6,7 @@ import { CASAS_PADRAO, type NivelRobo } from '../pages/CorridaRobo/logic';
 import { chaveDia, chaveSemana, diasEntre, registrarDia } from './sequenciaDias';
 import { idsLiberados, idsLiberadosNaCurvaAnterior } from './recompensas';
 import { calcularNivel, nivelNaCurvaAnterior, xpDaPartida, xpDasMedalhas, xpDoDesafio, xpInicial, type NivelXp } from './xp';
+import { gravarItem } from '../services/armazenamento';
 
 export const STORAGE_KEY = 'tabuada-divertida-progresso';
 export const EVENTO_CONQUISTAS = 'tabuada-divertida-conquistas';
@@ -182,7 +183,7 @@ export const lerProgresso = (): Progresso => {
 
 const salvarProgresso = (progresso: Progresso) => {
   try {
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(progresso));
+    gravarItem(STORAGE_KEY, JSON.stringify(progresso));
   } catch {}
 };
 

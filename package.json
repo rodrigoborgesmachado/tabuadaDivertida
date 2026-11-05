@@ -7,6 +7,15 @@
     "node": ">=22.12.0"
   },
   "dependencies": {
+    "@capacitor/android": "^8.6.0",
+    "@capacitor/app": "^8.1.2",
+    "@capacitor/browser": "^8.0.5",
+    "@capacitor/core": "^8.6.0",
+    "@capacitor/filesystem": "^8.1.5",
+    "@capacitor/preferences": "^8.0.1",
+    "@capacitor/share": "^8.0.3",
+    "@capacitor/splash-screen": "^8.0.2",
+    "@capacitor/status-bar": "^8.0.4",
     "@fortawesome/free-solid-svg-icons": "^7.0.1",
     "@fortawesome/react-fontawesome": "^3.0.2",
     "@testing-library/dom": "^10.4.2",
@@ -26,12 +35,18 @@
     "start": "vite",
     "dev": "vite",
     "build": "tsc && vite build && node -e \"const fs=require('fs'); fs.copyFileSync('routes.json','build/routes.json');\"",
+    "build:app": "tsc && vite build --mode app",
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "app:sync": "npm run build:app && cap sync android",
+    "app:open": "cap open android",
+    "app:assets": "capacitor-assets generate --android --iconBackgroundColor \"#ffffff\" --iconBackgroundColorDark \"#ffffff\" --splashBackgroundColor \"#fff7d7\" --splashBackgroundColorDark \"#101c30\""
   },
   "devDependencies": {
+    "@capacitor/assets": "^4.0.0",
+    "@capacitor/cli": "^8.6.0",
     "@eslint/js": "^10.0.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@types/canvas-confetti": "^1.9.0",
