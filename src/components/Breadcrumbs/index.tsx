@@ -25,6 +25,7 @@ function Breadcrumbs() {
     'maior-ou-menor': 'Maior ou menor',
     'teste-de-qi': 'Teste de QI com Números',
     'corrida-contra-o-robo': 'Corrida contra o robô',
+    'contando-bichinhos': 'Contando bichinhos',
     'personalizar': 'Personalizar',
     'instrucoes': 'Instruções',
     'historico': 'Histórico',

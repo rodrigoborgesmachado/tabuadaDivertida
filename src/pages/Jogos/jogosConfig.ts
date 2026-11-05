@@ -82,6 +82,21 @@ export const jogos: JogoConfig[] = [
     idade: '6+ anos',
     novoAte: '2026-12-31',
   },
+  {
+    id: 'contando-bichinhos',
+    path: '/jogos/contando-bichinhos',
+    nome: 'Contando bichinhos',
+    icone: '🐥',
+    descricao: 'Conte os bichinhos, junte os grupos e descubra qual tem mais, tocando nos números e ouvindo as instruções.',
+    habilidade: 'Contagem e primeiras somas',
+    idade: '4+ anos',
+    novoAte: '2026-12-31',
+    comoJogar: [
+      'Escolha até quanto contar: 5, 10 ou 20.',
+      'Ouça a instrução (toque em 🔊 para ouvir de novo) e responda tocando nos bichinhos, nos grupos ou nos números.',
+      'São 8 desafios sem relógio. Ao final, ganhe até 3 estrelas!',
+    ],
+  },
 ];
 
 export const isJogoPath = (pathname: string) =>

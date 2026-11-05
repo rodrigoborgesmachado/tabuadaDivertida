@@ -72,6 +72,23 @@ export const playError = () => {
   playBeep(220, 220, 'square', 0.06, 0);
 };
 
+export const falar = (texto: string) => {
+  if (lerMudo() || typeof window === 'undefined' || !window.speechSynthesis) return;
+  const fala = new SpeechSynthesisUtterance(texto);
+  const voz = window.speechSynthesis.getVoices().find((item) => item.lang.replace('_', '-').toLowerCase() === 'pt-br');
+  fala.lang = 'pt-BR';
+  fala.rate = 0.9;
+  if (voz) fala.voice = voz;
+  window.speechSynthesis.cancel();
+  window.speechSynthesis.speak(fala);
+};
+
+export const pararFala = () => {
+  if (typeof window !== 'undefined' && window.speechSynthesis) {
+    window.speechSynthesis.cancel();
+  }
+};
+
 export const playConquista = () => {
   playBeep(523, 110, 'triangle', 0.08, 0);
   playBeep(659, 110, 'triangle', 0.08, 110);
