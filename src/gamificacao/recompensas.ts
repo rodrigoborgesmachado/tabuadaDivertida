@@ -219,8 +219,9 @@ export const recompensasNaoVistas = (progresso = lerProgresso()) => {
   return liberadas.filter((recompensa) => !vistas.includes(recompensa.id));
 };
 
-export const marcarRecompensasVistas = (progresso = lerProgresso()) => {
-  salvarVistas(recompensasLiberadas(progresso).map((recompensa) => recompensa.id));
+export const marcarRecompensasVistas = (progresso = lerProgresso(), tipo?: TipoRecompensa) => {
+  const liberadas = recompensasLiberadas(progresso).filter((recompensa) => !tipo || recompensa.tipo === tipo).map((recompensa) => recompensa.id);
+  salvarVistas(tipo ? Array.from(new Set([...(lerVistas() || []), ...liberadas])) : liberadas);
   window.dispatchEvent(new Event(EVENTO_RECOMPENSAS_VISTAS));
 };
 

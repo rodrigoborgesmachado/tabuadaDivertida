@@ -63,6 +63,21 @@
   background: var(--transient-color-second);
 }
 
+.personalizar-novo {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 8px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--button-color-primary-wrong);
+  color: #ffffff;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 800;
+  line-height: 1.4;
+  vertical-align: middle;
+}
+
 .personalizar-secao {
   width: 100%;
   margin-bottom: 24px;

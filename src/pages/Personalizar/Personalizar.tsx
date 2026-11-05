@@ -20,6 +20,7 @@ import {
   type TipoRecompensa,
 } from '../../gamificacao/recompensas';
 import { usePersonalizacao } from '../../gamificacao/usePersonalizacao';
+import { useRecompensasNaoVistas } from '../../gamificacao/useRecompensasNaoVistas';
 import { calcularNivel } from '../../gamificacao/xp';
 import './Personalizar.css';
 
@@ -35,13 +36,16 @@ function Personalizar() {
   const [progresso] = useState(() => lerProgresso());
   const personalizacao = usePersonalizacao();
   const [novas] = useState(() => recompensasNaoVistas(progresso).map((recompensa) => recompensa.id));
-  const [aba, setAba] = useState<TipoRecompensa>('cor');
+  const [aba, setAba] = useState<TipoRecompensa>(() => ABAS.find((item) => recompensas.some((recompensa) => recompensa.tipo === item.tipo && novas.includes(recompensa.id)))?.tipo || 'cor');
+  const naoVistas = useRecompensasNaoVistas();
   const nivel = calcularNivel(progresso.xp).nivel;
   const proxima = proximaRecompensa(progresso);
 
   useEffect(() => {
-    marcarRecompensasVistas(progresso);
-  }, [progresso]);
+    marcarRecompensasVistas(progresso, aba);
+  }, [progresso, aba]);
+
+  const renderNovo = (itens: Recompensa[]) => itens.some((recompensa) => novas.includes(recompensa.id)) && <span className='personalizar-novo'>✨ Novo</span>;
 
   const renderItem = (recompensa: Recompensa) => {
     const liberada = recompensaLiberada(recompensa, progresso);
@@ -71,24 +75,28 @@ function Personalizar() {
     );
   };
 
-  const renderEspaco = (espaco: Espaco) => (
-    <section key={espaco} className='personalizar-grupo'>
-      <h3>{ESPACOS.find((item) => item.id === espaco)?.nome}</h3>
-      <div className='personalizar-grid'>
-        <button
-          type='button'
-          className={`personalizar-item${!personalizacao[espaco] ? ' personalizar-item--ativo' : ''}`}
-          aria-pressed={!personalizacao[espaco]}
-          onClick={() => salvarPersonalizacao({ ...personalizacao, [espaco]: '' })}
-        >
-          <span className='personalizar-item__icone' aria-hidden='true'>🚫</span>
-          <strong>Nenhum</strong>
-          <small>{!personalizacao[espaco] ? '✅ Em uso' : 'Tirar'}</small>
-        </button>
-        {recompensas.filter((recompensa) => recompensa.espaco === espaco).map(renderItem)}
-      </div>
-    </section>
-  );
+  const renderEspaco = (espaco: Espaco) => {
+    const itens = recompensas.filter((recompensa) => recompensa.espaco === espaco);
+
+    return (
+      <section key={espaco} className='personalizar-grupo'>
+        <h3>{ESPACOS.find((item) => item.id === espaco)?.nome}{renderNovo(itens)}</h3>
+        <div className='personalizar-grid'>
+          <button
+            type='button'
+            className={`personalizar-item${!personalizacao[espaco] ? ' personalizar-item--ativo' : ''}`}
+            aria-pressed={!personalizacao[espaco]}
+            onClick={() => salvarPersonalizacao({ ...personalizacao, [espaco]: '' })}
+          >
+            <span className='personalizar-item__icone' aria-hidden='true'>🚫</span>
+            <strong>Nenhum</strong>
+            <small>{!personalizacao[espaco] ? '✅ Em uso' : 'Tirar'}</small>
+          </button>
+          {itens.map(renderItem)}
+        </div>
+      </section>
+    );
+  };
 
   return (
     <div className='center'>
@@ -114,29 +122,39 @@ function Personalizar() {
         </div>
 
         <div className='personalizar-abas' role='tablist' aria-label='Tipos de itens'>
-          {ABAS.map((item) => (
-            <button
-              key={item.tipo}
-              type='button'
-              role='tab'
-              className={`personalizar-aba${aba === item.tipo ? ' personalizar-aba--ativa' : ''}`}
-              aria-selected={aba === item.tipo}
-              onClick={() => setAba(item.tipo)}
-            >
-              {item.titulo}
-            </button>
-          ))}
+          {ABAS.map((item) => {
+            const quantidade = naoVistas.filter((recompensa) => recompensa.tipo === item.tipo).length;
+
+            return (
+              <button
+                key={item.tipo}
+                type='button'
+                role='tab'
+                className={`personalizar-aba${aba === item.tipo ? ' personalizar-aba--ativa' : ''}`}
+                aria-selected={aba === item.tipo}
+                aria-label={quantidade > 0 ? `${item.titulo}, ${quantidade} ${quantidade === 1 ? 'item novo' : 'itens novos'}` : undefined}
+                onClick={() => setAba(item.tipo)}
+              >
+                {item.titulo}
+                {quantidade > 0 && <span className='personalizar-novo' aria-hidden='true'>✨ {quantidade}</span>}
+              </button>
+            );
+          })}
         </div>
 
         <section className='personalizar-secao' role='tabpanel'>
-          {aba === 'cor' && RARIDADES.map((raridade) => (
-            <section key={raridade.id} className='personalizar-grupo'>
-              <h3 className={`personalizar-raridade personalizar-raridade--${raridade.id}`}>{raridade.nome}</h3>
-              <div className='personalizar-grid'>
-                {recompensas.filter((recompensa) => recompensa.tipo === 'cor' && recompensa.raridade === raridade.id).map(renderItem)}
-              </div>
-            </section>
-          ))}
+          {aba === 'cor' && RARIDADES.map((raridade) => {
+            const itens = recompensas.filter((recompensa) => recompensa.tipo === 'cor' && recompensa.raridade === raridade.id);
+
+            return (
+              <section key={raridade.id} className='personalizar-grupo'>
+                <h3 className={`personalizar-raridade personalizar-raridade--${raridade.id}`}>{raridade.nome}{renderNovo(itens)}</h3>
+                <div className='personalizar-grid'>
+                  {itens.map(renderItem)}
+                </div>
+              </section>
+            );
+          })}
           {aba === 'acessorio' && ESPACOS.map((espaco) => renderEspaco(espaco.id))}
           {aba === 'tema' && (
             <div className='personalizar-grid'>

@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { criarProgresso, STORAGE_KEY } from '../../gamificacao/progresso';
-import { STORAGE_PERSONALIZACAO, STORAGE_RECOMPENSAS_VISTAS } from '../../gamificacao/recompensas';
+import { marcarRecompensasVistas, recompensasNaoVistas, STORAGE_PERSONALIZACAO, STORAGE_RECOMPENSAS_VISTAS } from '../../gamificacao/recompensas';
 import Personalizar from './Personalizar';
 
 const renderPersonalizar = () => render(
@@ -92,8 +92,35 @@ describe('Personalizar', () => {
 
     expect(item('Azul céu').textContent).toContain('✨ Novo!');
     expect(item('Prata').textContent).toContain('Em uso');
+    expect(screen.getByRole('heading', { name: 'Comum ✨ Novo' })).toBeTruthy();
+    expect(screen.getByRole('heading', { name: 'Rara' })).toBeTruthy();
     expect(screen.queryByText('🎨 Personalizar robô')).toBeNull();
     expect(JSON.parse(window.localStorage.getItem(STORAGE_RECOMPENSAS_VISTAS) || '[]')).toContain('cor-azul');
+  });
+
+  it('opens the first tab with new items and marks them as seen only when the tab is opened', () => {
+    recompensasNaoVistas({ ...criarProgresso(), xp: 200 });
+    salvarProgresso({ xp: 430, medalhas: { 'partidas-jogadas': { nivel: 1, data: '2026-11-02T15:00:00.000Z' } } });
+    marcarRecompensasVistas(undefined, 'cor');
+    renderPersonalizar();
+
+    expect(screen.getByRole('tab', { name: '🎩 Acessórios' }).getAttribute('aria-selected')).toBe('true');
+    expect(screen.getByRole('tab', { name: '🎨 Cores' })).toBeTruthy();
+    expect(screen.getByRole('tab', { name: '🌈 Temas, 1 item novo' }).textContent).toContain('✨ 1');
+    expect(screen.getByRole('heading', { name: '🎩 Cabeça ✨ Novo' })).toBeTruthy();
+    expect(screen.getByRole('heading', { name: '✋ Mão' })).toBeTruthy();
+    expect(item('Boné').textContent).toContain('✨ Novo!');
+    expect(recompensasNaoVistas().map((recompensa) => recompensa.id)).toEqual(['tema-oceano']);
+
+    abrirAba('🌈 Temas, 1 item novo');
+
+    expect(screen.getByRole('tab', { name: '🌈 Temas' }).getAttribute('aria-selected')).toBe('true');
+    expect(item('Oceano').textContent).toContain('✨ Novo!');
+    expect(recompensasNaoVistas()).toEqual([]);
+
+    abrirAba('🎩 Acessórios');
+
+    expect(item('Boné').textContent).toContain('✨ Novo!');
   });
 
   it('unlocks the items of a conquered medal', () => {
