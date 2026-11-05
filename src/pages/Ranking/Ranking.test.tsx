@@ -109,6 +109,19 @@ describe('Ranking', () => {
     expect(get).toHaveBeenLastCalledWith('ResultadosJogos/ranking?jogo=maior-ou-menor&modo=tabuada-facil&top=50', expect.anything());
   });
 
+  it('asks to connect to the internet when there is no connection', async () => {
+    get.mockRejectedValue(new Error('Network Error'));
+    vi.spyOn(navigator, 'onLine', 'get').mockReturnValue(false);
+
+    const { unmount } = renderRanking('/ranking?jogo=maior-ou-menor');
+    expect(await screen.findByText('📡 Você está sem internet. Conecte-se para ver o ranking.')).toBeTruthy();
+    unmount();
+
+    renderRanking('/ranking');
+    expect(await screen.findByText('📡 Você está sem internet. Conecte-se para ver o ranking.')).toBeTruthy();
+    vi.restoreAllMocks();
+  });
+
   it('keeps the multiplication table ranking as the default tab without leaving the page on error', async () => {
     get.mockRejectedValue(new Error('Network Error'));
 

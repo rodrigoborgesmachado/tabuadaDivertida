@@ -3,6 +3,7 @@ import api from '../../services/api';
 import { Table } from 'react-bootstrap';
 import PacmanLoader from '../../components/PacmanLoader/PacmanLoader';
 import { TIMEOUT_ENVIO, TOP_RANKING } from '../../services/resultadosJogos';
+import { semConexao } from '../../services/plataforma';
 
 interface RankingTabuadaProps {
     filtroNome: string;
@@ -74,7 +75,7 @@ function RankingTabuada({ filtroNome, nomeJogador }: RankingTabuadaProps){
     if(erro){
         return(
             <div className='ranking-mensagem' role='alert'>
-                <p>😕 Não foi possível carregar o ranking agora. Tente novamente em instantes.</p>
+                <p>{semConexao() ? '📡 Você está sem internet. Conecte-se para ver o ranking.' : '😕 Não foi possível carregar o ranking agora. Tente novamente em instantes.'}</p>
                 <button type='button' className='global-button' onClick={() => setTentativa((atual) => atual + 1)}>
                     Tentar novamente
                 </button>

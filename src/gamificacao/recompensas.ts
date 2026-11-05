@@ -1,6 +1,7 @@
 import { buscarMedalha, NIVEIS, nomeNivel } from './medalhas';
 import { lerProgresso, type Progresso } from './progresso';
 import { calcularNivel, nivelNaCurvaAnterior, xpTotalDoNivel } from './xp';
+import { gravarItem } from '../services/armazenamento';
 
 export const STORAGE_PERSONALIZACAO = 'tabuada-divertida-personalizacao';
 export const EVENTO_PERSONALIZACAO = 'tabuada-divertida-personalizacao';
@@ -194,7 +195,7 @@ export const proximaRecompensa = (progresso: Progresso) => {
 
 const salvarVistas = (ids: string[]) => {
   try {
-    window.localStorage.setItem(STORAGE_RECOMPENSAS_VISTAS, JSON.stringify(ids));
+    gravarItem(STORAGE_RECOMPENSAS_VISTAS, JSON.stringify(ids));
   } catch {}
 };
 
@@ -286,7 +287,7 @@ export const sortearPersonalizacao = (personalizacao: Personalizacao, progresso:
 
 export const salvarPersonalizacao = (personalizacao: Personalizacao) => {
   try {
-    window.localStorage.setItem(STORAGE_PERSONALIZACAO, JSON.stringify(personalizacao));
+    gravarItem(STORAGE_PERSONALIZACAO, JSON.stringify(personalizacao));
   } catch {}
 
   window.dispatchEvent(new CustomEvent<Personalizacao>(EVENTO_PERSONALIZACAO, { detail: personalizacao }));

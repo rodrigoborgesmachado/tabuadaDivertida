@@ -2,6 +2,7 @@ import { ChangeEvent, FormEvent, useState } from 'react';
 import { toast } from 'react-toastify';
 import PacmanLoader from '../../components/PacmanLoader/PacmanLoader';
 import api from '../../services/api';
+import { semConexao } from '../../services/plataforma';
 import './Contato.css';
 
 type ContactForm = {
@@ -70,7 +71,7 @@ function Contato() {
         toast.error('Servico indisponivel no momento.');
       }
     } catch {
-      toast.error('Nao foi possivel enviar o email agora. Tente novamente.');
+      toast.error(semConexao() ? 'Você está sem internet. Conecte-se para enviar a mensagem.' : 'Nao foi possivel enviar o email agora. Tente novamente.');
     } finally {
       setLoading(false);
     }

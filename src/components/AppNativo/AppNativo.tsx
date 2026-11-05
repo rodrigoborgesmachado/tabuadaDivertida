@@ -1,0 +1,52 @@
+import { useEffect, useRef } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { App } from '@capacitor/app';
+import { Browser } from '@capacitor/browser';
+import { SplashScreen } from '@capacitor/splash-screen';
+import { ehApp, linkExterno } from '../../services/plataforma';
+
+function AppNativo() {
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+  const rota = useRef(pathname);
+
+  useEffect(() => {
+    rota.current = pathname;
+  }, [pathname]);
+
+  useEffect(() => {
+    if (!ehApp()) {
+      return;
+    }
+
+    SplashScreen.hide().catch(() => {});
+
+    const voltar = App.addListener('backButton', ({ canGoBack }) => {
+      if (rota.current === '/') {
+        App.exitApp();
+      } else if (canGoBack) {
+        navigate(-1);
+      } else {
+        navigate('/', { replace: true });
+      }
+    });
+
+    const abrirLink = (event: MouseEvent) => {
+      const link = (event.target as Element | null)?.closest?.('a');
+      if (link && linkExterno(link.href)) {
+        event.preventDefault();
+        Browser.open({ url: link.href }).catch(() => {});
+      }
+    };
+
+    document.addEventListener('click', abrirLink);
+    return () => {
+      voltar.then((ouvinte) => ouvinte.remove());
+      document.removeEventListener('click', abrirLink);
+    };
+  }, [navigate]);
+
+  return null;
+}
+
+export default AppNativo;

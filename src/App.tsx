@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { buscarRecompensa } from './gamificacao/recompensas';
 import { usePersonalizacao } from './gamificacao/usePersonalizacao';
 import { TemaContext } from './components/ThemeSwitcher/temaContext';
+import { ajustarBarraDeStatus } from './services/plataforma';
 
 function App() {
   const { tema } = usePersonalizacao();
@@ -27,6 +28,10 @@ function App() {
       document.body.removeAttribute('data-cor');
     }
   }, [tema]);
+
+  useEffect(() => {
+    ajustarBarraDeStatus(theme === 'dark');
+  }, [theme, tema]);
 
   const toggleTheme = () => {
     setTheme(prev => (prev === 'light' ? 'dark' : 'light'));

@@ -4,6 +4,7 @@ import { casasDaCorrida, lerNome, salvarQuantidade, useJogador } from '../../ser
 import { playError, playSuccess } from '../../services/sons';
 import { salvarPartida, type Questao } from '../../services/historico';
 import { conquistasDaPartida, type ConquistaPartida } from '../../services/compartilhar';
+import { urlDoSite } from '../../services/plataforma';
 import { contasDaTabuada, lerProgresso, partidaFinalizada } from '../../gamificacao/progresso';
 import BarraXp from '../../components/BarraXp/BarraXp';
 import BotaoSom from '../../components/BotaoSom/BotaoSom';
@@ -242,7 +243,7 @@ function CorridaRobo() {
   };
 
   const buildShareResult = () => {
-    const url = `${window.location.origin || 'https://www.tabuadadivertida.com'}/jogos/corrida-contra-o-robo`;
+    const url = `${urlDoSite()}/jogos/corrida-contra-o-robo`;
 
     return {
       jogo: 'Corrida contra o robô',

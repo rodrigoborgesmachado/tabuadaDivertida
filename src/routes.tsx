@@ -34,11 +34,13 @@ import Progresso from './pages/Progresso/Progresso';
 import Personalizar from './pages/Personalizar/Personalizar';
 import AvisoConquista from './components/AvisoConquista/AvisoConquista';
 import ScrollToTop from './components/ScrollToTop/ScrollToTop';
+import AppNativo from './components/AppNativo/AppNativo';
 
 function RoutesApp() {
     return(
         <BrowserRouter>
             <ScrollToTop/>
+            <AppNativo/>
             <Header/>
             <Breadcrumbs />
             <AvisoConquista />

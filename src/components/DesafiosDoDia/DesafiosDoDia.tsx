@@ -3,6 +3,7 @@ import { desafioConcluido, desafioDaSemana, desafioDoDia, valorDesafio, type Des
 import { lerProgresso } from '../../gamificacao/progresso';
 import { jogos } from '../../pages/Jogos/jogosConfig';
 import { compartilhar } from '../../services/compartilhar';
+import { urlDoSite } from '../../services/plataforma';
 import SequenciaDias from '../SequenciaDias/SequenciaDias';
 import './DesafiosDoDia.css';
 
@@ -17,7 +18,7 @@ function DesafiosDoDia({ sequencia = true }: DesafiosDoDiaProps) {
   const [desafios] = useState(() => [desafioDoDia(), desafioDaSemana()]);
 
   const handleShare = (desafio: Desafio) => {
-    const url = window.location.origin || 'https://www.tabuadadivertida.com';
+    const url = urlDoSite();
 
     compartilhar('Tabuada Divertida', [
       `Concluí o desafio ${desafio.tipo === 'dia' ? 'de hoje' : 'da semana'} do Tabuada Divertida!`,

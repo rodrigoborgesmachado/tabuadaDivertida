@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { playError, playSuccess } from '../../services/sons';
 import { conquistasDaPartida, type ConquistaPartida } from '../../services/compartilhar';
+import { urlDoSite } from '../../services/plataforma';
 import { lerProgresso, partidaFinalizada } from '../../gamificacao/progresso';
 import BarraXp from '../../components/BarraXp/BarraXp';
 import BotaoSom from '../../components/BotaoSom/BotaoSom';
@@ -153,7 +154,7 @@ function MemoriaTabuada() {
   };
 
   const buildShareResult = () => {
-    const url = `${window.location.origin || 'https://www.tabuadadivertida.com'}/jogos/memoria-da-tabuada`;
+    const url = `${urlDoSite()}/jogos/memoria-da-tabuada`;
 
     return {
       jogo: 'Memória da tabuada',

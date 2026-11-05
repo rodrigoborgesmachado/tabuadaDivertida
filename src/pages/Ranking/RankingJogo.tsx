@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Table } from 'react-bootstrap';
 import PacmanLoader from '../../components/PacmanLoader/PacmanLoader';
 import { buscarRanking, normalizarNome, type ItemRanking } from '../../services/resultadosJogos';
+import { semConexao } from '../../services/plataforma';
 import type { JogoRanking } from './rankingConfig';
 
 interface RankingJogoProps {
@@ -52,7 +53,7 @@ function RankingJogo({ jogo, modo, filtroNome, nomeJogador }: RankingJogoProps) 
   if (status === 'erro') {
     return (
       <div className='ranking-mensagem' role='alert'>
-        <p>😕 Não foi possível carregar o ranking agora. Tente novamente em instantes.</p>
+        <p>{semConexao() ? '📡 Você está sem internet. Conecte-se para ver o ranking.' : '😕 Não foi possível carregar o ranking agora. Tente novamente em instantes.'}</p>
         <button type='button' className='global-button' onClick={() => setTentativa((atual) => atual + 1)}>
           Tentar novamente
         </button>

@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import confetti from 'canvas-confetti';
 import { lerNome } from '../../services/jogador';
 import { compartilharResultado, conquistaDaMedalha, resultadoDaConquista, type ConquistaPartida, type ResultadoCompartilhado } from '../../services/compartilhar';
+import { urlDoSite } from '../../services/plataforma';
 import great from '../../assets/great.png';
 import donkey from '../../assets/donkey.png';
 import WalkingRobot from "./../../components/WalkingRobot/WalkingRobot";
@@ -70,7 +71,7 @@ function Final(){
         const pontuacao = localStorage.getItem(configData.PONTUACAO) || '0';
         const recorde = localStorage.getItem(configData.RECORDE) || '0';
         const percentual = total > 0 ? Math.round((acertos / total) * 100) : 0;
-        const url = window.location.origin || 'https://www.tabuadadivertida.com';
+        const url = urlDoSite();
 
         return {
             jogo: 'Tabuada Divertida',

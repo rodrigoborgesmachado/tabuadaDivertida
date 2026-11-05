@@ -4,6 +4,7 @@ import { lerNome } from '../../services/jogador';
 import { playError, playSuccess } from '../../services/sons';
 import { salvarPartida, type Questao } from '../../services/historico';
 import { conquistasDaPartida, type ConquistaPartida } from '../../services/compartilhar';
+import { urlDoSite } from '../../services/plataforma';
 import { lerProgresso, partidaFinalizada } from '../../gamificacao/progresso';
 import BarraXp from '../../components/BarraXp/BarraXp';
 import BotaoSom from '../../components/BotaoSom/BotaoSom';
@@ -224,7 +225,7 @@ function MaiorOuMenor() {
   }, [fase, responder]);
 
   const buildShareResult = () => {
-    const url = `${window.location.origin || 'https://www.tabuadadivertida.com'}/jogos/maior-ou-menor`;
+    const url = `${urlDoSite()}/jogos/maior-ou-menor`;
 
     return {
       jogo: 'Maior ou menor',

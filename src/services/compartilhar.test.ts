@@ -1,7 +1,15 @@
+import type { Mock } from 'vitest';
+import { Capacitor } from '@capacitor/core';
+import { Directory, Filesystem } from '@capacitor/filesystem';
+import { Share } from '@capacitor/share';
 import { desafioDaSemana, desafioDoDia } from '../gamificacao/desafios';
 import { criarProgresso } from '../gamificacao/progresso';
 import { calcularNivel, xpTotalDoNivel } from '../gamificacao/xp';
-import { compartilharResultado, conquistaDaMedalha, conquistasDaPartida, montarTextoResultado, podeCompartilharArquivos, resultadoDaConquista, type ResultadoCompartilhado } from './compartilhar';
+import { compartilhar, compartilharResultado, conquistaDaMedalha, conquistasDaPartida, montarTextoResultado, podeCompartilharArquivos, resultadoDaConquista, type ResultadoCompartilhado } from './compartilhar';
+
+vi.mock('@capacitor/core', () => ({ Capacitor: { isNativePlatform: vi.fn() } }));
+vi.mock('@capacitor/share', () => ({ Share: { share: vi.fn() } }));
+vi.mock('@capacitor/filesystem', () => ({ Directory: { Cache: 'CACHE' }, Filesystem: { writeFile: vi.fn() } }));
 
 const data = new Date(2026, 10, 4, 15, 0);
 
@@ -101,6 +109,55 @@ describe('compartilhar', () => {
       await compartilharResultado(resultado());
 
       expect(share).toHaveBeenCalledWith({ title: 'Tabuada Divertida', text: montarTextoResultado(resultado()) });
+    });
+  });
+
+  describe('app share', () => {
+    const nativo = Capacitor.isNativePlatform as Mock;
+    const shareNoApp = Share.share as Mock;
+    const writeFile = Filesystem.writeFile as Mock;
+
+    beforeEach(() => {
+      nativo.mockReturnValue(true);
+      shareNoApp.mockResolvedValue({});
+      writeFile.mockResolvedValue({ uri: 'file:///cache/tabuada-divertida.png' });
+    });
+
+    it('opens the Android share screen with the text', async () => {
+      await compartilhar('Tabuada Divertida', 'Joguei!');
+
+      expect(shareNoApp).toHaveBeenCalledWith({ title: 'Tabuada Divertida', text: 'Joguei!', files: undefined });
+    });
+
+    it('always offers the image in the app', () => {
+      expect(podeCompartilharArquivos()).toBe(true);
+    });
+
+    it('saves the image in the cache and shares it with the text', async () => {
+      const arquivo = new File(['imagem'], 'tabuada-divertida.png', { type: 'image/png' });
+
+      await compartilharResultado(resultado(), arquivo);
+
+      expect(writeFile).toHaveBeenCalledWith({ path: 'tabuada-divertida.png', data: btoa('imagem'), directory: Directory.Cache });
+      expect(shareNoApp).toHaveBeenCalledWith({ title: 'Tabuada Divertida', text: montarTextoResultado(resultado()), files: ['file:///cache/tabuada-divertida.png'] });
+    });
+
+    it('shares only the text when the image cannot be saved', async () => {
+      writeFile.mockRejectedValue(new Error('falha'));
+
+      await compartilharResultado(resultado(), new File(['imagem'], 'tabuada-divertida.png', { type: 'image/png' }));
+
+      expect(shareNoApp).toHaveBeenCalledWith({ title: 'Tabuada Divertida', text: montarTextoResultado(resultado()), files: undefined });
+    });
+
+    it('invites to the site address instead of the app address', () => {
+      expect(resultadoDaConquista({ icone: '🔥', texto: 'Sequência de fogo · Ouro' }).convite).toBe('Duvido você me superar 👉 https://www.tabuadadivertida.com');
+    });
+
+    it('ignores when the player cancels the share', async () => {
+      shareNoApp.mockRejectedValue(new Error('Share canceled'));
+
+      await expect(compartilhar('Tabuada Divertida', 'Joguei!')).resolves.toBeUndefined();
     });
   });
 

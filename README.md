@@ -37,3 +37,23 @@ Gera o build de produção na pasta `build`, usada no deploy do Azure Static Web
 ### `npm run preview`
 
 Serve localmente o build gerado para conferência.
+
+## App Android
+
+O app é gerado com o [Capacitor](https://capacitorjs.com/) a partir do mesmo código. Para compilar e rodar no emulador ou no aparelho é preciso ter o Android Studio instalado.
+
+### `npm run build:app`
+
+Gera o build do app na pasta `build-app`, sem o AdSense.
+
+### `npm run app:sync`
+
+Gera o build do app e copia para o projeto `android`.
+
+### `npm run app:open`
+
+Abre o projeto `android` no Android Studio, onde o app é executado e o APK/AAB é gerado.
+
+### `npm run app:assets`
+
+Gera o ícone e a tela de abertura do app a partir de `assets/logo.png`.

@@ -12,7 +12,6 @@ const api = axios.create({
 api.interceptors.request.use(config => {
     // Modify headers before request is sent
     config.headers['Referer'] = window.location.href;
-    console.log(config.headers['Referer']);
     return config;
 }, error => {
     // Handle request error

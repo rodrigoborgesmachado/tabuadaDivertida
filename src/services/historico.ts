@@ -1,4 +1,5 @@
 import configData from '../Config.json';
+import { gravarItem } from './armazenamento';
 
 export type Questao = {
   questao: string;
@@ -23,7 +24,7 @@ const erroDeQuota = (erro: unknown) => {
 };
 
 const gravar = (historico: HistoricoItem[]) => {
-  window.localStorage.setItem(configData.HISTORICO, JSON.stringify(historico));
+  gravarItem(configData.HISTORICO, JSON.stringify(historico));
 };
 
 export const lerHistorico = (): HistoricoItem[] => {
