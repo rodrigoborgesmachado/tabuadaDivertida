@@ -21,7 +21,7 @@ const abrirAba = (nome: string) => fireEvent.click(screen.getByRole('tab', { nam
 describe('Personalizar', () => {
   beforeEach(() => {
     window.localStorage.clear();
-    jest.restoreAllMocks();
+    vi.restoreAllMocks();
   });
 
   it('shows the locked items with the condition to unlock them', () => {
@@ -69,7 +69,7 @@ describe('Personalizar', () => {
 
   it('picks a random combination among the unlocked items', () => {
     salvarProgresso({ xp: 430 });
-    jest.spyOn(Math, 'random').mockReturnValue(0.99);
+    vi.spyOn(Math, 'random').mockReturnValue(0.99);
     const { container } = renderPersonalizar();
 
     fireEvent.click(screen.getByRole('button', { name: '🎲 Aleatório' }));
@@ -92,7 +92,7 @@ describe('Personalizar', () => {
 
     expect(item('Azul céu').textContent).toContain('✨ Novo!');
     expect(item('Prata').textContent).toContain('Em uso');
-    expect(screen.getByRole('heading', { name: 'Comum ✨ Novo' })).toBeTruthy();
+    expect(screen.getByRole('heading', { name: 'Comum✨ Novo' })).toBeTruthy();
     expect(screen.getByRole('heading', { name: 'Rara' })).toBeTruthy();
     expect(screen.queryByText('🎨 Personalizar robô')).toBeNull();
     expect(JSON.parse(window.localStorage.getItem(STORAGE_RECOMPENSAS_VISTAS) || '[]')).toContain('cor-azul');
@@ -107,7 +107,7 @@ describe('Personalizar', () => {
     expect(screen.getByRole('tab', { name: '🎩 Acessórios' }).getAttribute('aria-selected')).toBe('true');
     expect(screen.getByRole('tab', { name: '🎨 Cores' })).toBeTruthy();
     expect(screen.getByRole('tab', { name: '🌈 Temas, 1 item novo' }).textContent).toContain('✨ 1');
-    expect(screen.getByRole('heading', { name: '🎩 Cabeça ✨ Novo' })).toBeTruthy();
+    expect(screen.getByRole('heading', { name: '🎩 Cabeça✨ Novo' })).toBeTruthy();
     expect(screen.getByRole('heading', { name: '✋ Mão' })).toBeTruthy();
     expect(item('Boné').textContent).toContain('✨ Novo!');
     expect(recompensasNaoVistas().map((recompensa) => recompensa.id)).toEqual(['tema-oceano']);

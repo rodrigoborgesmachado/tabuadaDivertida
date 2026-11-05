@@ -1,17 +1,18 @@
+import type { Mock } from 'vitest';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import configData from '../../Config.json';
 import { buscarRanking, enviarResultado } from '../../services/resultadosJogos';
 import RankingFinal from './RankingFinal';
 
-jest.mock('../../services/resultadosJogos', () => ({
-  ...jest.requireActual('../../services/resultadosJogos'),
-  enviarResultado: jest.fn(),
-  buscarRanking: jest.fn(),
+vi.mock('../../services/resultadosJogos', async () => ({
+  ...(await vi.importActual('../../services/resultadosJogos')),
+  enviarResultado: vi.fn(),
+  buscarRanking: vi.fn(),
 }));
 
-const enviar = enviarResultado as jest.Mock;
-const buscar = buscarRanking as jest.Mock;
+const enviar = enviarResultado as Mock;
+const buscar = buscarRanking as Mock;
 
 const renderRanking = () => render(
   <MemoryRouter>

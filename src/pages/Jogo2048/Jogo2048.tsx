@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import confetti from 'canvas-confetti';
 import { addRandomTile, createInitialBoard, getSwipeDirection, hasNoMoves, moveBoard, type Board, type Direction } from './logic';
 import { lerProgresso, partidaFinalizada, registrarProgresso, type Progresso } from '../../gamificacao/progresso';
 import { conquistasDaPartida, type ConquistaPartida } from '../../services/compartilhar';
@@ -36,11 +37,6 @@ const markWinShown = () => {
 };
 
 const launchFireworks = () => {
-  const confetti = (window as any).confetti;
-  if (!confetti) {
-    return;
-  }
-
   const duration = 3 * 1000;
   const animationEnd = Date.now() + duration;
   const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };

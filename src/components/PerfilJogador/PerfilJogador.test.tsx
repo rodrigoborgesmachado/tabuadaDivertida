@@ -6,7 +6,7 @@ import { EVENTO_SOM } from '../../services/sons';
 import { TemaContext } from '../ThemeSwitcher/temaContext';
 import PerfilJogador from './PerfilJogador';
 
-const renderPerfil = (theme: 'light' | 'dark' = 'light', toggleTheme = jest.fn(), onFechar = jest.fn()) => render(
+const renderPerfil = (theme: 'light' | 'dark' = 'light', toggleTheme = vi.fn(), onFechar = vi.fn()) => render(
   <TemaContext.Provider value={{ theme, toggleTheme }}>
     <MemoryRouter>
       <PerfilJogador onFechar={onFechar} />
@@ -28,8 +28,8 @@ describe('PerfilJogador', () => {
   });
 
   it('changes the theme right away without saving', () => {
-    const toggleTheme = jest.fn();
-    const onFechar = jest.fn();
+    const toggleTheme = vi.fn();
+    const onFechar = vi.fn();
     renderPerfil('light', toggleTheme, onFechar);
 
     expect(screen.getByText('Claro')).toBeTruthy();
@@ -47,7 +47,7 @@ describe('PerfilJogador', () => {
   });
 
   it('turns the sound off and on right away and notifies the change', () => {
-    const ouvinte = jest.fn();
+    const ouvinte = vi.fn();
     window.addEventListener(EVENTO_SOM, ouvinte);
     renderPerfil();
 
@@ -68,8 +68,8 @@ describe('PerfilJogador', () => {
   });
 
   it('keeps the sound choice when the profile is cancelled', () => {
-    const onFechar = jest.fn();
-    renderPerfil('light', jest.fn(), onFechar);
+    const onFechar = vi.fn();
+    renderPerfil('light', vi.fn(), onFechar);
 
     fireEvent.change(screen.getByLabelText('Nome'), { target: { value: 'Caio' } });
     fireEvent.click(screen.getByRole('button', { name: '🔇 Desligado' }));
@@ -81,10 +81,10 @@ describe('PerfilJogador', () => {
   });
 
   it('shows the customize robot card with the player robot', () => {
-    const onFechar = jest.fn();
-    renderPerfil('light', jest.fn(), onFechar);
+    const onFechar = vi.fn();
+    renderPerfil('light', vi.fn(), onFechar);
 
-    const cartao = screen.getByRole('link', { name: 'Personalizar robô Cores, acessórios e temas' });
+    const cartao = screen.getByRole('link', { name: 'Personalizar robôCores, acessórios e temas' });
     expect(cartao.getAttribute('href')).toBe('/personalizar');
     expect(cartao.querySelector('svg.perfil-modal__personalizar-robo')).toBeTruthy();
 

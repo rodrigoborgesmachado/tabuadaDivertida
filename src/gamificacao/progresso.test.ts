@@ -21,7 +21,7 @@ const salvarProgresso = (dados: object) => {
 describe('progresso', () => {
   beforeEach(() => {
     window.localStorage.clear();
-    jest.restoreAllMocks();
+    vi.restoreAllMocks();
   });
 
   it('starts empty and keeps the progress between reads', () => {
@@ -59,10 +59,10 @@ describe('progresso', () => {
   });
 
   it('does not break when the storage is unavailable', () => {
-    jest.spyOn(Storage.prototype, 'getItem').mockImplementation(() => {
+    vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => {
       throw new Error('bloqueado');
     });
-    jest.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
+    vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
       throw new Error('bloqueado');
     });
 
@@ -483,7 +483,7 @@ describe('progresso', () => {
   });
 
   it('notifies the screen about new medals', () => {
-    const ouvinte = jest.fn();
+    const ouvinte = vi.fn();
     window.addEventListener(EVENTO_CONQUISTAS, ouvinte);
 
     partidaFinalizada({ jogo: 'memoria' }, dia);
@@ -505,7 +505,7 @@ describe('progresso', () => {
   });
 
   it('notifies the completed challenge and rewards it with a medal', () => {
-    const ouvinte = jest.fn();
+    const ouvinte = vi.fn();
     window.addEventListener(EVENTO_DESAFIOS, ouvinte);
 
     const novas = partidaFinalizada({ jogo: 'tabuada', contas: contasCorretas(5) }, dia);
@@ -537,7 +537,7 @@ describe('progresso', () => {
   });
 
   it('notifies the screen when the player levels up', () => {
-    const ouvinte = jest.fn();
+    const ouvinte = vi.fn();
     window.addEventListener(EVENTO_NIVEL, ouvinte);
     salvarProgresso({ xp: 185 });
 

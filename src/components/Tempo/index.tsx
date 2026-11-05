@@ -8,7 +8,7 @@ function Tempo(){
 
     useEffect(() =>
     {
-        let intervalId: NodeJS.Timeout;
+        let intervalId: ReturnType<typeof setInterval>;
 
         if(start){
             intervalId = setInterval(() => {

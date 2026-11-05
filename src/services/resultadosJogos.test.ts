@@ -1,13 +1,14 @@
+import type { Mock } from 'vitest';
 import api from './api';
 import { buscarRanking, enviarResultado, lerExtras, posicaoNoRanking, TIMEOUT_ENVIO, urlRanking, type ItemRanking } from './resultadosJogos';
 
-jest.mock('./api', () => ({
+vi.mock('./api', () => ({
   __esModule: true,
-  default: { post: jest.fn(), get: jest.fn() },
+  default: { post: vi.fn(), get: vi.fn() },
 }));
 
-const post = api.post as jest.Mock;
-const get = api.get as jest.Mock;
+const post = api.post as Mock;
+const get = api.get as Mock;
 
 const item = (nome: string, dados: string | null = null): ItemRanking => ({
   nome,

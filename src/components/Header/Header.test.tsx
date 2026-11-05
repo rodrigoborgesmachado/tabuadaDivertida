@@ -74,14 +74,14 @@ describe('Header', () => {
     expect(screen.getByRole('button', { name: 'Abrir menu' }).querySelector('.nav-item__novo')?.textContent).toBe('2');
 
     fireEvent.click(botao);
-    expect(screen.getByRole('link', { name: 'Personalizar robô Cores, acessórios e temas 2 novos' }).getAttribute('href')).toBe('/personalizar');
+    expect(screen.getByRole('link', { name: 'Personalizar robôCores, acessórios e temas2 novos' }).getAttribute('href')).toBe('/personalizar');
 
     act(() => {
       marcarRecompensasVistas();
     });
 
     expect(screen.getByRole('button', { name: 'Meu perfil e configurações: Jogador' }).querySelector('.nav-item__novo')).toBeNull();
-    expect(screen.getByRole('link', { name: 'Personalizar robô Cores, acessórios e temas' })).toBeTruthy();
+    expect(screen.getByRole('link', { name: 'Personalizar robôCores, acessórios e temas' })).toBeTruthy();
   });
 
   it('shows the player name and saves the profile', () => {

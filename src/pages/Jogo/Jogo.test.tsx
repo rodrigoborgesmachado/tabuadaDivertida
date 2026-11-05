@@ -5,13 +5,13 @@ import api from '../../services/api';
 import { TIMEOUT_ENVIO } from '../../services/resultadosJogos';
 import Jogo from './Jogo';
 
-jest.mock('../../services/api', () => ({
+vi.mock('../../services/api', () => ({
   __esModule: true,
   default: { post: () => Promise.resolve({}) },
 }));
 
-jest.mock('../../services/sons', () => ({
-  ...jest.requireActual('../../services/sons'),
+vi.mock('../../services/sons', async () => ({
+  ...(await vi.importActual('../../services/sons')),
   playError: () => {},
   playSuccess: () => {},
 }));
@@ -38,7 +38,7 @@ const progresso = () => JSON.parse(window.localStorage.getItem('tabuada-divertid
 
 describe('Jogo', () => {
   beforeEach(() => {
-    jest.restoreAllMocks();
+    vi.restoreAllMocks();
     window.localStorage.clear();
     window.localStorage.setItem(configData.QUANTIDADE_PARAM, '1');
     window.localStorage.setItem(configData.NOME_PARAM, 'Ana');
@@ -57,7 +57,7 @@ describe('Jogo', () => {
 
   it.each(['QuotaExceededError', 'SecurityError'])('finishes the match and registers the achievements when saving the history fails with %s', async (name) => {
     const setItem = Storage.prototype.setItem;
-    jest.spyOn(Storage.prototype, 'setItem').mockImplementation(function (this: Storage, chave: string, valor: string) {
+    vi.spyOn(Storage.prototype, 'setItem').mockImplementation(function (this: Storage, chave: string, valor: string) {
       if (chave === configData.HISTORICO) {
         throw Object.assign(new Error(name), { name });
       }
@@ -73,7 +73,7 @@ describe('Jogo', () => {
   });
 
   it('finishes the match and registers the achievements when the api fails', async () => {
-    const post = jest.spyOn(api, 'post').mockRejectedValue(new Error('Network Error'));
+    const post = vi.spyOn(api, 'post').mockRejectedValue(new Error('Network Error'));
 
     renderJogo();
     await responderConta();
@@ -85,7 +85,7 @@ describe('Jogo', () => {
 
   it('sends the match to the api when the player never told the name', async () => {
     window.localStorage.removeItem(configData.NOME_PARAM);
-    const post = jest.spyOn(api, 'post').mockResolvedValue({});
+    const post = vi.spyOn(api, 'post').mockResolvedValue({});
     renderJogo();
     await responderConta();
 
@@ -95,7 +95,7 @@ describe('Jogo', () => {
   });
 
   it('shows the final screen without waiting for the api', async () => {
-    jest.spyOn(api, 'post').mockReturnValue(new Promise(() => {}));
+    vi.spyOn(api, 'post').mockReturnValue(new Promise(() => {}));
 
     renderJogo();
     await responderConta();
@@ -104,7 +104,7 @@ describe('Jogo', () => {
   });
 
   it('plays only the training questions without sending them to the ranking', async () => {
-    const post = jest.spyOn(api, 'post');
+    const post = vi.spyOn(api, 'post');
     window.localStorage.setItem(configData.TREINO, JSON.stringify([{ texto: '56÷8', resposta: 7 }, { texto: '7x8', resposta: 56 }]));
     window.localStorage.setItem(configData.QUANTIDADE_PARAM, '2');
 

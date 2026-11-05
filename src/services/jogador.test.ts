@@ -4,7 +4,7 @@ import { casasDaCorrida, EVENTO_JOGADOR, lerNome, lerQuantidade, marcarPerfilVis
 
 describe('jogador', () => {
   beforeEach(() => {
-    jest.restoreAllMocks();
+    vi.restoreAllMocks();
     window.localStorage.clear();
   });
 
@@ -78,10 +78,10 @@ describe('jogador', () => {
   });
 
   it('keeps working when the storage fails', () => {
-    jest.spyOn(Storage.prototype, 'getItem').mockImplementation(() => {
+    vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => {
       throw new Error('SecurityError');
     });
-    jest.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
+    vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
       throw new Error('SecurityError');
     });
 
@@ -95,7 +95,7 @@ describe('jogador', () => {
   it('updates every place when the player changes', () => {
     const { result } = renderHook(() => useJogador());
     const outro = renderHook(() => useJogador());
-    const evento = jest.fn();
+    const evento = vi.fn();
     window.addEventListener(EVENTO_JOGADOR, evento);
 
     expect(result.current).toEqual({ nome: '', quantidade: 20 });

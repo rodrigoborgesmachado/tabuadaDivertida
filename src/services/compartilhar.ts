@@ -28,8 +28,8 @@ export interface ResultadoCompartilhado {
 
 export const compartilhar = async (title: string, text: string) => {
   try {
-    if ('share' in navigator) {
-      await (navigator as any).share({ title, text });
+    if (navigator.share) {
+      await navigator.share({ title, text });
       return;
     }
 

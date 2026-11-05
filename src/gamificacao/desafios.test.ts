@@ -8,7 +8,7 @@ const umAno = Array.from({ length: 365 }, (_, index) => new Date(2026, 0, 1 + in
 
 describe('desafios', () => {
   afterEach(() => {
-    jest.restoreAllMocks();
+    vi.restoreAllMocks();
   });
 
   it('repeats the same numbers for the same seed', () => {
@@ -23,7 +23,7 @@ describe('desafios', () => {
   });
 
   it('draws the same daily challenge for the whole day on any device', () => {
-    jest.spyOn(Math, 'random').mockReturnValue(0.99);
+    vi.spyOn(Math, 'random').mockReturnValue(0.99);
     const manha = desafioDoDia(diaDeNovembro(3, 0));
     const noite = desafioDoDia(new Date(2026, 10, 3, 23, 59));
 

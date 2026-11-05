@@ -8,13 +8,13 @@ const salvarProgresso = (dados: object) => {
 
 describe('DesafiosDoDia', () => {
   beforeEach(() => {
-    jest.useFakeTimers();
-    jest.setSystemTime(new Date(2026, 10, 3, 10, 0));
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date(2026, 10, 3, 10, 0));
     window.localStorage.clear();
   });
 
   afterEach(() => {
-    jest.useRealTimers();
+    vi.useRealTimers();
     delete (navigator as any).share;
   });
 
@@ -29,7 +29,7 @@ describe('DesafiosDoDia', () => {
   });
 
   it('shows the streak, the progress and shares a completed challenge', () => {
-    const share = jest.fn().mockResolvedValue(undefined);
+    const share = vi.fn().mockResolvedValue(undefined);
     (navigator as any).share = share;
     salvarProgresso({
       ultimoDia: '2026-11-02',

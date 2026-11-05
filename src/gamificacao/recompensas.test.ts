@@ -26,7 +26,7 @@ const xpDoNivel10 = 2880;
 describe('recompensas', () => {
   beforeEach(() => {
     window.localStorage.clear();
-    jest.restoreAllMocks();
+    vi.restoreAllMocks();
   });
 
   it('unlocks level items only after the level is reached', () => {
@@ -78,7 +78,7 @@ describe('recompensas', () => {
   });
 
   it('saves the choice and notifies the site', () => {
-    const ouvinte = jest.fn();
+    const ouvinte = vi.fn();
     window.addEventListener(EVENTO_PERSONALIZACAO, ouvinte);
 
     salvarPersonalizacao({ ...PERSONALIZACAO_PADRAO, cor: 'cor-azul', cabeca: 'bone' });
@@ -123,7 +123,7 @@ describe('recompensas', () => {
   it('shows the items unlocked after the last visit until they are seen', () => {
     recompensasNaoVistas({ ...criarProgresso(), xp: 200 });
     const progresso = { ...criarProgresso(), xp: 430, medalhas: { 'partidas-jogadas': medalha(1) } };
-    const ouvinte = jest.fn();
+    const ouvinte = vi.fn();
     window.addEventListener(EVENTO_RECOMPENSAS_VISTAS, ouvinte);
 
     expect(recompensasNaoVistas(progresso).map((item) => item.id)).toEqual(['cor-vermelho', 'bone', 'tema-oceano']);
@@ -152,7 +152,7 @@ describe('recompensas', () => {
     window.localStorage.setItem(STORAGE_PERSONALIZACAO, 'quebrado');
     expect(lerPersonalizacao(criarProgresso())).toEqual(PERSONALIZACAO_PADRAO);
 
-    jest.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
+    vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
       throw new Error('bloqueado');
     });
     expect(() => salvarPersonalizacao(PERSONALIZACAO_PADRAO)).not.toThrow();
