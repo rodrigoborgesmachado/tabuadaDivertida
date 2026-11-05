@@ -28,6 +28,7 @@ import MemoriaTabuada from './pages/MemoriaTabuada/MemoriaTabuada';
 import MaiorOuMenor from './pages/MaiorOuMenor/MaiorOuMenor';
 import TesteQi from './pages/TesteQi/TesteQi';
 import CorridaRobo from './pages/CorridaRobo/CorridaRobo';
+import ContandoBichinhos from './pages/ContandoBichinhos/ContandoBichinhos';
 import Progresso from './pages/Progresso/Progresso';
 import Personalizar from './pages/Personalizar/Personalizar';
 import AvisoConquista from './components/AvisoConquista/AvisoConquista';
@@ -55,6 +56,7 @@ function RoutesApp() {
                 <Route path='/jogos/maior-ou-menor' element={<MaiorOuMenor/>}/>
                 <Route path='/jogos/teste-de-qi' element={<TesteQi/>}/>
                 <Route path='/jogos/corrida-contra-o-robo' element={<CorridaRobo/>}/>
+                <Route path='/jogos/contando-bichinhos' element={<ContandoBichinhos/>}/>
                 <Route path='/conquistas' element={<Navigate to='/progresso?aba=conquistas' replace/>}/>
                 <Route path='/personalizar' element={<Personalizar/>}/>
                 <Route path='/final/:tipo' element={<Final/>}/>

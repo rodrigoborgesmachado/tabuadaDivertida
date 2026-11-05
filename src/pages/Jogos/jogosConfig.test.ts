@@ -9,6 +9,7 @@ describe('jogosConfig', () => {
     expect(paths).toContain('/jogos/maior-ou-menor');
     expect(paths).toContain('/jogos/teste-de-qi');
     expect(paths).toContain('/jogos/corrida-contra-o-robo');
+    expect(paths).toContain('/jogos/contando-bichinhos');
   });
 
   it('gives each game a unique id', () => {

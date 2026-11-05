@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { jogos } from './jogosConfig';
+import { abasRanking } from '../Ranking/rankingConfig';
 import './Jogos.css';
 
 function Jogos() {
@@ -20,9 +21,11 @@ function Jogos() {
                   <span className='jogos-card-tag'>👦 {jogo.idade}</span>
                 </div>
               </Link>
-              <Link to={`/ranking?jogo=${jogo.id}`} className='global-button global-button--basic jogos-ranking'>
-                🏆 Ranking de {jogo.nome}
-              </Link>
+              {abasRanking.some((aba) => aba.id === jogo.id) && (
+                <Link to={`/ranking?jogo=${jogo.id}`} className='global-button global-button--basic jogos-ranking'>
+                  🏆 Ranking de {jogo.nome}
+                </Link>
+              )}
             </div>
           ))}
         </div>

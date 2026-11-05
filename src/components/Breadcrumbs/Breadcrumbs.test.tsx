@@ -44,6 +44,13 @@ describe('Breadcrumbs', () => {
     expect(screen.getByText('Corrida contra o robô')).toBeTruthy();
   });
 
+  it('shows the counting animals game', () => {
+    renderBreadcrumbs('/jogos/contando-bichinhos');
+
+    expect(screen.getAllByText('Jogos')).toHaveLength(1);
+    expect(screen.getByText('Contando bichinhos')).toBeTruthy();
+  });
+
   it('shows the achievements tab inside my progress', () => {
     renderBreadcrumbs('/progresso?aba=conquistas');
 

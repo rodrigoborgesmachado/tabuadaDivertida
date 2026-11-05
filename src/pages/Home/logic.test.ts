@@ -50,8 +50,8 @@ describe('Home logic', () => {
     expect(idsDoFiltro('todos')).toEqual(jogos.map((item) => item.id));
     expect(idsDoFiltro('tabuada')).toEqual(['tabuada', 'memoria', 'corrida-robo']);
     expect(idsDoFiltro('logica')).toEqual(['2048', 'teste-qi']);
-    expect(idsDoFiltro('contas')).toEqual(['2048', 'maior-ou-menor', 'corrida-robo']);
-    expect(idsDoFiltro('pequenos')).toEqual(['tabuada', 'memoria', 'corrida-robo']);
+    expect(idsDoFiltro('contas')).toEqual(['2048', 'maior-ou-menor', 'corrida-robo', 'contando-bichinhos']);
+    expect(idsDoFiltro('pequenos')).toEqual(['tabuada', 'memoria', 'corrida-robo', 'contando-bichinhos']);
   });
 
   it('remembers the chosen filter', () => {
