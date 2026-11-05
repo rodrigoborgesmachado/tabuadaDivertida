@@ -112,13 +112,23 @@
   font-weight: 700;
 }
 
-.perfil-modal__som {
+.perfil-modal__som,
+.perfil-modal__lembrete {
   flex: 1;
 }
 
-.perfil-modal__som .opcoes-quantidade__opcao {
+.perfil-modal__som .opcoes-quantidade__opcao,
+.perfil-modal__lembrete .opcoes-quantidade__opcao {
   font-family: var(--font-body);
   font-size: 1rem;
+}
+
+.perfil-modal__lembrete {
+  flex-basis: 100%;
+}
+
+.perfil-modal__secao .perfil-modal__hora {
+  width: auto;
 }
 
 .perfil-modal__personalizar {

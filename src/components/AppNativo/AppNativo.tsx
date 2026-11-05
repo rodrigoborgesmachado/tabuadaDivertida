@@ -2,7 +2,10 @@ import { useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { App } from '@capacitor/app';
 import { Browser } from '@capacitor/browser';
+import { LocalNotifications } from '@capacitor/local-notifications';
 import { SplashScreen } from '@capacitor/splash-screen';
+import { EVENTO_DESAFIOS } from '../../gamificacao/progresso';
+import { agendarLembretes, ROTA_DESAFIO_DO_DIA } from '../../services/lembretes';
 import { ehApp, linkExterno } from '../../services/plataforma';
 
 function AppNativo() {
@@ -39,10 +42,17 @@ function AppNativo() {
       }
     };
 
+    const abrirDesafio = LocalNotifications.addListener('localNotificationActionPerformed', () => navigate(ROTA_DESAFIO_DO_DIA));
+    const reagendar = () => agendarLembretes();
+
+    agendarLembretes();
     document.addEventListener('click', abrirLink);
+    window.addEventListener(EVENTO_DESAFIOS, reagendar);
     return () => {
       voltar.then((ouvinte) => ouvinte.remove());
+      abrirDesafio.then((ouvinte) => ouvinte.remove());
       document.removeEventListener('click', abrirLink);
+      window.removeEventListener(EVENTO_DESAFIOS, reagendar);
     };
   }, [navigate]);
 

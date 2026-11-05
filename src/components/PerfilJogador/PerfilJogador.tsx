@@ -1,7 +1,10 @@
 import { FormEvent, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { NavLink } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { lerNome, lerQuantidade, salvarNome, salvarQuantidade, TAMANHO_NOME } from '../../services/jogador';
+import { ativarLembrete, desativarLembrete, lerLembrete } from '../../services/lembretes';
+import { ehApp } from '../../services/plataforma';
 import { useRecompensasNaoVistas } from '../../gamificacao/useRecompensasNaoVistas';
 import { useSom } from '../../services/sons';
 import RoboPersonalizado from '../RoboPersonalizado/RoboPersonalizado';
@@ -18,6 +21,9 @@ interface PerfilJogadorProps {
 function PerfilJogador({ primeiraVisita = false, onFechar }: PerfilJogadorProps) {
   const [nome, setNome] = useState(lerNome);
   const [quantidade, setQuantidade] = useState(lerQuantidade);
+  const [lembrete] = useState(lerLembrete);
+  const [lembreteAtivo, setLembreteAtivo] = useState(lembrete.ativo);
+  const [horaLembrete, setHoraLembrete] = useState(lembrete.hora);
   const recompensasNovas = useRecompensasNaoVistas().length;
   const { theme, toggleTheme } = useTema();
   const { mudo, alternarSom } = useSom();
@@ -46,6 +52,15 @@ function PerfilJogador({ primeiraVisita = false, onFechar }: PerfilJogadorProps)
     event.preventDefault();
     salvarNome(nome);
     salvarQuantidade(quantidade);
+    if (!lembreteAtivo && lembrete.ativo) {
+      desativarLembrete(horaLembrete);
+    } else if (lembreteAtivo && (!lembrete.ativo || horaLembrete !== lembrete.hora)) {
+      ativarLembrete(horaLembrete).then((ativo) => {
+        if (!ativo) {
+          toast.info('Para receber o lembrete, permita as notificações do app nas configurações do celular.', { autoClose: 5000 });
+        }
+      });
+    }
     onFechar();
   };
 
@@ -98,6 +113,36 @@ function PerfilJogador({ primeiraVisita = false, onFechar }: PerfilJogadorProps)
             ))}
           </div>
         </section>
+        {ehApp() && (
+          <section className='perfil-modal__secao perfil-modal__secao--linha' aria-labelledby='perfil-secao-lembrete'>
+            <h4 id='perfil-secao-lembrete'>Lembrete diário</h4>
+            <div className='opcoes-quantidade perfil-modal__lembrete' role='group' aria-label='Lembrete diário'>
+              {[true, false].map((opcao) => (
+                <button
+                  key={String(opcao)}
+                  type='button'
+                  className={`opcoes-quantidade__opcao${lembreteAtivo === opcao ? ' opcoes-quantidade__opcao--ativa' : ''}`}
+                  aria-pressed={lembreteAtivo === opcao}
+                  onClick={() => setLembreteAtivo(opcao)}
+                >
+                  {opcao ? '🔔 Ligado' : '🔕 Desligado'}
+                </button>
+              ))}
+            </div>
+            {lembreteAtivo && (
+              <>
+                <label htmlFor='perfil-lembrete-hora' className='perfil-modal__valor'>Horário</label>
+                <input
+                  id='perfil-lembrete-hora'
+                  type='time'
+                  className='global-input perfil-modal__hora'
+                  value={horaLembrete}
+                  onChange={(event) => event.target.value && setHoraLembrete(event.target.value)}
+                />
+              </>
+            )}
+          </section>
+        )}
         <NavLink to='/personalizar' onClick={onFechar} className='perfil-modal__personalizar'>
           <RoboPersonalizado titulo='' className='perfil-modal__personalizar-robo' />
           <span className='perfil-modal__personalizar-texto'>

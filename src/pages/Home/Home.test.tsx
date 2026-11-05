@@ -25,7 +25,7 @@ describe('Home', () => {
     Element.prototype.scrollIntoView = scrollIntoView;
     window.history.pushState({}, '', '/#jogos');
 
-    render(<Home />);
+    render(<MemoryRouter><Home /></MemoryRouter>);
 
     expect(scrollIntoView).toHaveBeenCalledTimes(1);
     expect(scrollIntoView.mock.instances[0]).toBe(document.getElementById('jogos'));
@@ -34,7 +34,7 @@ describe('Home', () => {
   });
 
   it('invites who never played to start with the tabuada and shows every game', () => {
-    render(<Home />);
+    render(<MemoryRouter><Home /></MemoryRouter>);
 
     expect(screen.getByText('🎮 Começar pela Tabuada').closest('a')?.getAttribute('href')).toBe('/selecionarjogo');
     expect(screen.queryByText(/Continuar:/)).toBeNull();
@@ -47,7 +47,7 @@ describe('Home', () => {
     window.localStorage.setItem('nome', 'Ana');
     salvarProgresso({ jogosJogados: ['tabuada', 'memoria'], ultimoJogo: 'memoria', partidasPorJogo: { tabuada: 5, memoria: 2 } });
 
-    render(<Home />);
+    render(<MemoryRouter><Home /></MemoryRouter>);
 
     expect(screen.getByText('Olá, Ana! 👋')).toBeTruthy();
     expect(screen.getByText('▶️ Continuar: Memória da tabuada').closest('a')?.getAttribute('href')).toBe('/jogos/memoria-da-tabuada');
@@ -67,7 +67,7 @@ describe('Home', () => {
   });
 
   it('filters the games and remembers the filter', () => {
-    render(<Home />);
+    render(<MemoryRouter><Home /></MemoryRouter>);
     fireEvent.click(screen.getByRole('button', { name: '🧩 Lógica' }));
 
     expect(screen.getByText('2048')).toBeTruthy();
@@ -76,7 +76,7 @@ describe('Home', () => {
   });
 
   it('shows compact shortcuts instead of the big menu buttons', () => {
-    render(<Home />);
+    render(<MemoryRouter><Home /></MemoryRouter>);
 
     expect(screen.getByRole('navigation', { name: 'Atalhos' })).toBeTruthy();
     expect(screen.getByText('🏅 Conquistas').getAttribute('href')).toBe('/progresso?aba=conquistas');

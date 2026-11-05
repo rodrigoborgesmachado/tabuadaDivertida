@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { desafioConcluido, desafioDaSemana, desafioDoDia, valorDesafio, type Desafio } from '../../gamificacao/desafios';
 import { lerProgresso } from '../../gamificacao/progresso';
 import { jogos } from '../../pages/Jogos/jogosConfig';
 import { compartilhar } from '../../services/compartilhar';
 import { urlDoSite } from '../../services/plataforma';
+import PerguntaLembrete from '../PerguntaLembrete/PerguntaLembrete';
 import SequenciaDias from '../SequenciaDias/SequenciaDias';
 import './DesafiosDoDia.css';
 
@@ -11,11 +12,18 @@ const formatarNumero = (valor: number) => valor.toLocaleString('pt-BR');
 
 interface DesafiosDoDiaProps {
   sequencia?: boolean;
+  destaque?: boolean;
 }
 
-function DesafiosDoDia({ sequencia = true }: DesafiosDoDiaProps) {
+function DesafiosDoDia({ sequencia = true, destaque = false }: DesafiosDoDiaProps) {
   const [progresso] = useState(() => lerProgresso());
   const [desafios] = useState(() => [desafioDoDia(), desafioDaSemana()]);
+
+  useEffect(() => {
+    if (destaque) {
+      document.getElementById('desafio-do-dia')?.scrollIntoView?.({ behavior: 'smooth', block: 'center' });
+    }
+  }, [destaque]);
 
   const handleShare = (desafio: Desafio) => {
     const url = urlDoSite();
@@ -39,7 +47,11 @@ function DesafiosDoDia({ sequencia = true }: DesafiosDoDiaProps) {
           const jogo = jogos.find((item) => item.id === desafio.jogo);
 
           return (
-            <div key={desafio.id} className={`desafios-do-dia__card${concluido ? ' desafios-do-dia__card--concluido' : ''}`}>
+            <div
+              key={desafio.id}
+              id={desafio.tipo === 'dia' ? 'desafio-do-dia' : undefined}
+              className={`desafios-do-dia__card${concluido ? ' desafios-do-dia__card--concluido' : ''}${destaque && desafio.tipo === 'dia' ? ' desafios-do-dia__card--destaque' : ''}`}
+            >
               <span className='desafios-do-dia__rotulo'>{desafio.tipo === 'dia' ? '🎯' : '🗓️'} {rotulo}</span>
               <p>
                 <span aria-hidden='true'>{desafio.icone}</span> {desafio.texto}
@@ -70,6 +82,7 @@ function DesafiosDoDia({ sequencia = true }: DesafiosDoDiaProps) {
           );
         })}
       </div>
+      <PerguntaLembrete progresso={progresso} />
     </section>
   );
 }

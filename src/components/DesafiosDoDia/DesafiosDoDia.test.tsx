@@ -59,4 +59,17 @@ describe('DesafiosDoDia', () => {
     expect(screen.getByText('Jogue hoje para acender o foguinho!')).toBeTruthy();
     expect(screen.getByText('0/5')).toBeTruthy();
   });
+
+  it('highlights the challenge of the day', () => {
+    const scrollIntoView = vi.fn();
+    Element.prototype.scrollIntoView = scrollIntoView;
+
+    render(<DesafiosDoDia destaque />);
+
+    const desafio = document.getElementById('desafio-do-dia');
+    expect(desafio?.textContent).toContain('Desafio do dia');
+    expect(desafio?.className).toContain('desafios-do-dia__card--destaque');
+    expect(scrollIntoView).toHaveBeenCalledTimes(1);
+    delete (Element.prototype as any).scrollIntoView;
+  });
 });
