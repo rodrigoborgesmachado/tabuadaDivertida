@@ -31,10 +31,12 @@ import CorridaRobo from './pages/CorridaRobo/CorridaRobo';
 import Progresso from './pages/Progresso/Progresso';
 import Personalizar from './pages/Personalizar/Personalizar';
 import AvisoConquista from './components/AvisoConquista/AvisoConquista';
+import ScrollToTop from './components/ScrollToTop/ScrollToTop';
 
 function RoutesApp() {
     return(
         <BrowserRouter>
+            <ScrollToTop/>
             <Header/>
             <Breadcrumbs />
             <AvisoConquista />

@@ -135,6 +135,19 @@ describe('recompensas', () => {
     expect(recompensasNaoVistas(progresso)).toEqual([]);
   });
 
+  it('marks as seen only the unlocked items of the given type', () => {
+    recompensasNaoVistas({ ...criarProgresso(), xp: 200 });
+    const progresso = { ...criarProgresso(), xp: 430, medalhas: { 'partidas-jogadas': medalha(1) } };
+
+    marcarRecompensasVistas(progresso, 'acessorio');
+
+    expect(recompensasNaoVistas(progresso).map((item) => item.id)).toEqual(['cor-vermelho', 'tema-oceano']);
+
+    marcarRecompensasVistas(progresso, 'tema');
+
+    expect(recompensasNaoVistas(progresso).map((item) => item.id)).toEqual(['cor-vermelho']);
+  });
+
   it('does not break when the storage is unavailable or invalid', () => {
     window.localStorage.setItem(STORAGE_PERSONALIZACAO, 'quebrado');
     expect(lerPersonalizacao(criarProgresso())).toEqual(PERSONALIZACAO_PADRAO);
