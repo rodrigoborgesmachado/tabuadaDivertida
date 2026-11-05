@@ -162,6 +162,45 @@ describe('Sudoku', () => {
     expect(window.localStorage.getItem('tabuada-divertida-sudoku-partida')).toBeNull();
   });
 
+  it('sends the time, hints, undo and error marking and shows the medals of the match', () => {
+    iniciar();
+    fireEvent.click(screen.getByText(/Marcar erros/));
+    act(() => {
+      vi.advanceTimersByTime(20000);
+    });
+
+    fireEvent.click(casa(1, 1));
+    fireEvent.click(numero(1));
+    fireEvent.click(casa(4, 4));
+    fireEvent.click(numero(1));
+
+    const progresso = lerProgresso();
+    expect(progresso.sudokusPorModo).toEqual({ '4x4': 1 });
+    expect(progresso.melhorTempoSudokuPorModo).toEqual({ '4x4': 20 });
+    expect(progresso.sudokusSemAjudaPorModo).toEqual({ '4x4': 1 });
+    expect(screen.getByText('🏅 Conquistas desta partida')).toBeTruthy();
+    expect(screen.getByText('🧩 Sudokista · Bronze')).toBeTruthy();
+    expect(screen.getByText('⚡ Sudoku relâmpago · Bronze')).toBeTruthy();
+  });
+
+  it('does not count a match without help after playing with the error marking on or using a hint', () => {
+    iniciar();
+    fireEvent.click(casa(1, 1));
+    fireEvent.click(numero(1));
+    fireEvent.click(screen.getByText(/Marcar erros/));
+    fireEvent.click(casa(4, 4));
+    fireEvent.click(numero(1));
+    expect(lerProgresso().sudokusSemAjudaPorModo).toEqual({});
+
+    fireEvent.click(screen.getByText('🔁 Jogar de novo'));
+    fireEvent.click(casa(1, 1));
+    fireEvent.click(screen.getByText('💡 Dica (3)'));
+    fireEvent.click(casa(4, 4));
+    fireEvent.click(numero(1));
+    expect(lerProgresso().sudokusPorModo).toEqual({ '4x4': 2 });
+    expect(lerProgresso().sudokusSemAjudaPorModo).toEqual({});
+  });
+
   it('saves the game in progress to continue later', () => {
     const { unmount } = renderJogo();
     fireEvent.click(screen.getByText('4×4'));
