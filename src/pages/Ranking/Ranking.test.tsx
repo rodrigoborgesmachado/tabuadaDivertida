@@ -88,6 +88,22 @@ describe('Ranking', () => {
     expect(screen.getByText('Multiplicação · Robô turbo · 50 casas')).toBeTruthy();
   });
 
+  it('shows the sudoku ranking by mode with the time, real time and hints', async () => {
+    get.mockResolvedValue({ data: { success: true, object: [{ ...item('Ana', 0, '{"segundos":95,"dicas":2}'), pontuacao: null, tempo: 155 }], total: 1 } });
+
+    renderRanking('/ranking?jogo=sudoku&modo=9x9-medio');
+
+    await screen.findByText('🏆Ana');
+    expect(get).toHaveBeenCalledWith('ResultadosJogos/ranking?jogo=sudoku&modo=9x9-medio&top=50', expect.anything());
+    expect(screen.getByRole('tab', { name: /Sudoku/ }).getAttribute('aria-selected')).toBe('true');
+    expect((screen.getByRole('combobox') as HTMLSelectElement).value).toBe('9x9-medio');
+    expect(Array.from((screen.getByRole('combobox') as HTMLSelectElement).options).map((opcao) => opcao.value)).toEqual(['4x4', '6x6', '9x9-facil', '9x9-medio', '9x9-dificil']);
+    ['Tempo', 'Tempo real', 'Dicas'].forEach((titulo) => expect(screen.getByText(titulo)).toBeTruthy());
+    expect(screen.getByText('155s')).toBeTruthy();
+    expect(screen.getByText('95s')).toBeTruthy();
+    expect(screen.getByText('2')).toBeTruthy();
+  });
+
   it('shows the empty state', async () => {
     get.mockResolvedValue({ data: { success: true, object: [], total: 0 } });
 

@@ -10,8 +10,9 @@ import BotaoSom from '../../components/BotaoSom/BotaoSom';
 import ComoJogar from '../../components/ComoJogar/ComoJogar';
 import CompartilharResultado from '../../components/CompartilharResultado/CompartilharResultado';
 import HappyRobot from '../../components/HappyRobot/HappyRobot';
+import RankingFinal from '../../components/RankingFinal/RankingFinal';
 import { formatarTempo } from '../MemoriaTabuada/logic';
-import { buscarModo, casaParaDica, casasComConflito, copiarGrade, DICAS, dimensoesBloco, estaCompleto, gerarTabuleiro, mesmaRegiao, MODOS, moverCasa, type Casa, type Direcao, type Grade, type Modo } from './logic';
+import { buscarModo, casaParaDica, casasComConflito, copiarGrade, DICAS, dimensoesBloco, estaCompleto, gerarTabuleiro, mesmaRegiao, MODOS, moverCasa, resultadoRanking, type Casa, type Direcao, type Grade, type Modo } from './logic';
 import './Sudoku.css';
 
 interface Jogada extends Casa {
@@ -386,6 +387,7 @@ function Sudoku() {
                 {resultado.dicasUsadas > 0 ? ` usando ${resultado.dicasUsadas} ${resultado.dicasUsadas === 1 ? 'dica' : 'dicas'}` : ' sem usar dicas'}!
               </p>
               <BarraXp ganho={resultado.ganhoXp} />
+              <RankingFinal jogo='sudoku' modo={resultado.modo.id} resultado={resultadoRanking(resultado.segundos, resultado.dicasUsadas)} />
               {resultado.conquistas.length > 0 && (
                 <div className='sudoku-conquistas'>
                   <h4>🏅 Conquistas desta partida</h4>
