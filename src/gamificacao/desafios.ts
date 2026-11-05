@@ -121,7 +121,11 @@ export const modelosDoDia: ModeloDesafio[] = [
     id: 'sudoku',
     jogo: 'sudoku',
     icone: '🔢',
-    criar: () => ({ texto: 'Termine um Sudoku 4×4', meta: 1, avancar: somarPartidas('sudoku') }),
+    criar: () => ({
+      texto: 'Termine um Sudoku 4×4',
+      meta: 1,
+      avancar: (valor, evento, finalizada) => valor + (finalizada && evento.jogo === 'sudoku' && evento.modo === '4x4' ? 1 : 0),
+    }),
   },
 ];
 

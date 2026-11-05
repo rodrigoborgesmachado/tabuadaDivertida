@@ -1,0 +1,270 @@
+.sudoku-page {
+  width: min(100%, 1120px);
+}
+
+.sudoku-card {
+  width: 100%;
+  background: var(--secundary-color);
+  border: 1px solid var(--panel-border-color);
+  border-radius: 28px;
+  box-shadow: var(--shadow-card);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.sudoku-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.sudoku-badges {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.sudoku-badge {
+  background: linear-gradient(135deg, var(--button-color-primary), #ffb067);
+  color: white;
+  font-weight: 700;
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-variant-numeric: tabular-nums;
+}
+
+.sudoku-config {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.sudoku-config__grupo h3 {
+  font-family: var(--font-title);
+  font-size: 1.25rem;
+  margin-bottom: 10px;
+}
+
+.sudoku-opcoes {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.sudoku-opcao {
+  flex: 1 1 140px;
+  min-height: 96px;
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: 3px solid var(--panel-border-color);
+  background: var(--block-color);
+  color: var(--text-color-primary);
+  font-family: var(--font-title);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: transform 0.15s ease, border-color 0.15s ease;
+}
+
+.sudoku-opcao strong {
+  font-size: 1.8rem;
+  line-height: 1.1;
+}
+
+.sudoku-opcao span {
+  color: var(--text-color-secondary);
+  font-weight: 700;
+}
+
+.sudoku-opcao:hover {
+  transform: translateY(-2px);
+}
+
+.sudoku-opcao--ativa {
+  border-color: var(--button-color-primary);
+  background: var(--color-surface);
+}
+
+.sudoku-toolbar {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.global-button.sudoku-jogar {
+  font-size: 1.4rem;
+  padding: 14px 28px;
+}
+
+.sudoku-toolbar .global-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.sudoku-jogo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.sudoku-grade {
+  width: min(100%, 520px);
+  aspect-ratio: 1;
+  display: grid;
+  grid-template-columns: repeat(var(--sudoku-tamanho), 1fr);
+  grid-template-rows: repeat(var(--sudoku-tamanho), 1fr);
+  border: 3px solid var(--text-color-primary);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--block-color);
+  touch-action: manipulation;
+  user-select: none;
+}
+
+.sudoku-casa {
+  min-width: 0;
+  min-height: 0;
+  padding: 0;
+  border: none;
+  border-right: 1px solid var(--separator-color-primary);
+  border-bottom: 1px solid var(--separator-color-primary);
+  background: var(--block-color);
+  color: var(--button-color-back);
+  font-family: var(--font-title);
+  font-size: clamp(1.1rem, 5vw, 1.8rem);
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.sudoku-grade--4 .sudoku-casa,
+.sudoku-grade--6 .sudoku-casa {
+  font-size: clamp(1.6rem, 8vw, 2.6rem);
+}
+
+.sudoku-casa--borda-direita {
+  border-right: 3px solid var(--text-color-primary);
+}
+
+.sudoku-casa--borda-baixo {
+  border-bottom: 3px solid var(--text-color-primary);
+}
+
+.sudoku-casa--fixa {
+  color: var(--text-color-primary);
+}
+
+.sudoku-casa--dica {
+  color: var(--button-color-primary-right);
+}
+
+.sudoku-casa--relacionada {
+  background: var(--color-surface);
+}
+
+.sudoku-casa--mesmo-numero {
+  background: var(--color-surface-variant);
+}
+
+.sudoku-casa--selecionada {
+  background: var(--transient-color-primary);
+  box-shadow: inset 0 0 0 3px var(--button-color-back);
+}
+
+.sudoku-casa--erro {
+  color: var(--button-color-primary-wrong);
+  background: rgba(224, 88, 106, 0.18);
+}
+
+.sudoku-teclado {
+  width: min(100%, 520px);
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+}
+
+.sudoku-teclado--6 {
+  grid-template-columns: repeat(7, 1fr);
+}
+
+.sudoku-tecla {
+  min-height: 52px;
+  border-radius: 14px;
+  border: 2px solid var(--panel-border-color);
+  background: var(--block-color);
+  color: var(--text-color-primary);
+  font-family: var(--font-title);
+  font-size: 1.6rem;
+  font-weight: 700;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: transform 0.15s ease;
+}
+
+.sudoku-tecla:active {
+  transform: scale(0.95);
+}
+
+.sudoku-tecla--apagar {
+  color: var(--button-color-primary-wrong);
+}
+
+.sudoku-erros--ativo {
+  outline: 2px solid var(--button-color-primary-right);
+}
+
+.sudoku-ajuda {
+  color: var(--text-color-secondary);
+  text-align: center;
+  margin: 0;
+}
+
+.sudoku-resultado {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  text-align: center;
+}
+
+.sudoku-resultado .home-robot {
+  width: min(12rem, 50vw);
+}
+
+.sudoku-resultado h3 {
+  font-family: var(--font-title);
+  font-size: 2rem;
+  margin: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sudoku-opcao,
+  .sudoku-tecla {
+    transition: none;
+  }
+}
+
+@media (max-width: 760px) {
+  .options-preview.sudoku-page {
+    margin-top: 16px;
+  }
+
+  .sudoku-card {
+    padding: 16px 12px;
+  }
+
+  .sudoku-tecla {
+    min-height: 48px;
+  }
+}

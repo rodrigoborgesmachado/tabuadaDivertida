@@ -97,6 +97,21 @@ export const jogos: JogoConfig[] = [
       'São 8 desafios sem relógio. Ao final, ganhe até 3 estrelas!',
     ],
   },
+  {
+    id: 'sudoku',
+    path: '/jogos/sudoku',
+    nome: 'Sudoku',
+    icone: '🔢',
+    descricao: 'Preencha a grade sem repetir números nas linhas, colunas e blocos, do 4×4 para os pequenos ao 9×9 clássico.',
+    habilidade: 'Lógica e concentração',
+    idade: '5+ anos',
+    novoAte: '2026-12-31',
+    comoJogar: [
+      'Escolha o tamanho: 4×4 ou 6×6 para começar, ou o 9×9 clássico nos níveis fácil, médio e difícil.',
+      'Toque numa casa vazia e escolha o número no teclado da tela. No computador, use as setas e as teclas numéricas.',
+      'Cada número só pode aparecer uma vez em cada linha, coluna e bloco. Se travar, use uma dica!',
+    ],
+  },
 ];
 
 export const isJogoPath = (pathname: string) =>
