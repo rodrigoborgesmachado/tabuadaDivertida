@@ -451,6 +451,97 @@ describe('progresso', () => {
     expect(lerProgresso().perfeitasPorModo).toEqual({ M: 1 });
   });
 
+  it('counts the sudokus of each mode and unlocks the sudoku medals', () => {
+    expect(ids(partidaFinalizada({ jogo: 'sudoku', modo: '4x4', tempo: 40, dicasUsadas: 1, desfez: true, marcouErros: true }, dia))).toContain('sudokista:1');
+    expect(ids(partidaFinalizada({ jogo: 'sudoku', modo: '6x6', tempo: 200, dicasUsadas: 0, desfez: true, marcouErros: true }, dia))).toContain('primeiros-quadradinhos:1');
+    expect(lerProgresso().sudokusPorModo).toEqual({ '4x4': 1, '6x6': 1 });
+
+    salvarProgresso({ sudokusPorModo: { '4x4': 9 } });
+    expect(ids(partidaFinalizada({ jogo: 'sudoku', modo: '9x9-facil', tempo: 600, desfez: true }, dia))).toContain('sudokista:2');
+  });
+
+  it('unlocks the classic sudoku levels in order', () => {
+    expect(ids(partidaFinalizada({ jogo: 'sudoku', modo: '9x9-dificil', tempo: 900, desfez: true }, dia))).not.toContain('classico:1');
+    expect(ids(partidaFinalizada({ jogo: 'sudoku', modo: '9x9-facil', tempo: 900, desfez: true }, dia))).toContain('classico:1');
+    expect(ids(partidaFinalizada({ jogo: 'sudoku', modo: '9x9-medio', tempo: 900, desfez: true }, dia))).toContain('classico:3');
+
+    salvarProgresso({ sudokusPorModo: { '9x9-facil': 1, '9x9-medio': 1, '9x9-dificil': 9 }, medalhas: { classico: { nivel: 3, data: dia.toISOString() } } });
+    expect(ids(partidaFinalizada({ jogo: 'sudoku', modo: '9x9-dificil', tempo: 900, desfez: true }, dia))).toContain('classico:4');
+  });
+
+  it('counts only 9x9 sudokus without hints and without error marking as without help', () => {
+    partidaFinalizada({ jogo: 'sudoku', modo: '4x4', tempo: 60, dicasUsadas: 0, marcouErros: false, desfez: true }, dia);
+    partidaFinalizada({ jogo: 'sudoku', modo: '9x9-facil', tempo: 600, dicasUsadas: 1, marcouErros: false, desfez: true }, dia);
+    expect(ids(partidaFinalizada({ jogo: 'sudoku', modo: '9x9-facil', tempo: 600, dicasUsadas: 0, marcouErros: true, desfez: true }, dia))).not.toContain('sem-ajuda:1');
+
+    expect(ids(partidaFinalizada({ jogo: 'sudoku', modo: '9x9-medio', tempo: 600, dicasUsadas: 0, marcouErros: false, desfez: true }, dia))).toContain('sem-ajuda:1');
+    expect(lerProgresso().sudokusSemAjudaPorModo).toEqual({ '4x4': 1, '9x9-medio': 1 });
+
+    salvarProgresso({ sudokusSemAjudaPorModo: { '4x4': 30, '9x9-facil': 2, '9x9-dificil': 2 } });
+    expect(ids(partidaFinalizada({ jogo: 'sudoku', modo: '9x9-facil', tempo: 600, dicasUsadas: 0, marcouErros: false, desfez: true }, dia))).toContain('sem-ajuda:2');
+  });
+
+  it('keeps the best time of each sudoku mode and unlocks the lightning levels in order', () => {
+    expect(ids(partidaFinalizada({ jogo: 'sudoku', modo: '6x6', tempo: 100, desfez: true }, dia))).not.toContain('sudoku-relampago:1');
+    expect(ids(partidaFinalizada({ jogo: 'sudoku', modo: '4x4', tempo: 31, desfez: true }, dia))).not.toContain('sudoku-relampago:1');
+    expect(ids(partidaFinalizada({ jogo: 'sudoku', modo: '4x4', tempo: 30, desfez: true }, dia))).toContain('sudoku-relampago:2');
+    partidaFinalizada({ jogo: 'sudoku', modo: '4x4', tempo: 45, desfez: true }, dia);
+    expect(lerProgresso().melhorTempoSudokuPorModo).toEqual({ '6x6': 100, '4x4': 30 });
+
+    expect(ids(partidaFinalizada({ jogo: 'sudoku', modo: '9x9-dificil', tempo: 720, desfez: true }, dia))).not.toContain('sudoku-relampago:3');
+    expect(ids(partidaFinalizada({ jogo: 'sudoku', modo: '9x9-facil', tempo: 360, desfez: true }, dia))).toContain('sudoku-relampago:4');
+  });
+
+  it('unlocks the no eraser medal only in the medium and hard 9x9 without undo', () => {
+    expect(ids(partidaFinalizada({ jogo: 'sudoku', modo: '9x9-facil', tempo: 600, desfez: false }, dia))).not.toContain('sem-borracha:1');
+    expect(ids(partidaFinalizada({ jogo: 'sudoku', modo: '9x9-medio', tempo: 600, desfez: true }, dia))).not.toContain('sem-borracha:1');
+    expect(ids(partidaFinalizada({ jogo: 'sudoku', modo: '9x9-medio', tempo: 600, desfez: false }, dia))).toContain('sem-borracha:1');
+  });
+
+  it('counts the different days with a finished sudoku', () => {
+    partidaFinalizada({ jogo: 'sudoku', modo: '4x4', tempo: 60 }, dia);
+    partidaFinalizada({ jogo: 'sudoku', modo: '4x4', tempo: 60 }, noite);
+    partidaFinalizada({ jogo: 'memoria' }, new Date(2026, 10, 3, 15, 0));
+    expect(lerProgresso().diasComSudoku).toBe(1);
+
+    salvarProgresso({ diasComSudoku: 6, ultimoDiaSudoku: '2026-11-01' });
+    expect(ids(partidaFinalizada({ jogo: 'sudoku', modo: '4x4', tempo: 60 }, new Date(2026, 10, 20, 15, 0)))).toContain('um-por-dia:1');
+    expect(lerProgresso().ultimoDiaSudoku).toBe('2026-11-20');
+  });
+
+  it('unlocks the secret silent master medal only in the hard 9x9 without any help', () => {
+    const silencioso = { jogo: 'sudoku', tempo: 900, dicasUsadas: 0, marcouErros: false, desfez: false };
+
+    expect(ids(partidaFinalizada({ ...silencioso, modo: '9x9-medio' }, dia))).not.toContain('mestre-silencioso:1');
+    expect(ids(partidaFinalizada({ ...silencioso, modo: '9x9-dificil', dicasUsadas: 1 }, dia))).not.toContain('mestre-silencioso:1');
+    expect(ids(partidaFinalizada({ ...silencioso, modo: '9x9-dificil', marcouErros: true }, dia))).not.toContain('mestre-silencioso:1');
+    expect(ids(partidaFinalizada({ ...silencioso, modo: '9x9-dificil', desfez: true }, dia))).not.toContain('mestre-silencioso:1');
+    expect(ids(partidaFinalizada({ ...silencioso, modo: '9x9-dificil' }, dia))).toContain('mestre-silencioso:1');
+    expect(buscarMedalha('mestre-silencioso')?.secreta).toBe(true);
+  });
+
+  it('starts the sudoku counters empty and keeps the medals when migrating from the fourth version', () => {
+    const data = '2026-10-01T15:00:00.000Z';
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      versao: 4,
+      partidas: 12,
+      xp: 500,
+      partidasPorJogo: { sudoku: 3 },
+      recompensasLiberadas: ['cor-prata'],
+      medalhas: { 'partidas-jogadas': { nivel: 1, data }, explorador: { nivel: 1, data } },
+    }));
+
+    const progresso = lerProgresso();
+
+    expect(progresso.versao).toBe(VERSAO_PROGRESSO);
+    expect(progresso.sudokusPorModo).toEqual({});
+    expect(progresso.melhorTempoSudokuPorModo).toEqual({});
+    expect(progresso.sudokusSemAjudaPorModo).toEqual({});
+    expect(progresso.diasComSudoku).toBe(0);
+    expect(progresso.medalhas).toEqual({ 'partidas-jogadas': { nivel: 1, data }, explorador: { nivel: 1, data } });
+    expect(progresso.recompensasLiberadas).toEqual(['cor-prata']);
+  });
+
   it('unlocks the IQ test medals', () => {
     const questoes = (acertos: number) => [...contasCorretas(acertos), ...Array.from({ length: 15 - acertos }, () => ({ correta: false }))];
 

@@ -21,7 +21,11 @@ export const FATORES = [2, 3, 4, 5, 6, 7, 8, 9, 10];
 
 export const MODOS = ['M', 'D', 'A', 'S', 'R', 'E'];
 
-export const GRUPOS = ['Multiplicação', 'Divisão', 'Adição', 'Subtração', 'Aleatório', 'Expressões', 'Outros jogos', 'Geral'];
+export const GRUPOS = ['Multiplicação', 'Divisão', 'Adição', 'Subtração', 'Aleatório', 'Expressões', 'Sudoku', 'Outros jogos', 'Geral'];
+
+const SUDOKUS_9X9 = ['9x9-facil', '9x9-medio', '9x9-dificil'];
+
+const TEMPOS_SUDOKU: [string, number][] = [['4x4', 30], ['6x6', 120], ['9x9-facil', 360], ['9x9-dificil', 720]];
 
 const contasAcertadas = (progresso: Progresso, tabuada: number) => Object.keys(progresso.tabuadas[tabuada] || {}).length;
 
@@ -30,6 +34,12 @@ const divisoesAcertadas = (progresso: Progresso, divisor: number) => Object.keys
 const perfeitasNoModo = (progresso: Progresso, modo: string) => progresso.perfeitasPorModo[modo] || 0;
 
 const listar = (valores: string[]) => `${valores.slice(0, -1).join(', ')} e ${valores[valores.length - 1]}`;
+
+const somar = (valores: Record<string, number>, modos = Object.keys(valores)) => modos.reduce((total, modo) => total + (valores[modo] || 0), 0);
+
+const etapasSeguidas = (etapas: boolean[]) => (etapas.includes(false) ? etapas.indexOf(false) : etapas.length);
+
+const sudokus = (progresso: Progresso, modo: string) => progresso.sudokusPorModo[modo] || 0;
 
 const desafiosDoDiaNaMesmaSemana = (progresso: Progresso) => {
   const porSemana: Record<string, number> = {};
@@ -395,6 +405,76 @@ const outrasMedalhas: Medalha[] = [
     grupo: 'Outros jogos',
   },
   {
+    id: 'sudokista',
+    nome: 'Sudokista',
+    descricao: 'Complete 1, 10, 50 e 100 sudokus de qualquer tamanho.',
+    icone: '🧩',
+    metas: [1, 10, 50, 100],
+    unidade: 'sudokus',
+    valor: (progresso) => somar(progresso.sudokusPorModo),
+    grupo: 'Sudoku',
+  },
+  {
+    id: 'primeiros-quadradinhos',
+    nome: 'Primeiros quadradinhos',
+    descricao: 'Complete um Sudoku 4×4 e um 6×6.',
+    icone: '🌱',
+    metas: [2],
+    unidade: 'tamanhos',
+    valor: (progresso) => ['4x4', '6x6'].filter((modo) => sudokus(progresso, modo) > 0).length,
+    grupo: 'Sudoku',
+  },
+  {
+    id: 'classico',
+    nome: 'Clássico',
+    descricao: 'Complete o Sudoku 9×9 fácil, depois o médio e o difícil. No Diamante, complete 10 sudokus 9×9 difíceis.',
+    icone: '🏛️',
+    metas: [1, 2, 3, 4],
+    unidade: 'etapas',
+    valor: (progresso) => etapasSeguidas([...SUDOKUS_9X9.map((modo) => sudokus(progresso, modo) > 0), sudokus(progresso, '9x9-dificil') >= 10]),
+    grupo: 'Sudoku',
+  },
+  {
+    id: 'sem-ajuda',
+    nome: 'Sem ajuda',
+    descricao: 'Complete 1, 5, 10 e 25 sudokus 9×9 sem usar dicas e sem ligar o "Marcar erros".',
+    icone: '🧠',
+    metas: [1, 5, 10, 25],
+    unidade: 'sudokus',
+    valor: (progresso) => somar(progresso.sudokusSemAjudaPorModo, SUDOKUS_9X9),
+    grupo: 'Sudoku',
+  },
+  {
+    id: 'sudoku-relampago',
+    nome: 'Sudoku relâmpago',
+    descricao: 'Complete o 4×4 em até 30s, depois o 6×6 em até 2 min, o 9×9 fácil em até 6 min e o 9×9 difícil em até 12 min.',
+    icone: '⚡',
+    metas: [1, 2, 3, 4],
+    unidade: 'etapas',
+    valor: (progresso) => etapasSeguidas(TEMPOS_SUDOKU.map(([modo, tempo]) => (progresso.melhorTempoSudokuPorModo[modo] || Infinity) <= tempo)),
+    grupo: 'Sudoku',
+  },
+  {
+    id: 'sem-borracha',
+    nome: 'Sem borracha',
+    descricao: 'Complete um Sudoku 9×9 médio ou difícil sem usar o desfazer.',
+    icone: '🧽',
+    metas: [1],
+    unidade: 'sudokus',
+    valor: (progresso) => progresso.sudokusSemBorracha,
+    grupo: 'Sudoku',
+  },
+  {
+    id: 'um-por-dia',
+    nome: 'Um por dia',
+    descricao: 'Complete sudokus em 7, 15, 30 e 60 dias diferentes.',
+    icone: '📆',
+    metas: [7, 15, 30, 60],
+    unidade: 'dias',
+    valor: (progresso) => progresso.diasComSudoku,
+    grupo: 'Sudoku',
+  },
+  {
     id: 'semana-perfeita',
     nome: 'Semana perfeita',
     descricao: 'Conclua os 7 desafios do dia de uma mesma semana.',
@@ -467,6 +547,17 @@ const outrasMedalhas: Medalha[] = [
     unidade: 'partidas',
     valor: (progresso) => progresso.partidasPalindromas,
     grupo: 'Geral',
+    secreta: true,
+  },
+  {
+    id: 'mestre-silencioso',
+    nome: 'Mestre silencioso',
+    descricao: 'Complete um Sudoku 9×9 difícil sem dicas, sem "Marcar erros" e sem desfazer.',
+    icone: '🥷',
+    metas: [1],
+    unidade: 'sudokus',
+    valor: (progresso) => progresso.sudokusSilenciosos,
+    grupo: 'Sudoku',
     secreta: true,
   },
 ];
