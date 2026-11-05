@@ -4,6 +4,7 @@ import { nomeNivel } from '../../gamificacao/medalhas';
 import { EVENTO_CONQUISTAS, EVENTO_DESAFIOS, EVENTO_NIVEL, lerProgresso, type Conquista } from '../../gamificacao/progresso';
 import { recompensasLiberadas, type Recompensa } from '../../gamificacao/recompensas';
 import type { NivelXp } from '../../gamificacao/xp';
+import { temIconeDoApp } from '../../services/iconeApp';
 import { playConquista } from '../../services/sons';
 import RoboPersonalizado from '../RoboPersonalizado/RoboPersonalizado';
 import './AvisoConquista.css';
@@ -39,6 +40,11 @@ const avisoDaRecompensa = (recompensa: Recompensa): Aviso => ({
   texto: `${recompensa.icone} ${recompensa.nome}`,
 });
 
+const avisosDaRecompensa = (recompensa: Recompensa): Aviso[] => [
+  avisoDaRecompensa(recompensa),
+  ...(temIconeDoApp(recompensa.id) ? [{ id: `icone-${recompensa.id}`, titulo: '🎉 Novo ícone do app liberado!', texto: `🤖 Robô ${recompensa.nome}` }] : []),
+];
+
 function AvisoConquista() {
   const [fila, setFila] = useState<Aviso[]>([]);
 
@@ -50,7 +56,7 @@ function AvisoConquista() {
       novas.forEach((recompensa) => liberadas.add(recompensa.id));
 
       if (novas.length > 0) {
-        setFila((atual) => [...atual, ...novas.map(avisoDaRecompensa)]);
+        setFila((atual) => [...atual, ...novas.flatMap(avisosDaRecompensa)]);
       }
     });
 

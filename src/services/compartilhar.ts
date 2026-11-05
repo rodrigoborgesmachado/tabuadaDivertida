@@ -133,7 +133,7 @@ const carregarImagem = (src: string) => new Promise<HTMLImageElement>((resolve, 
   imagem.src = src;
 });
 
-const imagemDoRobo = () => {
+export const imagemDoRobo = () => {
   const elemento = document.createElement('div');
   const raiz = createRoot(elemento);
   flushSync(() => raiz.render(createElement(RoboPersonalizado, { titulo: '' })));

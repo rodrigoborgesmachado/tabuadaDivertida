@@ -22,6 +22,7 @@ import {
 import { usePersonalizacao } from '../../gamificacao/usePersonalizacao';
 import { useRecompensasNaoVistas } from '../../gamificacao/useRecompensasNaoVistas';
 import { calcularNivel } from '../../gamificacao/xp';
+import IconeDoApp from './IconeDoApp';
 import './Personalizar.css';
 
 const ABAS: { tipo: TipoRecompensa; titulo: string }[] = [
@@ -162,6 +163,8 @@ function Personalizar() {
             </div>
           )}
         </section>
+
+        <IconeDoApp progresso={progresso} nivel={nivel} />
 
         <div className='personalizar-toolbar'>
           <Link to='/progresso?aba=conquistas' className='global-button'>

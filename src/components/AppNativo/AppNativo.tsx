@@ -3,7 +3,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { App } from '@capacitor/app';
 import { Browser } from '@capacitor/browser';
 import { SplashScreen } from '@capacitor/splash-screen';
-import { ehApp, linkExterno } from '../../services/plataforma';
+import { IconeApp } from '../../services/iconeApp';
+import { ehAndroid, ehApp, linkExterno } from '../../services/plataforma';
 
 function AppNativo() {
   const navigate = useNavigate();
@@ -39,9 +40,12 @@ function AppNativo() {
       }
     };
 
+    const atalho = ehAndroid() ? IconeApp.addListener('atalhoAberto', () => navigate('/')) : undefined;
+
     document.addEventListener('click', abrirLink);
     return () => {
       voltar.then((ouvinte) => ouvinte.remove());
+      atalho?.then((ouvinte) => ouvinte.remove());
       document.removeEventListener('click', abrirLink);
     };
   }, [navigate]);
