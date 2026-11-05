@@ -46,13 +46,21 @@ describe('desafios', () => {
     const idsJogos = jogos.map((jogo) => jogo.id);
 
     expect(modelos.size).toBeGreaterThan(4);
-    expect(modelos.has('sudoku')).toBe(false);
+    expect(modelos.has('sudoku')).toBe(true);
     umAno.forEach((data) => {
       [desafioDoDia(data), desafioDaSemana(data)].forEach((desafio) => {
         expect(!desafio.jogo || idsJogos.includes(desafio.jogo)).toBe(true);
       });
     });
     expect(modelosDoDia.some((modelo) => modelo.jogo === 'sudoku')).toBe(true);
+  });
+
+  it('counts only finished 4x4 sudokus in the sudoku challenge', () => {
+    const { avancar } = (modelosDoDia.find((modelo) => modelo.id === 'sudoku') as (typeof modelosDoDia)[number]).criar((opcoes) => opcoes[0]);
+
+    expect(avancar(0, { jogo: 'sudoku', modo: '4x4' }, true, false)).toBe(1);
+    expect(avancar(0, { jogo: 'sudoku', modo: '9x9-facil' }, true, false)).toBe(0);
+    expect(avancar(0, { jogo: 'sudoku', modo: '4x4' }, false, false)).toBe(0);
   });
 
   it('advances the daily challenge and completes it only once', () => {

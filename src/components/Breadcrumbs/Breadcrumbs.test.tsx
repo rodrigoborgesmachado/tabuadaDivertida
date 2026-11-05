@@ -51,6 +51,13 @@ describe('Breadcrumbs', () => {
     expect(screen.getByText('Contando bichinhos')).toBeTruthy();
   });
 
+  it('shows the sudoku game', () => {
+    renderBreadcrumbs('/jogos/sudoku');
+
+    expect(screen.getAllByText('Jogos')).toHaveLength(1);
+    expect(screen.getByText('Sudoku')).toBeTruthy();
+  });
+
   it('shows the achievements tab inside my progress', () => {
     renderBreadcrumbs('/progresso?aba=conquistas');
 

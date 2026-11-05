@@ -21,12 +21,12 @@ describe('Home logic', () => {
 
   it('has nothing to continue for who never played or played a removed game', () => {
     expect(jogoParaContinuar(criarProgresso())).toBeUndefined();
-    expect(jogoParaContinuar({ ...criarProgresso(), ultimoJogo: 'sudoku' })).toBeUndefined();
+    expect(jogoParaContinuar({ ...criarProgresso(), ultimoJogo: 'xadrez' })).toBeUndefined();
   });
 
   it('picks the most played game as the favorite', () => {
     expect(jogoFavorito(criarProgresso())).toBeUndefined();
-    expect(jogoFavorito({ ...criarProgresso(), partidasPorJogo: { tabuada: 3, 'teste-qi': 5, sudoku: 9 } })).toBe('teste-qi');
+    expect(jogoFavorito({ ...criarProgresso(), partidasPorJogo: { tabuada: 3, 'teste-qi': 5, xadrez: 9 } })).toBe('teste-qi');
   });
 
   it('keeps the first game of the list when the favorite is tied', () => {
@@ -49,9 +49,9 @@ describe('Home logic', () => {
   it('filters the games by skill and age', () => {
     expect(idsDoFiltro('todos')).toEqual(jogos.map((item) => item.id));
     expect(idsDoFiltro('tabuada')).toEqual(['tabuada', 'memoria', 'corrida-robo']);
-    expect(idsDoFiltro('logica')).toEqual(['2048', 'teste-qi']);
+    expect(idsDoFiltro('logica')).toEqual(['2048', 'teste-qi', 'sudoku']);
     expect(idsDoFiltro('contas')).toEqual(['2048', 'maior-ou-menor', 'corrida-robo', 'contando-bichinhos']);
-    expect(idsDoFiltro('pequenos')).toEqual(['tabuada', 'memoria', 'corrida-robo', 'contando-bichinhos']);
+    expect(idsDoFiltro('pequenos')).toEqual(['tabuada', 'memoria', 'corrida-robo', 'contando-bichinhos', 'sudoku']);
   });
 
   it('remembers the chosen filter', () => {

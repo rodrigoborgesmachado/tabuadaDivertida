@@ -424,8 +424,9 @@ describe('progresso', () => {
     partidaFinalizada({ jogo: 'maior-ou-menor' }, dia);
     partidaFinalizada({ jogo: 'teste-qi' }, dia);
     partidaFinalizada({ jogo: 'corrida-robo' }, dia);
+    partidaFinalizada({ jogo: 'contando-bichinhos' }, dia);
 
-    expect(ids(partidaFinalizada({ jogo: 'contando-bichinhos' }, dia))).toContain('explorador:1');
+    expect(ids(partidaFinalizada({ jogo: 'sudoku' }, dia))).toContain('explorador:1');
   });
 
   it('unlocks the race medal only when beating the champion robot', () => {
