@@ -1,15 +1,23 @@
+import type { Mock } from 'vitest';
 import { act, render, screen } from '@testing-library/react';
 import { criarProgresso, partidaFinalizada, registrarProgresso, STORAGE_KEY } from '../../gamificacao/progresso';
+import { ehAndroid } from '../../services/plataforma';
 import AvisoConquista from './AvisoConquista';
 
 vi.mock('../../services/sons', () => ({
   playConquista: vi.fn(),
 }));
 
+vi.mock('../../services/plataforma', async (original) => ({
+  ...(await original<typeof import('../../services/plataforma')>()),
+  ehAndroid: vi.fn(),
+}));
+
 describe('AvisoConquista', () => {
   beforeEach(() => {
     vi.useFakeTimers();
     window.localStorage.clear();
+    (ehAndroid as Mock).mockReturnValue(false);
   });
 
   afterEach(() => {
@@ -88,6 +96,31 @@ describe('AvisoConquista', () => {
     });
 
     expect(screen.queryByRole('status')).toBeNull();
+  });
+
+  it('announces the new app icon with the robot color in the Android app', () => {
+    (ehAndroid as Mock).mockReturnValue(true);
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...criarProgresso(), xp: 425 }));
+    render(<AvisoConquista />);
+
+    act(() => {
+      partidaFinalizada({ jogo: 'memoria' }, new Date(2026, 10, 2, 15, 0));
+    });
+
+    const textos = [screen.getByRole('status').textContent];
+    for (let i = 0; i < 3; i++) {
+      act(() => {
+        vi.advanceTimersByTime(4000);
+      });
+      textos.push(screen.getByRole('status').textContent);
+    }
+
+    expect(textos).toEqual([
+      'Subiu de nível!⬆️ Nível 3 · Contador',
+      'Novo item para o seu robô!🔴 Vermelho tomate',
+      '🎉 Novo ícone do app liberado!🤖 Robô Vermelho tomate',
+      'Novo item para o seu robô!🧢 Boné',
+    ]);
   });
 
   it('shows the completed daily challenge before its medal', () => {

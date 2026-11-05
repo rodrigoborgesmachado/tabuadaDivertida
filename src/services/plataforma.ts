@@ -5,6 +5,8 @@ export const URL_SITE = 'https://www.tabuadadivertida.com';
 
 export const ehApp = () => Capacitor.isNativePlatform();
 
+export const ehAndroid = () => ehApp() && Capacitor.getPlatform() === 'android';
+
 export const urlDoSite = () => (ehApp() ? URL_SITE : window.location.origin || URL_SITE);
 
 export const semConexao = () => typeof navigator !== 'undefined' && navigator.onLine === false;
