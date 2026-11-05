@@ -1,3 +1,5 @@
+import type { DadosResultado } from '../../services/resultadosJogos';
+
 export type Tamanho = 4 | 6 | 9;
 
 export type Grade = number[][];
@@ -31,6 +33,8 @@ export const MODOS: Modo[] = [
 ];
 
 export const DICAS = 3;
+
+export const PENALIDADE_DICA = 30;
 
 export const buscarModo = (id: string) => MODOS.find((modo) => modo.id === id);
 
@@ -213,3 +217,8 @@ export const moverCasa = (casa: Casa, direcao: Direcao, tamanho: number): Casa =
 
   return { ...casa, coluna: limitar(casa.coluna + (direcao === 'esquerda' ? -1 : 1)) };
 };
+
+export const resultadoRanking = (segundos: number, dicas: number): DadosResultado => ({
+  tempo: segundos + dicas * PENALIDADE_DICA,
+  extras: { segundos, dicas },
+});
