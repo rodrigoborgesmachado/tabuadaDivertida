@@ -46,7 +46,7 @@ describe('Conquistas', () => {
   });
 
   it('shows a conquered secret medal with its date and shares it', () => {
-    const share = jest.fn().mockResolvedValue(undefined);
+    const share = vi.fn().mockResolvedValue(undefined);
     (navigator as any).share = share;
     salvarProgresso({
       partidasNoturnas: 1,

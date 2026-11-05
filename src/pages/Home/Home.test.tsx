@@ -11,17 +11,17 @@ const salvarProgresso = (dados: object) => {
 
 describe('Home', () => {
   beforeEach(() => {
-    jest.useFakeTimers();
-    jest.setSystemTime(new Date(2026, 10, 3, 10, 0));
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date(2026, 10, 3, 10, 0));
     window.localStorage.clear();
   });
 
   afterEach(() => {
-    jest.useRealTimers();
+    vi.useRealTimers();
   });
 
   it('scrolls to the games grid when opened from the back to games buttons', () => {
-    const scrollIntoView = jest.fn();
+    const scrollIntoView = vi.fn();
     Element.prototype.scrollIntoView = scrollIntoView;
     window.history.pushState({}, '', '/#jogos');
 

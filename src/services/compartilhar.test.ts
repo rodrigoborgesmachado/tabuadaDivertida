@@ -74,7 +74,7 @@ describe('compartilhar', () => {
   });
 
   describe('native share', () => {
-    const share = jest.fn();
+    const share = vi.fn();
 
     beforeEach(() => {
       share.mockReset().mockResolvedValue(undefined);

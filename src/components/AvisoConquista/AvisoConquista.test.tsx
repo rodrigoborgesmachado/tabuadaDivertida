@@ -2,18 +2,18 @@ import { act, render, screen } from '@testing-library/react';
 import { criarProgresso, partidaFinalizada, registrarProgresso, STORAGE_KEY } from '../../gamificacao/progresso';
 import AvisoConquista from './AvisoConquista';
 
-jest.mock('../../services/sons', () => ({
-  playConquista: jest.fn(),
+vi.mock('../../services/sons', () => ({
+  playConquista: vi.fn(),
 }));
 
 describe('AvisoConquista', () => {
   beforeEach(() => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
     window.localStorage.clear();
   });
 
   afterEach(() => {
-    jest.useRealTimers();
+    vi.useRealTimers();
   });
 
   it('shows each new medal for a few seconds', () => {
@@ -29,33 +29,33 @@ describe('AvisoConquista', () => {
     expect(screen.getByRole('status').textContent).toContain('🎲 Rumo ao 2048 · Bronze');
 
     act(() => {
-      jest.advanceTimersByTime(4000);
+      vi.advanceTimersByTime(4000);
     });
 
     expect(screen.getByRole('status').textContent).toContain('Rumo ao 2048 · Ouro');
 
     for (let i = 0; i < 3; i++) {
       act(() => {
-        jest.advanceTimersByTime(4000);
+        vi.advanceTimersByTime(4000);
       });
     }
 
     expect(screen.getByRole('status').textContent).toContain('Subiu de nível!⬆️ Nível 3 · Contador');
 
     act(() => {
-      jest.advanceTimersByTime(4000);
+      vi.advanceTimersByTime(4000);
     });
 
     expect(screen.getByRole('status').textContent).toBe('Novo item para o seu robô!🔴 Vermelho tomate');
 
     act(() => {
-      jest.advanceTimersByTime(4000);
+      vi.advanceTimersByTime(4000);
     });
 
     expect(screen.getByRole('status').textContent).toBe('Novo item para o seu robô!🧢 Boné');
 
     act(() => {
-      jest.advanceTimersByTime(4000);
+      vi.advanceTimersByTime(4000);
     });
 
     expect(screen.queryByRole('status')).toBeNull();
@@ -72,19 +72,19 @@ describe('AvisoConquista', () => {
     expect(screen.getByRole('status').textContent).toBe('Subiu de nível!⬆️ Nível 3 · Contador');
 
     act(() => {
-      jest.advanceTimersByTime(4000);
+      vi.advanceTimersByTime(4000);
     });
 
     expect(screen.getByRole('status').textContent).toBe('Novo item para o seu robô!🔴 Vermelho tomate');
 
     act(() => {
-      jest.advanceTimersByTime(4000);
+      vi.advanceTimersByTime(4000);
     });
 
     expect(screen.getByRole('status').textContent).toBe('Novo item para o seu robô!🧢 Boné');
 
     act(() => {
-      jest.advanceTimersByTime(4000);
+      vi.advanceTimersByTime(4000);
     });
 
     expect(screen.queryByRole('status')).toBeNull();
@@ -100,7 +100,7 @@ describe('AvisoConquista', () => {
     const textos = [screen.getByRole('status').textContent];
     for (let i = 0; i < 3; i++) {
       act(() => {
-        jest.advanceTimersByTime(4000);
+        vi.advanceTimersByTime(4000);
       });
       textos.push(screen.getByRole('status').textContent);
     }
@@ -123,7 +123,7 @@ describe('AvisoConquista', () => {
     const textos = [screen.getByRole('status').textContent];
     for (let i = 0; i < 4; i++) {
       act(() => {
-        jest.advanceTimersByTime(4000);
+        vi.advanceTimersByTime(4000);
       });
       textos.push(screen.getByRole('status').textContent);
     }

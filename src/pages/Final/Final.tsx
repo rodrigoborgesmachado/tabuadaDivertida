@@ -1,6 +1,7 @@
 import configData from "../../Config.json";
 import { useLocation, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import confetti from 'canvas-confetti';
 import { lerNome } from '../../services/jogador';
 import { compartilharResultado, conquistaDaMedalha, resultadoDaConquista, type ConquistaPartida, type ResultadoCompartilhado } from '../../services/compartilhar';
 import great from '../../assets/great.png';
@@ -90,9 +91,6 @@ function Final(){
     };
 
     const launchFireworks = () => {
-        const confetti = (window as any).confetti;
-        if (!confetti) return;
-
         const duration = 3 * 1000;
         const animationEnd = Date.now() + duration;
         const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };

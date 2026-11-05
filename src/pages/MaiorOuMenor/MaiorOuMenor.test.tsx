@@ -2,8 +2,8 @@ import { act, fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import MaiorOuMenor from './MaiorOuMenor';
 
-jest.mock('./logic', () => {
-  const actual = jest.requireActual('./logic');
+vi.mock('./logic', async () => {
+  const actual = await vi.importActual<typeof import('./logic')>('./logic');
   return {
     ...actual,
     gerarRodada: () => ({ esquerda: actual.conta(6, 7), direita: actual.numero(45) }),
@@ -19,7 +19,7 @@ const renderJogo = () => render(
 const avancar = (ms: number) => {
   for (let tempo = 0; tempo < ms; tempo += 1000) {
     act(() => {
-      jest.advanceTimersByTime(1000);
+      vi.advanceTimersByTime(1000);
     });
   }
 };
@@ -31,12 +31,12 @@ const comecar = () => {
 
 describe('MaiorOuMenor', () => {
   beforeEach(() => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
     window.localStorage.clear();
   });
 
   afterEach(() => {
-    jest.useRealTimers();
+    vi.useRealTimers();
   });
 
   it('shows the countdown before the round', () => {
@@ -84,7 +84,7 @@ describe('MaiorOuMenor', () => {
     expect(screen.getByText('⭐ Pontos: 0')).toBeTruthy();
 
     act(() => {
-      jest.advanceTimersByTime(1200);
+      vi.advanceTimersByTime(1200);
     });
 
     expect(screen.queryByText('Ops! 6 × 7 = 42 < 45')).toBeNull();

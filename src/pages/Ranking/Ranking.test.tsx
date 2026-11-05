@@ -1,15 +1,16 @@
+import type { Mock } from 'vitest';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import configData from '../../Config.json';
 import api from '../../services/api';
 import Ranking from './Ranking';
 
-jest.mock('../../services/api', () => ({
+vi.mock('../../services/api', () => ({
   __esModule: true,
-  default: { get: jest.fn() },
+  default: { get: vi.fn() },
 }));
 
-const get = api.get as jest.Mock;
+const get = api.get as Mock;
 
 const renderRanking = (url: string) => render(
   <MemoryRouter initialEntries={[url]}>

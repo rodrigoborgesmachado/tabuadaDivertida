@@ -1,3 +1,4 @@
+import type { Mock, MockInstance } from 'vitest';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter, useNavigate } from 'react-router-dom';
 import ScrollToTop from './ScrollToTop';
@@ -26,17 +27,17 @@ const renderNavegacao = (inicio = '/progresso') => render(
 const clicar = (nome: string) => fireEvent.click(screen.getByRole('button', { name: nome }));
 
 describe('ScrollToTop', () => {
-  let rolarPagina: jest.SpyInstance;
-  let rolarAteElemento: jest.Mock;
+  let rolarPagina: MockInstance;
+  let rolarAteElemento: Mock;
 
   beforeEach(() => {
-    rolarPagina = jest.spyOn(window, 'scrollTo').mockImplementation(() => {});
-    rolarAteElemento = jest.fn();
+    rolarPagina = vi.spyOn(window, 'scrollTo').mockImplementation(() => {});
+    rolarAteElemento = vi.fn();
     Element.prototype.scrollIntoView = rolarAteElemento;
   });
 
   afterEach(() => {
-    jest.restoreAllMocks();
+    vi.restoreAllMocks();
   });
 
   it('does not scroll when the page is first opened', () => {

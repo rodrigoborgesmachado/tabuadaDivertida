@@ -18,7 +18,7 @@ const erro = (name: string) => Object.assign(new Error(name), { name });
 describe('historico', () => {
   beforeEach(() => {
     window.localStorage.clear();
-    jest.restoreAllMocks();
+    vi.restoreAllMocks();
   });
 
   it('saves the match with date and score keeping the previous ones', () => {
@@ -34,7 +34,7 @@ describe('historico', () => {
   it('compacts the older matches when the storage is full and saves again', () => {
     salvarPartida(partida({ nome: 'Antiga' }));
     const setItem = Storage.prototype.setItem;
-    jest.spyOn(Storage.prototype, 'setItem')
+    vi.spyOn(Storage.prototype, 'setItem')
       .mockImplementationOnce(() => { throw erro('QuotaExceededError'); })
       .mockImplementation(function (this: Storage, chave: string, valor: string) { setItem.call(this, chave, valor); });
 
@@ -48,7 +48,7 @@ describe('historico', () => {
 
   it('does not throw nor compact when saving fails for another reason', () => {
     salvarPartida(partida({ nome: 'Antiga' }));
-    const setItem = jest.spyOn(Storage.prototype, 'setItem').mockImplementation(() => { throw erro('SecurityError'); });
+    const setItem = vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => { throw erro('SecurityError'); });
 
     expect(() => salvarPartida(partida())).not.toThrow();
     expect(salvarPartida(partida())).toBe(false);
@@ -57,7 +57,7 @@ describe('historico', () => {
   });
 
   it('does not throw when the storage stays full after compacting', () => {
-    jest.spyOn(Storage.prototype, 'setItem').mockImplementation(() => { throw erro('QuotaExceededError'); });
+    vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => { throw erro('QuotaExceededError'); });
 
     expect(salvarPartida(partida())).toBe(false);
   });

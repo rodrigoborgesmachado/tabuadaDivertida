@@ -2,8 +2,8 @@ import { act, fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import TesteQi from './TesteQi';
 
-jest.mock('./logic', () => {
-  const actual = jest.requireActual('./logic');
+vi.mock('./logic', async () => {
+  const actual = await vi.importActual<typeof import('./logic')>('./logic');
   const facil = { regra: 'soma-fixa', tipo: 'sequencia', dificuldade: 'facil', linhas: [[2, 4, 6, 8, null]], resposta: 10, explicacao: 'Cada número é o anterior mais 2.', opcoes: [8, 10, 12, 9] };
   const medio = { regra: 'quadrados', tipo: 'sequencia', dificuldade: 'medio', linhas: [[1, 4, 9, 16, 25, null]], resposta: 36, explicacao: 'Cada número é um número vezes ele mesmo.' };
   const dificil = { regra: 'grade-soma', tipo: 'grade', dificuldade: 'dificil', linhas: [[2, 3, 5], [4, 6, 10], [7, null, 15]], resposta: 8, explicacao: 'Em cada linha, o terceiro número é a soma dos dois primeiros.' };
@@ -22,7 +22,7 @@ const renderJogo = () => render(
 const avancar = (ms: number) => {
   for (let tempo = 0; tempo < ms; tempo += 1000) {
     act(() => {
-      jest.advanceTimersByTime(1000);
+      vi.advanceTimersByTime(1000);
     });
   }
 };
@@ -39,14 +39,14 @@ const digitar = (texto: string) => {
 
 describe('TesteQi', () => {
   beforeEach(() => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
     window.localStorage.clear();
     document.head.innerHTML = '<meta name="description" content="Descrição padrão" />';
     document.title = 'Tabuada Divertida';
   });
 
   afterEach(() => {
-    jest.useRealTimers();
+    vi.useRealTimers();
   });
 
   it('shows the just for fun notice and sets the page title', () => {

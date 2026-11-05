@@ -1,3 +1,4 @@
+import type { Mock } from 'vitest';
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import configData from '../../Config.json';
@@ -7,22 +8,22 @@ import CorridaRobo from './CorridaRobo';
 
 const STORAGE_RECORDES = 'tabuada-divertida-corrida-robo-recordes';
 
-jest.mock('./logic', () => {
-  const actual = jest.requireActual('./logic');
+vi.mock('./logic', async () => {
+  const actual = await vi.importActual<typeof import('./logic')>('./logic');
   return {
     ...actual,
     gerarConta: () => ({ texto: '6x7', resposta: 42 }),
   };
 });
 
-jest.mock('../../services/resultadosJogos', () => ({
-  ...jest.requireActual('../../services/resultadosJogos'),
-  enviarResultado: jest.fn(),
-  buscarRanking: jest.fn(),
+vi.mock('../../services/resultadosJogos', async () => ({
+  ...(await vi.importActual('../../services/resultadosJogos')),
+  enviarResultado: vi.fn(),
+  buscarRanking: vi.fn(),
 }));
 
-const enviar = enviarResultado as jest.Mock;
-const buscar = buscarRanking as jest.Mock;
+const enviar = enviarResultado as Mock;
+const buscar = buscarRanking as Mock;
 
 const renderJogo = () => render(
   <MemoryRouter>
@@ -33,7 +34,7 @@ const renderJogo = () => render(
 const avancar = (ms: number) => {
   for (let tempo = 0; tempo < ms; tempo += 1000) {
     act(() => {
-      jest.advanceTimersByTime(1000);
+      vi.advanceTimersByTime(1000);
     });
   }
 };
@@ -51,14 +52,14 @@ const responder = (valor: string) => {
 
 describe('CorridaRobo', () => {
   beforeEach(() => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
     window.localStorage.clear();
     enviar.mockReset().mockResolvedValue(true);
     buscar.mockReset().mockResolvedValue({ lista: [], total: 0 });
   });
 
   afterEach(() => {
-    jest.useRealTimers();
+    vi.useRealTimers();
   });
 
   it('shows the robot levels and the countdown before the race', () => {

@@ -2,8 +2,8 @@ import { act, fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import MemoriaTabuada from './MemoriaTabuada';
 
-jest.mock('./logic', () => {
-  const actual = jest.requireActual('./logic');
+vi.mock('./logic', async () => {
+  const actual = await vi.importActual<typeof import('./logic')>('./logic');
   return {
     ...actual,
     criarTabuleiro: () => [
@@ -25,12 +25,12 @@ const cartas = () => screen.getAllByRole('button').filter((button) => button.cla
 
 describe('MemoriaTabuada', () => {
   beforeEach(() => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
     window.localStorage.clear();
   });
 
   afterEach(() => {
-    jest.useRealTimers();
+    vi.useRealTimers();
   });
 
   it('flips back two cards that are not a pair', () => {
@@ -44,7 +44,7 @@ describe('MemoriaTabuada', () => {
     expect(cartas()[0].classList.contains('memoria-carta--virada')).toBe(true);
 
     act(() => {
-      jest.advanceTimersByTime(900);
+      vi.advanceTimersByTime(900);
     });
 
     expect(cartas()[0].classList.contains('memoria-carta--virada')).toBe(false);
@@ -80,7 +80,7 @@ describe('MemoriaTabuada', () => {
       fireEvent.click(cartas()[0]);
       fireEvent.click(cartas()[1]);
       act(() => {
-        jest.advanceTimersByTime(900);
+        vi.advanceTimersByTime(900);
       });
     }
 
