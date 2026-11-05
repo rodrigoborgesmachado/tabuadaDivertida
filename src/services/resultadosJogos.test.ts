@@ -1,13 +1,14 @@
 import type { Mock } from 'vitest';
 import api from './api';
-import { buscarRanking, enviarResultado, lerExtras, posicaoNoRanking, TIMEOUT_ENVIO, urlRanking, type ItemRanking } from './resultadosJogos';
+import { buscarRanking, enviarResultado, informarNome, lerExtras, posicaoNoRanking, TIMEOUT_ENVIO, urlRanking, type ItemRanking } from './resultadosJogos';
 
 vi.mock('./api', () => ({
   __esModule: true,
-  default: { post: vi.fn(), get: vi.fn() },
+  default: { post: vi.fn(), put: vi.fn(), get: vi.fn() },
 }));
 
 const post = api.post as Mock;
+const put = api.put as Mock;
 const get = api.get as Mock;
 
 const item = (nome: string, dados: string | null = null): ItemRanking => ({
@@ -24,6 +25,7 @@ const item = (nome: string, dados: string | null = null): ItemRanking => ({
 describe('resultadosJogos', () => {
   beforeEach(() => {
     post.mockReset();
+    put.mockReset();
     get.mockReset();
   });
 
@@ -33,9 +35,9 @@ describe('resultadosJogos', () => {
   });
 
   it('sends the result with the normalized name, the extras as json and a timeout', async () => {
-    post.mockResolvedValue({ data: { success: true } });
+    post.mockResolvedValue({ data: { success: true, object: { Id: 42 } } });
 
-    await expect(enviarResultado('2048', null, { pontuacao: 1200, extras: { maiorPeca: 256 } }, '  Ana   Bia ')).resolves.toBe(true);
+    await expect(enviarResultado('2048', null, { pontuacao: 1200, extras: { maiorPeca: 256 } }, '  Ana   Bia ')).resolves.toBe(42);
 
     expect(post).toHaveBeenCalledWith('/ResultadosJogos', {
       jogo: '2048',
@@ -46,22 +48,46 @@ describe('resultadosJogos', () => {
     }, { timeout: TIMEOUT_ENVIO });
   });
 
-  it('returns false without throwing when the api fails', async () => {
+  it('sends the result without a name', async () => {
+    post.mockResolvedValue({ data: { success: true, object: { Id: 7 } } });
+
+    await expect(enviarResultado('memoria', 'facil', { pontuacao: 8, tempo: 30 }, '  ')).resolves.toBe(7);
+
+    expect(post).toHaveBeenCalledWith('/ResultadosJogos', expect.objectContaining({ jogo: 'memoria', modo: 'facil', nome: '' }), { timeout: TIMEOUT_ENVIO });
+  });
+
+  it('returns null without throwing when the api fails', async () => {
     post.mockRejectedValue(new Error('Network Error'));
 
-    await expect(enviarResultado('memoria', 'facil', { pontuacao: 8, tempo: 30 }, 'Ana')).resolves.toBe(false);
+    await expect(enviarResultado('memoria', 'facil', { pontuacao: 8, tempo: 30 }, 'Ana')).resolves.toBeNull();
   });
 
-  it('returns false without throwing when the request times out', async () => {
+  it('returns null without throwing when the request times out', async () => {
     post.mockRejectedValue(Object.assign(new Error('timeout of 8000ms exceeded'), { code: 'ECONNABORTED' }));
 
-    await expect(enviarResultado('teste-qi', null, { acertos: 10, total: 15, tempo: 90 }, 'Ana')).resolves.toBe(false);
+    await expect(enviarResultado('teste-qi', null, { acertos: 10, total: 15, tempo: 90 }, 'Ana')).resolves.toBeNull();
   });
 
-  it('returns false when the api refuses the result', async () => {
+  it('returns null when the api refuses the result', async () => {
     post.mockResolvedValue({ data: { success: false, message: 'Pontuação fora do limite' } });
 
-    await expect(enviarResultado('2048', null, { pontuacao: 1 }, 'Ana')).resolves.toBe(false);
+    await expect(enviarResultado('2048', null, { pontuacao: 1 }, 'Ana')).resolves.toBeNull();
+  });
+
+  it('informs the name of a result already sent', async () => {
+    put.mockResolvedValue({ data: { success: true } });
+
+    await expect(informarNome(42, '  Ana   Bia ')).resolves.toBe(true);
+
+    expect(put).toHaveBeenCalledWith('/ResultadosJogos/42/nome', { nome: 'Ana Bia' }, { timeout: TIMEOUT_ENVIO });
+  });
+
+  it('returns false when the name can not be informed', async () => {
+    put.mockResolvedValue({ data: { success: false, message: 'Resultado já possui nome' } });
+    await expect(informarNome(42, 'Ana')).resolves.toBe(false);
+
+    put.mockRejectedValue(new Error('Network Error'));
+    await expect(informarNome(42, 'Ana')).resolves.toBe(false);
   });
 
   it('fetches the ranking list and total', async () => {
