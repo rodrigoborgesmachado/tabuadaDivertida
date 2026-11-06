@@ -10,8 +10,9 @@ import BotaoSom from '../../components/BotaoSom/BotaoSom';
 import ComoJogar from '../../components/ComoJogar/ComoJogar';
 import CompartilharResultado from '../../components/CompartilharResultado/CompartilharResultado';
 import HappyRobot from '../../components/HappyRobot/HappyRobot';
+import RankingFinal from '../../components/RankingFinal/RankingFinal';
 import { formatarTempo } from '../MemoriaTabuada/logic';
-import { buscarModo, casaParaDica, casasComConflito, copiarGrade, DICAS, dimensoesBloco, estaCompleto, gerarTabuleiro, mesmaRegiao, MODOS, moverCasa, type Casa, type Direcao, type Grade, type Modo } from './logic';
+import { buscarModo, casaParaDica, casasComConflito, copiarGrade, DICAS, dimensoesBloco, estaCompleto, gerarTabuleiro, mesmaRegiao, MODOS, moverCasa, resultadoRanking, type Casa, type Direcao, type Grade, type Modo } from './logic';
 import './Sudoku.css';
 
 interface Jogada extends Casa {
@@ -28,6 +29,8 @@ interface Partida {
   dicasUsadas: number;
   historico: Jogada[];
   segundos: number;
+  desfez?: boolean;
+  marcouErros?: boolean;
 }
 
 interface Resultado {
@@ -105,14 +108,21 @@ function Sudoku() {
   const iniciarJogo = (id = modoId) => {
     const escolhido = buscarModo(id) || MODOS[0];
     const { inicial, solucao } = gerarTabuleiro(escolhido);
-    setPartida({ modo: escolhido.id, inicial, solucao, grade: copiarGrade(inicial), dicas: [], dicasUsadas: 0, historico: [], segundos: 0 });
+    setPartida({ modo: escolhido.id, inicial, solucao, grade: copiarGrade(inicial), dicas: [], dicasUsadas: 0, historico: [], segundos: 0, desfez: false, marcouErros: false });
     setSelecionada(null);
     setResultado(null);
   };
 
   const finalizarJogo = (concluida: Partida) => {
     const anterior = lerProgresso();
-    partidaFinalizada({ jogo: 'sudoku', modo: concluida.modo });
+    partidaFinalizada({
+      jogo: 'sudoku',
+      modo: concluida.modo,
+      tempo: concluida.segundos,
+      dicasUsadas: concluida.dicasUsadas,
+      desfez: !!concluida.desfez,
+      marcouErros: !!concluida.marcouErros,
+    });
     const atual = lerProgresso();
     setResultado({
       modo: buscarModo(concluida.modo) as Modo,
@@ -127,7 +137,8 @@ function Sudoku() {
     confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
   };
 
-  const aplicarJogada = (proxima: Partida) => {
+  const aplicarJogada = (jogada: Partida) => {
+    const proxima = { ...jogada, marcouErros: !!jogada.marcouErros || marcarErros };
     if (estaCompleto(proxima.grade, proxima.solucao)) {
       finalizarJogo(proxima);
       return;
@@ -167,6 +178,7 @@ function Sudoku() {
       grade,
       dicas: ultima.dica ? partida.dicas.filter((item) => item !== chave(ultima)) : partida.dicas,
       historico: partida.historico.slice(0, -1),
+      desfez: true,
     });
     setSelecionada({ linha: ultima.linha, coluna: ultima.coluna });
   };
@@ -196,6 +208,9 @@ function Sudoku() {
   const alternarErros = () => {
     const proximo = !marcarErros;
     setMarcarErros(proximo);
+    if (proximo) {
+      setPartida((atual) => atual && { ...atual, marcouErros: true });
+    }
     try {
       window.localStorage.setItem(STORAGE_ERROS, proximo ? '1' : '0');
     } catch {}
@@ -372,6 +387,19 @@ function Sudoku() {
                 {resultado.dicasUsadas > 0 ? ` usando ${resultado.dicasUsadas} ${resultado.dicasUsadas === 1 ? 'dica' : 'dicas'}` : ' sem usar dicas'}!
               </p>
               <BarraXp ganho={resultado.ganhoXp} />
+              <RankingFinal jogo='sudoku' modo={resultado.modo.id} resultado={resultadoRanking(resultado.segundos, resultado.dicasUsadas)} />
+              {resultado.conquistas.length > 0 && (
+                <div className='sudoku-conquistas'>
+                  <h4>🏅 Conquistas desta partida</h4>
+                  <ul>
+                    {resultado.conquistas.map((conquista) => (
+                      <li key={conquista.texto}>
+                        {conquista.icone} {conquista.texto}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
               <div className='sudoku-toolbar'>
                 <button type='button' className='global-button sudoku-jogar' onClick={() => iniciarJogo(resultado.modo.id)}>
                   🔁 Jogar de novo

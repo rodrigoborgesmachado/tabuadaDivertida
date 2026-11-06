@@ -12,7 +12,7 @@ export const STORAGE_KEY = 'tabuada-divertida-progresso';
 export const EVENTO_CONQUISTAS = 'tabuada-divertida-conquistas';
 export const EVENTO_DESAFIOS = 'tabuada-divertida-desafios';
 export const EVENTO_NIVEL = 'tabuada-divertida-nivel';
-export const VERSAO_PROGRESSO = 4;
+export const VERSAO_PROGRESSO = 5;
 export const MINIMO_CONTAS = 20;
 export const MAXIMO_CONTAS = 100;
 export const DIAS_MESTRE = 7;
@@ -58,6 +58,13 @@ export interface Progresso {
   gabaritos: number;
   semTitubear: number;
   vitoriasContraCampeao: number;
+  sudokusPorModo: Record<string, number>;
+  melhorTempoSudokuPorModo: Record<string, number>;
+  sudokusSemAjudaPorModo: Record<string, number>;
+  sudokusSemBorracha: number;
+  sudokusSilenciosos: number;
+  diasComSudoku: number;
+  ultimoDiaSudoku: string;
   tabuadas: Record<string, Record<string, string>>;
   divisoes: Record<string, Record<string, string>>;
   medalhas: Record<string, MedalhaObtida>;
@@ -97,6 +104,8 @@ export interface EventoJogo {
   nivelRobo?: NivelRobo;
   casas?: number;
   venceu?: boolean;
+  dicasUsadas?: number;
+  marcouErros?: boolean;
 }
 
 export interface Conquista {
@@ -140,6 +149,13 @@ export const criarProgresso = (): Progresso => ({
   gabaritos: 0,
   semTitubear: 0,
   vitoriasContraCampeao: 0,
+  sudokusPorModo: {},
+  melhorTempoSudokuPorModo: {},
+  sudokusSemAjudaPorModo: {},
+  sudokusSemBorracha: 0,
+  sudokusSilenciosos: 0,
+  diasComSudoku: 0,
+  ultimoDiaSudoku: '',
   tabuadas: {},
   divisoes: {},
   medalhas: {},
@@ -295,6 +311,39 @@ const registrarCorrida = (proximo: Progresso, evento: EventoJogo) => {
   }
 };
 
+const registrarSudoku = (proximo: Progresso, evento: EventoJogo, data: Date) => {
+  if (evento.jogo !== 'sudoku' || !evento.modo) {
+    return;
+  }
+
+  const modo = evento.modo;
+  const semAjuda = !evento.dicasUsadas && !evento.marcouErros;
+  const melhorTempo = proximo.melhorTempoSudokuPorModo[modo] || 0;
+
+  proximo.sudokusPorModo = { ...proximo.sudokusPorModo, [modo]: (proximo.sudokusPorModo[modo] || 0) + 1 };
+
+  if (evento.tempo && (melhorTempo === 0 || evento.tempo < melhorTempo)) {
+    proximo.melhorTempoSudokuPorModo = { ...proximo.melhorTempoSudokuPorModo, [modo]: evento.tempo };
+  }
+
+  if (semAjuda) {
+    proximo.sudokusSemAjudaPorModo = { ...proximo.sudokusSemAjudaPorModo, [modo]: (proximo.sudokusSemAjudaPorModo[modo] || 0) + 1 };
+  }
+
+  if (evento.desfez === false && (modo === '9x9-medio' || modo === '9x9-dificil')) {
+    proximo.sudokusSemBorracha += 1;
+  }
+
+  if (evento.desfez === false && semAjuda && modo === '9x9-dificil') {
+    proximo.sudokusSilenciosos += 1;
+  }
+
+  if (proximo.ultimoDiaSudoku !== chaveDia(data)) {
+    proximo.diasComSudoku += 1;
+    proximo.ultimoDiaSudoku = chaveDia(data);
+  }
+};
+
 export const aplicarEvento = (progresso: Progresso, evento: EventoJogo, finalizada: boolean, data: Date): Progresso => {
   const proximo: Progresso = {
     ...progresso,
@@ -392,6 +441,7 @@ export const aplicarEvento = (progresso: Progresso, evento: EventoJogo, finaliza
   registrarMemoria(proximo, evento);
   registrarTesteQi(proximo, evento, acertos);
   registrarCorrida(proximo, evento);
+  registrarSudoku(proximo, evento, data);
   registrarFimDeSemana(proximo, data);
 
   return registrarDia(proximo, data);

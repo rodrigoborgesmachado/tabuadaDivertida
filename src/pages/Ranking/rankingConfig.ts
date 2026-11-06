@@ -1,5 +1,6 @@
 import { lerExtras, type ItemRanking } from '../../services/resultadosJogos';
 import { CASAS_CORRIDA, chaveCorrida, NIVEIS_ROBO, type NivelRobo, type Operacao } from '../CorridaRobo/logic';
+import { MODOS as MODOS_SUDOKU } from '../Sudoku/logic';
 
 export interface ColunaRanking {
   titulo: string;
@@ -48,7 +49,7 @@ const NIVEIS_CORRIDA = Object.keys(NIVEIS_ROBO) as NivelRobo[];
 
 const texto = (valor: unknown) => (valor === null || valor === undefined ? '—' : String(valor));
 
-const segundos = (valor: number | null) => (valor === null ? '—' : `${valor}s`);
+const segundos = (valor: unknown) => (typeof valor === 'number' ? `${valor}s` : '—');
 
 export const ABA_TABUADA: AbaRanking = { id: 'tabuada', nome: 'Tabuada', icone: '✖️', path: '/selecionarjogo' };
 
@@ -107,6 +108,18 @@ export const jogosRanking: JogoRanking[] = [
     colunas: [
       { titulo: 'Tempo', valor: (item) => segundos(item.tempo) },
       { titulo: 'Acertos', valor: (item) => `${texto(item.acertos)}/${texto(item.total)}` },
+    ],
+  },
+  {
+    id: 'sudoku',
+    nome: 'Sudoku',
+    icone: '🔢',
+    path: '/jogos/sudoku',
+    modos: MODOS_SUDOKU.map((modo) => ({ id: modo.id, label: modo.nome })),
+    colunas: [
+      { titulo: 'Tempo', valor: (item) => segundos(item.tempo) },
+      { titulo: 'Tempo real', valor: (item) => segundos(lerExtras(item).segundos) },
+      { titulo: 'Dicas', valor: (item) => texto(lerExtras(item).dicas) },
     ],
   },
 ];

@@ -1,6 +1,9 @@
+import type { Mock } from 'vitest';
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
+import configData from '../../Config.json';
 import { lerProgresso } from '../../gamificacao/progresso';
+import { buscarRanking, enviarResultado } from '../../services/resultadosJogos';
 import Sudoku from './Sudoku';
 
 const solucao = [
@@ -27,6 +30,15 @@ vi.mock('./logic', async () => {
 
 vi.mock('canvas-confetti', () => ({ default: vi.fn() }));
 
+vi.mock('../../services/resultadosJogos', async () => ({
+  ...(await vi.importActual('../../services/resultadosJogos')),
+  enviarResultado: vi.fn(),
+  buscarRanking: vi.fn(),
+}));
+
+const enviar = enviarResultado as Mock;
+const buscar = buscarRanking as Mock;
+
 vi.mock('../../services/sons', async () => ({
   ...(await vi.importActual('../../services/sons')),
   playSuccess: vi.fn(),
@@ -52,6 +64,8 @@ describe('Sudoku', () => {
   beforeEach(() => {
     vi.useFakeTimers();
     window.localStorage.clear();
+    enviar.mockReset().mockResolvedValue(true);
+    buscar.mockReset().mockResolvedValue({ lista: [], total: 0 });
   });
 
   afterEach(() => {
@@ -158,8 +172,49 @@ describe('Sudoku', () => {
 
     expect(screen.getByRole('status').textContent).toContain('Você completou o Sudoku 4×4 em 1:05 sem usar dicas!');
     expect(screen.getByText('Compartilhar')).toBeTruthy();
+    expect(screen.getByText('Quer entrar no ranking? Digite seu nome:')).toBeTruthy();
+    expect(screen.getByText('🏆 Ver ranking').getAttribute('href')).toBe('/ranking?jogo=sudoku&modo=4x4');
     expect(lerProgresso().jogosJogados).toContain('sudoku');
     expect(window.localStorage.getItem('tabuada-divertida-sudoku-partida')).toBeNull();
+  });
+
+  it('sends the time, hints, undo and error marking and shows the medals of the match', () => {
+    iniciar();
+    fireEvent.click(screen.getByText(/Marcar erros/));
+    act(() => {
+      vi.advanceTimersByTime(20000);
+    });
+
+    fireEvent.click(casa(1, 1));
+    fireEvent.click(numero(1));
+    fireEvent.click(casa(4, 4));
+    fireEvent.click(numero(1));
+
+    const progresso = lerProgresso();
+    expect(progresso.sudokusPorModo).toEqual({ '4x4': 1 });
+    expect(progresso.melhorTempoSudokuPorModo).toEqual({ '4x4': 20 });
+    expect(progresso.sudokusSemAjudaPorModo).toEqual({ '4x4': 1 });
+    expect(screen.getByText('🏅 Conquistas desta partida')).toBeTruthy();
+    expect(screen.getByText('🧩 Sudokista · Bronze')).toBeTruthy();
+    expect(screen.getByText('⚡ Sudoku relâmpago · Bronze')).toBeTruthy();
+  });
+
+  it('does not count a match without help after playing with the error marking on or using a hint', () => {
+    iniciar();
+    fireEvent.click(casa(1, 1));
+    fireEvent.click(numero(1));
+    fireEvent.click(screen.getByText(/Marcar erros/));
+    fireEvent.click(casa(4, 4));
+    fireEvent.click(numero(1));
+    expect(lerProgresso().sudokusSemAjudaPorModo).toEqual({});
+
+    fireEvent.click(screen.getByText('🔁 Jogar de novo'));
+    fireEvent.click(casa(1, 1));
+    fireEvent.click(screen.getByText('💡 Dica (3)'));
+    fireEvent.click(casa(4, 4));
+    fireEvent.click(numero(1));
+    expect(lerProgresso().sudokusPorModo).toEqual({ '4x4': 2 });
+    expect(lerProgresso().sudokusSemAjudaPorModo).toEqual({});
   });
 
   it('saves the game in progress to continue later', () => {
@@ -177,5 +232,23 @@ describe('Sudoku', () => {
 
     expect(casa(1, 1).textContent).toBe('3');
     expect(screen.getByText('⏱️ 0:03')).toBeTruthy();
+  });
+
+  it('sends the result to the ranking with the hint penalty', async () => {
+    window.localStorage.setItem(configData.NOME_PARAM, 'Ana');
+    iniciar();
+    act(() => {
+      vi.advanceTimersByTime(40000);
+    });
+
+    fireEvent.click(casa(1, 1));
+    fireEvent.click(screen.getByText('💡 Dica (3)'));
+    fireEvent.click(casa(4, 4));
+    await act(async () => {
+      fireEvent.click(numero(1));
+    });
+
+    expect(enviar).toHaveBeenCalledWith('sudoku', '4x4', { tempo: 70, extras: { segundos: 40, dicas: 1 } }, 'Ana');
+    expect(enviar).toHaveBeenCalledTimes(1);
   });
 });

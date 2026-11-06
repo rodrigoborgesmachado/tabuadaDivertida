@@ -10,7 +10,12 @@ import { EVENTO_DESAFIOS } from '../../gamificacao/progresso';
 import { agendarLembretes } from '../../services/lembretes';
 import AppNativo from './AppNativo';
 
-vi.mock('@capacitor/core', () => ({ Capacitor: { isNativePlatform: vi.fn() } }));
+const atalhoAberto = vi.hoisted(() => vi.fn());
+
+vi.mock('@capacitor/core', () => ({
+  Capacitor: { isNativePlatform: vi.fn(), getPlatform: () => 'android' },
+  registerPlugin: () => ({ addListener: atalhoAberto }),
+}));
 vi.mock('@capacitor/app', () => ({ App: { addListener: vi.fn(), exitApp: vi.fn() } }));
 vi.mock('@capacitor/browser', () => ({ Browser: { open: vi.fn() } }));
 vi.mock('@capacitor/local-notifications', () => ({ LocalNotifications: { addListener: vi.fn() } }));
@@ -25,6 +30,7 @@ const ouvirNotificacao = LocalNotifications.addListener as Mock;
 const agendar = agendarLembretes as Mock;
 let voltar: (evento: { canGoBack: boolean }) => void;
 let tocarNotificacao: () => void;
+let abrirAtalho: () => void;
 
 function Endereco() {
   const { pathname, hash } = useLocation();
@@ -53,6 +59,10 @@ describe('AppNativo', () => {
       tocarNotificacao = ouvinte;
       return { remove: vi.fn() };
     });
+    atalhoAberto.mockImplementation(async (_evento, ouvinte) => {
+      abrirAtalho = ouvinte;
+      return { remove: vi.fn() };
+    });
     abrir.mockResolvedValue(undefined);
     (SplashScreen.hide as Mock).mockResolvedValue(undefined);
   });
@@ -69,6 +79,7 @@ describe('AppNativo', () => {
     expect(addListener).not.toHaveBeenCalled();
     expect(ouvirNotificacao).not.toHaveBeenCalled();
     expect(agendar).not.toHaveBeenCalled();
+    expect(atalhoAberto).not.toHaveBeenCalled();
     expect(SplashScreen.hide).not.toHaveBeenCalled();
   });
 
@@ -121,6 +132,15 @@ describe('AppNativo', () => {
     act(() => voltar({ canGoBack: true }));
 
     expect(exitApp).toHaveBeenCalledTimes(1);
+  });
+
+  it('goes to the home when the app is opened by the robot shortcut', () => {
+    renderApp(['/jogos']);
+
+    act(() => abrirAtalho());
+
+    expect(atalhoAberto).toHaveBeenCalledWith('atalhoAberto', expect.any(Function));
+    expect(screen.getByText('SunSale System')).toBeTruthy();
   });
 
   it('opens external links in the system browser', () => {

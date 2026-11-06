@@ -1,4 +1,4 @@
-import { buscarModo, casaParaDica, casasComConflito, contarSolucoes, dimensoesBloco, estaCompleto, gerarSolucao, gerarTabuleiro, mesmaRegiao, MODOS, moverCasa, type Grade } from './logic';
+import { buscarModo, casaParaDica, casasComConflito, contarSolucoes, dimensoesBloco, estaCompleto, gerarSolucao, gerarTabuleiro, mesmaRegiao, MODOS, moverCasa, PENALIDADE_DICA, resultadoRanking, type Grade } from './logic';
 
 const solucao4: Grade = [
   [1, 2, 3, 4],
@@ -98,5 +98,11 @@ describe('Sudoku logic', () => {
     expect(moverCasa({ linha: 0, coluna: 0 }, 'baixo', 9)).toEqual({ linha: 1, coluna: 0 });
     expect(moverCasa({ linha: 3, coluna: 3 }, 'direita', 4)).toEqual({ linha: 3, coluna: 3 });
     expect(moverCasa({ linha: 3, coluna: 3 }, 'esquerda', 4)).toEqual({ linha: 3, coluna: 2 });
+  });
+
+  it('builds the ranking result with the hint penalty', () => {
+    expect(PENALIDADE_DICA).toBe(30);
+    expect(resultadoRanking(95, 0)).toEqual({ tempo: 95, extras: { segundos: 95, dicas: 0 } });
+    expect(resultadoRanking(95, 2)).toEqual({ tempo: 155, extras: { segundos: 95, dicas: 2 } });
   });
 });

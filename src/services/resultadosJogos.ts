@@ -1,6 +1,6 @@
 import api from './api';
 
-export type JogoComRanking = '2048' | 'memoria' | 'maior-ou-menor' | 'teste-qi' | 'corrida-robo';
+export type JogoComRanking = '2048' | 'memoria' | 'maior-ou-menor' | 'teste-qi' | 'corrida-robo' | 'sudoku';
 
 export interface DadosResultado {
   pontuacao?: number;
@@ -46,6 +46,16 @@ export const enviarResultado = async (jogo: JogoComRanking, modo: string | null,
       ...valores,
       dados: extras ? JSON.stringify(extras) : null,
     }, { timeout: TIMEOUT_ENVIO });
+    const codigo = response?.data?.success === true ? response.data.object?.Id : null;
+    return typeof codigo === 'number' ? codigo : null;
+  } catch {
+    return null;
+  }
+};
+
+export const informarNome = async (codigo: number, nome: string) => {
+  try {
+    const response = await api.put(`/ResultadosJogos/${codigo}/nome`, { nome: normalizarNome(nome) }, { timeout: TIMEOUT_ENVIO });
     return response?.data?.success === true;
   } catch {
     return false;

@@ -248,6 +248,27 @@
   margin: 0;
 }
 
+.sudoku-conquistas {
+  width: 100%;
+  max-width: 420px;
+  border: 2px solid var(--panel-border-color);
+  border-radius: 14px;
+  background: var(--block-color);
+  padding: 12px 16px;
+}
+
+.sudoku-conquistas h4 {
+  margin: 0 0 8px;
+}
+
+.sudoku-conquistas ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 6px;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .sudoku-opcao,
   .sudoku-tecla {

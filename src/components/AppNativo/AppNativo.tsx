@@ -6,7 +6,8 @@ import { LocalNotifications } from '@capacitor/local-notifications';
 import { SplashScreen } from '@capacitor/splash-screen';
 import { EVENTO_DESAFIOS } from '../../gamificacao/progresso';
 import { agendarLembretes, ROTA_DESAFIO_DO_DIA } from '../../services/lembretes';
-import { ehApp, linkExterno } from '../../services/plataforma';
+import { IconeApp } from '../../services/iconeApp';
+import { ehAndroid, ehApp, linkExterno } from '../../services/plataforma';
 
 function AppNativo() {
   const navigate = useNavigate();
@@ -46,11 +47,15 @@ function AppNativo() {
     const reagendar = () => agendarLembretes();
 
     agendarLembretes();
+
+    const atalho = ehAndroid() ? IconeApp.addListener('atalhoAberto', () => navigate('/')) : undefined;
+
     document.addEventListener('click', abrirLink);
     window.addEventListener(EVENTO_DESAFIOS, reagendar);
     return () => {
       voltar.then((ouvinte) => ouvinte.remove());
       abrirDesafio.then((ouvinte) => ouvinte.remove());
+      atalho?.then((ouvinte) => ouvinte.remove());
       document.removeEventListener('click', abrirLink);
       window.removeEventListener(EVENTO_DESAFIOS, reagendar);
     };
