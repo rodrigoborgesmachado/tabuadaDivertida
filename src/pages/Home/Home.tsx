@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import HappyRobot from '../../components/HappyRobot/HappyRobot';
 import WalkingRobot from '../../components/WalkingRobot/WalkingRobot';
 import DesafiosDoDia from '../../components/DesafiosDoDia/DesafiosDoDia';
@@ -17,6 +18,7 @@ function Home() {
     const [filtro, setFiltro] = useState(lerFiltro);
     const recompensasNovas = useRecompensasNaoVistas().length;
     const { nome } = useJogador();
+    const { hash } = useLocation();
     const [editandoNome, setEditandoNome] = useState(false);
     const dias = diasSeguidosAtuais(progresso);
     const continuar = jogoParaContinuar(progresso);
@@ -61,7 +63,7 @@ function Home() {
                         </span>
                     </a>
                 </section>
-                <DesafiosDoDia sequencia={false} />
+                <DesafiosDoDia sequencia={false} destaque={hash === '#desafio-do-dia'} />
                 <section id='jogos' className='home-jogos'>
                     <div className='home-jogos__topo'>
                         <h2>🎮 Escolha um jogo</h2>

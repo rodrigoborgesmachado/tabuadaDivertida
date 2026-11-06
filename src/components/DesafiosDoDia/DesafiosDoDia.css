@@ -32,6 +32,11 @@
   border-color: #f2b632;
 }
 
+.desafios-do-dia__card--destaque {
+  border-color: var(--button-color-primary);
+  box-shadow: 0 0 0 4px var(--button-color-back);
+}
+
 .desafios-do-dia__rotulo {
   font-family: var(--font-title);
   font-size: 1.1rem;

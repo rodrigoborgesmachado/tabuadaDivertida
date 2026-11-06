@@ -7,6 +7,7 @@ import { STORAGE_KEY } from './gamificacao/progresso';
 import { STORAGE_PERSONALIZACAO, STORAGE_RECOMPENSAS_VISTAS } from './gamificacao/recompensas';
 import { iniciarArmazenamento } from './services/armazenamento';
 import { STORAGE_PERFIL_VISTO, STORAGE_QUANTIDADE } from './services/jogador';
+import { STORAGE_LEMBRETE } from './services/lembretes';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 iniciarArmazenamento([
@@ -17,6 +18,7 @@ iniciarArmazenamento([
   STORAGE_PERFIL_VISTO,
   STORAGE_PERSONALIZACAO,
   STORAGE_RECOMPENSAS_VISTAS,
+  STORAGE_LEMBRETE,
 ]).finally(() => root.render(
   <React.StrictMode>
     <App />

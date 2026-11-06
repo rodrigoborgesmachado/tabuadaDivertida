@@ -1,10 +1,24 @@
+import type { Mock } from 'vitest';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
+import { Capacitor } from '@capacitor/core';
 import configData from '../../Config.json';
 import { lerNome } from '../../services/jogador';
+import { ativarLembrete, desativarLembrete, STORAGE_LEMBRETE } from '../../services/lembretes';
 import { EVENTO_SOM } from '../../services/sons';
 import { TemaContext } from '../ThemeSwitcher/temaContext';
 import PerfilJogador from './PerfilJogador';
+
+vi.mock('@capacitor/core', () => ({ Capacitor: { isNativePlatform: vi.fn(() => false) } }));
+vi.mock('../../services/lembretes', async (original) => ({
+  ...(await original<object>()),
+  ativarLembrete: vi.fn(),
+  desativarLembrete: vi.fn(),
+}));
+
+const nativo = Capacitor.isNativePlatform as Mock;
+const ativar = ativarLembrete as Mock;
+const desativar = desativarLembrete as Mock;
 
 const renderPerfil = (theme: 'light' | 'dark' = 'light', toggleTheme = vi.fn(), onFechar = vi.fn()) => render(
   <TemaContext.Provider value={{ theme, toggleTheme }}>
@@ -90,5 +104,63 @@ describe('PerfilJogador', () => {
 
     fireEvent.click(cartao);
     expect(onFechar).toHaveBeenCalled();
+  });
+
+  describe('daily reminder', () => {
+    beforeEach(() => {
+      nativo.mockReturnValue(true);
+      ativar.mockResolvedValue(true);
+    });
+
+    afterEach(() => {
+      nativo.mockReturnValue(false);
+      vi.clearAllMocks();
+    });
+
+    it('is shown only in the app', () => {
+      nativo.mockReturnValue(false);
+      renderPerfil();
+
+      expect(screen.queryByRole('region', { name: 'Lembrete diário' })).toBeNull();
+    });
+
+    it('turns on with the chosen time when saved', () => {
+      const onFechar = vi.fn();
+      renderPerfil('light', vi.fn(), onFechar);
+
+      expect(screen.getByRole('button', { name: '🔕 Desligado' }).getAttribute('aria-pressed')).toBe('true');
+      expect(screen.queryByLabelText('Horário')).toBeNull();
+
+      fireEvent.click(screen.getByRole('button', { name: '🔔 Ligado' }));
+      fireEvent.change(screen.getByLabelText('Horário'), { target: { value: '19:30' } });
+      expect(ativar).not.toHaveBeenCalled();
+
+      fireEvent.click(screen.getByText('Salvar'));
+
+      expect(ativar).toHaveBeenCalledWith('19:30');
+      expect(onFechar).toHaveBeenCalled();
+    });
+
+    it('turns off when saved', () => {
+      window.localStorage.setItem(STORAGE_LEMBRETE, JSON.stringify({ ativo: true, hora: '07:00', perguntado: true }));
+      renderPerfil();
+
+      expect((screen.getByLabelText('Horário') as HTMLInputElement).value).toBe('07:00');
+      fireEvent.click(screen.getByRole('button', { name: '🔕 Desligado' }));
+      fireEvent.click(screen.getByText('Salvar'));
+
+      expect(desativar).toHaveBeenCalledWith('07:00');
+      expect(ativar).not.toHaveBeenCalled();
+    });
+
+    it('changes nothing when saved without changes', () => {
+      window.localStorage.setItem(STORAGE_LEMBRETE, JSON.stringify({ ativo: true, hora: '07:00', perguntado: true }));
+      renderPerfil();
+
+      fireEvent.click(screen.getByText('Salvar'));
+
+      expect(ativar).not.toHaveBeenCalled();
+      expect(desativar).not.toHaveBeenCalled();
+    });
   });
 });
