@@ -43,6 +43,7 @@
     "lint": "eslint .",
     "app:sync": "npm run build:app && cap sync android",
     "app:open": "cap open android",
+    "app:release": "npm run app:sync && cd android && .\\gradlew bundleRelease",
     "app:assets": "capacitor-assets generate --android --iconBackgroundColor \"#ffffff\" --iconBackgroundColorDark \"#ffffff\" --splashBackgroundColor \"#fff7d7\" --splashBackgroundColorDark \"#101c30\""
   },
   "devDependencies": {

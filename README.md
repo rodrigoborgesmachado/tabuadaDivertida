@@ -57,3 +57,32 @@ Abre o projeto `android` no Android Studio, onde o app é executado e o APK/AAB 
 ### `npm run app:assets`
 
 Gera o ícone e a tela de abertura do app a partir de `assets/logo.png`.
+
+### `npm run app:release`
+
+Gera o build do app, copia para o projeto `android` e gera o AAB de release assinado em `android/app/build/outputs/bundle/release/app-release.aab`.
+
+## Publicação na Google Play
+
+### Assinatura
+
+A chave de upload fica fora do repositório. O build de release lê o arquivo `android/keystore.properties`, que não é versionado:
+
+```properties
+storeFile=C:/Android/keystores/tabuada-divertida.jks
+storePasswordFile=C:/Android/keystores/tabuada-divertida.senha
+keyAlias=tabuada-divertida
+```
+
+* `storeFile`: caminho da keystore.
+* `storePasswordFile`: caminho de um arquivo com a senha da keystore em uma linha.
+* `keyAlias`: alias da chave.
+
+Sem esse arquivo o AAB é gerado sem assinatura. A assinatura final do app é feita pelo Play App Signing; guarde um backup da keystore e da senha, pois sem elas não é possível enviar novas versões.
+
+### Nova versão
+
+1. Aumentar o `versionCode` (inteiro, sempre maior que o do último envio) e ajustar o `versionName` em `android/app/build.gradle`.
+2. Rodar `npm run app:release` com o JDK 21 e o Android SDK configurados (`JAVA_HOME` e `ANDROID_HOME`).
+3. No [Google Play Console](https://play.google.com/console), criar uma versão na faixa desejada (teste interno, teste fechado ou produção), enviar o `app-release.aab` e preencher as notas da versão.
+4. Enviar a versão para revisão.
