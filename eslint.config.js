@@ -3,7 +3,7 @@ import reactHooks from 'eslint-plugin-react-hooks';
 import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
-  { ignores: ['build', 'node_modules'] },
+  { ignores: ['build', 'node_modules', 'android'] },
   {
     files: ['**/*.{ts,tsx}'],
     linterOptions: {
