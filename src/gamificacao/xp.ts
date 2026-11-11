@@ -1,7 +1,7 @@
 import regras from './xp.json';
 import type { TipoDesafio } from './desafios';
 import { buscarMedalha } from './medalhas';
-import type { Progresso } from './progresso';
+import { MINIMO_CONTAS, type EventoJogo, type Progresso } from './progresso';
 
 export interface NivelXp {
   nivel: number;
@@ -12,8 +12,28 @@ export interface NivelXp {
 
 const somar = (valores: number[]) => valores.reduce((total, valor) => total + valor, 0);
 
-export const xpDaPartida = (acertos: number, perfeita: boolean) =>
-  regras.partidaConcluida + Math.min(acertos * regras.porAcerto, regras.maximoPorAcertos) + (perfeita ? regras.partidaPerfeita : 0);
+const xpDoSudoku = (modo: string, semAjuda: boolean) => {
+  const base = (regras.sudoku as Record<string, number>)[modo] ?? regras.partidaConcluida;
+
+  return base + (semAjuda ? Math.round(base * regras.sudokuSemAjuda) : 0);
+};
+
+export const xpDoJogo = (evento: EventoJogo) => {
+  if (evento.jogo === 'sudoku') {
+    return xpDoSudoku(evento.modo || '', !evento.dicasUsadas && !evento.marcouErros);
+  }
+
+  if (evento.jogo === '2048') {
+    return regras.pecas2048.reduce((xp, item) => ((evento.maiorPeca || 0) >= item.peca ? item.xp : xp), regras.partidaConcluida);
+  }
+
+  return (evento.jogo === 'memoria' && evento.nivel && regras.memoria[evento.nivel]) || regras.partidaConcluida;
+};
+
+export const xpDaPartidaPerfeita = (acertos: number) => Math.max(Math.floor(acertos * regras.partidaPerfeitaPorAcerto), regras.partidaPerfeitaMinimo);
+
+export const xpDaPartida = (acertos: number, perfeita: boolean, base = regras.partidaConcluida) =>
+  base + Math.min(acertos * regras.porAcerto, regras.maximoPorAcertos) + (perfeita ? xpDaPartidaPerfeita(acertos) : 0);
 
 export const xpDoDesafio = (tipo: TipoDesafio) => (tipo === 'dia' ? regras.desafioDoDia : regras.desafioDaSemana);
 
@@ -30,7 +50,8 @@ export const xpDasMedalhas = (obtidas: Progresso['medalhas']) =>
 export const xpInicial = (progresso: Progresso) =>
   progresso.partidas * regras.partidaConcluida +
   progresso.acertos * regras.porAcerto +
-  progresso.partidasPerfeitas * regras.partidaPerfeita +
+  progresso.partidasPerfeitas * xpDaPartidaPerfeita(MINIMO_CONTAS) +
+  somar(Object.entries(progresso.sudokusPorModo).map(([modo, partidas]) => partidas * (xpDoSudoku(modo, false) - regras.partidaConcluida))) +
   somar(progresso.desafiosConcluidos.map((id) => xpDoDesafio(id.startsWith('dia:') ? 'dia' : 'semana'))) +
   xpDasMedalhas(progresso.medalhas);
 
