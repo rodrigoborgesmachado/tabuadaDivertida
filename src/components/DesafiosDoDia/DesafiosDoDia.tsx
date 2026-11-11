@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { boosterDoDesafio, multiplicadorDeXp } from '../../gamificacao/boosters';
 import { desafioConcluido, desafioDaSemana, desafioDoDia, valorDesafio, type Desafio } from '../../gamificacao/desafios';
 import { lerProgresso } from '../../gamificacao/progresso';
 import { jogos } from '../../pages/Jogos/jogosConfig';
@@ -45,6 +46,8 @@ function DesafiosDoDia({ sequencia = true, destaque = false }: DesafiosDoDiaProp
           const valor = concluido ? desafio.meta : Math.min(valorDesafio(progresso, desafio), desafio.meta);
           const rotulo = desafio.tipo === 'dia' ? 'Desafio do dia' : 'Desafio da semana';
           const jogo = jogos.find((item) => item.id === desafio.jogo);
+          const booster = boosterDoDesafio(desafio.tipo);
+          const mostrarBooster = !concluido && (desafio.tipo === 'semana' || multiplicadorDeXp(progresso) < booster);
 
           return (
             <div
@@ -56,6 +59,11 @@ function DesafiosDoDia({ sequencia = true, destaque = false }: DesafiosDoDiaProp
               <p>
                 <span aria-hidden='true'>{desafio.icone}</span> {desafio.texto}
               </p>
+              {mostrarBooster && (
+                <small className='desafios-do-dia__booster'>
+                  ⚡ Conclua e ganhe {booster}× XP nas partidas {desafio.tipo === 'dia' ? 'até o fim do dia' : 'do dia seguinte'}
+                </small>
+              )}
               <div
                 className='desafios-do-dia__barra'
                 role='progressbar'

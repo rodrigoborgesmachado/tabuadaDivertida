@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { multiplicadorDeXp } from '../../gamificacao/boosters';
 import { lerProgresso } from '../../gamificacao/progresso';
 import { calcularNivel } from '../../gamificacao/xp';
 import './BarraXp.css';
@@ -18,6 +19,7 @@ function BarraXp({ xp, ganho, atalho = true, compacta = false }: BarraXpProps) {
   const atual = calcularNivel(total, salvo.nivelDoTitulo);
   const subiu = ganho !== undefined && atual.nivel > calcularNivel(total - ganho).nivel;
   const percentual = Math.min(atual.xpNoNivel / atual.xpDoNivel, 1);
+  const multiplicador = multiplicadorDeXp(salvo);
 
   return (
     <div className={`barra-xp${subiu ? ' barra-xp--subiu' : ''}${compacta ? ' barra-xp--compacta' : ''}`}>
@@ -27,7 +29,12 @@ function BarraXp({ xp, ganho, atalho = true, compacta = false }: BarraXpProps) {
           <strong>Nível {atual.nivel} · {atual.titulo}</strong>
           <small>{formatarNumero(atual.xpNoNivel)}/{formatarNumero(atual.xpDoNivel)} XP para o nível {atual.nivel + 1}</small>
         </div>
-        {ganho !== undefined && <span className='barra-xp__ganho'>+{formatarNumero(ganho)} XP</span>}
+        {(multiplicador > 1 || ganho !== undefined) && (
+          <div className='barra-xp__lado'>
+            {multiplicador > 1 && <span className='barra-xp__booster' title='Booster de XP ativo nas partidas de hoje'>⚡ {multiplicador}× XP</span>}
+            {ganho !== undefined && <span className='barra-xp__ganho'>+{formatarNumero(ganho)} XP</span>}
+          </div>
+        )}
       </div>
       <div
         className='barra-xp__barra'

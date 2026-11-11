@@ -51,6 +51,28 @@ describe('DesafiosDoDia', () => {
     expect(share.mock.calls[0][0].text).toContain('Concluí o desafio de hoje do Tabuada Divertida!');
   });
 
+  it('tells how to earn the XP boosters with the challenges', () => {
+    const { unmount } = render(<DesafiosDoDia />);
+
+    expect(screen.getByText('⚡ Conclua e ganhe 2× XP nas partidas até o fim do dia')).toBeTruthy();
+    expect(screen.getByText('⚡ Conclua e ganhe 3× XP nas partidas do dia seguinte')).toBeTruthy();
+    unmount();
+
+    salvarProgresso({ desafiosConcluidos: ['dia:2026-11-03', 'semana:2026-S45'] });
+    render(<DesafiosDoDia />);
+
+    expect(screen.queryByText(/Conclua e ganhe/)).toBeNull();
+  });
+
+  it('hides the daily booster tip when the XP is already doubled', () => {
+    vi.setSystemTime(new Date(2026, 10, 7, 10, 0));
+
+    render(<DesafiosDoDia />);
+
+    expect(screen.queryByText(/até o fim do dia/)).toBeNull();
+    expect(screen.getByText('⚡ Conclua e ganhe 3× XP nas partidas do dia seguinte')).toBeTruthy();
+  });
+
   it('ignores the progress of an old challenge', () => {
     salvarProgresso({ ultimoDia: '2026-10-30', diasSeguidos: 4, desafios: { dia: { id: 'dia:2026-11-02', valor: 1 } } });
 

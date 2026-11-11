@@ -7,11 +7,13 @@ import { chaveDia, chaveSemana, diasEntre, registrarDia } from './sequenciaDias'
 import { idsLiberados, idsLiberadosNaCurvaAnterior } from './recompensas';
 import { calcularNivel, nivelNaCurvaAnterior, xpDaPartida, xpDasMedalhas, xpDoDesafio, xpDoJogo, xpInicial, type NivelXp } from './xp';
 import { gravarItem } from '../services/armazenamento';
+import { ativarBoosters, boostersAtivados, multiplicadorDeXp, type BoosterAtivado } from './boosters';
 
 export const STORAGE_KEY = 'tabuada-divertida-progresso';
 export const EVENTO_CONQUISTAS = 'tabuada-divertida-conquistas';
 export const EVENTO_DESAFIOS = 'tabuada-divertida-desafios';
 export const EVENTO_NIVEL = 'tabuada-divertida-nivel';
+export const EVENTO_BOOSTERS = 'tabuada-divertida-boosters';
 export const VERSAO_PROGRESSO = 5;
 export const MINIMO_CONTAS = 20;
 export const MAXIMO_CONTAS = 100;
@@ -79,6 +81,7 @@ export interface Progresso {
   xp: number;
   recompensasLiberadas: string[];
   nivelDoTitulo: number;
+  boosters: Record<string, number>;
 }
 
 export interface ContaRespondida {
@@ -170,6 +173,7 @@ export const criarProgresso = (): Progresso => ({
   xp: 0,
   recompensasLiberadas: [],
   nivelDoTitulo: 0,
+  boosters: {},
 });
 
 const migrarProgresso = (dados: Partial<Progresso>): Progresso => {
@@ -469,10 +473,10 @@ const registrar = (evento: EventoJogo, finalizada: boolean, data: Date) => {
   const desafios = aplicarDesafios(aplicarEvento(anterior, evento, finalizada, data), evento, finalizada, novoDia, data);
   const { progresso: avaliado, novas } = avaliarMedalhas(desafios.progresso, data);
   const contas = evento.contas || [];
-  const ganho = (finalizada ? xpDaPartida(avaliado.acertos - anterior.acertos, contas.length > 0 && contas.every((conta) => conta.correta), xpDoJogo(evento)) : 0) +
+  const ganho = (finalizada ? xpDaPartida(avaliado.acertos - anterior.acertos, contas.length > 0 && contas.every((conta) => conta.correta), xpDoJogo(evento)) * multiplicadorDeXp(anterior, data) : 0) +
     desafios.concluidos.reduce((total, desafio) => total + xpDoDesafio(desafio.tipo), 0) +
     xpDasMedalhas(avaliado.medalhas) - xpDasMedalhas(anterior.medalhas);
-  const comXp = { ...avaliado, xp: avaliado.xp + ganho };
+  const comXp = { ...ativarBoosters(avaliado, anterior, desafios.concluidos, data), xp: avaliado.xp + ganho };
   const progresso = { ...comXp, recompensasLiberadas: idsLiberados(comXp) };
   salvarProgresso(progresso);
 
@@ -482,6 +486,11 @@ const registrar = (evento: EventoJogo, finalizada: boolean, data: Date) => {
 
   if (novas.length > 0) {
     window.dispatchEvent(new CustomEvent<Conquista[]>(EVENTO_CONQUISTAS, { detail: novas }));
+  }
+
+  const boosters = boostersAtivados(anterior, progresso, data);
+  if (boosters.length > 0) {
+    window.dispatchEvent(new CustomEvent<BoosterAtivado[]>(EVENTO_BOOSTERS, { detail: boosters }));
   }
 
   const nivel = calcularNivel(progresso.xp, progresso.nivelDoTitulo);
