@@ -5,6 +5,7 @@ import { faBars, faGear, faXmark } from '@fortawesome/free-solid-svg-icons';
 import robo from '../../assets/robot-happy.svg';
 import { NavLink, useLocation } from 'react-router-dom';
 import { useRecompensasNaoVistas } from '../../gamificacao/useRecompensasNaoVistas';
+import { useMedalhasObtidas } from '../../gamificacao/useMedalhasObtidas';
 import RoboPersonalizado from '../RoboPersonalizado/RoboPersonalizado';
 import PerfilJogador from '../PerfilJogador/PerfilJogador';
 import { marcarPerfilVisto, perfilVisto, useJogador } from '../../services/jogador';
@@ -16,6 +17,7 @@ function Header(){
     const wasMenuOpen = useRef<boolean>(false);
     const location = useLocation();
     const recompensasNovas = useRecompensasNaoVistas().length;
+    const { obtidas, total } = useMedalhasObtidas();
     const { nome } = useJogador();
     const [perfil, setPerfil] = useState<'perfil' | 'primeira-visita' | null>(null);
 
@@ -79,6 +81,17 @@ function Header(){
                         <strong>Tabuada Divertida</strong>
                         <small>Aprenda brincando com numeros</small>
                     </span>
+                </NavLink>
+
+                <NavLink
+                    to='/progresso?aba=conquistas'
+                    onClick={closeMenu}
+                    className='button-base conquistas-selo'
+                    aria-label={`Minhas conquistas: ${obtidas} de ${total} medalhas`}
+                    title='Minhas conquistas'
+                >
+                    <span aria-hidden='true'>🏅</span>
+                    {obtidas}/{total}
                 </NavLink>
 
                 <button

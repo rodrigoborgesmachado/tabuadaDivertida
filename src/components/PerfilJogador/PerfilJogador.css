@@ -164,6 +164,14 @@
   flex-shrink: 0;
 }
 
+.perfil-modal__personalizar-icone {
+  width: 52px;
+  flex-shrink: 0;
+  font-size: 2.2rem;
+  line-height: 1;
+  text-align: center;
+}
+
 .perfil-modal__personalizar-texto {
   display: flex;
   flex: 1;

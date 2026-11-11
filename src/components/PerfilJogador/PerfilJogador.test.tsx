@@ -3,6 +3,8 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { Capacitor } from '@capacitor/core';
 import configData from '../../Config.json';
+import { medalhas } from '../../gamificacao/medalhas';
+import { criarProgresso, STORAGE_KEY } from '../../gamificacao/progresso';
 import { lerNome } from '../../services/jogador';
 import { ativarLembrete, desativarLembrete, STORAGE_LEMBRETE } from '../../services/lembretes';
 import { EVENTO_SOM } from '../../services/sons';
@@ -103,6 +105,29 @@ describe('PerfilJogador', () => {
     expect(cartao.querySelector('svg.perfil-modal__personalizar-robo')).toBeTruthy();
 
     fireEvent.click(cartao);
+    expect(onFechar).toHaveBeenCalled();
+  });
+
+  it('shows the achievements shortcut below the customize robot card', () => {
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...criarProgresso(), medalhas: { [medalhas[0].id]: { nivel: 1, data: new Date().toISOString() } } }));
+    const onFechar = vi.fn();
+    renderPerfil('light', vi.fn(), onFechar);
+
+    const atalho = screen.getByRole('link', { name: `Minhas conquistas1 de ${medalhas.length} medalhas` });
+    expect(atalho.getAttribute('href')).toBe('/progresso?aba=conquistas');
+    expect(atalho.previousElementSibling?.getAttribute('href')).toBe('/personalizar');
+
+    fireEvent.click(atalho);
+    expect(onFechar).toHaveBeenCalled();
+  });
+
+  it('opens without focusing the name and still closes with Escape', () => {
+    const onFechar = vi.fn();
+    renderPerfil('light', vi.fn(), onFechar);
+
+    expect(document.activeElement).toBe(document.body);
+
+    fireEvent.keyDown(document, { key: 'Escape' });
     expect(onFechar).toHaveBeenCalled();
   });
 

@@ -1,6 +1,7 @@
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import { criarProgresso, STORAGE_KEY } from '../../gamificacao/progresso';
+import { medalhas } from '../../gamificacao/medalhas';
+import { criarProgresso, EVENTO_CONQUISTAS, STORAGE_KEY } from '../../gamificacao/progresso';
 import { marcarRecompensasVistas, STORAGE_RECOMPENSAS_VISTAS } from '../../gamificacao/recompensas';
 import { lerNome, lerQuantidade, STORAGE_PERFIL_VISTO } from '../../services/jogador';
 import configData from '../../Config.json';
@@ -93,7 +94,7 @@ describe('Header', () => {
     const dialog = screen.getByRole('dialog', { name: 'Meu perfil' });
     expect((screen.getByLabelText('Nome') as HTMLInputElement).value).toBe('Ana');
     expect(screen.getByRole('button', { name: '20' }).getAttribute('aria-pressed')).toBe('true');
-    expect(document.activeElement).toBe(screen.getByLabelText('Nome'));
+    expect(document.activeElement).not.toBe(screen.getByLabelText('Nome'));
 
     fireEvent.change(screen.getByLabelText('Nome'), { target: { value: '  Bia  ' } });
     fireEvent.click(screen.getByRole('button', { name: '50' }));
@@ -154,6 +155,22 @@ describe('Header', () => {
     expect(screen.queryByRole('button', { name: 'Silenciar som' })).toBeNull();
     expect(screen.getByRole('button', { name: 'Meu perfil e configurações: Jogador' }).getAttribute('title')).toBe('Meu perfil e configurações');
     expect(container.querySelector('.personalizar-toggle__engrenagem')).toBeTruthy();
+  });
+
+  it('shows the achievements badge outside the menu and updates the count when a medal is earned', () => {
+    renderHeader();
+
+    const selo = screen.getByRole('link', { name: `Minhas conquistas: 0 de ${medalhas.length} medalhas` });
+    expect(selo.getAttribute('href')).toBe('/progresso?aba=conquistas');
+    expect(selo.textContent).toBe(`🏅0/${medalhas.length}`);
+    expect(document.getElementById('site-menu')?.contains(selo)).toBe(false);
+
+    act(() => {
+      window.localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...criarProgresso(), medalhas: { [medalhas[0].id]: { nivel: 1, data: new Date().toISOString() } } }));
+      window.dispatchEvent(new CustomEvent(EVENTO_CONQUISTAS, { detail: [] }));
+    });
+
+    expect(screen.getByRole('link', { name: `Minhas conquistas: 1 de ${medalhas.length} medalhas` }).textContent).toBe(`🏅1/${medalhas.length}`);
   });
 
   it('marks my progress as active on the progress page', () => {
