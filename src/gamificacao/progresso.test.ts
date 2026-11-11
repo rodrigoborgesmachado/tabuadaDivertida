@@ -1,5 +1,5 @@
 import { buscarMedalha, FATORES, medalhas, MODOS } from './medalhas';
-import { contasDaTabuada, criarProgresso, EVENTO_CONQUISTAS, EVENTO_DESAFIOS, EVENTO_NIVEL, lerProgresso, partidaFinalizada, registrarProgresso, STORAGE_KEY, VERSAO_PROGRESSO, type EventoJogo } from './progresso';
+import { contasDaTabuada, criarProgresso, EVENTO_BOOSTERS, EVENTO_CONQUISTAS, EVENTO_DESAFIOS, EVENTO_NIVEL, lerProgresso, partidaFinalizada, registrarProgresso, STORAGE_KEY, VERSAO_PROGRESSO, type EventoJogo } from './progresso';
 
 const dia = new Date(2026, 10, 2, 15, 0);
 const noite = new Date(2026, 10, 2, 23, 30);
@@ -658,6 +658,90 @@ describe('progresso', () => {
 
     expect(ganho(5)).toBe(20);
     expect(ganho(50)).toBe(85);
+  });
+
+  describe('boosters', () => {
+    const terca = new Date(2026, 10, 3, 15, 0);
+    const quarta = new Date(2026, 10, 4, 15, 0);
+    const sabado = new Date(2026, 10, 7, 15, 0);
+    const memoria: EventoJogo = { jogo: 'memoria', nivel: 'facil' };
+
+    const salvarSemMedalhas = (dados: object) => {
+      salvarProgresso({
+        medalhas: Object.fromEntries(medalhas.map((medalha) => [medalha.id, { nivel: medalha.metas.length, data: dia.toISOString() }])),
+        desafiosConcluidos: ['dia:2026-11-02', 'dia:2026-11-03', 'dia:2026-11-04', 'dia:2026-11-07', 'semana:2026-S45'],
+        ultimoDia: '2026-11-02',
+        ...dados,
+      });
+    };
+
+    const ganho = (evento: EventoJogo, data: Date) => {
+      const anterior = lerProgresso().xp;
+      partidaFinalizada(evento, data);
+      return lerProgresso().xp - anterior;
+    };
+
+    it('doubles the XP of the match automatically on weekends', () => {
+      salvarSemMedalhas({});
+
+      expect(ganho(memoria, dia)).toBe(12);
+      expect(ganho(memoria, sabado)).toBe(24);
+      expect(ganho({ jogo: 'tabuada', contas: contasCorretas(50) }, sabado)).toBe(170);
+    });
+
+    it('doubles the XP until the end of the day after the daily challenge is completed', () => {
+      const ouvinte = vi.fn();
+      window.addEventListener(EVENTO_BOOSTERS, ouvinte);
+      salvarSemMedalhas({ desafiosConcluidos: ['dia:2026-11-03', 'semana:2026-S45'] });
+
+      expect(ganho({ jogo: 'tabuada', contas: contasCorretas(5) }, dia)).toBe(20 + 30);
+      expect(ouvinte).toHaveBeenCalledTimes(1);
+      expect((ouvinte.mock.calls[0][0] as CustomEvent).detail).toEqual([{ multiplicador: 2, amanha: false }]);
+      expect(ganho(memoria, dia)).toBe(24);
+      expect(ganho(memoria, noite)).toBe(24);
+      expect(ganho(memoria, terca)).toBe(12);
+      expect(ouvinte).toHaveBeenCalledTimes(1);
+      window.removeEventListener(EVENTO_BOOSTERS, ouvinte);
+    });
+
+    it('triples the XP of the next day after the weekly challenge is completed', () => {
+      const ouvinte = vi.fn();
+      window.addEventListener(EVENTO_BOOSTERS, ouvinte);
+      salvarSemMedalhas({ desafiosConcluidos: ['dia:2026-11-02', 'dia:2026-11-03', 'dia:2026-11-04'], desafios: { semana: { id: 'semana:2026-S45', valor: 149 } } });
+
+      expect(ganho({ jogo: 'tabuada', contas: contasCorretas(1) }, dia)).toBe(16 + 100);
+      expect((ouvinte.mock.calls[0][0] as CustomEvent).detail).toEqual([{ multiplicador: 3, amanha: true }]);
+      expect(ganho(memoria, dia)).toBe(12);
+      expect(ganho(memoria, terca)).toBe(36);
+      expect(ganho(memoria, quarta)).toBe(12);
+      expect(ouvinte).toHaveBeenCalledTimes(1);
+      window.removeEventListener(EVENTO_BOOSTERS, ouvinte);
+    });
+
+    it('triples the XP of the next day after seven days in a row', () => {
+      salvarSemMedalhas({ diasSeguidos: 6 });
+
+      expect(ganho(memoria, terca)).toBe(12);
+      expect(lerProgresso().diasSeguidos).toBe(7);
+      expect(lerProgresso().boosters).toEqual({ '2026-11-04': 3 });
+      expect(ganho(memoria, quarta)).toBe(36);
+      expect(lerProgresso().boosters).toEqual({ '2026-11-04': 3 });
+    });
+
+    it('keeps the normal XP of medals and challenges', () => {
+      salvarProgresso({ boosters: { '2026-11-02': 3 } });
+
+      partidaFinalizada({ jogo: 'tabuada', contas: contasCorretas(5) }, dia);
+
+      expect(lerProgresso().xp).toBe((10 + 5 + 5) * 3 + 30 + 10);
+    });
+
+    it('starts without boosters in progress saved before they existed', () => {
+      window.localStorage.setItem(STORAGE_KEY, JSON.stringify({ versao: VERSAO_PROGRESSO, partidas: 3, xp: 40 }));
+
+      expect(lerProgresso().boosters).toEqual({});
+      expect(ganho(memoria, dia)).toBeGreaterThanOrEqual(12);
+    });
   });
 
   it('rebuilds the XP of progress saved before the levels existed', () => {

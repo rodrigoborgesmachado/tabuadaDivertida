@@ -47,6 +47,23 @@
   color: var(--text-color-secondary);
 }
 
+.barra-xp__lado {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.barra-xp__booster {
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-weight: 800;
+  font-size: 0.85rem;
+  color: #ffffff;
+  background: linear-gradient(135deg, var(--button-color-primary), #ffb067);
+}
+
 .barra-xp__ganho {
   flex-shrink: 0;
   font-weight: 800;

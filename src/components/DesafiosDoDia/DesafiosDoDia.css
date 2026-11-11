@@ -49,6 +49,11 @@
   flex: 1;
 }
 
+.desafios-do-dia__booster {
+  font-weight: 800;
+  color: var(--text-color-accent);
+}
+
 .desafios-do-dia__barra {
   height: 12px;
   border-radius: 999px;

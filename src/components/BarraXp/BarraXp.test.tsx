@@ -39,6 +39,25 @@ describe('BarraXp', () => {
     expect(screen.getByText('Nível 9 · Mestre da Tabuada')).toBeTruthy();
   });
 
+  it('shows the seal of the active XP booster', () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date(2026, 10, 3, 10, 0));
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...criarProgresso(), boosters: { '2026-11-03': 3 } }));
+
+    const { unmount } = render(<BarraXp />);
+    expect(screen.getByText('⚡ 3× XP')).toBeTruthy();
+    unmount();
+
+    vi.setSystemTime(new Date(2026, 10, 4, 10, 0));
+    render(<BarraXp />).unmount();
+    expect(screen.queryByText(/× XP/)).toBeNull();
+
+    vi.setSystemTime(new Date(2026, 10, 7, 10, 0));
+    render(<BarraXp />);
+    expect(screen.getByText('⚡ 2× XP')).toBeTruthy();
+    vi.useRealTimers();
+  });
+
   it('celebrates when the match makes the player level up', () => {
     render(<BarraXp xp={440} ganho={30} />);
 

@@ -146,6 +146,22 @@ describe('AvisoConquista', () => {
     ]);
   });
 
+  it('announces the XP booster activated by the daily challenge', () => {
+    render(<AvisoConquista />);
+
+    act(() => {
+      partidaFinalizada({ jogo: 'tabuada', contas: Array.from({ length: 20 }, () => ({ correta: true })) }, new Date(2026, 10, 2, 15, 0));
+    });
+
+    for (let i = 0; i < 4; i++) {
+      act(() => {
+        vi.advanceTimersByTime(4000);
+      });
+    }
+
+    expect(screen.getByRole('status').textContent).toBe('Booster ativado!⚡ 2× XP nas partidas até o fim do dia');
+  });
+
   it('shows the diamond level and the new medals', () => {
     render(<AvisoConquista />);
 

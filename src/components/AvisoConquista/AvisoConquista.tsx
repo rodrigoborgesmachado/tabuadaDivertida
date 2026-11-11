@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
+import type { BoosterAtivado } from '../../gamificacao/boosters';
 import type { Desafio } from '../../gamificacao/desafios';
 import { nomeNivel } from '../../gamificacao/medalhas';
-import { EVENTO_CONQUISTAS, EVENTO_DESAFIOS, EVENTO_NIVEL, lerProgresso, type Conquista } from '../../gamificacao/progresso';
+import { EVENTO_BOOSTERS, EVENTO_CONQUISTAS, EVENTO_DESAFIOS, EVENTO_NIVEL, lerProgresso, type Conquista } from '../../gamificacao/progresso';
 import { recompensasLiberadas, type Recompensa } from '../../gamificacao/recompensas';
 import type { NivelXp } from '../../gamificacao/xp';
 import { temIconeDoApp } from '../../services/iconeApp';
@@ -26,6 +27,12 @@ const avisoDoDesafio = (desafio: Desafio): Aviso => ({
   id: desafio.id,
   titulo: desafio.tipo === 'dia' ? 'Desafio do dia concluído!' : 'Desafio da semana concluído!',
   texto: `${desafio.icone} ${desafio.texto}`,
+});
+
+const avisoDoBooster = ({ multiplicador, amanha }: BoosterAtivado): Aviso => ({
+  id: `booster-${amanha ? 'amanha' : 'hoje'}-${multiplicador}`,
+  titulo: amanha ? 'Booster conquistado!' : 'Booster ativado!',
+  texto: `⚡ ${multiplicador}× XP nas partidas ${amanha ? 'de amanhã' : 'até o fim do dia'}`,
 });
 
 const avisoDoNivel = ({ nivel, titulo }: NivelXp): Aviso => ({
@@ -71,6 +78,11 @@ function AvisoConquista() {
       playConquista();
     };
 
+    const onBoosters = (event: Event) => {
+      setFila((atual) => [...atual, ...(event as CustomEvent<BoosterAtivado[]>).detail.map(avisoDoBooster)]);
+      playConquista();
+    };
+
     const onNivel = (event: Event) => {
       setFila((atual) => [...atual, avisoDoNivel((event as CustomEvent<NivelXp>).detail)]);
       playConquista();
@@ -79,10 +91,12 @@ function AvisoConquista() {
 
     window.addEventListener(EVENTO_CONQUISTAS, onConquistas);
     window.addEventListener(EVENTO_DESAFIOS, onDesafios);
+    window.addEventListener(EVENTO_BOOSTERS, onBoosters);
     window.addEventListener(EVENTO_NIVEL, onNivel);
     return () => {
       window.removeEventListener(EVENTO_CONQUISTAS, onConquistas);
       window.removeEventListener(EVENTO_DESAFIOS, onDesafios);
+      window.removeEventListener(EVENTO_BOOSTERS, onBoosters);
       window.removeEventListener(EVENTO_NIVEL, onNivel);
     };
   }, []);

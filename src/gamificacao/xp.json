@@ -17,6 +17,7 @@
   "memoria": { "facil": 12, "medio": 18, "dificil": 30 },
   "desafioDoDia": 30,
   "desafioDaSemana": 100,
+  "boosters": { "fimDeSemana": 2, "desafioDoDia": 2, "desafioDaSemana": 3, "sequenciaDeDias": 3, "diasDaSequencia": 7 },
   "medalhaPorNivel": [10, 20, 40, 75],
   "medalhaUnica": 40,
   "primeiroNivel": 200,
