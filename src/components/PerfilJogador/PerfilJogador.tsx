@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useRef, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { NavLink } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -6,6 +6,7 @@ import { lerNome, lerQuantidade, salvarNome, salvarQuantidade, TAMANHO_NOME } fr
 import { ativarLembrete, desativarLembrete, lerLembrete } from '../../services/lembretes';
 import { ehApp } from '../../services/plataforma';
 import { useRecompensasNaoVistas } from '../../gamificacao/useRecompensasNaoVistas';
+import { useMedalhasObtidas } from '../../gamificacao/useMedalhasObtidas';
 import { useSom } from '../../services/sons';
 import RoboPersonalizado from '../RoboPersonalizado/RoboPersonalizado';
 import ThemeSwitcher from '../ThemeSwitcher/themeSwitcher';
@@ -26,11 +27,10 @@ function PerfilJogador({ primeiraVisita = false, onFechar }: PerfilJogadorProps)
   const [horaLembrete, setHoraLembrete] = useState(lembrete.hora);
   const recompensasNovas = useRecompensasNaoVistas().length;
   const { theme, toggleTheme } = useTema();
+  const { obtidas, total } = useMedalhasObtidas();
   const { mudo, alternarSom } = useSom();
-  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    inputRef.current?.focus();
     document.body.style.overflow = 'hidden';
     return () => {
       document.body.style.overflow = '';
@@ -80,7 +80,6 @@ function PerfilJogador({ primeiraVisita = false, onFechar }: PerfilJogadorProps)
           <h4 id='perfil-secao-jogador'>Jogador</h4>
           <label htmlFor='perfil-nome' className='perfil-modal__rotulo'>Nome</label>
           <input
-            ref={inputRef}
             id='perfil-nome'
             type='text'
             className='global-input'
@@ -150,6 +149,14 @@ function PerfilJogador({ primeiraVisita = false, onFechar }: PerfilJogadorProps)
             <small>Cores, acessórios e temas</small>
           </span>
           {recompensasNovas > 0 && <span className='perfil-modal__novo'>{recompensasNovas} {recompensasNovas === 1 ? 'novo' : 'novos'}</span>}
+          <span className='perfil-modal__seta' aria-hidden='true'>›</span>
+        </NavLink>
+        <NavLink to='/progresso?aba=conquistas' onClick={onFechar} className='perfil-modal__personalizar'>
+          <span className='perfil-modal__personalizar-icone' aria-hidden='true'>🏅</span>
+          <span className='perfil-modal__personalizar-texto'>
+            <strong>Minhas conquistas</strong>
+            <small>{obtidas} de {total} medalhas</small>
+          </span>
           <span className='perfil-modal__seta' aria-hidden='true'>›</span>
         </NavLink>
         <div className='perfil-modal__acoes'>

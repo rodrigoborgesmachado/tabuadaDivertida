@@ -60,6 +60,18 @@
     object-fit: contain;
 }
 
+.conquistas-selo {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 36px;
+    margin-left: auto;
+    padding: 0 10px;
+    font-weight: 700;
+    line-height: 1;
+    white-space: nowrap;
+}
+
 .site-right {
     display: inline-flex;
     align-items: center;
@@ -185,8 +197,7 @@
 
 @media (max-width: 980px) {
     .site-header-content {
-        flex-direction: column;
-        align-items: flex-start;
+        flex-wrap: wrap;
     }
 
     .site-right {
@@ -206,8 +217,8 @@
     }
 
     .site-header-content {
-        flex-direction: row;
-        align-items: center;
+        flex-wrap: nowrap;
+        gap: 8px;
     }
 
     .brand-badge {
