@@ -5,7 +5,7 @@ import { TEMPO_MEDIO_SEM_TITUBEAR, TOTAL_QUESTOES } from '../pages/TesteQi/logic
 import { CASAS_PADRAO, type NivelRobo } from '../pages/CorridaRobo/logic';
 import { chaveDia, chaveSemana, diasEntre, registrarDia } from './sequenciaDias';
 import { idsLiberados, idsLiberadosNaCurvaAnterior } from './recompensas';
-import { calcularNivel, nivelNaCurvaAnterior, xpDaPartida, xpDasMedalhas, xpDoDesafio, xpInicial, type NivelXp } from './xp';
+import { calcularNivel, nivelNaCurvaAnterior, xpDaPartida, xpDasMedalhas, xpDoDesafio, xpDoJogo, xpInicial, type NivelXp } from './xp';
 import { gravarItem } from '../services/armazenamento';
 
 export const STORAGE_KEY = 'tabuada-divertida-progresso';
@@ -468,7 +468,8 @@ const registrar = (evento: EventoJogo, finalizada: boolean, data: Date) => {
   const novoDia = finalizada && anterior.ultimoDia !== chaveDia(data);
   const desafios = aplicarDesafios(aplicarEvento(anterior, evento, finalizada, data), evento, finalizada, novoDia, data);
   const { progresso: avaliado, novas } = avaliarMedalhas(desafios.progresso, data);
-  const ganho = (finalizada ? xpDaPartida(avaliado.acertos - anterior.acertos, avaliado.partidasPerfeitas > anterior.partidasPerfeitas) : 0) +
+  const contas = evento.contas || [];
+  const ganho = (finalizada ? xpDaPartida(avaliado.acertos - anterior.acertos, contas.length > 0 && contas.every((conta) => conta.correta), xpDoJogo(evento)) : 0) +
     desafios.concluidos.reduce((total, desafio) => total + xpDoDesafio(desafio.tipo), 0) +
     xpDasMedalhas(avaliado.medalhas) - xpDasMedalhas(anterior.medalhas);
   const comXp = { ...avaliado, xp: avaliado.xp + ganho };

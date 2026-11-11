@@ -1,5 +1,5 @@
 import { criarProgresso } from './progresso';
-import { calcularNivel, nivelNaCurvaAnterior, tituloDoNivel, xpDaPartida, xpDasMedalhas, xpDoDesafio, xpInicial, xpParaSubir, xpTotalDoNivel } from './xp';
+import { calcularNivel, nivelNaCurvaAnterior, tituloDoNivel, xpDaPartida, xpDaPartidaPerfeita, xpDasMedalhas, xpDoDesafio, xpDoJogo, xpInicial, xpParaSubir, xpTotalDoNivel } from './xp';
 
 const medalha = (nivel: number) => ({ nivel, data: '2026-11-02T15:00:00.000Z' });
 
@@ -11,7 +11,41 @@ describe('xp', () => {
 
   it('limits the bonus for right answers and adds the perfect game bonus', () => {
     expect(xpDaPartida(100, false)).toBe(60);
-    expect(xpDaPartida(20, true)).toBe(55);
+    expect(xpDaPartida(20, true)).toBe(40);
+  });
+
+  it('gives a perfect game bonus proportional to the number of questions', () => {
+    expect(xpDaPartidaPerfeita(5)).toBe(5);
+    expect(xpDaPartidaPerfeita(50)).toBe(25);
+    expect(xpDaPartida(5, true)).toBe(20);
+    expect(xpDaPartida(50, true)).toBe(85);
+    expect(xpDaPartida(100, true)).toBe(110);
+  });
+
+  it('gives Sudoku XP by size and difficulty, with a bonus for finishing without help', () => {
+    expect(xpDoJogo({ jogo: 'sudoku', modo: '4x4', dicasUsadas: 1 })).toBe(15);
+    expect(xpDoJogo({ jogo: 'sudoku', modo: '4x4' })).toBe(18);
+    expect(xpDoJogo({ jogo: 'sudoku', modo: '9x9-facil', marcouErros: true })).toBe(40);
+    expect(xpDoJogo({ jogo: 'sudoku', modo: '9x9-dificil', dicasUsadas: 2 })).toBe(85);
+    expect(xpDoJogo({ jogo: 'sudoku', modo: '9x9-dificil', dicasUsadas: 0, marcouErros: false })).toBe(102);
+    expect(xpDoJogo({ jogo: 'sudoku', modo: 'desconhecido', dicasUsadas: 1 })).toBe(10);
+  });
+
+  it('gives 2048 XP by the biggest tile reached', () => {
+    expect(xpDoJogo({ jogo: '2048' })).toBe(10);
+    expect(xpDoJogo({ jogo: '2048', maiorPeca: 64 })).toBe(10);
+    expect(xpDoJogo({ jogo: '2048', maiorPeca: 128 })).toBe(15);
+    expect(xpDoJogo({ jogo: '2048', maiorPeca: 1024 })).toBe(60);
+    expect(xpDoJogo({ jogo: '2048', maiorPeca: 2048 })).toBe(100);
+    expect(xpDoJogo({ jogo: '2048', maiorPeca: 8192 })).toBe(150);
+  });
+
+  it('gives memory game XP by the board size', () => {
+    expect(xpDoJogo({ jogo: 'memoria' })).toBe(10);
+    expect(xpDoJogo({ jogo: 'memoria', nivel: 'facil' })).toBe(12);
+    expect(xpDoJogo({ jogo: 'memoria', nivel: 'medio' })).toBe(18);
+    expect(xpDoJogo({ jogo: 'memoria', nivel: 'dificil' })).toBe(30);
+    expect(xpDoJogo({ jogo: 'tabuada', nivel: 'dificil' })).toBe(10);
   });
 
   it('gives extra XP for daily and weekly challenges', () => {
@@ -38,7 +72,8 @@ describe('xp', () => {
       medalhas: { 'partida-perfeita': medalha(1) },
     };
 
-    expect(xpInicial(progresso)).toBe(30 + 40 + 25 + 130 + 10);
+    expect(xpInicial(progresso)).toBe(30 + 40 + 10 + 130 + 10);
+    expect(xpInicial({ ...progresso, sudokusPorModo: { '4x4': 2, '9x9-dificil': 1 } })).toBe(30 + 40 + 10 + 130 + 10 + 10 + 75);
   });
 
   it('uses a progressive level curve', () => {

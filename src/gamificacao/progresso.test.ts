@@ -1,5 +1,5 @@
 import { buscarMedalha, FATORES, medalhas, MODOS } from './medalhas';
-import { contasDaTabuada, criarProgresso, EVENTO_CONQUISTAS, EVENTO_DESAFIOS, EVENTO_NIVEL, lerProgresso, partidaFinalizada, registrarProgresso, STORAGE_KEY, VERSAO_PROGRESSO } from './progresso';
+import { contasDaTabuada, criarProgresso, EVENTO_CONQUISTAS, EVENTO_DESAFIOS, EVENTO_NIVEL, lerProgresso, partidaFinalizada, registrarProgresso, STORAGE_KEY, VERSAO_PROGRESSO, type EventoJogo } from './progresso';
 
 const dia = new Date(2026, 10, 2, 15, 0);
 const noite = new Date(2026, 10, 2, 23, 30);
@@ -16,6 +16,14 @@ const acertadas = (tabuada: number) => Object.keys(lerProgresso().tabuadas[tabua
 
 const salvarProgresso = (dados: object) => {
   window.localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...criarProgresso(), ...dados }));
+};
+
+const salvarSemMedalhasNemDesafios = () => {
+  salvarProgresso({
+    medalhas: Object.fromEntries(medalhas.map((medalha) => [medalha.id, { nivel: medalha.metas.length, data: dia.toISOString() }])),
+    desafiosConcluidos: ['dia:2026-11-02', 'semana:2026-11-02'],
+    ultimoDia: '2026-11-02',
+  });
 };
 
 describe('progresso', () => {
@@ -620,7 +628,36 @@ describe('progresso', () => {
   it('adds the XP of right answers, completed challenges and new medals', () => {
     partidaFinalizada({ jogo: 'tabuada', contas: contasCorretas(5) }, dia);
 
-    expect(lerProgresso().xp).toBe(10 + 5 + 30 + 10);
+    expect(lerProgresso().xp).toBe(10 + 5 + 5 + 30 + 10);
+  });
+
+  it('gives XP by size, difficulty and result in Sudoku, 2048 and memory games', () => {
+    const ganho = (evento: EventoJogo) => {
+      const anterior = lerProgresso().xp;
+      partidaFinalizada(evento, dia);
+      return lerProgresso().xp - anterior;
+    };
+
+    salvarSemMedalhasNemDesafios();
+
+    expect(ganho({ jogo: 'sudoku', modo: '4x4', dicasUsadas: 1 })).toBe(15);
+    expect(ganho({ jogo: 'sudoku', modo: '9x9-dificil', dicasUsadas: 1 })).toBe(85);
+    expect(ganho({ jogo: 'sudoku', modo: '9x9-dificil', dicasUsadas: 0, marcouErros: false })).toBe(102);
+    expect(ganho({ jogo: '2048', maiorPeca: 64 })).toBe(10);
+    expect(ganho({ jogo: '2048', maiorPeca: 1024 })).toBe(60);
+    expect(ganho({ jogo: 'memoria', nivel: 'facil' })).toBe(12);
+    expect(ganho({ jogo: 'memoria', nivel: 'dificil' })).toBe(30);
+  });
+
+  it('gives a bigger perfect game bonus to longer matches', () => {
+    const ganho = (quantidade: number) => {
+      salvarSemMedalhasNemDesafios();
+      partidaFinalizada({ jogo: 'tabuada', contas: contasCorretas(quantidade) }, dia);
+      return lerProgresso().xp;
+    };
+
+    expect(ganho(5)).toBe(20);
+    expect(ganho(50)).toBe(85);
   });
 
   it('rebuilds the XP of progress saved before the levels existed', () => {
