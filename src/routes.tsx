@@ -36,6 +36,9 @@ import Personalizar from './pages/Personalizar/Personalizar';
 import AvisoConquista from './components/AvisoConquista/AvisoConquista';
 import ScrollToTop from './components/ScrollToTop/ScrollToTop';
 import AppNativo from './components/AppNativo/AppNativo';
+import BarraNavegacao from './components/BarraNavegacao/BarraNavegacao';
+import Mais from './pages/Mais/Mais';
+import { ehApp } from './services/plataforma';
 
 function RoutesApp() {
     return(
@@ -80,8 +83,10 @@ function RoutesApp() {
                 <Route path='/artigos/expressoes-numericas' element={<ExpressoesNumericas/>}/>
                 <Route path='/artigos/tabuada-metodos-antigos-x-modernos' element={<TabuadaMetodosAntigosModernos/>}/>
                 <Route path='/contribua' element={<Contribua/>}/>
+                {ehApp() && <Route path='/mais' element={<Mais/>}/>}
                 <Route path='*' element={<Erro/>}/>
             </Routes>
+            <BarraNavegacao/>
         </BrowserRouter>
     )
 }

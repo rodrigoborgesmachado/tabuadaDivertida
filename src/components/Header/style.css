@@ -289,3 +289,24 @@
         background: rgba(0, 0, 0, 0.35);
     }
 }
+
+.site-header--app .site-right {
+    display: inline-flex;
+    position: static;
+    width: auto;
+    padding: 0;
+    background: none;
+    border: 0;
+    box-shadow: none;
+    overflow: visible;
+}
+
+.site-header--app .personalizar-toggle {
+    margin-right: 0;
+}
+
+@media (max-width: 760px), (max-height: 500px) {
+    .site-header--app .personalizar-toggle__texto {
+        display: none;
+    }
+}
