@@ -1,0 +1,60 @@
+.mais {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.mais h1 {
+  margin: 0;
+}
+
+.mais__lista {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border: 1px solid var(--panel-border-color);
+  border-radius: var(--default-border-radius-extra);
+  background: var(--block-color);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+
+.mais__lista li + li {
+  border-top: 1px solid var(--panel-border-color);
+}
+
+.mais__link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 56px;
+  padding: 0 16px;
+  color: var(--text-color-primary);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.mais__rotulo {
+  flex: 1;
+}
+
+.mais__seta {
+  color: var(--text-color-secondary);
+}
+
+.mais__marca {
+  margin: 8px 0 0;
+  text-align: center;
+  font-family: var(--font-title);
+  font-size: 1.6em;
+}
+
+.mais__marca a {
+  color: var(--text-color-primary);
+  text-decoration: none;
+}

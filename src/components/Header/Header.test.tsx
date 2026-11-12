@@ -1,11 +1,17 @@
+import type { Mock } from 'vitest';
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
+import { Capacitor } from '@capacitor/core';
 import { medalhas } from '../../gamificacao/medalhas';
 import { criarProgresso, EVENTO_CONQUISTAS, STORAGE_KEY } from '../../gamificacao/progresso';
 import { marcarRecompensasVistas, STORAGE_RECOMPENSAS_VISTAS } from '../../gamificacao/recompensas';
 import { lerNome, lerQuantidade, STORAGE_PERFIL_VISTO } from '../../services/jogador';
 import configData from '../../Config.json';
 import Header from './index';
+
+vi.mock('@capacitor/core', () => ({ Capacitor: { isNativePlatform: vi.fn(() => false) } }));
+
+const nativo = Capacitor.isNativePlatform as Mock;
 
 const renderHeader = () => render(
   <MemoryRouter>
@@ -17,6 +23,7 @@ describe('Header', () => {
   beforeEach(() => {
     window.localStorage.clear();
     window.localStorage.setItem(STORAGE_PERFIL_VISTO, '1');
+    nativo.mockReturnValue(false);
   });
 
   it('opens the menu and focuses the first item', () => {
@@ -155,6 +162,20 @@ describe('Header', () => {
     expect(screen.queryByRole('button', { name: 'Silenciar som' })).toBeNull();
     expect(screen.getByRole('button', { name: 'Meu perfil e configurações: Jogador' }).getAttribute('title')).toBe('Meu perfil e configurações');
     expect(container.querySelector('.personalizar-toggle__engrenagem')).toBeTruthy();
+  });
+
+  it('keeps only the brand, the achievements badge and the profile in the app', () => {
+    nativo.mockReturnValue(true);
+    const { container } = renderHeader();
+
+    expect(container.querySelector('.site-header--app')).toBeTruthy();
+    expect(screen.queryByRole('button', { name: 'Abrir menu' })).toBeNull();
+    expect(container.querySelector('.site-nav')).toBeNull();
+    expect(screen.getByRole('link', { name: `Minhas conquistas: 0 de ${medalhas.length} medalhas` })).toBeTruthy();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Meu perfil e configurações: Jogador' }));
+
+    expect(screen.getByRole('dialog', { name: 'Meu perfil' })).toBeTruthy();
   });
 
   it('shows the achievements badge outside the menu and updates the count when a medal is earned', () => {

@@ -35,6 +35,7 @@ function Breadcrumbs() {
     'sobre': 'Sobre',
     'contato': 'Contato',
     'contribua': 'Contribua',
+    'mais': 'Mais',
     'artigos': 'Artigos',
   };
 

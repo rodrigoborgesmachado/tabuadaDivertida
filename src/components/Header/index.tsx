@@ -9,6 +9,7 @@ import { useMedalhasObtidas } from '../../gamificacao/useMedalhasObtidas';
 import RoboPersonalizado from '../RoboPersonalizado/RoboPersonalizado';
 import PerfilJogador from '../PerfilJogador/PerfilJogador';
 import { marcarPerfilVisto, perfilVisto, useJogador } from '../../services/jogador';
+import { ehApp } from '../../services/plataforma';
 
 function Header(){
     const [menuOpen, setMenuOpen] = useState<boolean>(false);
@@ -20,6 +21,7 @@ function Header(){
     const { obtidas, total } = useMedalhasObtidas();
     const { nome } = useJogador();
     const [perfil, setPerfil] = useState<'perfil' | 'primeira-visita' | null>(null);
+    const app = ehApp();
 
     useEffect(() => {
         if (!perfilVisto()) {
@@ -71,7 +73,7 @@ function Header(){
     const isArtigosActive = location.pathname.startsWith('/artigos') && !isTabuadaActive;
 
     return(
-        <header className='site-header'>
+        <header className={`site-header${app ? ' site-header--app' : ''}`}>
             <div className='site-header-content'>
                 <NavLink to='/' className='brand'>
                     <span className='brand-badge' aria-hidden='true'>
@@ -94,20 +96,22 @@ function Header(){
                     {obtidas}/{total}
                 </NavLink>
 
-                <button
-                    ref={toggleRef}
-                    className='button-base menu-toggle'
-                    onClick={() => setMenuOpen(!menuOpen)}
-                    aria-expanded={menuOpen}
-                    aria-controls='site-menu'
-                    aria-label={menuOpen ? 'Fechar menu' : 'Abrir menu'}
-                >
-                    <FontAwesomeIcon icon={menuOpen ? faXmark : faBars} />
-                    {recompensasNovas > 0 && !menuOpen && <span className='nav-item__novo' aria-hidden='true'>{recompensasNovas}</span>}
-                </button>
+                {!app && (
+                    <button
+                        ref={toggleRef}
+                        className='button-base menu-toggle'
+                        onClick={() => setMenuOpen(!menuOpen)}
+                        aria-expanded={menuOpen}
+                        aria-controls='site-menu'
+                        aria-label={menuOpen ? 'Fechar menu' : 'Abrir menu'}
+                    >
+                        <FontAwesomeIcon icon={menuOpen ? faXmark : faBars} />
+                        {recompensasNovas > 0 && !menuOpen && <span className='nav-item__novo' aria-hidden='true'>{recompensasNovas}</span>}
+                    </button>
+                )}
 
                 <div id='site-menu' ref={menuRef} className={`site-right ${menuOpen ? 'open' : ''}`}>
-                    <nav className='site-nav' aria-label='Navegacao principal'>
+                    {!app && <nav className='site-nav' aria-label='Navegacao principal'>
                         <NavLink to='/ranking' onClick={closeMenu} className={`nav-item ${isRankingActive ? 'active' : ''}`}>
                             Ranking
                         </NavLink>
@@ -120,7 +124,7 @@ function Header(){
                         <NavLink to='/artigos' onClick={closeMenu} className={`nav-item ${isArtigosActive ? 'active' : ''}`}>
                             Artigos
                         </NavLink>
-                    </nav>
+                    </nav>}
 
                     <div className='site-controls'>
                         <button

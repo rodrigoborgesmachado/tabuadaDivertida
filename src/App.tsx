@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { buscarRecompensa } from './gamificacao/recompensas';
 import { usePersonalizacao } from './gamificacao/usePersonalizacao';
 import { TemaContext } from './components/ThemeSwitcher/temaContext';
-import { ajustarBarraDeStatus } from './services/plataforma';
+import { ajustarBarraDeStatus, ehApp } from './services/plataforma';
 
 function App() {
   const { tema } = usePersonalizacao();
@@ -43,7 +43,7 @@ function App() {
       <TemaContext.Provider value={{ theme, toggleTheme }}>
         <RoutesApp />
       </TemaContext.Provider>
-      <Footer />
+      {!ehApp() && <Footer />}
     </div>
   );
 }
