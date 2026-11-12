@@ -112,6 +112,21 @@ export const jogos: JogoConfig[] = [
       'Cada número só pode aparecer uma vez em cada linha, coluna e bloco. Se travar, use uma dica!',
     ],
   },
+  {
+    id: 'que-horas-sao',
+    path: '/jogos/que-horas-sao',
+    nome: 'Que horas são?',
+    icone: '🕒',
+    descricao: 'Aprenda a ler o relógio de ponteiros, acerte os ponteiros na hora pedida e calcule intervalos de tempo.',
+    habilidade: 'Leitura de horas e cálculo de tempo',
+    idade: '7+ anos',
+    novoAte: '2026-12-31',
+    comoJogar: [
+      'Escolha o modo: ler o relógio ou acertar os ponteiros, o nível e se quer ver as horas em digital ou por extenso.',
+      'Toque na hora certa ou arraste os ponteiros: o grande marca os minutos e o pequeno marca as horas.',
+      'São 10 questões. Se errar, veja o relógio com a hora certa e a explicação!',
+    ],
+  },
 ];
 
 export const isJogoPath = (pathname: string) =>

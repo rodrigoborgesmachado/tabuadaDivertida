@@ -58,6 +58,13 @@ describe('Breadcrumbs', () => {
     expect(screen.getByText('Sudoku')).toBeTruthy();
   });
 
+  it('shows the clock game', () => {
+    renderBreadcrumbs('/jogos/que-horas-sao');
+
+    expect(screen.getAllByText('Jogos')).toHaveLength(1);
+    expect(screen.getByText('Que horas são?')).toBeTruthy();
+  });
+
   it('shows the achievements tab inside my progress', () => {
     renderBreadcrumbs('/progresso?aba=conquistas');
 

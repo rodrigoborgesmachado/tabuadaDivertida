@@ -433,8 +433,18 @@ describe('progresso', () => {
     partidaFinalizada({ jogo: 'teste-qi' }, dia);
     partidaFinalizada({ jogo: 'corrida-robo' }, dia);
     partidaFinalizada({ jogo: 'contando-bichinhos' }, dia);
+    partidaFinalizada({ jogo: 'sudoku' }, dia);
 
-    expect(ids(partidaFinalizada({ jogo: 'sudoku' }, dia))).toContain('explorador:1');
+    expect(ids(partidaFinalizada({ jogo: 'que-horas-sao' }, dia))).toContain('explorador:1');
+  });
+
+  it('unlocks the clock medals with right times in a row on the hard level', () => {
+    partidaFinalizada({ jogo: 'que-horas-sao', modo: 'relogio-dificil', contas: [...contasCorretas(9), { correta: false }] }, dia);
+    expect(ids(partidaFinalizada({ jogo: 'que-horas-sao', modo: 'relogio-medio', contas: contasCorretas(10) }, dia))).not.toContain('relojoeiro:1');
+
+    const novas = ids(partidaFinalizada({ jogo: 'que-horas-sao', modo: 'relogio-dificil', contas: contasCorretas(10) }, dia));
+
+    expect(novas).toEqual(expect.arrayContaining(['relojoeiro:1', 'hora-certa:1']));
   });
 
   it('unlocks the race medal only when beating the champion robot', () => {
