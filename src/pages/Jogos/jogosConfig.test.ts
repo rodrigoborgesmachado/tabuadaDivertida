@@ -11,6 +11,7 @@ describe('jogosConfig', () => {
     expect(paths).toContain('/jogos/corrida-contra-o-robo');
     expect(paths).toContain('/jogos/contando-bichinhos');
     expect(paths).toContain('/jogos/sudoku');
+    expect(paths).toContain('/jogos/que-horas-sao');
   });
 
   it('gives each game a unique id', () => {

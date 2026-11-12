@@ -50,7 +50,7 @@ describe('Home logic', () => {
     expect(idsDoFiltro('todos')).toEqual(jogos.map((item) => item.id));
     expect(idsDoFiltro('tabuada')).toEqual(['tabuada', 'memoria', 'corrida-robo']);
     expect(idsDoFiltro('logica')).toEqual(['2048', 'teste-qi', 'sudoku']);
-    expect(idsDoFiltro('contas')).toEqual(['2048', 'maior-ou-menor', 'corrida-robo', 'contando-bichinhos']);
+    expect(idsDoFiltro('contas')).toEqual(['2048', 'maior-ou-menor', 'corrida-robo', 'contando-bichinhos', 'que-horas-sao']);
     expect(idsDoFiltro('pequenos')).toEqual(['tabuada', 'memoria', 'corrida-robo', 'contando-bichinhos', 'sudoku']);
   });
 

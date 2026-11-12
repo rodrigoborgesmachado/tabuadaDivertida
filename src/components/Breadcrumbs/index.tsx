@@ -27,6 +27,7 @@ function Breadcrumbs() {
     'corrida-contra-o-robo': 'Corrida contra o robô',
     'contando-bichinhos': 'Contando bichinhos',
     'sudoku': 'Sudoku',
+    'que-horas-sao': 'Que horas são?',
     'personalizar': 'Personalizar',
     'instrucoes': 'Instruções',
     'historico': 'Histórico',

@@ -27,6 +27,8 @@ const SUDOKUS_9X9 = ['9x9-facil', '9x9-medio', '9x9-dificil'];
 
 const TEMPOS_SUDOKU: [string, number][] = [['4x4', 30], ['6x6', 120], ['9x9-facil', 360], ['9x9-dificil', 720]];
 
+const MODOS_RELOGIO = ['relogio-facil', 'relogio-medio', 'relogio-dificil'];
+
 const contasAcertadas = (progresso: Progresso, tabuada: number) => Object.keys(progresso.tabuadas[tabuada] || {}).length;
 
 const divisoesAcertadas = (progresso: Progresso, divisor: number) => Object.keys(progresso.divisoes[divisor] || {}).length;
@@ -402,6 +404,26 @@ const outrasMedalhas: Medalha[] = [
     metas: [1],
     unidade: 'corridas',
     valor: (progresso) => progresso.vitoriasContraCampeao,
+    grupo: 'Outros jogos',
+  },
+  {
+    id: 'hora-certa',
+    nome: 'Hora certa',
+    descricao: 'No Que horas são?, acerte 25, 100, 250 e 500 horas no total.',
+    icone: '🕒',
+    metas: [25, 100, 250, 500],
+    unidade: 'acertos',
+    valor: (progresso) => somar(progresso.acertosPorModo, MODOS_RELOGIO),
+    grupo: 'Outros jogos',
+  },
+  {
+    id: 'relojoeiro',
+    nome: 'Relojoeiro',
+    descricao: 'No Que horas são?, acerte 10 horas seguidas no nível difícil, mesmo em partidas diferentes.',
+    icone: '⏰',
+    metas: [10],
+    unidade: 'acertos seguidos',
+    valor: (progresso) => progresso.melhorSequenciaPorModo['relogio-dificil'] || 0,
     grupo: 'Outros jogos',
   },
   {
