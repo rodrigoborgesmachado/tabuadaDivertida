@@ -12,7 +12,45 @@ interface RoboPersonalizadoProps {
   onClick?: () => void;
   bichinho?: boolean;
   dancando?: boolean;
+  rastro?: boolean;
 }
+
+const PONTOS_RASTRO = [[4, 36], [-6, 50], [-16, 38], [-26, 52], [-34, 40], [0, 58]];
+const CORES_CONFETE = ['#ff6b6b', '#4d96ff', '#ffd93d'];
+const estrela = ([x, y]: number[]) => `M${x} ${y - 3} L${x + 1} ${y - 1} L${x + 3} ${y} L${x + 1} ${y + 1} L${x} ${y + 3} L${x - 1} ${y + 1} L${x - 3} ${y} L${x - 1} ${y - 1} Z`;
+const coracao = ([x, y]: number[]) => `M${x} ${y + 3} C${x - 5} ${y - 1} ${x - 3} ${y - 5} ${x} ${y - 2} C${x + 3} ${y - 5} ${x + 5} ${y - 1} ${x} ${y + 3} Z`;
+
+const rastros: Record<string, ReactNode> = {
+  'rastro-pegadas': (
+    <g fill='#8a5a3c'>
+      {[[4, 40], [-6, 50], [-16, 40], [-26, 50], [-36, 40]].map(([x, y]) => <ellipse key={x} cx={x} cy={y} rx='2.5' ry='1.6' />)}
+    </g>
+  ),
+  'rastro-coracoes': <path d={PONTOS_RASTRO.map(coracao).join(' ')} fill='#ff5c8a' />,
+  'rastro-confete': (
+    <g>
+      {PONTOS_RASTRO.map(([x, y], indice) => <rect key={indice} x={x - 1.5} y={y - 1} width='3' height='2' fill={CORES_CONFETE[indice % CORES_CONFETE.length]} transform={`rotate(${indice * 35} ${x} ${y})`} />)}
+    </g>
+  ),
+  'rastro-estrelas': <path d={PONTOS_RASTRO.map(estrela).join(' ')} fill='#ffd93d' />,
+  'rastro-bolhas': (
+    <g fill='none' stroke='#7fd3f7' strokeWidth='1.2'>
+      {PONTOS_RASTRO.map(([x, y], indice) => <circle key={indice} cx={x} cy={y} r={2 + (indice % 3)} />)}
+    </g>
+  ),
+  'rastro-fogo': (
+    <g>
+      <path d='M10 32 Q-20 28 -38 46 Q-20 64 10 60 Z' fill='#a3120f' />
+      <path d='M10 36 Q-12 34 -26 46 Q-12 58 10 56 Z' fill='#ff5a1f' />
+      <path d='M10 40 Q-4 40 -12 46 Q-4 52 10 52 Z' fill='#ffd23f' />
+    </g>
+  ),
+  'rastro-arco-iris': (
+    <g>
+      {['#ff6b6b', '#ffd93d', '#6bcb77', '#4d96ff', '#b07cff'].map((cor, indice) => <rect key={cor} x='-38' y={30 + indice * 6} width='48' height='6' fill={cor} />)}
+    </g>
+  ),
+};
 
 const bichinhos: Record<string, ReactNode> = {
   'bichinho-tartaruga': (
@@ -405,7 +443,7 @@ const mao: Record<string, ReactNode> = {
 
 const desenhos: Record<string, Record<string, ReactNode>> = { cabeca, rosto, pescoco, mao };
 
-function RoboPersonalizado({ personalizacao, triste = false, titulo = 'Robô', className, style, onClick, bichinho = false, dancando = false }: RoboPersonalizadoProps) {
+function RoboPersonalizado({ personalizacao, triste = false, titulo = 'Robô', className, style, onClick, bichinho = true, dancando = true, rastro = true }: RoboPersonalizadoProps) {
   const salva = usePersonalizacao();
   const escolha = personalizacao || salva;
   const pintura = buscarRecompensa(escolha.cor);
@@ -414,16 +452,30 @@ function RoboPersonalizado({ personalizacao, triste = false, titulo = 'Robô', c
   const classePintura = pintura?.animada ? 'robo-pintura-animada' : undefined;
   const acessorios = ESPACOS.map((espaco) => escolha[espaco.id]).filter(Boolean);
   const classes = [className, dancando && escolha.danca && `robo-danca robo-${escolha.danca}`].filter(Boolean).join(' ') || undefined;
+  const desenhoBichinho = bichinho && bichinhos[escolha.bichinho];
+  const desenhoRastro = rastro && rastros[escolha.rastro];
 
   return (
-    <svg viewBox='0 0 100 100' overflow='visible' role='img' aria-label={titulo || undefined} aria-hidden={titulo ? undefined : true} className={classes} style={style} onClick={onClick} data-acessorios={acessorios.join(' ')}>
-      {pintura?.degrade && (
+    <svg viewBox={desenhoBichinho || desenhoRastro ? '-44 0 144 100' : '0 0 100 100'} overflow='visible' role='img' aria-label={titulo || undefined} aria-hidden={titulo ? undefined : true} className={classes} style={style} onClick={onClick} data-acessorios={acessorios.join(' ')}>
+      {(pintura?.degrade || desenhoRastro) && (
         <defs>
-          <linearGradient id={id} x1='0' y1='0' x2='1' y2='1'>
-            {pintura.degrade.map((corDegrade, indice) => <stop key={indice} offset={indice / (pintura.degrade!.length - 1)} stopColor={corDegrade} />)}
-          </linearGradient>
+          {pintura?.degrade && (
+            <linearGradient id={id} x1='0' y1='0' x2='1' y2='1'>
+              {pintura.degrade.map((corDegrade, indice) => <stop key={indice} offset={indice / (pintura.degrade!.length - 1)} stopColor={corDegrade} />)}
+            </linearGradient>
+          )}
+          {desenhoRastro && (
+            <mask id={`${id}-rastro`}>
+              <linearGradient id={`${id}-rastro-fade`} gradientUnits='userSpaceOnUse' x1='10' y1='0' x2='-40' y2='0'>
+                <stop offset='0' stopColor='#ffffff' />
+                <stop offset='1' stopColor='#000000' />
+              </linearGradient>
+              <rect x='-44' y='20' width='56' height='50' fill={`url(#${id}-rastro-fade)`} />
+            </mask>
+          )}
         </defs>
       )}
+      {desenhoRastro && <g className='robo-rastro' data-rastro={escolha.rastro} mask={`url(#${id}-rastro)`}>{desenhoRastro}</g>}
       {costas[escolha.costas]}
       <rect x='10' y='20' width='80' height='60' fill={corRobo} stroke='#333' className={classePintura} />
       <rect x='40' y='5' width='20' height='15' fill={corRobo} stroke='#333' className={classePintura} />
@@ -438,7 +490,7 @@ function RoboPersonalizado({ personalizacao, triste = false, titulo = 'Robô', c
         </g>
       )}
       {['rosto', 'cabeca', 'pescoco', 'mao'].map((espaco) => <g key={espaco} data-espaco={espaco}>{desenhos[espaco][escolha[espaco as keyof Personalizacao]]}</g>)}
-      {bichinho && bichinhos[escolha.bichinho] && <g className='robo-bichinho' data-bichinho={escolha.bichinho}>{bichinhos[escolha.bichinho]}</g>}
+      {desenhoBichinho && <g className='robo-bichinho' data-bichinho={escolha.bichinho}>{desenhoBichinho}</g>}
     </svg>
   );
 }
