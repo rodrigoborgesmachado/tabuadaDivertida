@@ -10,12 +10,14 @@ import {
   proximaRecompensa,
   recompensaLiberada,
   recompensas,
+  recompensasDoNivel,
   recompensasNaoVistas,
   salvarPersonalizacao,
   sortearPersonalizacao,
   STORAGE_PERSONALIZACAO,
   STORAGE_RECOMPENSAS_VISTAS,
 } from './recompensas';
+import { xpTotalDoNivel } from './xp';
 
 const recompensa = (id: string) => buscarRecompensa(id)!;
 
@@ -34,14 +36,67 @@ describe('recompensas', () => {
     expect(recompensaLiberada(recompensa('oculos'), { ...criarProgresso(), xp: 980 })).toBe(true);
   });
 
-  it('has many colors, accessories and themes spread up to level 50', () => {
+  it('has many colors, accessories and themes spread beyond level 50', () => {
     const tipo = (nome: string) => recompensas.filter((item) => item.tipo === nome);
 
     expect(tipo('cor').length).toBeGreaterThanOrEqual(30);
     expect(tipo('acessorio').length).toBeGreaterThanOrEqual(30);
     expect(tipo('tema').length).toBeGreaterThanOrEqual(12);
-    expect(Math.max(...recompensas.map((item) => item.nivel || 0))).toBe(50);
+    expect(Math.max(...recompensas.map((item) => item.nivel || 0))).toBe(75);
     expect(new Set(recompensas.map((item) => item.id)).size).toBe(recompensas.length);
+  });
+
+  it('gives an item on every level from 33 to 50 and every five levels after 50', () => {
+    const niveis = new Set(recompensas.map((item) => item.nivel));
+
+    for (let nivel = 33; nivel <= 50; nivel++) {
+      expect(niveis.has(nivel)).toBe(true);
+    }
+    [55, 60, 65, 70, 75].forEach((nivel) => expect(niveis.has(nivel)).toBe(true));
+  });
+
+  it('has animated colors among the epic and legendary ones', () => {
+    expect(recompensa('cor-camaleao').animada).toBe(true);
+    expect(recompensa('cor-infinito')).toMatchObject({ raridade: 'lendaria', nivel: 75, animada: true });
+  });
+
+  it('has pets, sounds, trails and dances unlocked by level or medal', () => {
+    const tipo = (nome: string) => recompensas.filter((item) => item.tipo === nome);
+
+    expect(tipo('bichinho').length).toBeGreaterThanOrEqual(5);
+    expect(tipo('som').length).toBeGreaterThanOrEqual(4);
+    expect(tipo('rastro').length).toBeGreaterThanOrEqual(4);
+    expect(tipo('danca').length).toBeGreaterThanOrEqual(5);
+    expect(recompensaLiberada(recompensa('bichinho-gato'), { ...criarProgresso(), xp: xpTotalDoNivel(37) })).toBe(false);
+    expect(recompensaLiberada(recompensa('bichinho-gato'), { ...criarProgresso(), xp: xpTotalDoNivel(38) })).toBe(true);
+    expect(recompensaLiberada(recompensa('bichinho-coruja'), { ...criarProgresso(), medalhas: { 'mestre-dos-padroes': medalha(3) } })).toBe(true);
+    expect(recompensaLiberada(recompensa('som-padrao'), criarProgresso())).toBe(true);
+    expect(recompensaLiberada(recompensa('danca-pulinho'), criarProgresso())).toBe(true);
+  });
+
+  it('reads the chosen pet, sound, trail and dance only while unlocked', () => {
+    salvarPersonalizacao({ ...PERSONALIZACAO_PADRAO, bichinho: 'bichinho-gato', som: 'som-8bits', rastro: 'rastro-estrelas', danca: 'danca-giro' });
+
+    expect(lerPersonalizacao({ ...criarProgresso(), xp: xpTotalDoNivel(45) })).toEqual({
+      ...PERSONALIZACAO_PADRAO,
+      bichinho: 'bichinho-gato',
+      som: 'som-8bits',
+      rastro: 'rastro-estrelas',
+      danca: 'danca-giro',
+    });
+    expect(lerPersonalizacao({ ...criarProgresso(), xp: xpTotalDoNivel(30) })).toEqual(PERSONALIZACAO_PADRAO);
+  });
+
+  it('does not show the default sound and dance as new items', () => {
+    window.localStorage.setItem(STORAGE_RECOMPENSAS_VISTAS, JSON.stringify(['cor-prata', 'tema-padrao']));
+
+    expect(recompensasNaoVistas(criarProgresso())).toEqual([]);
+  });
+
+  it('lists the items unlocked between two levels', () => {
+    expect(recompensasDoNivel(2, 3).map((item) => item.id)).toEqual(['cor-vermelho', 'bone']);
+    expect(recompensasDoNivel(58, 59)).toEqual([]);
+    expect(recompensasDoNivel(54, 55).map((item) => item.id)).toEqual(['cor-cometa']);
   });
 
   it('keeps the items already unlocked even if the condition is no longer met', () => {

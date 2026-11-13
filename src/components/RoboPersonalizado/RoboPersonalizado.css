@@ -10,9 +10,121 @@
   }
 }
 
+.robo-pintura-animada {
+  animation: robo-pintura-animada 6s linear infinite;
+}
+
+@keyframes robo-pintura-animada {
+  to {
+    filter: hue-rotate(360deg);
+  }
+}
+
+.robo-bichinho {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: robo-bichinho 1.6s ease-in-out infinite;
+}
+
+@keyframes robo-bichinho {
+  50% {
+    transform: translateY(-3px) scale(1.04, 0.97);
+  }
+}
+
+.robo-danca {
+  transform-origin: 50% 100%;
+  animation: robo-danca-pulinho 1.2s ease-in-out infinite;
+}
+
+.robo-danca-balanco {
+  animation-name: robo-danca-balanco;
+}
+
+.robo-danca-giro {
+  transform-origin: 50% 50%;
+  animation: robo-danca-giro 1.6s ease-in-out infinite;
+}
+
+.robo-danca-deslize {
+  animation-name: robo-danca-deslize;
+  animation-duration: 1.6s;
+}
+
+.robo-danca-estrela {
+  animation-name: robo-danca-estrela;
+}
+
+@keyframes robo-danca-pulinho {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0);
+  }
+  25% {
+    transform: translateY(-10px) rotate(-8deg);
+  }
+  75% {
+    transform: translateY(-10px) rotate(8deg);
+  }
+}
+
+@keyframes robo-danca-balanco {
+  0%,
+  100% {
+    transform: rotate(-12deg);
+  }
+  50% {
+    transform: rotate(12deg);
+  }
+}
+
+@keyframes robo-danca-giro {
+  0% {
+    transform: translateY(0) rotate(0);
+  }
+  50% {
+    transform: translateY(-12px) rotate(180deg);
+  }
+  100% {
+    transform: translateY(0) rotate(360deg);
+  }
+}
+
+@keyframes robo-danca-deslize {
+  0%,
+  100% {
+    transform: translateX(-12px) skewX(8deg);
+  }
+  50% {
+    transform: translateX(12px) skewX(-8deg);
+  }
+}
+
+@keyframes robo-danca-estrela {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+  40% {
+    transform: translateY(-16px) scale(1.15) rotate(-6deg);
+  }
+  60% {
+    transform: translateY(-16px) scale(1.15) rotate(6deg);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .robo-bichinho,
+  .robo-danca {
+    animation: none;
+  }
+
   .robo-brilho {
     animation: none;
     opacity: 0.35;
+  }
+
+  .robo-pintura-animada {
+    animation: none;
   }
 }

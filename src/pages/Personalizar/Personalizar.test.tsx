@@ -2,7 +2,14 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { criarProgresso, STORAGE_KEY } from '../../gamificacao/progresso';
 import { marcarRecompensasVistas, recompensasNaoVistas, STORAGE_PERSONALIZACAO, STORAGE_RECOMPENSAS_VISTAS } from '../../gamificacao/recompensas';
+import { xpTotalDoNivel } from '../../gamificacao/xp';
+import { playSuccess } from '../../services/sons';
 import Personalizar from './Personalizar';
+
+vi.mock('../../services/sons', async (original) => ({
+  ...(await original<typeof import('../../services/sons')>()),
+  playSuccess: vi.fn(),
+}));
 
 const renderPersonalizar = () => render(
   <MemoryRouter>
@@ -51,6 +58,68 @@ describe('Personalizar', () => {
     expect(item('Boné').getAttribute('aria-pressed')).toBe('true');
     expect(container.querySelector('.personalizar-robo')?.getAttribute('data-acessorios')).toBe('bone');
     expect(JSON.parse(window.localStorage.getItem(STORAGE_PERSONALIZACAO) || '{}').cabeca).toBe('bone');
+  });
+
+  it('animates the robot painted with an animated color', () => {
+    salvarProgresso({ xp: xpTotalDoNivel(55) });
+    const { container } = renderPersonalizar();
+
+    expect(item('Cometa').querySelector('.personalizar-item__icone--animada')).toBeTruthy();
+    expect(item('Ouro puro').querySelector('.personalizar-item__icone--animada')).toBeNull();
+    fireEvent.click(item('Cometa'));
+
+    expect(container.querySelectorAll('.personalizar-robo .robo-pintura-animada')).toHaveLength(2);
+  });
+
+  it('chooses a pet for the robot and takes it off', () => {
+    salvarProgresso({ xp: xpTotalDoNivel(38) });
+    const { container } = renderPersonalizar();
+    abrirAba('🐾 Bichinhos');
+
+    expect(screen.getByText('Um companheiro que fica ao lado do seu robô.')).toBeTruthy();
+    expect(item('Nenhum').getAttribute('aria-pressed')).toBe('true');
+    expect(item('Cachorrinho').disabled).toBe(true);
+    fireEvent.click(item('Gatinho'));
+
+    expect(container.querySelector('.personalizar-robo [data-bichinho="bichinho-gato"]')).toBeTruthy();
+    expect(container.querySelector('.personalizar-robo--bichinho')).toBeTruthy();
+
+    fireEvent.click(item('Gatinho'));
+
+    expect(container.querySelector('.personalizar-robo [data-bichinho]')).toBeNull();
+    expect(JSON.parse(window.localStorage.getItem(STORAGE_PERSONALIZACAO) || '{}').bichinho).toBe('');
+  });
+
+  it('plays the chosen sound set and keeps the default one selected', () => {
+    salvarProgresso({ xp: xpTotalDoNivel(36) });
+    renderPersonalizar();
+    abrirAba('🔊 Sons');
+
+    expect(screen.queryByText('Nenhum')).toBeNull();
+    expect(item('Clássico').getAttribute('aria-pressed')).toBe('true');
+    fireEvent.click(item('8 bits'));
+
+    expect(playSuccess).toHaveBeenCalledTimes(1);
+    expect(item('8 bits').getAttribute('aria-pressed')).toBe('true');
+
+    fireEvent.click(item('8 bits'));
+
+    expect(item('8 bits').getAttribute('aria-pressed')).toBe('true');
+  });
+
+  it('previews the chosen dance on the robot and lists the trails of the race', () => {
+    salvarProgresso({ xp: xpTotalDoNivel(45) });
+    const { container } = renderPersonalizar();
+    abrirAba('💃 Danças');
+
+    expect(container.querySelector('.personalizar-robo')?.getAttribute('class')).toContain('robo-danca-pulinho');
+    fireEvent.click(item('Giro'));
+    expect(container.querySelector('.personalizar-robo')?.getAttribute('class')).toContain('robo-danca-giro');
+
+    abrirAba('💨 Rastros');
+    expect(screen.getByText('O rastro que o seu robô deixa na Corrida contra o Robô.')).toBeTruthy();
+    expect(item('Bolhas').disabled).toBe(false);
+    expect(item('Fogo').disabled).toBe(true);
   });
 
   it('combines one accessory for each space on the robot', () => {

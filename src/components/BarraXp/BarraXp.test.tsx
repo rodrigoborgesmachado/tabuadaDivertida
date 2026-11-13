@@ -1,5 +1,6 @@
-import { render, screen } from '@testing-library/react';
+import { cleanup, render, screen } from '@testing-library/react';
 import { criarProgresso, STORAGE_KEY } from '../../gamificacao/progresso';
+import { xpTotalDoNivel } from '../../gamificacao/xp';
 import BarraXp from './BarraXp';
 
 describe('BarraXp', () => {
@@ -56,6 +57,22 @@ describe('BarraXp', () => {
     render(<BarraXp />);
     expect(screen.getByText('⚡ 2× XP')).toBeTruthy();
     vi.useRealTimers();
+  });
+
+  it('changes the look of the level seal by band and shows the legend stars', () => {
+    const { container, unmount } = render(<BarraXp xp={0} />);
+    expect(container.querySelector('.barra-xp--bronze')).toBeTruthy();
+    expect(container.querySelector('.barra-xp__estrelas')).toBeNull();
+    unmount();
+
+    render(<BarraXp xp={xpTotalDoNivel(20)} />);
+    expect(screen.getByTitle('Faixa Ouro').textContent).toBe('20');
+    cleanup();
+
+    const { container: lenda } = render(<BarraXp xp={xpTotalDoNivel(60)} />);
+    expect(lenda.querySelector('.barra-xp--arco-iris')).toBeTruthy();
+    expect(screen.getByText('Nível 60 · Lenda Suprema III')).toBeTruthy();
+    expect(lenda.querySelector('.barra-xp__estrelas')?.textContent).toBe('⭐2');
   });
 
   it('celebrates when the match makes the player level up', () => {

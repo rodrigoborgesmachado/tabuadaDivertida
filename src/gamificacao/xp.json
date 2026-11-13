@@ -22,6 +22,14 @@
   "medalhaUnica": 40,
   "primeiroNivel": 200,
   "aumentoPorNivel": 30,
+  "niveisPorEstrela": 5,
+  "faixas": [
+    { "nivel": 1, "id": "bronze", "nome": "Bronze" },
+    { "nivel": 10, "id": "prata", "nome": "Prata" },
+    { "nivel": 20, "id": "ouro", "nome": "Ouro" },
+    { "nivel": 30, "id": "diamante", "nome": "Diamante" },
+    { "nivel": 40, "id": "arco-iris", "nome": "Arco-íris" }
+  ],
   "titulos": [
     { "nivel": 1, "titulo": "Aprendiz" },
     { "nivel": 3, "titulo": "Contador" },

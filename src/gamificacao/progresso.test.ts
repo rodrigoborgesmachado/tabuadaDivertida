@@ -770,7 +770,7 @@ describe('progresso', () => {
 
     partidaFinalizada({ jogo: 'memoria' }, dia);
     expect(ouvinte).toHaveBeenCalledTimes(1);
-    expect((ouvinte.mock.calls[0][0] as CustomEvent).detail).toEqual({ nivel: 2, titulo: 'Aprendiz', xpNoNivel: 5, xpDoNivel: 230 });
+    expect((ouvinte.mock.calls[0][0] as CustomEvent).detail).toEqual({ nivel: 2, titulo: 'Aprendiz', xpNoNivel: 5, xpDoNivel: 230, nivelAnterior: 1 });
     window.removeEventListener(EVENTO_NIVEL, ouvinte);
   });
 
@@ -789,7 +789,7 @@ describe('progresso', () => {
 
     partidaFinalizada({ jogo: 'memoria' }, dia);
 
-    expect(lerProgresso().recompensasLiberadas).toEqual(['cor-prata', 'cor-azul', 'cor-vermelho', 'bone', 'lapis', 'tema-padrao']);
+    expect(lerProgresso().recompensasLiberadas).toEqual(['cor-prata', 'cor-azul', 'cor-vermelho', 'bone', 'lapis', 'tema-padrao', 'som-padrao', 'danca-pulinho']);
   });
 
   it('reads the multiplication factors and the divisions from the times table questions', () => {

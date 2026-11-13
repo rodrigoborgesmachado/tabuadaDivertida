@@ -4,6 +4,9 @@ import { MemoryRouter } from 'react-router-dom';
 import configData from '../../Config.json';
 import { buscarRanking, enviarResultado } from '../../services/resultadosJogos';
 import { lerQuantidade, salvarQuantidade } from '../../services/jogador';
+import { criarProgresso, STORAGE_KEY } from '../../gamificacao/progresso';
+import { PERSONALIZACAO_PADRAO, STORAGE_PERSONALIZACAO } from '../../gamificacao/recompensas';
+import { xpTotalDoNivel } from '../../gamificacao/xp';
 import CorridaRobo from './CorridaRobo';
 
 const STORAGE_RECORDES = 'tabuada-divertida-corrida-robo-recordes';
@@ -80,6 +83,21 @@ describe('CorridaRobo', () => {
     expect(screen.getByText('6x7')).toBeTruthy();
     expect(screen.getByLabelText('Pista da corrida')).toBeTruthy();
     expect(screen.getByLabelText('Seu robô')).toBeTruthy();
+  });
+
+  it('shows the trail chosen for the player robot during the race', () => {
+    const { container, unmount } = renderJogo();
+    comecar();
+    expect(container.querySelector('.corrida-rastro')).toBeNull();
+    unmount();
+
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...criarProgresso(), xp: xpTotalDoNivel(49) }));
+    window.localStorage.setItem(STORAGE_PERSONALIZACAO, JSON.stringify({ ...PERSONALIZACAO_PADRAO, rastro: 'rastro-fogo' }));
+    const { container: comRastro } = renderJogo();
+    comecar();
+
+    expect(comRastro.querySelectorAll('.corrida-rastro')).toHaveLength(1);
+    expect(comRastro.querySelector('.corrida-corredor:not(.corrida-corredor--robo) .corrida-rastro-fogo')).toBeTruthy();
   });
 
   it('moves the player one step for each right answer', () => {

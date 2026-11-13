@@ -4,7 +4,6 @@ import type { Desafio } from '../../gamificacao/desafios';
 import { nomeNivel } from '../../gamificacao/medalhas';
 import { EVENTO_BOOSTERS, EVENTO_CONQUISTAS, EVENTO_DESAFIOS, EVENTO_NIVEL, lerProgresso, type Conquista } from '../../gamificacao/progresso';
 import { recompensasLiberadas, type Recompensa } from '../../gamificacao/recompensas';
-import type { NivelXp } from '../../gamificacao/xp';
 import { temIconeDoApp } from '../../services/iconeApp';
 import { playConquista } from '../../services/sons';
 import RoboPersonalizado from '../RoboPersonalizado/RoboPersonalizado';
@@ -35,12 +34,6 @@ const avisoDoBooster = ({ multiplicador, amanha }: BoosterAtivado): Aviso => ({
   texto: `⚡ ${multiplicador}× XP nas partidas ${amanha ? 'de amanhã' : 'até o fim do dia'}`,
 });
 
-const avisoDoNivel = ({ nivel, titulo }: NivelXp): Aviso => ({
-  id: `nivel-${nivel}`,
-  titulo: 'Subiu de nível!',
-  texto: `⬆️ Nível ${nivel} · ${titulo}`,
-});
-
 const avisoDaRecompensa = (recompensa: Recompensa): Aviso => ({
   id: `recompensa-${recompensa.id}`,
   titulo: recompensa.tipo === 'tema' ? 'Novo tema liberado!' : 'Novo item para o seu robô!',
@@ -48,7 +41,7 @@ const avisoDaRecompensa = (recompensa: Recompensa): Aviso => ({
 });
 
 const avisosDaRecompensa = (recompensa: Recompensa): Aviso[] => [
-  avisoDaRecompensa(recompensa),
+  ...(recompensa.nivel ? [] : [avisoDaRecompensa(recompensa)]),
   ...(temIconeDoApp(recompensa.id) ? [{ id: `icone-${recompensa.id}`, titulo: '🎉 Novo ícone do app liberado!', texto: `🤖 Robô ${recompensa.nome}` }] : []),
 ];
 
@@ -83,11 +76,7 @@ function AvisoConquista() {
       playConquista();
     };
 
-    const onNivel = (event: Event) => {
-      setFila((atual) => [...atual, avisoDoNivel((event as CustomEvent<NivelXp>).detail)]);
-      playConquista();
-      verificarRecompensas();
-    };
+    const onNivel = () => verificarRecompensas();
 
     window.addEventListener(EVENTO_CONQUISTAS, onConquistas);
     window.addEventListener(EVENTO_DESAFIOS, onDesafios);
@@ -118,7 +107,7 @@ function AvisoConquista() {
 
   return (
     <div key={aviso.id} className='aviso-conquista' role='status' aria-live='polite'>
-      <RoboPersonalizado titulo='' className='aviso-conquista__robo' />
+      <RoboPersonalizado titulo='' className='aviso-conquista__robo' dancando />
       <div className='aviso-conquista__texto'>
         <strong>{aviso.titulo}</strong>
         <span>{aviso.texto}</span>

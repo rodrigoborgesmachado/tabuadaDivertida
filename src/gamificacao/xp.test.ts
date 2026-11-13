@@ -1,5 +1,5 @@
 import { criarProgresso } from './progresso';
-import { calcularNivel, nivelNaCurvaAnterior, tituloDoNivel, xpDaPartida, xpDaPartidaPerfeita, xpDasMedalhas, xpDoDesafio, xpDoJogo, xpInicial, xpParaSubir, xpTotalDoNivel } from './xp';
+import { calcularNivel, estrelasDoNivel, faixaDoNivel, nivelNaCurvaAnterior, tituloDoNivel, xpDaPartida, xpDaPartidaPerfeita, xpDasMedalhas, xpDoDesafio, xpDoJogo, xpInicial, xpParaSubir, xpTotalDoNivel } from './xp';
 
 const medalha = (nivel: number) => ({ nivel, data: '2026-11-02T15:00:00.000Z' });
 
@@ -119,5 +119,27 @@ describe('xp', () => {
     expect(tituloDoNivel(25)).toBe('Arquiteto dos Números');
     expect(tituloDoNivel(40)).toBe('Guardião da Tabuada');
     expect(tituloDoNivel(50)).toBe('Lenda Suprema');
+  });
+
+  it('keeps giving titles and legend stars every five levels after 50', () => {
+    expect(estrelasDoNivel(54)).toBe(0);
+    expect(tituloDoNivel(54)).toBe('Lenda Suprema');
+    expect(estrelasDoNivel(55)).toBe(1);
+    expect(tituloDoNivel(55)).toBe('Lenda Suprema II');
+    expect(tituloDoNivel(60)).toBe('Lenda Suprema III');
+    expect(tituloDoNivel(70)).toBe('Lenda Suprema V');
+    expect(tituloDoNivel(95)).toBe('Lenda Suprema X');
+    expect(estrelasDoNivel(100)).toBe(10);
+    expect(tituloDoNivel(100)).toBe('Lenda Suprema XI');
+  });
+
+  it('gives a medal range for each band of levels', () => {
+    expect(faixaDoNivel(1).id).toBe('bronze');
+    expect(faixaDoNivel(9).id).toBe('bronze');
+    expect(faixaDoNivel(10)).toEqual({ nivel: 10, id: 'prata', nome: 'Prata' });
+    expect(faixaDoNivel(20).id).toBe('ouro');
+    expect(faixaDoNivel(30).id).toBe('diamante');
+    expect(faixaDoNivel(40).id).toBe('arco-iris');
+    expect(faixaDoNivel(80).id).toBe('arco-iris');
   });
 });

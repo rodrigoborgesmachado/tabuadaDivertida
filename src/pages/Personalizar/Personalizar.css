@@ -15,7 +15,10 @@
   height: auto;
   flex-shrink: 0;
   margin-top: 16px;
-  animation: home-robot-bounce 1s ease-in-out infinite;
+}
+
+.personalizar-robo--bichinho {
+  margin-left: 4rem;
 }
 
 .personalizar-resumo {
@@ -187,6 +190,16 @@
 
 .personalizar-item:disabled .personalizar-item__icone {
   filter: grayscale(0.6);
+}
+
+.personalizar-item:not(:disabled) .personalizar-item__icone--animada {
+  animation: robo-pintura-animada 6s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .personalizar-item:not(:disabled) .personalizar-item__icone--animada {
+    animation: none;
+  }
 }
 
 .personalizar-item small {

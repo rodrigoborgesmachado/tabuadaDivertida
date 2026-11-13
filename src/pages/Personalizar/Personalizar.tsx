@@ -8,6 +8,7 @@ import {
   condicaoRecompensa,
   ESPACOS,
   marcarRecompensasVistas,
+  PERSONALIZACAO_PADRAO,
   proximaRecompensa,
   RARIDADES,
   recompensaLiberada,
@@ -16,19 +17,25 @@ import {
   salvarPersonalizacao,
   sortearPersonalizacao,
   type Espaco,
+  type Personalizacao,
   type Recompensa,
   type TipoRecompensa,
 } from '../../gamificacao/recompensas';
 import { usePersonalizacao } from '../../gamificacao/usePersonalizacao';
 import { useRecompensasNaoVistas } from '../../gamificacao/useRecompensasNaoVistas';
 import { calcularNivel } from '../../gamificacao/xp';
+import { playSuccess } from '../../services/sons';
 import IconeDoApp from './IconeDoApp';
 import './Personalizar.css';
 
-const ABAS: { tipo: TipoRecompensa; titulo: string }[] = [
+const ABAS: { tipo: TipoRecompensa; titulo: string; dica?: string }[] = [
   { tipo: 'cor', titulo: '🎨 Cores' },
   { tipo: 'acessorio', titulo: '🎩 Acessórios' },
   { tipo: 'tema', titulo: '🌈 Temas' },
+  { tipo: 'bichinho', titulo: '🐾 Bichinhos', dica: 'Um companheiro que fica ao lado do seu robô.' },
+  { tipo: 'som', titulo: '🔊 Sons', dica: 'Os sons de acerto, erro e conquista das partidas. Toque para ouvir.' },
+  { tipo: 'rastro', titulo: '💨 Rastros', dica: 'O rastro que o seu robô deixa na Corrida contra o Robô.' },
+  { tipo: 'danca', titulo: '💃 Danças', dica: 'Como o seu robô comemora quando você sobe de nível e conquista coisas.' },
 ];
 
 const formatarNumero = (valor: number) => valor.toLocaleString('pt-BR');
@@ -41,6 +48,7 @@ function Personalizar() {
   const naoVistas = useRecompensasNaoVistas();
   const nivel = calcularNivel(progresso.xp).nivel;
   const proxima = proximaRecompensa(progresso);
+  const dica = ABAS.find((item) => item.tipo === aba)?.dica;
 
   useEffect(() => {
     marcarRecompensasVistas(progresso, aba);
@@ -60,10 +68,15 @@ function Personalizar() {
         className={`personalizar-item${ativa ? ' personalizar-item--ativo' : ''}${recompensa.raridade ? ` personalizar-item--${recompensa.raridade}` : ''}`}
         aria-pressed={ativa}
         disabled={!liberada}
-        onClick={() => salvarPersonalizacao({ ...personalizacao, [chave]: ativa && recompensa.espaco ? '' : recompensa.id })}
+        onClick={() => {
+          salvarPersonalizacao({ ...personalizacao, [chave]: ativa && !PERSONALIZACAO_PADRAO[chave] ? '' : recompensa.id });
+          if (recompensa.tipo === 'som') {
+            playSuccess();
+          }
+        }}
       >
         <span
-          className={`personalizar-item__icone${recompensa.tipo === 'tema' && recompensa.valor ? ' personalizar-item__icone--tema' : ''}`}
+          className={`personalizar-item__icone${recompensa.tipo === 'tema' && recompensa.valor ? ' personalizar-item__icone--tema' : ''}${recompensa.animada ? ' personalizar-item__icone--animada' : ''}`}
           style={recompensa.tipo === 'cor' ? { background: recompensa.degrade ? `linear-gradient(135deg, ${recompensa.degrade.join(', ')})` : recompensa.valor } : undefined}
           data-cor={recompensa.tipo === 'tema' ? recompensa.valor : undefined}
           aria-hidden='true'
@@ -76,6 +89,19 @@ function Personalizar() {
     );
   };
 
+  const renderNenhum = (chave: keyof Personalizacao) => (
+    <button
+      type='button'
+      className={`personalizar-item${!personalizacao[chave] ? ' personalizar-item--ativo' : ''}`}
+      aria-pressed={!personalizacao[chave]}
+      onClick={() => salvarPersonalizacao({ ...personalizacao, [chave]: '' })}
+    >
+      <span className='personalizar-item__icone' aria-hidden='true'>🚫</span>
+      <strong>Nenhum</strong>
+      <small>{!personalizacao[chave] ? '✅ Em uso' : 'Tirar'}</small>
+    </button>
+  );
+
   const renderEspaco = (espaco: Espaco) => {
     const itens = recompensas.filter((recompensa) => recompensa.espaco === espaco);
 
@@ -83,16 +109,7 @@ function Personalizar() {
       <section key={espaco} className='personalizar-grupo'>
         <h3>{ESPACOS.find((item) => item.id === espaco)?.nome}{renderNovo(itens)}</h3>
         <div className='personalizar-grid'>
-          <button
-            type='button'
-            className={`personalizar-item${!personalizacao[espaco] ? ' personalizar-item--ativo' : ''}`}
-            aria-pressed={!personalizacao[espaco]}
-            onClick={() => salvarPersonalizacao({ ...personalizacao, [espaco]: '' })}
-          >
-            <span className='personalizar-item__icone' aria-hidden='true'>🚫</span>
-            <strong>Nenhum</strong>
-            <small>{!personalizacao[espaco] ? '✅ Em uso' : 'Tirar'}</small>
-          </button>
+          {renderNenhum(espaco)}
           {itens.map(renderItem)}
         </div>
       </section>
@@ -108,7 +125,7 @@ function Personalizar() {
         </p>
 
         <div className='personalizar-topo'>
-          <RoboPersonalizado titulo='Seu robô' className='personalizar-robo' />
+          <RoboPersonalizado titulo='Seu robô' className={`personalizar-robo${personalizacao.bichinho ? ' personalizar-robo--bichinho' : ''}`} bichinho dancando />
           <div className='personalizar-resumo'>
             <BarraXp xp={progresso.xp} atalho={false} />
             {proxima && (
@@ -157,10 +174,14 @@ function Personalizar() {
             );
           })}
           {aba === 'acessorio' && ESPACOS.map((espaco) => renderEspaco(espaco.id))}
-          {aba === 'tema' && (
-            <div className='personalizar-grid'>
-              {recompensas.filter((recompensa) => recompensa.tipo === 'tema').map(renderItem)}
-            </div>
+          {aba !== 'cor' && aba !== 'acessorio' && (
+            <>
+              {dica && <p className='paragrafo3'>{dica}</p>}
+              <div className='personalizar-grid'>
+                {!PERSONALIZACAO_PADRAO[aba] && renderNenhum(aba)}
+                {recompensas.filter((recompensa) => recompensa.tipo === aba).map(renderItem)}
+              </div>
+            </>
           )}
         </section>
 

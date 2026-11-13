@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { multiplicadorDeXp } from '../../gamificacao/boosters';
 import { lerProgresso } from '../../gamificacao/progresso';
-import { calcularNivel } from '../../gamificacao/xp';
+import { calcularNivel, estrelasDoNivel, faixaDoNivel } from '../../gamificacao/xp';
 import './BarraXp.css';
 
 interface BarraXpProps {
@@ -20,11 +20,16 @@ function BarraXp({ xp, ganho, atalho = true, compacta = false }: BarraXpProps) {
   const subiu = ganho !== undefined && atual.nivel > calcularNivel(total - ganho).nivel;
   const percentual = Math.min(atual.xpNoNivel / atual.xpDoNivel, 1);
   const multiplicador = multiplicadorDeXp(salvo);
+  const faixa = faixaDoNivel(atual.nivel);
+  const estrelas = estrelasDoNivel(atual.nivel);
 
   return (
-    <div className={`barra-xp${subiu ? ' barra-xp--subiu' : ''}${compacta ? ' barra-xp--compacta' : ''}`}>
+    <div className={`barra-xp barra-xp--${faixa.id}${subiu ? ' barra-xp--subiu' : ''}${compacta ? ' barra-xp--compacta' : ''}`}>
       <div className='barra-xp__topo'>
-        <span className='barra-xp__nivel' aria-hidden='true'>{atual.nivel}</span>
+        <span className='barra-xp__nivel' title={`Faixa ${faixa.nome}`} aria-hidden='true'>
+          {atual.nivel}
+          {estrelas > 0 && <span className='barra-xp__estrelas'>⭐{estrelas}</span>}
+        </span>
         <div className='barra-xp__texto'>
           <strong>Nível {atual.nivel} · {atual.titulo}</strong>
           <small>{formatarNumero(atual.xpNoNivel)}/{formatarNumero(atual.xpDoNivel)} XP para o nível {atual.nivel + 1}</small>

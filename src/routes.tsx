@@ -34,6 +34,7 @@ import QueHorasSao from './pages/QueHorasSao/QueHorasSao';
 import Progresso from './pages/Progresso/Progresso';
 import Personalizar from './pages/Personalizar/Personalizar';
 import AvisoConquista from './components/AvisoConquista/AvisoConquista';
+import ComemoracaoNivel from './components/ComemoracaoNivel/ComemoracaoNivel';
 import ScrollToTop from './components/ScrollToTop/ScrollToTop';
 import AppNativo from './components/AppNativo/AppNativo';
 import BarraNavegacao from './components/BarraNavegacao/BarraNavegacao';
@@ -48,6 +49,7 @@ function RoutesApp() {
             <Header/>
             <Breadcrumbs />
             <AvisoConquista />
+            <ComemoracaoNivel />
             <Routes>                
                 <Route path='/' element={<Home/>}/>
                 <Route path='/formulario' element={<Navigate to='/selecionarjogo' replace/>}/>

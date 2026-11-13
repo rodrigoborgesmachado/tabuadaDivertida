@@ -9,7 +9,7 @@ export const STORAGE_RECOMPENSAS_VISTAS = 'tabuada-divertida-recompensas-vistas'
 export const EVENTO_RECOMPENSAS_VISTAS = 'tabuada-divertida-recompensas-vistas';
 export const QUALQUER_MEDALHA = 'qualquer';
 
-export type TipoRecompensa = 'cor' | 'acessorio' | 'tema';
+export type TipoRecompensa = 'cor' | 'acessorio' | 'tema' | 'bichinho' | 'som' | 'rastro' | 'danca';
 export type Espaco = 'cabeca' | 'rosto' | 'pescoco' | 'costas' | 'mao';
 export type Raridade = 'comum' | 'rara' | 'epica' | 'lendaria';
 
@@ -21,13 +21,14 @@ export interface Recompensa {
   valor?: string;
   degrade?: string[];
   brilho?: boolean;
+  animada?: boolean;
   raridade?: Raridade;
   espaco?: Espaco;
   nivel?: number;
   medalha?: { id: string; nivel: number };
 }
 
-export type Personalizacao = Record<'cor' | 'tema' | Espaco, string>;
+export type Personalizacao = Record<Exclude<TipoRecompensa, 'acessorio'> | Espaco, string>;
 
 export const ESPACOS: { id: Espaco; nome: string }[] = [
   { id: 'cabeca', nome: '🎩 Cabeça' },
@@ -52,6 +53,9 @@ const acessorio = (id: string, espaco: Espaco, nome: string, icone: string, cond
 
 const tema = (id: string, nome: string, icone: string, condicao: Partial<Recompensa> = {}): Recompensa =>
   ({ id: `tema-${id}`, tipo: 'tema', nome, icone, valor: id, ...condicao });
+
+const extra = (tipo: TipoRecompensa, id: string, nome: string, icone: string, condicao: Partial<Recompensa> = {}): Recompensa =>
+  ({ id: `${tipo}-${id}`, tipo, nome, icone, ...condicao });
 
 const medalha = (id: string, nivel = 1) => ({ medalha: { id, nivel } });
 
@@ -88,9 +92,21 @@ export const recompensas: Recompensa[] = [
   cor('cor-aurora', 'Aurora boreal', '🌌', '#5fe0b0', 'epica', { nivel: 40, degrade: ['#5fe0b0', '#4fa8e8', '#9b7bf0'] }),
   cor('cor-metalico', 'Metálico prateado', '🔩', '#c9d1db', 'epica', { nivel: 45, degrade: ['#eef2f6', '#a9b3bf', '#eef2f6'], brilho: true }),
   cor('cor-ouro', 'Ouro puro', '🏅', '#f2c94c', 'epica', { nivel: 50, degrade: ['#fff1a8', '#f2c94c', '#c9931e'], brilho: true }),
+  cor('cor-oceano-profundo', 'Oceano profundo', '🐋', '#2f7bff', 'epica', { nivel: 34, degrade: ['#5fd3c9', '#2f7bff', '#1c1446'] }),
+  cor('cor-algodao-doce', 'Algodão-doce', '🍭', '#ffd1ec', 'epica', { nivel: 39, degrade: ['#ffd1ec', '#c9b3e8', '#a8e6ff'], brilho: true }),
+  cor('cor-camaleao', 'Camaleão', '🦎', '#6bcb77', 'epica', { nivel: 41, degrade: ['#b8ffd9', '#6bcb77', '#1fa774'], animada: true }),
+  cor('cor-cristal', 'Cristal', '🔮', '#c9b3e8', 'epica', { nivel: 43, degrade: ['#f5f0ff', '#c9b3e8', '#8a4fc7'], brilho: true }),
+  cor('cor-fogo-gelo', 'Fogo e gelo', '🔥', '#ff9a5a', 'epica', { nivel: 46, degrade: ['#ff5a1f', '#ffd23f', '#7fd3f7', '#2f7bff'] }),
+  cor('cor-pulsar', 'Pulsar', '💫', '#b79cf0', 'epica', { nivel: 48, degrade: ['#ff4fb8', '#b79cf0', '#2f7bff'], brilho: true, animada: true }),
+  cor('cor-eclipse', 'Eclipse', '🌑', '#3b2a7a', 'epica', { nivel: 49, degrade: ['#1c1446', '#3b2a7a', '#f2c94c'], brilho: true }),
   cor('cor-diamante', 'Diamante', '💎', '#bdeeff', 'lendaria', { ...medalha(QUALQUER_MEDALHA, 4), degrade: ['#ffffff', '#bdeeff', '#7fd3f7'], brilho: true }),
   cor('cor-galaxia', 'Galáxia estrelada', '✨', '#3b2a7a', 'lendaria', { ...medalha('perfeccionista'), degrade: ['#1c1446', '#3b2a7a', '#8a4fc7'], brilho: true }),
   cor('cor-lava', 'Lava', '🌋', '#ff5a1f', 'lendaria', { ...medalha('acertos-seguidos', 4), degrade: ['#ffd23f', '#ff5a1f', '#a3120f'], brilho: true }),
+  cor('cor-cometa', 'Cometa', '☄️', '#7fd3f7', 'lendaria', { nivel: 55, degrade: ['#ffffff', '#7fd3f7', '#2952a3'], brilho: true, animada: true }),
+  cor('cor-nebulosa', 'Nebulosa', '🌠', '#b07cff', 'lendaria', { nivel: 60, degrade: ['#ff6b6b', '#b07cff', '#4d96ff'], brilho: true, animada: true }),
+  cor('cor-supernova', 'Supernova', '💥', '#ff9a5a', 'lendaria', { nivel: 65, degrade: ['#fff1a8', '#ff9a5a', '#e8577e'], brilho: true, animada: true }),
+  cor('cor-buraco-negro', 'Buraco negro', '🕳️', '#3b2a7a', 'lendaria', { nivel: 70, degrade: ['#000000', '#3b2a7a', '#8a4fc7'], animada: true }),
+  cor('cor-infinito', 'Infinito', '♾️', '#ff6b6b', 'lendaria', { nivel: 75, degrade: ['#ff6b6b', '#ffd93d', '#6bcb77', '#4d96ff', '#b07cff'], brilho: true, animada: true }),
   acessorio('bone', 'cabeca', 'Boné', '🧢', { nivel: 3 }),
   acessorio('fones', 'cabeca', 'Fones de ouvido', '🎧', { nivel: 7 }),
   acessorio('antena-coracao', 'cabeca', 'Antena de coração', '💖', { nivel: 9 }),
@@ -147,6 +163,25 @@ export const recompensas: Recompensa[] = [
   tema('floresta', 'Floresta', '🌳', medalha('constancia', 2)),
   tema('cyberpunk', 'Cyberpunk', '🤖', medalha('resposta-rapida', 3)),
   tema('espaco-profundo', 'Espaço profundo', '🪐', medalha('constancia', 4)),
+  extra('bichinho', 'passarinho', 'Passarinho', '🐦', { nivel: 34 }),
+  extra('bichinho', 'gato', 'Gatinho', '🐱', { nivel: 38 }),
+  extra('bichinho', 'cachorro', 'Cachorrinho', '🐶', { nivel: 42 }),
+  extra('bichinho', 'coelho', 'Coelhinho', '🐰', { nivel: 47 }),
+  extra('bichinho', 'coruja', 'Coruja sábia', '🦉', medalha('mestre-dos-padroes', 3)),
+  extra('bichinho', 'dragao', 'Dragãozinho', '🐲', { nivel: 52 }),
+  extra('som', 'padrao', 'Clássico', '🔔'),
+  extra('som', '8bits', '8 bits', '👾', { nivel: 36 }),
+  extra('som', 'sininho', 'Sininho', '🎐', { nivel: 44 }),
+  extra('som', 'robo', 'Robótico', '🤖', { nivel: 53 }),
+  extra('rastro', 'estrelas', 'Estrelas', '✨', { nivel: 35 }),
+  extra('rastro', 'bolhas', 'Bolhas', '🫧', { nivel: 40 }),
+  extra('rastro', 'fogo', 'Fogo', '🔥', { nivel: 49 }),
+  extra('rastro', 'arco-iris', 'Arco-íris', '🌈', { nivel: 57 }),
+  extra('danca', 'pulinho', 'Pulinho', '🦘'),
+  extra('danca', 'balanco', 'Balanço', '🎶', { nivel: 37 }),
+  extra('danca', 'giro', 'Giro', '🌀', { nivel: 45 }),
+  extra('danca', 'deslize', 'Deslize', '🕺', { nivel: 51 }),
+  extra('danca', 'estrela', 'Salto estrela', '⭐', { nivel: 62 }),
 ];
 
 const RECOMPENSAS_DA_CURVA_ANTERIOR = [
@@ -155,11 +190,23 @@ const RECOMPENSAS_DA_CURVA_ANTERIOR = [
   'tema-padrao', 'tema-oceano', 'tema-floresta', 'tema-galaxia',
 ];
 
-export const PERSONALIZACAO_PADRAO: Personalizacao = { cor: 'cor-prata', tema: 'tema-padrao', cabeca: '', rosto: '', pescoco: '', costas: '', mao: '' };
+export const PERSONALIZACAO_PADRAO: Personalizacao = {
+  cor: 'cor-prata',
+  tema: 'tema-padrao',
+  cabeca: '',
+  rosto: '',
+  pescoco: '',
+  costas: '',
+  mao: '',
+  bichinho: '',
+  som: 'som-padrao',
+  rastro: '',
+  danca: 'danca-pulinho',
+};
 
 export const buscarRecompensa = (id: string) => recompensas.find((recompensa) => recompensa.id === id);
 
-export const chaveDaRecompensa = (recompensa: Recompensa): keyof Personalizacao => recompensa.espaco || (recompensa.tipo === 'tema' ? 'tema' : 'cor');
+export const chaveDaRecompensa = (recompensa: Recompensa): keyof Personalizacao => recompensa.espaco || (recompensa.tipo as Exclude<TipoRecompensa, 'acessorio'>);
 
 const nivelDaMedalha = (progresso: Progresso, id: string) =>
   id === QUALQUER_MEDALHA
@@ -183,6 +230,9 @@ export const idsLiberadosNaCurvaAnterior = (progresso: Progresso) => {
     .filter((recompensa) => RECOMPENSAS_DA_CURVA_ANTERIOR.includes(recompensa.id) && condicaoCumprida(recompensa, progresso, nivel))
     .map((recompensa) => recompensa.id);
 };
+
+export const recompensasDoNivel = (nivelAnterior: number, nivel: number) =>
+  recompensas.filter((recompensa) => recompensa.nivel && recompensa.nivel > nivelAnterior && recompensa.nivel <= nivel);
 
 export const proximaRecompensa = (progresso: Progresso) => {
   const nivel = calcularNivel(progresso.xp).nivel;
@@ -217,7 +267,8 @@ export const recompensasNaoVistas = (progresso = lerProgresso()) => {
     return [];
   }
 
-  return liberadas.filter((recompensa) => !vistas.includes(recompensa.id));
+  const padroes = Object.values(PERSONALIZACAO_PADRAO);
+  return liberadas.filter((recompensa) => !vistas.includes(recompensa.id) && !padroes.includes(recompensa.id));
 };
 
 export const marcarRecompensasVistas = (progresso = lerProgresso(), tipo?: TipoRecompensa) => {
@@ -268,6 +319,10 @@ export const lerPersonalizacao = (progresso = lerProgresso()): Personalizacao =>
     pescoco: escolher('pescoco'),
     costas: escolher('costas'),
     mao: escolher('mao'),
+    bichinho: escolher('bichinho'),
+    som: escolher('som'),
+    rastro: escolher('rastro'),
+    danca: escolher('danca'),
   };
 };
 
