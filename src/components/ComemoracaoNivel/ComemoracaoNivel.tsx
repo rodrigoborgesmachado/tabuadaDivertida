@@ -65,7 +65,7 @@ function ComemoracaoNivel() {
         ))}
       </div>
       <div className='comemoracao-nivel__conteudo'>
-        <RoboPersonalizado titulo='' className='comemoracao-nivel__robo' />
+        <RoboPersonalizado titulo='' className='comemoracao-nivel__robo' bichinho dancando />
         <h2 id='comemoracao-nivel-titulo'>Subiu de nível!</h2>
         <span className='comemoracao-nivel__selo' aria-hidden='true'>{nivel.nivel}</span>
         <p className='comemoracao-nivel__titulo'>Nível {nivel.nivel} · {nivel.titulo}</p>

@@ -1,6 +1,7 @@
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { criarProgresso, EVENTO_NIVEL, partidaFinalizada, STORAGE_KEY, type NivelAlcancado } from '../../gamificacao/progresso';
+import { PERSONALIZACAO_PADRAO, STORAGE_PERSONALIZACAO } from '../../gamificacao/recompensas';
 import { calcularNivel, xpTotalDoNivel } from '../../gamificacao/xp';
 import { playConquista } from '../../services/sons';
 import ComemoracaoNivel from './ComemoracaoNivel';
@@ -76,14 +77,26 @@ describe('ComemoracaoNivel', () => {
   it('hides the shortcut when the level has no new items and joins levels reached in a row', () => {
     renderComemoracao();
 
-    subirNivel(51, 52);
+    subirNivel(58, 59);
 
     expect(screen.queryByText('Liberado agora')).toBeNull();
     expect(screen.queryByRole('link', { name: '🎨 Personalizar robô' })).toBeNull();
 
-    subirNivel(52, 55);
+    subirNivel(59, 60);
 
-    expect(screen.getByText('Nível 55 · Lenda Suprema II')).toBeTruthy();
-    expect(screen.getByText('Cometa')).toBeTruthy();
+    expect(screen.getByText('Nível 60 · Lenda Suprema III')).toBeTruthy();
+    expect(screen.getByText('Nebulosa')).toBeTruthy();
+  });
+
+  it('shows the pet and the chosen dance of the robot', () => {
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...criarProgresso(), xp: xpTotalDoNivel(62) }));
+    window.localStorage.setItem(STORAGE_PERSONALIZACAO, JSON.stringify({ ...PERSONALIZACAO_PADRAO, bichinho: 'bichinho-dragao', danca: 'danca-estrela' }));
+    const { container } = renderComemoracao();
+
+    subirNivel(61, 62);
+
+    const robo = container.querySelector('.comemoracao-nivel__robo');
+    expect(robo?.getAttribute('class')).toContain('robo-danca robo-danca-estrela');
+    expect(robo?.querySelector('[data-bichinho="bichinho-dragao"]')).toBeTruthy();
   });
 });

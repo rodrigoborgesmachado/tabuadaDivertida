@@ -107,7 +107,7 @@ function AvisoConquista() {
 
   return (
     <div key={aviso.id} className='aviso-conquista' role='status' aria-live='polite'>
-      <RoboPersonalizado titulo='' className='aviso-conquista__robo' />
+      <RoboPersonalizado titulo='' className='aviso-conquista__robo' dancando />
       <div className='aviso-conquista__texto'>
         <strong>{aviso.titulo}</strong>
         <span>{aviso.texto}</span>

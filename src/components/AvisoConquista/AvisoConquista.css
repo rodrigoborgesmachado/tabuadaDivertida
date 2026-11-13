@@ -22,7 +22,6 @@
   width: 52px;
   height: 52px;
   flex-shrink: 0;
-  animation: home-robot-bounce 1s ease-in-out infinite;
 }
 
 .aviso-conquista__texto {

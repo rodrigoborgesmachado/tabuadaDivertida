@@ -789,7 +789,7 @@ describe('progresso', () => {
 
     partidaFinalizada({ jogo: 'memoria' }, dia);
 
-    expect(lerProgresso().recompensasLiberadas).toEqual(['cor-prata', 'cor-azul', 'cor-vermelho', 'bone', 'lapis', 'tema-padrao']);
+    expect(lerProgresso().recompensasLiberadas).toEqual(['cor-prata', 'cor-azul', 'cor-vermelho', 'bone', 'lapis', 'tema-padrao', 'som-padrao', 'danca-pulinho']);
   });
 
   it('reads the multiplication factors and the divisions from the times table questions', () => {

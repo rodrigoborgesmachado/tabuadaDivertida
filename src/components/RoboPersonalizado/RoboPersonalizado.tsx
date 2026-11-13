@@ -10,7 +10,76 @@ interface RoboPersonalizadoProps {
   className?: string;
   style?: CSSProperties;
   onClick?: () => void;
+  bichinho?: boolean;
+  dancando?: boolean;
 }
+
+const bichinhos: Record<string, ReactNode> = {
+  'bichinho-passarinho': (
+    <g stroke='#333'>
+      <ellipse cx='-22' cy='91' rx='11' ry='8' fill='#f4e66b' />
+      <path d='M-31 89 Q-25 82 -18 89 Z' fill='#e0c13f' />
+      <circle cx='-15' cy='81' r='7' fill='#f4e66b' />
+      <path d='M-9 80 L-3 82 L-9 84 Z' fill='#ff9f43' />
+      <circle cx='-14' cy='80' r='1.5' fill='#333' />
+    </g>
+  ),
+  'bichinho-gato': (
+    <g stroke='#333'>
+      <path d='M-11 95 Q-2 92 -5 80' fill='none' stroke='#e8954f' strokeWidth='3' />
+      <ellipse cx='-22' cy='93' rx='12' ry='7' fill='#ffb067' />
+      <path d='M-30 78 L-29 68 L-23 74 Z M-14 78 L-15 68 L-21 74 Z' fill='#ffb067' />
+      <circle cx='-22' cy='81' r='9' fill='#ffb067' />
+      <circle cx='-25' cy='80' r='1.5' fill='#333' />
+      <circle cx='-19' cy='80' r='1.5' fill='#333' />
+      <path d='M-29 84 H-35 M-15 84 H-9' strokeWidth='0.8' />
+    </g>
+  ),
+  'bichinho-cachorro': (
+    <g stroke='#333'>
+      <ellipse cx='-22' cy='93' rx='12' ry='7' fill='#c08457' />
+      <circle cx='-22' cy='81' r='9' fill='#c08457' />
+      <ellipse cx='-31' cy='82' rx='3.5' ry='7' fill='#8a5a3c' />
+      <ellipse cx='-13' cy='82' rx='3.5' ry='7' fill='#8a5a3c' />
+      <circle cx='-25' cy='79' r='1.5' fill='#333' />
+      <circle cx='-19' cy='79' r='1.5' fill='#333' />
+      <circle cx='-22' cy='84' r='2' fill='#333' />
+    </g>
+  ),
+  'bichinho-coelho': (
+    <g stroke='#333'>
+      <ellipse cx='-26' cy='67' rx='3' ry='9' fill='#ffffff' />
+      <ellipse cx='-18' cy='67' rx='3' ry='9' fill='#ffffff' />
+      <ellipse cx='-22' cy='93' rx='11' ry='7' fill='#ffffff' />
+      <circle cx='-22' cy='81' r='8' fill='#ffffff' />
+      <circle cx='-25' cy='80' r='1.5' fill='#333' />
+      <circle cx='-19' cy='80' r='1.5' fill='#333' />
+      <circle cx='-22' cy='84' r='1.5' fill='#f7a1c4' />
+    </g>
+  ),
+  'bichinho-coruja': (
+    <g stroke='#333'>
+      <path d='M-32 76 L-30 68 L-25 74 Z M-12 76 L-14 68 L-19 74 Z' fill='#8a5a3c' />
+      <ellipse cx='-22' cy='86' rx='11' ry='14' fill='#a8734f' />
+      <circle cx='-26' cy='80' r='4.5' fill='#ffffff' />
+      <circle cx='-18' cy='80' r='4.5' fill='#ffffff' />
+      <circle cx='-26' cy='80' r='2' fill='#333' />
+      <circle cx='-18' cy='80' r='2' fill='#333' />
+      <path d='M-24 85 L-20 85 L-22 89 Z' fill='#ff9f43' />
+    </g>
+  ),
+  'bichinho-dragao': (
+    <g stroke='#333'>
+      <path d='M-30 86 Q-44 70 -40 90 Z M-14 86 Q0 70 -4 90 Z' fill='#3aa86b' />
+      <ellipse cx='-22' cy='93' rx='12' ry='7' fill='#5fd38a' />
+      <path d='M-27 74 L-28 67 L-24 72 Z M-17 74 L-16 67 L-20 72 Z' fill='#f2c94c' />
+      <circle cx='-22' cy='81' r='9' fill='#5fd38a' />
+      <circle cx='-25' cy='80' r='1.5' fill='#333' />
+      <circle cx='-19' cy='80' r='1.5' fill='#333' />
+      <path d='M-25 85 Q-22 87 -19 85' fill='none' strokeWidth='0.8' />
+    </g>
+  ),
+};
 
 const costas: Record<string, ReactNode> = {
   capa: <path d='M14 28 L0 100 L100 100 L86 28 Z' fill='#e0586a' stroke='#333' />,
@@ -274,7 +343,7 @@ const mao: Record<string, ReactNode> = {
 
 const desenhos: Record<string, Record<string, ReactNode>> = { cabeca, rosto, pescoco, mao };
 
-function RoboPersonalizado({ personalizacao, triste = false, titulo = 'Robô', className, style, onClick }: RoboPersonalizadoProps) {
+function RoboPersonalizado({ personalizacao, triste = false, titulo = 'Robô', className, style, onClick, bichinho = false, dancando = false }: RoboPersonalizadoProps) {
   const salva = usePersonalizacao();
   const escolha = personalizacao || salva;
   const pintura = buscarRecompensa(escolha.cor);
@@ -282,9 +351,10 @@ function RoboPersonalizado({ personalizacao, triste = false, titulo = 'Robô', c
   const corRobo = pintura?.degrade ? `url(#${id})` : pintura?.valor || '#cccccc';
   const classePintura = pintura?.animada ? 'robo-pintura-animada' : undefined;
   const acessorios = ESPACOS.map((espaco) => escolha[espaco.id]).filter(Boolean);
+  const classes = [className, dancando && escolha.danca && `robo-danca robo-${escolha.danca}`].filter(Boolean).join(' ') || undefined;
 
   return (
-    <svg viewBox='0 0 100 100' overflow='visible' role='img' aria-label={titulo || undefined} aria-hidden={titulo ? undefined : true} className={className} style={style} onClick={onClick} data-acessorios={acessorios.join(' ')}>
+    <svg viewBox='0 0 100 100' overflow='visible' role='img' aria-label={titulo || undefined} aria-hidden={titulo ? undefined : true} className={classes} style={style} onClick={onClick} data-acessorios={acessorios.join(' ')}>
       {pintura?.degrade && (
         <defs>
           <linearGradient id={id} x1='0' y1='0' x2='1' y2='1'>
@@ -306,6 +376,7 @@ function RoboPersonalizado({ personalizacao, triste = false, titulo = 'Robô', c
         </g>
       )}
       {['rosto', 'cabeca', 'pescoco', 'mao'].map((espaco) => <g key={espaco} data-espaco={espaco}>{desenhos[espaco][escolha[espaco as keyof Personalizacao]]}</g>)}
+      {bichinho && bichinhos[escolha.bichinho] && <g className='robo-bichinho' data-bichinho={escolha.bichinho}>{bichinhos[escolha.bichinho]}</g>}
     </svg>
   );
 }

@@ -9,7 +9,7 @@ export const STORAGE_RECOMPENSAS_VISTAS = 'tabuada-divertida-recompensas-vistas'
 export const EVENTO_RECOMPENSAS_VISTAS = 'tabuada-divertida-recompensas-vistas';
 export const QUALQUER_MEDALHA = 'qualquer';
 
-export type TipoRecompensa = 'cor' | 'acessorio' | 'tema';
+export type TipoRecompensa = 'cor' | 'acessorio' | 'tema' | 'bichinho' | 'som' | 'rastro' | 'danca';
 export type Espaco = 'cabeca' | 'rosto' | 'pescoco' | 'costas' | 'mao';
 export type Raridade = 'comum' | 'rara' | 'epica' | 'lendaria';
 
@@ -28,7 +28,7 @@ export interface Recompensa {
   medalha?: { id: string; nivel: number };
 }
 
-export type Personalizacao = Record<'cor' | 'tema' | Espaco, string>;
+export type Personalizacao = Record<Exclude<TipoRecompensa, 'acessorio'> | Espaco, string>;
 
 export const ESPACOS: { id: Espaco; nome: string }[] = [
   { id: 'cabeca', nome: '🎩 Cabeça' },
@@ -53,6 +53,9 @@ const acessorio = (id: string, espaco: Espaco, nome: string, icone: string, cond
 
 const tema = (id: string, nome: string, icone: string, condicao: Partial<Recompensa> = {}): Recompensa =>
   ({ id: `tema-${id}`, tipo: 'tema', nome, icone, valor: id, ...condicao });
+
+const extra = (tipo: TipoRecompensa, id: string, nome: string, icone: string, condicao: Partial<Recompensa> = {}): Recompensa =>
+  ({ id: `${tipo}-${id}`, tipo, nome, icone, ...condicao });
 
 const medalha = (id: string, nivel = 1) => ({ medalha: { id, nivel } });
 
@@ -160,6 +163,25 @@ export const recompensas: Recompensa[] = [
   tema('floresta', 'Floresta', '🌳', medalha('constancia', 2)),
   tema('cyberpunk', 'Cyberpunk', '🤖', medalha('resposta-rapida', 3)),
   tema('espaco-profundo', 'Espaço profundo', '🪐', medalha('constancia', 4)),
+  extra('bichinho', 'passarinho', 'Passarinho', '🐦', { nivel: 34 }),
+  extra('bichinho', 'gato', 'Gatinho', '🐱', { nivel: 38 }),
+  extra('bichinho', 'cachorro', 'Cachorrinho', '🐶', { nivel: 42 }),
+  extra('bichinho', 'coelho', 'Coelhinho', '🐰', { nivel: 47 }),
+  extra('bichinho', 'coruja', 'Coruja sábia', '🦉', medalha('mestre-dos-padroes', 3)),
+  extra('bichinho', 'dragao', 'Dragãozinho', '🐲', { nivel: 52 }),
+  extra('som', 'padrao', 'Clássico', '🔔'),
+  extra('som', '8bits', '8 bits', '👾', { nivel: 36 }),
+  extra('som', 'sininho', 'Sininho', '🎐', { nivel: 44 }),
+  extra('som', 'robo', 'Robótico', '🤖', { nivel: 53 }),
+  extra('rastro', 'estrelas', 'Estrelas', '✨', { nivel: 35 }),
+  extra('rastro', 'bolhas', 'Bolhas', '🫧', { nivel: 40 }),
+  extra('rastro', 'fogo', 'Fogo', '🔥', { nivel: 49 }),
+  extra('rastro', 'arco-iris', 'Arco-íris', '🌈', { nivel: 57 }),
+  extra('danca', 'pulinho', 'Pulinho', '🦘'),
+  extra('danca', 'balanco', 'Balanço', '🎶', { nivel: 37 }),
+  extra('danca', 'giro', 'Giro', '🌀', { nivel: 45 }),
+  extra('danca', 'deslize', 'Deslize', '🕺', { nivel: 51 }),
+  extra('danca', 'estrela', 'Salto estrela', '⭐', { nivel: 62 }),
 ];
 
 const RECOMPENSAS_DA_CURVA_ANTERIOR = [
@@ -168,11 +190,23 @@ const RECOMPENSAS_DA_CURVA_ANTERIOR = [
   'tema-padrao', 'tema-oceano', 'tema-floresta', 'tema-galaxia',
 ];
 
-export const PERSONALIZACAO_PADRAO: Personalizacao = { cor: 'cor-prata', tema: 'tema-padrao', cabeca: '', rosto: '', pescoco: '', costas: '', mao: '' };
+export const PERSONALIZACAO_PADRAO: Personalizacao = {
+  cor: 'cor-prata',
+  tema: 'tema-padrao',
+  cabeca: '',
+  rosto: '',
+  pescoco: '',
+  costas: '',
+  mao: '',
+  bichinho: '',
+  som: 'som-padrao',
+  rastro: '',
+  danca: 'danca-pulinho',
+};
 
 export const buscarRecompensa = (id: string) => recompensas.find((recompensa) => recompensa.id === id);
 
-export const chaveDaRecompensa = (recompensa: Recompensa): keyof Personalizacao => recompensa.espaco || (recompensa.tipo === 'tema' ? 'tema' : 'cor');
+export const chaveDaRecompensa = (recompensa: Recompensa): keyof Personalizacao => recompensa.espaco || (recompensa.tipo as Exclude<TipoRecompensa, 'acessorio'>);
 
 const nivelDaMedalha = (progresso: Progresso, id: string) =>
   id === QUALQUER_MEDALHA
@@ -233,7 +267,8 @@ export const recompensasNaoVistas = (progresso = lerProgresso()) => {
     return [];
   }
 
-  return liberadas.filter((recompensa) => !vistas.includes(recompensa.id));
+  const padroes = Object.values(PERSONALIZACAO_PADRAO);
+  return liberadas.filter((recompensa) => !vistas.includes(recompensa.id) && !padroes.includes(recompensa.id));
 };
 
 export const marcarRecompensasVistas = (progresso = lerProgresso(), tipo?: TipoRecompensa) => {
@@ -284,6 +319,10 @@ export const lerPersonalizacao = (progresso = lerProgresso()): Personalizacao =>
     pescoco: escolher('pescoco'),
     costas: escolher('costas'),
     mao: escolher('mao'),
+    bichinho: escolher('bichinho'),
+    som: escolher('som'),
+    rastro: escolher('rastro'),
+    danca: escolher('danca'),
   };
 };
 

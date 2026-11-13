@@ -68,7 +68,6 @@
 .comemoracao-nivel__robo {
   width: 96px;
   height: 96px;
-  animation: comemoracao-nivel-danca 1.2s ease-in-out infinite;
 }
 
 .comemoracao-nivel__conteudo h2 {
@@ -177,19 +176,6 @@
   }
 }
 
-@keyframes comemoracao-nivel-danca {
-  0%,
-  100% {
-    transform: translateY(0) rotate(0);
-  }
-  25% {
-    transform: translateY(-10px) rotate(-8deg);
-  }
-  75% {
-    transform: translateY(-10px) rotate(8deg);
-  }
-}
-
 @keyframes comemoracao-nivel-selo {
   0% {
     transform: scale(0.4) rotate(-20deg);
@@ -208,7 +194,6 @@
   }
 
   .comemoracao-nivel__conteudo,
-  .comemoracao-nivel__robo,
   .comemoracao-nivel__selo,
   .comemoracao-nivel__icone--animada {
     animation: none;

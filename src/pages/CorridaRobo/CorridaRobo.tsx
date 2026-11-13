@@ -6,6 +6,7 @@ import { salvarPartida, type Questao } from '../../services/historico';
 import { conquistasDaPartida, type ConquistaPartida } from '../../services/compartilhar';
 import { urlDoSite } from '../../services/plataforma';
 import { contasDaTabuada, lerProgresso, partidaFinalizada } from '../../gamificacao/progresso';
+import { usePersonalizacao } from '../../gamificacao/usePersonalizacao';
 import BarraXp from '../../components/BarraXp/BarraXp';
 import BotaoSom from '../../components/BotaoSom/BotaoSom';
 import RankingFinal from '../../components/RankingFinal/RankingFinal';
@@ -80,6 +81,7 @@ function CorridaRobo() {
   const [recordes, setRecordes] = useState<Record<string, number>>(() => readRecordes());
   const [resultado, setResultado] = useState<Resultado | null>(null);
   const { quantidade } = useJogador();
+  const { rastro } = usePersonalizacao();
   const [totalCasas, setTotalCasas] = useState(() => casasDaCorrida(quantidade));
   const inicioRef = useRef(0);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -371,6 +373,7 @@ function CorridaRobo() {
                   <span className='corrida-raia__nome'>Você</span>
                   <div className='corrida-raia__trilho'>
                     <div className='corrida-corredor' style={posicaoNaPista(casas, totalCasas)}>
+                      {rastro && <span className={`corrida-rastro corrida-${rastro}`} aria-hidden='true' />}
                       <RoboPersonalizado titulo='Seu robô' triste={resultado?.vencedor === 'robo'} className='corrida-corredor__robo' />
                     </div>
                   </div>

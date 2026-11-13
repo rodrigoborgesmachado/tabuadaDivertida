@@ -170,6 +170,7 @@
     repeating-linear-gradient(90deg, transparent 0 calc(5% - 2px), var(--separator-color-primary) calc(5% - 2px) 5%),
     var(--color-surface);
   border-right: 8px dashed var(--text-color-primary);
+  overflow: hidden;
 }
 
 .corrida-corredor {
@@ -181,9 +182,59 @@
 }
 
 .corrida-corredor__robo {
+  position: relative;
   display: block;
   width: 100%;
   height: 100%;
+}
+
+.corrida-rastro {
+  position: absolute;
+  top: 25%;
+  right: 70%;
+  width: 72px;
+  height: 50%;
+  border-radius: 999px;
+  -webkit-mask-image: linear-gradient(to left, #000, transparent);
+  mask-image: linear-gradient(to left, #000, transparent);
+  pointer-events: none;
+}
+
+.corrida-rastro-estrelas {
+  background: radial-gradient(circle, #ffd93d 0 2px, transparent 3px) 0 0 / 12px 12px;
+}
+
+.corrida-rastro-bolhas {
+  background: radial-gradient(circle, transparent 0 3px, #7fd3f7 3px 4.5px, transparent 5px) 0 0 / 14px 14px;
+}
+
+.corrida-rastro-fogo {
+  background: linear-gradient(to left, #ffd23f, #ff5a1f 60%, #a3120f);
+}
+
+.corrida-rastro-arco-iris {
+  border-radius: 6px;
+  background: linear-gradient(#ff6b6b 0 20%, #ffd93d 20% 40%, #6bcb77 40% 60%, #4d96ff 60% 80%, #b07cff 80%);
+}
+
+.corrida-pista--correndo .corrida-rastro {
+  animation: corrida-rastro 0.6s linear infinite;
+}
+
+.corrida-pista--correndo .corrida-rastro-fogo {
+  animation: corrida-rastro-fogo 0.3s ease-in-out infinite alternate;
+}
+
+@keyframes corrida-rastro {
+  to {
+    background-position: -12px 0;
+  }
+}
+
+@keyframes corrida-rastro-fogo {
+  to {
+    transform: scaleY(0.75);
+  }
 }
 
 .corrida-pista--correndo .corrida-corredor__robo {
@@ -265,7 +316,8 @@
     transition: none;
   }
 
-  .corrida-pista--correndo .corrida-corredor__robo {
+  .corrida-pista--correndo .corrida-corredor__robo,
+  .corrida-pista--correndo .corrida-rastro {
     animation: none;
   }
 }
