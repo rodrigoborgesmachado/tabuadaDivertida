@@ -90,7 +90,7 @@ function IconeDoApp({ progresso, nivel, icone: { atual, setAtual, trocaSuportada
                   disabled={!liberada}
                   onClick={() => trocar(id)}
                 >
-                  <span className='personalizar-item__icone' style={{ background: recompensa.valor }} aria-hidden='true'>
+                  <span className='personalizar-item__icone' style={{ background: recompensa.degrade ? `linear-gradient(135deg, ${recompensa.degrade.join(', ')})` : recompensa.valor }} aria-hidden='true'>
                     {liberada ? '🤖' : '🔒'}
                   </span>
                   <strong>Robô {recompensa.nome}</strong>

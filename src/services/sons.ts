@@ -68,6 +68,16 @@ type Efeito = 'acerto' | 'erro' | 'conquista';
 type Nota = [number, number, OscillatorType, number];
 
 const CONJUNTOS: Record<string, Record<Efeito, Nota[]>> = {
+  'som-xilofone': {
+    acerto: [[1047, 120, 'triangle', 0], [1568, 180, 'triangle', 100]],
+    erro: [[523, 160, 'triangle', 0], [392, 220, 'triangle', 130]],
+    conquista: [[784, 120, 'triangle', 0], [988, 120, 'triangle', 110], [1175, 120, 'triangle', 220], [1568, 300, 'triangle', 330]],
+  },
+  'som-tambor': {
+    acerto: [[180, 80, 'sine', 0], [240, 90, 'sine', 90]],
+    erro: [[90, 260, 'sine', 0]],
+    conquista: [[150, 80, 'sine', 0], [150, 80, 'sine', 120], [200, 80, 'sine', 240], [260, 260, 'sine', 360]],
+  },
   'som-8bits': {
     acerto: [[988, 70, 'square', 0], [1319, 90, 'square', 70]],
     erro: [[196, 120, 'square', 0], [147, 180, 'square', 110]],

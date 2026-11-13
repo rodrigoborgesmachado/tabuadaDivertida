@@ -2,6 +2,7 @@ import { criarProgresso } from './progresso';
 import {
   buscarRecompensa,
   condicaoRecompensa,
+  ESPACOS,
   EVENTO_PERSONALIZACAO,
   EVENTO_RECOMPENSAS_VISTAS,
   lerPersonalizacao,
@@ -18,6 +19,7 @@ import {
   STORAGE_RECOMPENSAS_VISTAS,
 } from './recompensas';
 import { xpTotalDoNivel } from './xp';
+import { ICONES_APP } from '../services/iconeApp';
 
 const recompensa = (id: string) => buscarRecompensa(id)!;
 
@@ -60,6 +62,17 @@ describe('recompensas', () => {
     expect(recompensa('cor-infinito')).toMatchObject({ raridade: 'lendaria', nivel: 75, animada: true });
   });
 
+  it('keeps unlocking new app icon colors after level 22', () => {
+    const niveis = ICONES_APP.map((id) => recompensa(id)).filter((item) => item.nivel && item.nivel > 22).map((item) => item.nivel!).sort((a, b) => a - b);
+
+    ICONES_APP.forEach((id) => expect(recompensa(id).tipo).toBe('cor'));
+    expect(niveis.length).toBeGreaterThanOrEqual(10);
+    expect(niveis[0]).toBe(24);
+    expect(niveis[niveis.length - 1]).toBe(75);
+    niveis.slice(1).forEach((nivel, indice) => expect(nivel - niveis[indice]).toBeLessThanOrEqual(5));
+    expect(recompensasDoNivel(22, 24).filter((item) => ICONES_APP.includes(item.id)).map((item) => item.id)).toEqual(['cor-rubi']);
+  });
+
   it('has pets, sounds, trails and dances unlocked by level or medal', () => {
     const tipo = (nome: string) => recompensas.filter((item) => item.tipo === nome);
 
@@ -72,6 +85,24 @@ describe('recompensas', () => {
     expect(recompensaLiberada(recompensa('bichinho-coruja'), { ...criarProgresso(), medalhas: { 'mestre-dos-padroes': medalha(3) } })).toBe(true);
     expect(recompensaLiberada(recompensa('som-padrao'), criarProgresso())).toBe(true);
     expect(recompensaLiberada(recompensa('danca-pulinho'), criarProgresso())).toBe(true);
+  });
+
+  it('gives new trails, dances, sounds and pets between levels 10 and 30, each on its own level', () => {
+    const extras = recompensas.filter((item) => ['rastro', 'danca', 'som', 'bichinho'].includes(item.tipo) && item.nivel && item.nivel >= 10 && item.nivel <= 30);
+
+    ['rastro', 'danca', 'som', 'bichinho'].forEach((tipo) => expect(extras.filter((item) => item.tipo === tipo).length).toBeGreaterThanOrEqual(2));
+    expect(new Set(extras.map((item) => item.nivel)).size).toBe(extras.length);
+    expect(recompensasDoNivel(9, 10).map((item) => item.id)).toContain('rastro-pegadas');
+    expect(recompensaLiberada(recompensa('bichinho-pinguim'), { ...criarProgresso(), xp: xpTotalDoNivel(19) })).toBe(false);
+    expect(recompensaLiberada(recompensa('bichinho-pinguim'), { ...criarProgresso(), xp: xpTotalDoNivel(20) })).toBe(true);
+  });
+
+  it('keeps giving new themes and accessories in every space after level 40', () => {
+    const altos = recompensas.filter((item) => item.nivel && item.nivel > 40);
+
+    expect(altos.filter((item) => item.tipo === 'tema').length).toBeGreaterThanOrEqual(3);
+    ESPACOS.forEach((espaco) => expect(altos.some((item) => item.espaco === espaco.id)).toBe(true));
+    expect(recompensasDoNivel(42, 43).map((item) => item.id)).toContain('tema-castelo');
   });
 
   it('reads the chosen pet, sound, trail and dance only while unlocked', () => {

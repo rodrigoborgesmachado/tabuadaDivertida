@@ -407,6 +407,90 @@
   --text-color-accent: #e8c49a;
 }
 
+[data-cor='castelo'] {
+  --background-color: #f4f0fa;
+  --background-color-alt: #e2dcef;
+  --background-glow-warm: #f2c94c;
+  --background-glow-cool: #9a8fc7;
+  --button-color-primary: #6a4fa3;
+  --button-color-primary-hover: #5a428c;
+  --text-color-accent: #5a428c;
+}
+
+[data-theme='dark'][data-cor='castelo'],
+[data-theme='dark'] [data-cor='castelo'] {
+  --background-color: #18142a;
+  --background-color-alt: #2a2442;
+  --background-glow-warm: #c9a23a;
+  --background-glow-cool: #6a5fa8;
+  --button-color-primary: #7a5fb8;
+  --button-color-primary-hover: #6a4fa3;
+  --text-color-accent: #f2d98a;
+}
+
+[data-cor='selva'] {
+  --background-color: #eefbe4;
+  --background-color-alt: #d2efc0;
+  --background-glow-warm: #ffd23f;
+  --background-glow-cool: #3fbf6a;
+  --button-color-primary: #1f8a4c;
+  --button-color-primary-hover: #19733f;
+  --text-color-accent: #19733f;
+}
+
+[data-theme='dark'][data-cor='selva'],
+[data-theme='dark'] [data-cor='selva'] {
+  --background-color: #0b2014;
+  --background-color-alt: #133a20;
+  --background-glow-warm: #c9a020;
+  --background-glow-cool: #1f9a52;
+  --button-color-primary: #24985a;
+  --button-color-primary-hover: #1f8a4c;
+  --text-color-accent: #b8f08a;
+}
+
+[data-cor='cristais'] {
+  --background-color: #f1fbff;
+  --background-color-alt: #e6e4ff;
+  --background-glow-warm: #bdeeff;
+  --background-glow-cool: #c9b3e8;
+  --button-color-primary: #3f7fb8;
+  --button-color-primary-hover: #346ba0;
+  --text-color-accent: #346ba0;
+}
+
+[data-theme='dark'][data-cor='cristais'],
+[data-theme='dark'] [data-cor='cristais'] {
+  --background-color: #0e1a2a;
+  --background-color-alt: #1e1c3c;
+  --background-glow-warm: #4fa8d8;
+  --background-glow-cool: #8a6cc8;
+  --button-color-primary: #4a8cc8;
+  --button-color-primary-hover: #3f7fb8;
+  --text-color-accent: #bdeeff;
+}
+
+[data-cor='nuvens'] {
+  --background-color: #f7fbff;
+  --background-color-alt: #e3f1ff;
+  --background-glow-warm: #ffe1f0;
+  --background-glow-cool: #a8d8ff;
+  --button-color-primary: #3a86c8;
+  --button-color-primary-hover: #3075b0;
+  --text-color-accent: #3075b0;
+}
+
+[data-theme='dark'][data-cor='nuvens'],
+[data-theme='dark'] [data-cor='nuvens'] {
+  --background-color: #141c2c;
+  --background-color-alt: #22304a;
+  --background-glow-warm: #a87fa8;
+  --background-glow-cool: #4f86c0;
+  --button-color-primary: #4a90cf;
+  --button-color-primary-hover: #3a86c8;
+  --text-color-accent: #cfe6ff;
+}
+
 * {
   padding: 0;
   margin: 0;
