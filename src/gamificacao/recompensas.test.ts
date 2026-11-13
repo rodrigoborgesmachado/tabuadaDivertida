@@ -18,6 +18,7 @@ import {
   STORAGE_RECOMPENSAS_VISTAS,
 } from './recompensas';
 import { xpTotalDoNivel } from './xp';
+import { ICONES_APP } from '../services/iconeApp';
 
 const recompensa = (id: string) => buscarRecompensa(id)!;
 
@@ -58,6 +59,17 @@ describe('recompensas', () => {
   it('has animated colors among the epic and legendary ones', () => {
     expect(recompensa('cor-camaleao').animada).toBe(true);
     expect(recompensa('cor-infinito')).toMatchObject({ raridade: 'lendaria', nivel: 75, animada: true });
+  });
+
+  it('keeps unlocking new app icon colors after level 22', () => {
+    const niveis = ICONES_APP.map((id) => recompensa(id)).filter((item) => item.nivel && item.nivel > 22).map((item) => item.nivel!).sort((a, b) => a - b);
+
+    ICONES_APP.forEach((id) => expect(recompensa(id).tipo).toBe('cor'));
+    expect(niveis.length).toBeGreaterThanOrEqual(10);
+    expect(niveis[0]).toBe(24);
+    expect(niveis[niveis.length - 1]).toBe(75);
+    niveis.slice(1).forEach((nivel, indice) => expect(nivel - niveis[indice]).toBeLessThanOrEqual(5));
+    expect(recompensasDoNivel(22, 24).filter((item) => ICONES_APP.includes(item.id)).map((item) => item.id)).toEqual(['cor-rubi']);
   });
 
   it('has pets, sounds, trails and dances unlocked by level or medal', () => {

@@ -15,6 +15,9 @@ export const IconeApp = registerPlugin<IconeAppPlugin>('IconeApp');
 export const ICONES_APP = [
   'cor-prata', 'cor-azul', 'cor-vermelho', 'cor-verde', 'cor-laranja',
   'cor-roxa', 'cor-dourada', 'cor-verde-neon', 'cor-rosa-neon', 'cor-azul-eletrico',
+  'cor-rubi', 'cor-esmeralda', 'cor-safira', 'cor-arco-iris', 'cor-holografico',
+  'cor-por-do-sol', 'cor-aurora', 'cor-cristal', 'cor-fogo-gelo', 'cor-ouro',
+  'cor-cometa', 'cor-nebulosa', 'cor-supernova', 'cor-buraco-negro', 'cor-infinito',
 ];
 
 export const TAMANHO_ATALHO = 432;

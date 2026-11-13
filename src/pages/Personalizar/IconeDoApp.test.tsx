@@ -1,6 +1,7 @@
 import type { Mock } from 'vitest';
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import { criarProgresso } from '../../gamificacao/progresso';
+import { xpTotalDoNivel } from '../../gamificacao/xp';
 import { IconeApp, imagemDoAtalho, temIconeDoApp } from '../../services/iconeApp';
 import { ehAndroid } from '../../services/plataforma';
 import IconeDoApp, { AVISO_TROCA, useIconeDoApp } from './IconeDoApp';
@@ -66,6 +67,17 @@ describe('IconeDoApp', () => {
     expect(item('Robô Azul céu').textContent).toContain('Nível 2');
     expect(temIconeDoApp('cor-azul')).toBe(true);
     expect(temIconeDoApp('cor-lilas')).toBe(false);
+  });
+
+  it('shows the icons unlocked after level 22 with the gradient of the robot color', async () => {
+    await renderIcone(xpTotalDoNivel(24));
+
+    expect(item('Robô Vermelho rubi').disabled).toBe(false);
+    expect(item('Robô Esmeralda').disabled).toBe(true);
+    expect(item('Robô Esmeralda').textContent).toContain('Nível 26');
+    expect(item('Robô Infinito').textContent).toContain('Nível 75');
+    expect((item('Robô Aurora boreal').querySelector('.personalizar-item__icone') as HTMLElement).style.background).toContain('linear-gradient');
+    expect(temIconeDoApp('cor-infinito')).toBe(true);
   });
 
   it('warns the player before changing the icon', async () => {
