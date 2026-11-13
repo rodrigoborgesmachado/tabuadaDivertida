@@ -104,6 +104,20 @@ describe('Ranking', () => {
     expect(screen.getByText('2')).toBeTruthy();
   });
 
+  it('shows the clock game ranking by mode and level with the right answers and time', async () => {
+    get.mockResolvedValue({ data: { success: true, object: [{ ...item('Ana', 0), pontuacao: null, acertos: 9, total: 10, tempo: 48 }], total: 1 } });
+
+    renderRanking('/ranking?jogo=que-horas-sao&modo=acertar-dificil');
+
+    await screen.findByText('🏆Ana');
+    expect(get).toHaveBeenCalledWith('ResultadosJogos/ranking?jogo=que-horas-sao&modo=acertar-dificil&top=50', expect.anything());
+    expect(screen.getByRole('tab', { name: /Que horas são\?/ }).getAttribute('aria-selected')).toBe('true');
+    expect(Array.from((screen.getByRole('combobox') as HTMLSelectElement).options).map((opcao) => opcao.value)).toEqual(['ler-facil', 'ler-medio', 'ler-dificil', 'acertar-facil', 'acertar-medio', 'acertar-dificil']);
+    expect(screen.getByRole('option', { name: 'Acertar os ponteiros · Difícil' })).toBeTruthy();
+    expect(screen.getByText('9/10')).toBeTruthy();
+    expect(screen.getByText('48s')).toBeTruthy();
+  });
+
   it('shows the empty state', async () => {
     get.mockResolvedValue({ data: { success: true, object: [], total: 0 } });
 

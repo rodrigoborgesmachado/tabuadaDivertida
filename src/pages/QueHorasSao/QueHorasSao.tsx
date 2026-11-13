@@ -7,6 +7,7 @@ import { lerProgresso, partidaFinalizada } from '../../gamificacao/progresso';
 import BarraXp from '../../components/BarraXp/BarraXp';
 import BotaoSom from '../../components/BotaoSom/BotaoSom';
 import CompartilharResultado from '../../components/CompartilharResultado/CompartilharResultado';
+import RankingFinal from '../../components/RankingFinal/RankingFinal';
 import ComoJogar from '../../components/ComoJogar/ComoJogar';
 import { formatarTempo } from '../MemoriaTabuada/logic';
 import { acertou, anguloDoPonteiroDasHoras, anguloDoPonteiroDosMinutos, anguloDoPonto, explicar, formatar, gerarPartida, inicioDosPonteiros, moverHoras, moverMinutos, normalizar, PASSO_ARRASTE, pergunta, TOTAL_QUESTOES, type Formato, type Modo, type Nivel, type Questao } from './logic';
@@ -448,6 +449,7 @@ function QueHorasSao() {
                 <h3>🕒 Fim da partida!</h3>
                 <p>Você acertou {resultado.acertos} de {TOTAL_QUESTOES} questões em {formatarTempo(resultado.tempo)}.</p>
                 <BarraXp ganho={resultado.ganhoXp} />
+                <RankingFinal jogo='que-horas-sao' modo={`${modo}-${nivel}`} resultado={{ acertos: resultado.acertos, total: TOTAL_QUESTOES, tempo: resultado.tempo }} />
                 <div className='que-horas-modal__actions'>
                   <button type='button' className='global-button' onClick={iniciarJogo}>
                     Jogar de novo

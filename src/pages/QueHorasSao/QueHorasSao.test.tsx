@@ -1,6 +1,16 @@
+import type { Mock } from 'vitest';
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
+import { enviarResultado } from '../../services/resultadosJogos';
 import QueHorasSao from './QueHorasSao';
+
+vi.mock('../../services/resultadosJogos', async () => ({
+  ...(await vi.importActual('../../services/resultadosJogos')),
+  enviarResultado: vi.fn(),
+  buscarRanking: vi.fn(),
+}));
+
+const enviar = enviarResultado as Mock;
 
 vi.mock('./logic', async () => {
   const actual = await vi.importActual<typeof import('./logic')>('./logic');
@@ -35,6 +45,8 @@ describe('QueHorasSao', () => {
   beforeEach(() => {
     vi.useFakeTimers();
     window.localStorage.clear();
+    enviar.mockReset();
+    enviar.mockResolvedValue(null);
   });
 
   afterEach(() => {
@@ -139,5 +151,7 @@ describe('QueHorasSao', () => {
     expect(screen.getByText('Compartilhar')).toBeTruthy();
     expect(progresso.jogosJogados).toEqual(['que-horas-sao']);
     expect(progresso.acertosPorModo['relogio-facil']).toBe(10);
+    expect(enviar).toHaveBeenCalledWith('que-horas-sao', 'ler-facil', { acertos: 10, total: 10, tempo: 10 }, '');
+    expect(screen.getByText('🏆 Ver ranking').getAttribute('href')).toBe('/ranking?jogo=que-horas-sao&modo=ler-facil');
   });
 });
