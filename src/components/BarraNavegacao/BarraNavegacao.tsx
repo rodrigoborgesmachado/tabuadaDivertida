@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBookOpen, faChartLine, faEllipsis, faHouse, faTrophy, IconDefinition } from '@fortawesome/free-solid-svg-icons';
+import { faChartLine, faEllipsis, faGamepad, faHouse, faTrophy, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { Link, useLocation } from 'react-router-dom';
 import { isJogoPath } from '../../pages/Jogos/jogosConfig';
 import { ehApp } from '../../services/plataforma';
@@ -16,10 +16,10 @@ const ROTAS_MAIS = ['/mais', '/sobre', '/contato', '/privacidade', '/contribua']
 
 const itens: ItemBarra[] = [
   { to: '/', rotulo: 'Início', icone: faHouse, ativo: (path) => path === '/' },
+  { to: '/jogos', rotulo: 'Jogos', icone: faGamepad, ativo: (path) => path === '/jogos' },
   { to: '/progresso', rotulo: 'Progresso', icone: faChartLine, ativo: (path) => path.startsWith('/progresso') || path === '/historico' },
   { to: '/ranking', rotulo: 'Ranking', icone: faTrophy, ativo: (path) => path.startsWith('/ranking') },
-  { to: '/artigos', rotulo: 'Aprender', icone: faBookOpen, ativo: (path) => path.startsWith('/artigos') },
-  { to: '/mais', rotulo: 'Mais', icone: faEllipsis, ativo: (path) => ROTAS_MAIS.includes(path) },
+  { to: '/mais', rotulo: 'Mais', icone: faEllipsis, ativo: (path) => ROTAS_MAIS.includes(path) || path.startsWith('/artigos') },
 ];
 
 export const telaDeJogo = (path: string) =>

@@ -30,16 +30,18 @@ describe('BarraNavegacao', () => {
     renderBarra();
 
     const links = screen.getAllByRole('link');
-    expect(links.map((link) => link.textContent)).toEqual(['Início', 'Progresso', 'Ranking', 'Aprender', 'Mais']);
-    expect(links.map((link) => link.getAttribute('href'))).toEqual(['/', '/progresso', '/ranking', '/artigos', '/mais']);
+    expect(links.map((link) => link.textContent)).toEqual(['Início', 'Jogos', 'Progresso', 'Ranking', 'Mais']);
+    expect(links.map((link) => link.getAttribute('href'))).toEqual(['/', '/jogos', '/progresso', '/ranking', '/mais']);
     expect(screen.getByRole('link', { name: 'Início' }).getAttribute('aria-current')).toBe('page');
   });
 
   it.each([
+    ['/jogos', 'Jogos'],
     ['/progresso', 'Progresso'],
     ['/historico', 'Progresso'],
     ['/ranking', 'Ranking'],
-    ['/artigos/tabuada', 'Aprender'],
+    ['/artigos', 'Mais'],
+    ['/artigos/tabuada', 'Mais'],
     ['/mais', 'Mais'],
     ['/privacidade', 'Mais'],
   ])('marks the tab of %s as active', (path, aba) => {
