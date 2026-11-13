@@ -15,6 +15,36 @@ interface RoboPersonalizadoProps {
 }
 
 const bichinhos: Record<string, ReactNode> = {
+  'bichinho-tartaruga': (
+    <g stroke='#333'>
+      <ellipse cx='-10' cy='94' rx='6' ry='5' fill='#8fdcb0' />
+      <ellipse cx='-32' cy='98' rx='4' ry='3' fill='#8fdcb0' />
+      <path d='M-36 96 Q-24 72 -12 96 Z' fill='#4f9d69' />
+      <path d='M-29 92 L-24 86 L-19 92 Z' fill='#8fdcb0' strokeWidth='0.8' />
+      <circle cx='-8' cy='93' r='1.3' fill='#333' />
+    </g>
+  ),
+  'bichinho-pinguim': (
+    <g stroke='#333'>
+      <ellipse cx='-22' cy='88' rx='11' ry='13' fill='#24324a' />
+      <ellipse cx='-22' cy='91' rx='7' ry='9' fill='#ffffff' />
+      <circle cx='-25' cy='80' r='1.5' fill='#ffffff' stroke='none' />
+      <circle cx='-19' cy='80' r='1.5' fill='#ffffff' stroke='none' />
+      <path d='M-24 84 L-20 84 L-22 87 Z' fill='#ff9f43' />
+      <path d='M-27 101 h4 M-21 101 h4' stroke='#ff9f43' strokeWidth='2.5' />
+    </g>
+  ),
+  'bichinho-joaninha': (
+    <g stroke='#333'>
+      <circle cx='-11' cy='92' r='5' fill='#333' />
+      <path d='M-34 98 Q-34 80 -20 80 Q-12 80 -12 98 Z' fill='#e0302a' />
+      <path d='M-23 81 V98' />
+      <circle cx='-28' cy='90' r='2' fill='#333' />
+      <circle cx='-18' cy='88' r='2' fill='#333' />
+      <circle cx='-27' cy='95' r='1.6' fill='#333' />
+      <circle cx='-17' cy='95' r='1.6' fill='#333' />
+    </g>
+  ),
   'bichinho-passarinho': (
     <g stroke='#333'>
       <ellipse cx='-22' cy='91' rx='11' ry='8' fill='#f4e66b' />
@@ -107,6 +137,12 @@ const costas: Record<string, ReactNode> = {
       <path d='M86 30 Q122 -4 116 30 Q122 56 86 54 Z' />
     </g>
   ),
+  'asas-dragao': (
+    <g fill='#3aa86b' stroke='#333'>
+      <path d='M14 30 L-22 4 L-14 22 L-26 26 L-12 36 L-20 48 L14 52 Z' />
+      <path d='M86 30 L122 4 L114 22 L126 26 L112 36 L120 48 L86 52 Z' />
+    </g>
+  ),
   jato: (
     <g stroke='#333'>
       <path d='M2 62 L6 78 L10 62 Z M90 62 L94 78 L98 62 Z' fill='#ff9f43' />
@@ -135,6 +171,13 @@ const rosto: Record<string, ReactNode> = {
     <g stroke='#333' strokeWidth='2'>
       <path d='M10 45 H22 M78 45 H90' strokeWidth='4' />
       <rect x='22' y='35' width='56' height='20' rx='10' fill='rgba(140, 220, 255, 0.4)' />
+    </g>
+  ),
+  'oculos-coracao': (
+    <g fill='#ff5c8a' stroke='#333' strokeWidth='1.5'>
+      <path d='M35 55 C22 46 22 34 30 36 Q34 37 35 41 Q36 37 40 36 C48 34 48 46 35 55 Z' />
+      <path d='M65 55 C52 46 52 34 60 36 Q64 37 65 41 Q66 37 70 36 C78 34 78 46 65 55 Z' />
+      <path d='M45 42 H55' fill='none' strokeWidth='2.5' />
     </g>
   ),
   bigode: <path d='M50 58 Q40 51 31 60 Q40 64 50 60 Q60 64 69 60 Q60 51 50 58 Z' fill='#6b4226' stroke='#333' />,
@@ -243,6 +286,13 @@ const cabeca: Record<string, ReactNode> = {
       <path d='M45 -2 L55 -6 M46 -10 L54 -13' stroke='#c58ce0' strokeWidth='2' />
     </g>
   ),
+  'chapeu-festa': (
+    <g stroke='#333'>
+      <path d='M36 20 L50 -20 L64 20 Z' fill='#7cc6f2' />
+      <path d='M40 9 L60 9 M44 -3 L56 -3' stroke='#f2c94c' strokeWidth='3' />
+      <circle cx='50' cy='-22' r='4' fill='#ff5c8a' />
+    </g>
+  ),
   'chapeu-formatura': (
     <g stroke='#333'>
       <rect x='36' y='6' width='28' height='14' fill='#24324a' />
@@ -285,6 +335,11 @@ const pescoco: Record<string, ReactNode> = {
       {[[30, 83], [37, 88], [43, 91], [50, 92], [57, 91], [63, 88], [70, 83]].map(([x, y]) => <circle key={x} cx={x} cy={y} r='3' />)}
     </g>
   ),
+  'colar-havaiano': (
+    <g stroke='#333' strokeWidth='0.6'>
+      {[[28, 81, '#ff5c8a'], [35, 87, '#ffb067'], [42, 91, '#f4e66b'], [50, 93, '#ff5c8a'], [58, 91, '#ffb067'], [65, 87, '#f4e66b'], [72, 81, '#ff5c8a']].map(([x, y, cor]) => <circle key={x} cx={x} cy={y} r='4' fill={cor as string} />)}
+    </g>
+  ),
   'medalha-ouro': (
     <g stroke='#333'>
       <path d='M40 78 L50 90 L60 78' fill='none' stroke='#e0586a' strokeWidth='4' />
@@ -323,6 +378,13 @@ const mao: Record<string, ReactNode> = {
       <rect x='106' y='60' width='4' height='26' fill='#6b4226' />
       <circle cx='108' cy='92' r='9' fill='#e0586a' />
       <circle cx='108' cy='92' r='2.5' fill='#333' />
+    </g>
+  ),
+  pirulito: (
+    <g stroke='#333'>
+      <path d='M108 96 V72' strokeWidth='2.5' />
+      <circle cx='108' cy='64' r='10' fill='#ff9ad5' />
+      <path d='M108 64 m-6 0 a6 6 0 1 1 6 6 a3.5 3.5 0 1 1 -3.5 -3.5' fill='none' stroke='#ffffff' strokeWidth='2' />
     </g>
   ),
   calculadora: (

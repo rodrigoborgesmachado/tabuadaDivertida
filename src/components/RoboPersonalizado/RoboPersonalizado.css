@@ -55,6 +55,64 @@
   animation-name: robo-danca-estrela;
 }
 
+.robo-danca-palmas {
+  animation-name: robo-danca-palmas;
+  animation-duration: 0.8s;
+}
+
+.robo-danca-robo {
+  animation-name: robo-danca-robo;
+  animation-duration: 1.6s;
+  animation-timing-function: steps(1, end);
+}
+
+.robo-danca-onda {
+  animation-name: robo-danca-onda;
+  animation-duration: 1.4s;
+}
+
+@keyframes robo-danca-palmas {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  25% {
+    transform: scale(1.1, 0.92);
+  }
+  50% {
+    transform: scale(0.95, 1.06);
+  }
+}
+
+@keyframes robo-danca-robo {
+  0%,
+  100% {
+    transform: rotate(0) translateX(0);
+  }
+  25% {
+    transform: rotate(-10deg) translateX(-6px);
+  }
+  50% {
+    transform: rotate(0) translateY(-8px);
+  }
+  75% {
+    transform: rotate(10deg) translateX(6px);
+  }
+}
+
+@keyframes robo-danca-onda {
+  0%,
+  100% {
+    transform: translateY(0) skewY(0);
+  }
+  25% {
+    transform: translateY(-8px) skewY(6deg);
+  }
+  75% {
+    transform: translateY(-8px) skewY(-6deg);
+  }
+}
+
 @keyframes robo-danca-pulinho {
   0%,
   100% {
