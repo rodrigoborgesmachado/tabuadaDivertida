@@ -45,7 +45,12 @@ const OPERACOES: ModoRanking[] = [
   { id: 'R', label: 'Aleatório' },
 ];
 
-const NIVEIS_CORRIDA = Object.keys(NIVEIS_ROBO) as NivelRobo[];
+const MODOS_RELOGIO: ModoRanking[] = [
+  { id: 'ler', label: 'Ler o relógio' },
+  { id: 'acertar', label: 'Acertar os ponteiros' },
+];
+
+const NIVEIS_CORRIDA =Object.keys(NIVEIS_ROBO) as NivelRobo[];
 
 const texto = (valor: unknown) => (valor === null || valor === undefined ? '—' : String(valor));
 
@@ -120,6 +125,17 @@ export const jogosRanking: JogoRanking[] = [
       { titulo: 'Tempo', valor: (item) => segundos(item.tempo) },
       { titulo: 'Tempo real', valor: (item) => segundos(lerExtras(item).segundos) },
       { titulo: 'Dicas', valor: (item) => texto(lerExtras(item).dicas) },
+    ],
+  },
+  {
+    id: 'que-horas-sao',
+    nome: 'Que horas são?',
+    icone: '🕒',
+    path: '/jogos/que-horas-sao',
+    modos: MODOS_RELOGIO.flatMap((modo) => NIVEIS.map((nivel) => ({ id: `${modo.id}-${nivel.id}`, label: `${modo.label} · ${nivel.label}` }))),
+    colunas: [
+      { titulo: 'Acertos', valor: (item) => `${texto(item.acertos)}/${texto(item.total)}` },
+      { titulo: 'Tempo', valor: (item) => segundos(item.tempo) },
     ],
   },
 ];

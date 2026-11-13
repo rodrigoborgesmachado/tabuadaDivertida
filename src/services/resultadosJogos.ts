@@ -1,6 +1,6 @@
 import api from './api';
 
-export type JogoComRanking = '2048' | 'memoria' | 'maior-ou-menor' | 'teste-qi' | 'corrida-robo' | 'sudoku';
+export type JogoComRanking = '2048' | 'memoria' | 'maior-ou-menor' | 'teste-qi' | 'corrida-robo' | 'sudoku' | 'que-horas-sao';
 
 export interface DadosResultado {
   pontuacao?: number;
