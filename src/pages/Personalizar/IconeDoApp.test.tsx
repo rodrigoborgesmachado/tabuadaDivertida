@@ -3,7 +3,7 @@ import { act, fireEvent, render, screen } from '@testing-library/react';
 import { criarProgresso } from '../../gamificacao/progresso';
 import { IconeApp, imagemDoAtalho, temIconeDoApp } from '../../services/iconeApp';
 import { ehAndroid } from '../../services/plataforma';
-import IconeDoApp, { AVISO_TROCA } from './IconeDoApp';
+import IconeDoApp, { AVISO_TROCA, useIconeDoApp } from './IconeDoApp';
 
 vi.mock('../../services/plataforma', async (original) => ({
   ...(await original<typeof import('../../services/plataforma')>()),
@@ -22,8 +22,14 @@ const trocarIcone = IconeApp.trocarIcone as Mock;
 const atalho = IconeApp.atalho as Mock;
 const criarAtalho = IconeApp.criarAtalho as Mock;
 
+function IconeDoAppTeste({ xp }: { xp: number }) {
+  const icone = useIconeDoApp();
+
+  return <IconeDoApp progresso={{ ...criarProgresso(), xp }} nivel={1} icone={icone} />;
+}
+
 const renderIcone = async (xp = 0) => {
-  render(<IconeDoApp progresso={{ ...criarProgresso(), xp }} nivel={1} />);
+  render(<IconeDoAppTeste xp={xp} />);
   await act(async () => {});
 };
 
