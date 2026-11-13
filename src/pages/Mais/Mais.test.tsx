@@ -10,6 +10,9 @@ describe('Mais', () => {
       </MemoryRouter>
     );
 
+    expect(screen.getByRole('navigation', { name: 'Aprender' })).toBeTruthy();
+    expect(screen.getByRole('link', { name: /Tabuada/ }).getAttribute('href')).toBe('/artigos/tabuada');
+    expect(screen.getByRole('link', { name: /Artigos/ }).getAttribute('href')).toBe('/artigos');
     expect(screen.getByRole('link', { name: /Sobre/ }).getAttribute('href')).toBe('/sobre');
     expect(screen.getByRole('link', { name: /Contato/ }).getAttribute('href')).toBe('/contato');
     expect(screen.getByRole('link', { name: /Política de Privacidade/ }).getAttribute('href')).toBe('/privacidade');
