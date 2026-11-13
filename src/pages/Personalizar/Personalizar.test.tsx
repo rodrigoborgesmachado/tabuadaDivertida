@@ -2,6 +2,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { criarProgresso, STORAGE_KEY } from '../../gamificacao/progresso';
 import { marcarRecompensasVistas, recompensasNaoVistas, STORAGE_PERSONALIZACAO, STORAGE_RECOMPENSAS_VISTAS } from '../../gamificacao/recompensas';
+import { xpTotalDoNivel } from '../../gamificacao/xp';
 import Personalizar from './Personalizar';
 
 const renderPersonalizar = () => render(
@@ -51,6 +52,17 @@ describe('Personalizar', () => {
     expect(item('Boné').getAttribute('aria-pressed')).toBe('true');
     expect(container.querySelector('.personalizar-robo')?.getAttribute('data-acessorios')).toBe('bone');
     expect(JSON.parse(window.localStorage.getItem(STORAGE_PERSONALIZACAO) || '{}').cabeca).toBe('bone');
+  });
+
+  it('animates the robot painted with an animated color', () => {
+    salvarProgresso({ xp: xpTotalDoNivel(55) });
+    const { container } = renderPersonalizar();
+
+    expect(item('Cometa').querySelector('.personalizar-item__icone--animada')).toBeTruthy();
+    expect(item('Ouro puro').querySelector('.personalizar-item__icone--animada')).toBeNull();
+    fireEvent.click(item('Cometa'));
+
+    expect(container.querySelectorAll('.personalizar-robo .robo-pintura-animada')).toHaveLength(2);
   });
 
   it('combines one accessory for each space on the robot', () => {

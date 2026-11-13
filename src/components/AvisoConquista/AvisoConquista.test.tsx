@@ -48,51 +48,16 @@ describe('AvisoConquista', () => {
       });
     }
 
-    expect(screen.getByRole('status').textContent).toContain('Subiu de nível!⬆️ Nível 3 · Contador');
-
-    act(() => {
-      vi.advanceTimersByTime(4000);
-    });
-
-    expect(screen.getByRole('status').textContent).toBe('Novo item para o seu robô!🔴 Vermelho tomate');
-
-    act(() => {
-      vi.advanceTimersByTime(4000);
-    });
-
-    expect(screen.getByRole('status').textContent).toBe('Novo item para o seu robô!🧢 Boné');
-
-    act(() => {
-      vi.advanceTimersByTime(4000);
-    });
-
     expect(screen.queryByRole('status')).toBeNull();
   });
 
-  it('announces only the items unlocked after the site was opened', () => {
+  it('leaves the level up and its items to the level celebration', () => {
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...criarProgresso(), xp: 425 }));
     render(<AvisoConquista />);
 
     act(() => {
       partidaFinalizada({ jogo: 'memoria' }, new Date(2026, 10, 2, 15, 0));
-    });
-
-    expect(screen.getByRole('status').textContent).toBe('Subiu de nível!⬆️ Nível 3 · Contador');
-
-    act(() => {
-      vi.advanceTimersByTime(4000);
-    });
-
-    expect(screen.getByRole('status').textContent).toBe('Novo item para o seu robô!🔴 Vermelho tomate');
-
-    act(() => {
-      vi.advanceTimersByTime(4000);
-    });
-
-    expect(screen.getByRole('status').textContent).toBe('Novo item para o seu robô!🧢 Boné');
-
-    act(() => {
-      vi.advanceTimersByTime(4000);
+      vi.advanceTimersByTime(0);
     });
 
     expect(screen.queryByRole('status')).toBeNull();
@@ -107,20 +72,17 @@ describe('AvisoConquista', () => {
       partidaFinalizada({ jogo: 'memoria' }, new Date(2026, 10, 2, 15, 0));
     });
 
-    const textos = [screen.getByRole('status').textContent];
-    for (let i = 0; i < 3; i++) {
-      act(() => {
-        vi.advanceTimersByTime(4000);
-      });
-      textos.push(screen.getByRole('status').textContent);
-    }
+    act(() => {
+      vi.advanceTimersByTime(0);
+    });
 
-    expect(textos).toEqual([
-      'Subiu de nível!⬆️ Nível 3 · Contador',
-      'Novo item para o seu robô!🔴 Vermelho tomate',
-      '🎉 Novo ícone do app liberado!🤖 Robô Vermelho tomate',
-      'Novo item para o seu robô!🧢 Boné',
-    ]);
+    expect(screen.getByRole('status').textContent).toBe('🎉 Novo ícone do app liberado!🤖 Robô Vermelho tomate');
+
+    act(() => {
+      vi.advanceTimersByTime(4000);
+    });
+
+    expect(screen.queryByRole('status')).toBeNull();
   });
 
   it('shows the completed daily challenge before its medal', () => {

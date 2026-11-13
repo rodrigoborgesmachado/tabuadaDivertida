@@ -18,6 +18,7 @@
 }
 
 .barra-xp__nivel {
+  position: relative;
   width: 44px;
   height: 44px;
   flex-shrink: 0;
@@ -28,6 +29,7 @@
   font-family: var(--font-title);
   font-size: 1.3rem;
   color: #ffffff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
   background: linear-gradient(135deg, var(--button-color-primary), #ffb067);
 }
 
@@ -120,12 +122,88 @@
   height: 10px;
 }
 
+.barra-xp__estrelas {
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0 5px;
+  border-radius: 999px;
+  font-family: var(--font-body);
+  font-size: 0.65rem;
+  font-weight: 800;
+  white-space: nowrap;
+  color: #5a3d00;
+  text-shadow: none;
+  background: #ffe9a8;
+  border: 1px solid #f2c94c;
+}
+
+.barra-xp--bronze .barra-xp__nivel {
+  background: linear-gradient(135deg, #a8693f, #ffb067);
+}
+
+.barra-xp--prata .barra-xp__nivel {
+  background: linear-gradient(135deg, #7d8896, #dfe5ec);
+  box-shadow: 0 0 0 2px #c9d1db;
+}
+
+.barra-xp--prata .barra-xp__barra span {
+  background: linear-gradient(90deg, #7d8896, #dfe5ec);
+}
+
+.barra-xp--ouro .barra-xp__nivel {
+  background: linear-gradient(135deg, #c9931e, #ffe27a);
+  box-shadow: 0 0 0 2px #f2c94c, 0 0 12px rgba(242, 201, 76, 0.6);
+}
+
+.barra-xp--ouro .barra-xp__barra span {
+  background: linear-gradient(90deg, #c9931e, #ffe27a);
+}
+
+.barra-xp--diamante .barra-xp__nivel {
+  background: linear-gradient(135deg, #2f7bff, #bdeeff);
+  box-shadow: 0 0 0 2px #7fd3f7, 0 0 14px rgba(127, 211, 247, 0.7);
+}
+
+.barra-xp--diamante .barra-xp__barra span {
+  background: linear-gradient(90deg, #2f7bff, #bdeeff);
+}
+
+.barra-xp--arco-iris .barra-xp__nivel,
+.barra-xp--arco-iris .barra-xp__barra span {
+  background: linear-gradient(90deg, #ff6b6b, #ffd93d, #6bcb77, #4d96ff, #b07cff, #ff6b6b);
+  background-size: 300% 100%;
+}
+
+.barra-xp--arco-iris .barra-xp__nivel {
+  box-shadow: 0 0 0 2px #ffffff, 0 0 16px rgba(176, 124, 255, 0.7);
+  animation: barra-xp-arco-iris 4s linear infinite;
+}
+
+.barra-xp--arco-iris .barra-xp__barra span {
+  animation: barra-xp-encher 1s ease-out, barra-xp-arco-iris 4s linear infinite;
+}
+
 .barra-xp--subiu {
   border-color: #ffd66a;
 }
 
 .barra-xp--subiu .barra-xp__nivel {
   animation: barra-xp-nivel 1s ease 2;
+}
+
+@keyframes barra-xp-arco-iris {
+  to {
+    background-position: 300% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .barra-xp--arco-iris .barra-xp__nivel,
+  .barra-xp--arco-iris .barra-xp__barra span {
+    animation: none;
+  }
 }
 
 @keyframes barra-xp-encher {

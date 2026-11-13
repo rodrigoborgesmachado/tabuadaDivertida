@@ -57,8 +57,24 @@ export const xpInicial = (progresso: Progresso) =>
 
 export const xpParaSubir = (nivel: number) => regras.primeiroNivel + regras.aumentoPorNivel * (nivel - 1);
 
-export const tituloDoNivel = (nivel: number) =>
-  regras.titulos.reduce((titulo, item) => (nivel >= item.nivel ? item.titulo : titulo), regras.titulos[0].titulo);
+const ultimoTitulo = regras.titulos[regras.titulos.length - 1];
+
+const ROMANOS: [number, string][] = [[100, 'C'], [90, 'XC'], [50, 'L'], [40, 'XL'], [10, 'X'], [9, 'IX'], [5, 'V'], [4, 'IV'], [1, 'I']];
+
+const romano = (valor: number) =>
+  ROMANOS.reduce(({ texto, resto }, [numero, letra]) => ({ texto: texto + letra.repeat(Math.floor(resto / numero)), resto: resto % numero }), { texto: '', resto: valor }).texto;
+
+export const estrelasDoNivel = (nivel: number) => Math.max(Math.floor((nivel - ultimoTitulo.nivel) / regras.niveisPorEstrela), 0);
+
+export const faixaDoNivel = (nivel: number) => regras.faixas.reduce((faixa, item) => (nivel >= item.nivel ? item : faixa), regras.faixas[0]);
+
+export const tituloDoNivel = (nivel: number) => {
+  const estrelas = estrelasDoNivel(nivel);
+
+  return estrelas > 0
+    ? `${ultimoTitulo.titulo} ${romano(estrelas + 1)}`
+    : regras.titulos.reduce((titulo, item) => (nivel >= item.nivel ? item.titulo : titulo), regras.titulos[0].titulo);
+};
 
 export const xpTotalDoNivel = (nivel: number) => somar(Array.from({ length: Math.max(nivel - 1, 0) }, (_, indice) => xpParaSubir(indice + 1)));
 

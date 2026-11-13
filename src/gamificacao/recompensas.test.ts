@@ -10,6 +10,7 @@ import {
   proximaRecompensa,
   recompensaLiberada,
   recompensas,
+  recompensasDoNivel,
   recompensasNaoVistas,
   salvarPersonalizacao,
   sortearPersonalizacao,
@@ -34,14 +35,34 @@ describe('recompensas', () => {
     expect(recompensaLiberada(recompensa('oculos'), { ...criarProgresso(), xp: 980 })).toBe(true);
   });
 
-  it('has many colors, accessories and themes spread up to level 50', () => {
+  it('has many colors, accessories and themes spread beyond level 50', () => {
     const tipo = (nome: string) => recompensas.filter((item) => item.tipo === nome);
 
     expect(tipo('cor').length).toBeGreaterThanOrEqual(30);
     expect(tipo('acessorio').length).toBeGreaterThanOrEqual(30);
     expect(tipo('tema').length).toBeGreaterThanOrEqual(12);
-    expect(Math.max(...recompensas.map((item) => item.nivel || 0))).toBe(50);
+    expect(Math.max(...recompensas.map((item) => item.nivel || 0))).toBe(75);
     expect(new Set(recompensas.map((item) => item.id)).size).toBe(recompensas.length);
+  });
+
+  it('gives an item on every level from 33 to 50 and every five levels after 50', () => {
+    const niveis = new Set(recompensas.map((item) => item.nivel));
+
+    for (let nivel = 33; nivel <= 50; nivel++) {
+      expect(niveis.has(nivel)).toBe(true);
+    }
+    [55, 60, 65, 70, 75].forEach((nivel) => expect(niveis.has(nivel)).toBe(true));
+  });
+
+  it('has animated colors among the epic and legendary ones', () => {
+    expect(recompensa('cor-camaleao').animada).toBe(true);
+    expect(recompensa('cor-infinito')).toMatchObject({ raridade: 'lendaria', nivel: 75, animada: true });
+  });
+
+  it('lists the items unlocked between two levels', () => {
+    expect(recompensasDoNivel(2, 3).map((item) => item.id)).toEqual(['cor-vermelho', 'bone']);
+    expect(recompensasDoNivel(50, 54)).toEqual([]);
+    expect(recompensasDoNivel(54, 55).map((item) => item.id)).toEqual(['cor-cometa']);
   });
 
   it('keeps the items already unlocked even if the condition is no longer met', () => {

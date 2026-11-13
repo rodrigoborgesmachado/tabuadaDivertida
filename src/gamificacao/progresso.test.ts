@@ -770,7 +770,7 @@ describe('progresso', () => {
 
     partidaFinalizada({ jogo: 'memoria' }, dia);
     expect(ouvinte).toHaveBeenCalledTimes(1);
-    expect((ouvinte.mock.calls[0][0] as CustomEvent).detail).toEqual({ nivel: 2, titulo: 'Aprendiz', xpNoNivel: 5, xpDoNivel: 230 });
+    expect((ouvinte.mock.calls[0][0] as CustomEvent).detail).toEqual({ nivel: 2, titulo: 'Aprendiz', xpNoNivel: 5, xpDoNivel: 230, nivelAnterior: 1 });
     window.removeEventListener(EVENTO_NIVEL, ouvinte);
   });
 

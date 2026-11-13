@@ -63,7 +63,7 @@ function Personalizar() {
         onClick={() => salvarPersonalizacao({ ...personalizacao, [chave]: ativa && recompensa.espaco ? '' : recompensa.id })}
       >
         <span
-          className={`personalizar-item__icone${recompensa.tipo === 'tema' && recompensa.valor ? ' personalizar-item__icone--tema' : ''}`}
+          className={`personalizar-item__icone${recompensa.tipo === 'tema' && recompensa.valor ? ' personalizar-item__icone--tema' : ''}${recompensa.animada ? ' personalizar-item__icone--animada' : ''}`}
           style={recompensa.tipo === 'cor' ? { background: recompensa.degrade ? `linear-gradient(135deg, ${recompensa.degrade.join(', ')})` : recompensa.valor } : undefined}
           data-cor={recompensa.tipo === 'tema' ? recompensa.valor : undefined}
           aria-hidden='true'

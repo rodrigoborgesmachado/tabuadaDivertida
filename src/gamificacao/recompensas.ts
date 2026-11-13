@@ -21,6 +21,7 @@ export interface Recompensa {
   valor?: string;
   degrade?: string[];
   brilho?: boolean;
+  animada?: boolean;
   raridade?: Raridade;
   espaco?: Espaco;
   nivel?: number;
@@ -88,9 +89,21 @@ export const recompensas: Recompensa[] = [
   cor('cor-aurora', 'Aurora boreal', '🌌', '#5fe0b0', 'epica', { nivel: 40, degrade: ['#5fe0b0', '#4fa8e8', '#9b7bf0'] }),
   cor('cor-metalico', 'Metálico prateado', '🔩', '#c9d1db', 'epica', { nivel: 45, degrade: ['#eef2f6', '#a9b3bf', '#eef2f6'], brilho: true }),
   cor('cor-ouro', 'Ouro puro', '🏅', '#f2c94c', 'epica', { nivel: 50, degrade: ['#fff1a8', '#f2c94c', '#c9931e'], brilho: true }),
+  cor('cor-oceano-profundo', 'Oceano profundo', '🐋', '#2f7bff', 'epica', { nivel: 34, degrade: ['#5fd3c9', '#2f7bff', '#1c1446'] }),
+  cor('cor-algodao-doce', 'Algodão-doce', '🍭', '#ffd1ec', 'epica', { nivel: 39, degrade: ['#ffd1ec', '#c9b3e8', '#a8e6ff'], brilho: true }),
+  cor('cor-camaleao', 'Camaleão', '🦎', '#6bcb77', 'epica', { nivel: 41, degrade: ['#b8ffd9', '#6bcb77', '#1fa774'], animada: true }),
+  cor('cor-cristal', 'Cristal', '🔮', '#c9b3e8', 'epica', { nivel: 43, degrade: ['#f5f0ff', '#c9b3e8', '#8a4fc7'], brilho: true }),
+  cor('cor-fogo-gelo', 'Fogo e gelo', '🔥', '#ff9a5a', 'epica', { nivel: 46, degrade: ['#ff5a1f', '#ffd23f', '#7fd3f7', '#2f7bff'] }),
+  cor('cor-pulsar', 'Pulsar', '💫', '#b79cf0', 'epica', { nivel: 48, degrade: ['#ff4fb8', '#b79cf0', '#2f7bff'], brilho: true, animada: true }),
+  cor('cor-eclipse', 'Eclipse', '🌑', '#3b2a7a', 'epica', { nivel: 49, degrade: ['#1c1446', '#3b2a7a', '#f2c94c'], brilho: true }),
   cor('cor-diamante', 'Diamante', '💎', '#bdeeff', 'lendaria', { ...medalha(QUALQUER_MEDALHA, 4), degrade: ['#ffffff', '#bdeeff', '#7fd3f7'], brilho: true }),
   cor('cor-galaxia', 'Galáxia estrelada', '✨', '#3b2a7a', 'lendaria', { ...medalha('perfeccionista'), degrade: ['#1c1446', '#3b2a7a', '#8a4fc7'], brilho: true }),
   cor('cor-lava', 'Lava', '🌋', '#ff5a1f', 'lendaria', { ...medalha('acertos-seguidos', 4), degrade: ['#ffd23f', '#ff5a1f', '#a3120f'], brilho: true }),
+  cor('cor-cometa', 'Cometa', '☄️', '#7fd3f7', 'lendaria', { nivel: 55, degrade: ['#ffffff', '#7fd3f7', '#2952a3'], brilho: true, animada: true }),
+  cor('cor-nebulosa', 'Nebulosa', '🌠', '#b07cff', 'lendaria', { nivel: 60, degrade: ['#ff6b6b', '#b07cff', '#4d96ff'], brilho: true, animada: true }),
+  cor('cor-supernova', 'Supernova', '💥', '#ff9a5a', 'lendaria', { nivel: 65, degrade: ['#fff1a8', '#ff9a5a', '#e8577e'], brilho: true, animada: true }),
+  cor('cor-buraco-negro', 'Buraco negro', '🕳️', '#3b2a7a', 'lendaria', { nivel: 70, degrade: ['#000000', '#3b2a7a', '#8a4fc7'], animada: true }),
+  cor('cor-infinito', 'Infinito', '♾️', '#ff6b6b', 'lendaria', { nivel: 75, degrade: ['#ff6b6b', '#ffd93d', '#6bcb77', '#4d96ff', '#b07cff'], brilho: true, animada: true }),
   acessorio('bone', 'cabeca', 'Boné', '🧢', { nivel: 3 }),
   acessorio('fones', 'cabeca', 'Fones de ouvido', '🎧', { nivel: 7 }),
   acessorio('antena-coracao', 'cabeca', 'Antena de coração', '💖', { nivel: 9 }),
@@ -183,6 +196,9 @@ export const idsLiberadosNaCurvaAnterior = (progresso: Progresso) => {
     .filter((recompensa) => RECOMPENSAS_DA_CURVA_ANTERIOR.includes(recompensa.id) && condicaoCumprida(recompensa, progresso, nivel))
     .map((recompensa) => recompensa.id);
 };
+
+export const recompensasDoNivel = (nivelAnterior: number, nivel: number) =>
+  recompensas.filter((recompensa) => recompensa.nivel && recompensa.nivel > nivelAnterior && recompensa.nivel <= nivel);
 
 export const proximaRecompensa = (progresso: Progresso) => {
   const nivel = calcularNivel(progresso.xp).nivel;

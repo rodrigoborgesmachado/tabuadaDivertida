@@ -1,0 +1,216 @@
+.comemoracao-nivel {
+  --comemoracao-selo: linear-gradient(135deg, #a8693f, #ffb067);
+  --comemoracao-brilho: rgba(255, 176, 103, 0.6);
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  overflow: hidden;
+  background: rgba(12, 24, 41, 0.72);
+}
+
+.comemoracao-nivel--prata {
+  --comemoracao-selo: linear-gradient(135deg, #7d8896, #dfe5ec);
+  --comemoracao-brilho: rgba(201, 209, 219, 0.7);
+}
+
+.comemoracao-nivel--ouro {
+  --comemoracao-selo: linear-gradient(135deg, #c9931e, #ffe27a);
+  --comemoracao-brilho: rgba(242, 201, 76, 0.7);
+}
+
+.comemoracao-nivel--diamante {
+  --comemoracao-selo: linear-gradient(135deg, #2f7bff, #bdeeff);
+  --comemoracao-brilho: rgba(127, 211, 247, 0.75);
+}
+
+.comemoracao-nivel--arco-iris {
+  --comemoracao-selo: linear-gradient(90deg, #ff6b6b, #ffd93d, #6bcb77, #4d96ff, #b07cff);
+  --comemoracao-brilho: rgba(176, 124, 255, 0.75);
+}
+
+.comemoracao-nivel__confetes {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.comemoracao-nivel__confetes span {
+  position: absolute;
+  top: -20px;
+  width: 10px;
+  height: 16px;
+  border-radius: 3px;
+  animation: comemoracao-nivel-confete 2.6s ease-in infinite;
+}
+
+.comemoracao-nivel__conteudo {
+  position: relative;
+  width: min(100%, 400px);
+  max-height: calc(100svh - 32px);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 24px;
+  border: 3px solid #ffd66a;
+  border-radius: 24px;
+  background: var(--modal-color);
+  box-shadow: var(--shadow-card), 0 0 40px var(--comemoracao-brilho);
+  color: var(--text-color-primary);
+  text-align: center;
+  animation: comemoracao-nivel-entrada 0.5s ease;
+}
+
+.comemoracao-nivel__robo {
+  width: 96px;
+  height: 96px;
+  animation: comemoracao-nivel-danca 1.2s ease-in-out infinite;
+}
+
+.comemoracao-nivel__conteudo h2 {
+  margin: 0;
+  font-family: var(--font-title);
+  font-size: 1.8rem;
+  color: var(--text-color-accent);
+}
+
+.comemoracao-nivel__selo {
+  width: 72px;
+  height: 72px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-family: var(--font-title);
+  font-size: 2rem;
+  color: #ffffff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  background: var(--comemoracao-selo);
+  box-shadow: 0 0 0 3px #ffffff, 0 0 20px var(--comemoracao-brilho);
+  animation: comemoracao-nivel-selo 1s ease;
+}
+
+.comemoracao-nivel__titulo {
+  margin: 0;
+  font-family: var(--font-title);
+  font-size: 1.2rem;
+}
+
+.comemoracao-nivel__destaque {
+  margin: 0;
+  font-weight: 800;
+  color: var(--text-color-accent);
+}
+
+.comemoracao-nivel__recompensas {
+  width: 100%;
+}
+
+.comemoracao-nivel__recompensas h3 {
+  margin: 8px 0;
+  font-size: 1rem;
+  color: var(--text-color-secondary);
+}
+
+.comemoracao-nivel__recompensas ul {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.comemoracao-nivel__recompensas li {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px 4px 4px;
+  border-radius: 999px;
+  border: 2px solid var(--panel-border-color);
+  background: var(--block-color-secundary);
+  font-weight: 700;
+}
+
+.comemoracao-nivel__icone {
+  width: 30px;
+  height: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 18px;
+}
+
+.comemoracao-nivel__icone--animada {
+  animation: robo-pintura-animada 6s linear infinite;
+}
+
+.comemoracao-nivel__botoes {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+@keyframes comemoracao-nivel-confete {
+  0% {
+    opacity: 1;
+    transform: translateY(0) rotate(0);
+  }
+  100% {
+    opacity: 0.8;
+    transform: translateY(110vh) rotate(720deg);
+  }
+}
+
+@keyframes comemoracao-nivel-entrada {
+  from {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+}
+
+@keyframes comemoracao-nivel-danca {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0);
+  }
+  25% {
+    transform: translateY(-10px) rotate(-8deg);
+  }
+  75% {
+    transform: translateY(-10px) rotate(8deg);
+  }
+}
+
+@keyframes comemoracao-nivel-selo {
+  0% {
+    transform: scale(0.4) rotate(-20deg);
+  }
+  70% {
+    transform: scale(1.15) rotate(6deg);
+  }
+  100% {
+    transform: scale(1) rotate(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .comemoracao-nivel__confetes {
+    display: none;
+  }
+
+  .comemoracao-nivel__conteudo,
+  .comemoracao-nivel__robo,
+  .comemoracao-nivel__selo,
+  .comemoracao-nivel__icone--animada {
+    animation: none;
+  }
+}

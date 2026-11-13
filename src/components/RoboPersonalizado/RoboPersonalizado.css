@@ -10,9 +10,23 @@
   }
 }
 
+.robo-pintura-animada {
+  animation: robo-pintura-animada 6s linear infinite;
+}
+
+@keyframes robo-pintura-animada {
+  to {
+    filter: hue-rotate(360deg);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .robo-brilho {
     animation: none;
     opacity: 0.35;
+  }
+
+  .robo-pintura-animada {
+    animation: none;
   }
 }

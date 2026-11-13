@@ -280,6 +280,7 @@ function RoboPersonalizado({ personalizacao, triste = false, titulo = 'Robô', c
   const pintura = buscarRecompensa(escolha.cor);
   const id = `robo-pintura-${useId().replace(/:/g, '')}`;
   const corRobo = pintura?.degrade ? `url(#${id})` : pintura?.valor || '#cccccc';
+  const classePintura = pintura?.animada ? 'robo-pintura-animada' : undefined;
   const acessorios = ESPACOS.map((espaco) => escolha[espaco.id]).filter(Boolean);
 
   return (
@@ -292,8 +293,8 @@ function RoboPersonalizado({ personalizacao, triste = false, titulo = 'Robô', c
         </defs>
       )}
       {costas[escolha.costas]}
-      <rect x='10' y='20' width='80' height='60' fill={corRobo} stroke='#333' />
-      <rect x='40' y='5' width='20' height='15' fill={corRobo} stroke='#333' />
+      <rect x='10' y='20' width='80' height='60' fill={corRobo} stroke='#333' className={classePintura} />
+      <rect x='40' y='5' width='20' height='15' fill={corRobo} stroke='#333' className={classePintura} />
       {pintura?.brilho && <path className='robo-brilho' d='M14 24 H40 L22 76 H14 Z' fill='#ffffff' />}
       <circle cx='35' cy='45' r='5' fill='#333' />
       <circle cx='65' cy='45' r='5' fill='#333' />

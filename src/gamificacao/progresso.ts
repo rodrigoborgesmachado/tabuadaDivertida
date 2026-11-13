@@ -116,6 +116,10 @@ export interface Conquista {
   nivel: number;
 }
 
+export interface NivelAlcancado extends NivelXp {
+  nivelAnterior: number;
+}
+
 export const criarProgresso = (): Progresso => ({
   versao: VERSAO_PROGRESSO,
   partidas: 0,
@@ -494,8 +498,9 @@ const registrar = (evento: EventoJogo, finalizada: boolean, data: Date) => {
   }
 
   const nivel = calcularNivel(progresso.xp, progresso.nivelDoTitulo);
-  if (nivel.nivel > calcularNivel(anterior.xp).nivel) {
-    window.dispatchEvent(new CustomEvent<NivelXp>(EVENTO_NIVEL, { detail: nivel }));
+  const nivelAnterior = calcularNivel(anterior.xp).nivel;
+  if (nivel.nivel > nivelAnterior) {
+    window.dispatchEvent(new CustomEvent<NivelAlcancado>(EVENTO_NIVEL, { detail: { ...nivel, nivelAnterior } }));
   }
 
   return novas;
