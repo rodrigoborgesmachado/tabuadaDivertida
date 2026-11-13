@@ -128,7 +128,7 @@ function Personalizar() {
         </p>
 
         <div className='personalizar-topo'>
-          <RoboPersonalizado titulo='Seu robô' className={`personalizar-robo${personalizacao.bichinho ? ' personalizar-robo--bichinho' : ''}`} bichinho dancando />
+          <RoboPersonalizado titulo='Seu robô' className={`personalizar-robo${personalizacao.bichinho || personalizacao.rastro ? ' personalizar-robo--bichinho' : ''}`} bichinho dancando />
           <div className='personalizar-resumo'>
             <BarraXp xp={progresso.xp} atalho={false} />
             {proxima && (

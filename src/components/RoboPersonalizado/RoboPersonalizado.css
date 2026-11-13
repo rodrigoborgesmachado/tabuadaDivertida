@@ -32,6 +32,17 @@
   }
 }
 
+.robo-rastro {
+  animation: robo-rastro 0.8s ease-in-out infinite alternate;
+}
+
+@keyframes robo-rastro {
+  to {
+    transform: translateX(-3px);
+    opacity: 0.75;
+  }
+}
+
 .robo-danca {
   transform-origin: 50% 100%;
   animation: robo-danca-pulinho 1.2s ease-in-out infinite;
@@ -173,7 +184,8 @@
 
 @media (prefers-reduced-motion: reduce) {
   .robo-bichinho,
-  .robo-danca {
+  .robo-danca,
+  .robo-rastro {
     animation: none;
   }
 

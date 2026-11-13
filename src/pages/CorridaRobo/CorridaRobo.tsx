@@ -374,7 +374,7 @@ function CorridaRobo() {
                   <div className='corrida-raia__trilho'>
                     <div className='corrida-corredor' style={posicaoNaPista(casas, totalCasas)}>
                       {rastro && <span className={`corrida-rastro corrida-${rastro}`} aria-hidden='true' />}
-                      <RoboPersonalizado titulo='Seu robô' triste={resultado?.vencedor === 'robo'} className='corrida-corredor__robo' />
+                      <RoboPersonalizado titulo='Seu robô' triste={resultado?.vencedor === 'robo'} className='corrida-corredor__robo' rastro={false} />
                     </div>
                   </div>
                   <span className='corrida-raia__casas'>{casas}/{totalCasas}</span>
