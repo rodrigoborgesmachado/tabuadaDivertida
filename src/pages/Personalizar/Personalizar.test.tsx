@@ -1,8 +1,11 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import type { Mock } from 'vitest';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { criarProgresso, STORAGE_KEY } from '../../gamificacao/progresso';
 import { marcarRecompensasVistas, recompensasNaoVistas, STORAGE_PERSONALIZACAO, STORAGE_RECOMPENSAS_VISTAS } from '../../gamificacao/recompensas';
 import { xpTotalDoNivel } from '../../gamificacao/xp';
+import { IconeApp } from '../../services/iconeApp';
+import { ehAndroid } from '../../services/plataforma';
 import { playSuccess } from '../../services/sons';
 import Personalizar from './Personalizar';
 
@@ -10,6 +13,20 @@ vi.mock('../../services/sons', async (original) => ({
   ...(await original<typeof import('../../services/sons')>()),
   playSuccess: vi.fn(),
 }));
+
+vi.mock('../../services/plataforma', async (original) => ({
+  ...(await original<typeof import('../../services/plataforma')>()),
+  ehAndroid: vi.fn(),
+}));
+
+vi.mock('../../services/iconeApp', async (original) => ({
+  ...(await original<typeof import('../../services/iconeApp')>()),
+  IconeApp: { iconeAtual: vi.fn(), trocarIcone: vi.fn(), atalho: vi.fn(), criarAtalho: vi.fn() },
+}));
+
+const android = ehAndroid as Mock;
+const iconeAtual = IconeApp.iconeAtual as Mock;
+const atalho = IconeApp.atalho as Mock;
 
 const renderPersonalizar = () => render(
   <MemoryRouter>
@@ -29,6 +46,9 @@ describe('Personalizar', () => {
   beforeEach(() => {
     window.localStorage.clear();
     vi.restoreAllMocks();
+    android.mockReturnValue(false);
+    iconeAtual.mockResolvedValue({ icone: 'cor-prata', suportado: true });
+    atalho.mockResolvedValue({ suportado: true, criado: false });
   });
 
   it('shows the locked items with the condition to unlock them', () => {
@@ -199,5 +219,42 @@ describe('Personalizar', () => {
 
     expect(item('Oceano').disabled).toBe(false);
     expect(item('Floresta').disabled).toBe(true);
+  });
+
+  it('does not show the app icon tab on the site', async () => {
+    renderPersonalizar();
+    await act(async () => {});
+
+    expect(screen.queryByRole('tab', { name: '📱 Ícone do app' })).toBeNull();
+    expect(screen.queryByText('📌 Colocar meu robô na tela inicial')).toBeNull();
+  });
+
+  it('shows the app icon only in its own tab on Android', async () => {
+    android.mockReturnValue(true);
+    renderPersonalizar();
+    await act(async () => {});
+
+    expect(screen.queryByText('Robô Prata')).toBeNull();
+    abrirAba('🎩 Acessórios');
+    expect(screen.queryByText('📌 Colocar meu robô na tela inicial')).toBeNull();
+
+    abrirAba('📱 Ícone do app');
+
+    expect(screen.getByRole('tab', { name: '📱 Ícone do app' }).getAttribute('aria-selected')).toBe('true');
+    expect(item('Robô Prata').getAttribute('aria-pressed')).toBe('true');
+    expect(screen.getByText('📌 Colocar meu robô na tela inicial')).toBeTruthy();
+    expect(screen.queryByText('Boné')).toBeNull();
+  });
+
+  it('shows only the shortcut in the app icon tab when the icon cannot be changed', async () => {
+    android.mockReturnValue(true);
+    iconeAtual.mockResolvedValue({ icone: 'cor-prata', suportado: false });
+    renderPersonalizar();
+    await act(async () => {});
+
+    abrirAba('📱 Ícone do app');
+
+    expect(screen.queryByText('Robô Prata')).toBeNull();
+    expect(screen.getByText('📌 Colocar meu robô na tela inicial')).toBeTruthy();
   });
 });

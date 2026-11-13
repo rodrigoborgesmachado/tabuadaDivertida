@@ -25,7 +25,7 @@ import { usePersonalizacao } from '../../gamificacao/usePersonalizacao';
 import { useRecompensasNaoVistas } from '../../gamificacao/useRecompensasNaoVistas';
 import { calcularNivel } from '../../gamificacao/xp';
 import { playSuccess } from '../../services/sons';
-import IconeDoApp from './IconeDoApp';
+import IconeDoApp, { useIconeDoApp } from './IconeDoApp';
 import './Personalizar.css';
 
 const ABAS: { tipo: TipoRecompensa; titulo: string; dica?: string }[] = [
@@ -44,14 +44,17 @@ function Personalizar() {
   const [progresso] = useState(() => lerProgresso());
   const personalizacao = usePersonalizacao();
   const [novas] = useState(() => recompensasNaoVistas(progresso).map((recompensa) => recompensa.id));
-  const [aba, setAba] = useState<TipoRecompensa>(() => ABAS.find((item) => recompensas.some((recompensa) => recompensa.tipo === item.tipo && novas.includes(recompensa.id)))?.tipo || 'cor');
+  const [aba, setAba] = useState<TipoRecompensa | 'icone'>(() => ABAS.find((item) => recompensas.some((recompensa) => recompensa.tipo === item.tipo && novas.includes(recompensa.id)))?.tipo || 'cor');
   const naoVistas = useRecompensasNaoVistas();
   const nivel = calcularNivel(progresso.xp).nivel;
   const proxima = proximaRecompensa(progresso);
   const dica = ABAS.find((item) => item.tipo === aba)?.dica;
+  const icone = useIconeDoApp();
 
   useEffect(() => {
-    marcarRecompensasVistas(progresso, aba);
+    if (aba !== 'icone') {
+      marcarRecompensasVistas(progresso, aba);
+    }
   }, [progresso, aba]);
 
   const renderNovo = (itens: Recompensa[]) => itens.some((recompensa) => novas.includes(recompensa.id)) && <span className='personalizar-novo'>✨ Novo</span>;
@@ -158,6 +161,17 @@ function Personalizar() {
               </button>
             );
           })}
+          {icone.suportado && (
+            <button
+              type='button'
+              role='tab'
+              className={`personalizar-aba${aba === 'icone' ? ' personalizar-aba--ativa' : ''}`}
+              aria-selected={aba === 'icone'}
+              onClick={() => setAba('icone')}
+            >
+              📱 Ícone do app
+            </button>
+          )}
         </div>
 
         <section className='personalizar-secao' role='tabpanel'>
@@ -174,7 +188,7 @@ function Personalizar() {
             );
           })}
           {aba === 'acessorio' && ESPACOS.map((espaco) => renderEspaco(espaco.id))}
-          {aba !== 'cor' && aba !== 'acessorio' && (
+          {aba !== 'cor' && aba !== 'acessorio' && aba !== 'icone' && (
             <>
               {dica && <p className='paragrafo3'>{dica}</p>}
               <div className='personalizar-grid'>
@@ -183,9 +197,8 @@ function Personalizar() {
               </div>
             </>
           )}
+          {aba === 'icone' && <IconeDoApp progresso={progresso} nivel={nivel} icone={icone} />}
         </section>
-
-        <IconeDoApp progresso={progresso} nivel={nivel} />
 
         <div className='personalizar-toolbar'>
           <Link to='/progresso?aba=conquistas' className='global-button'>

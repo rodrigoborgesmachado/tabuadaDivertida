@@ -7,12 +7,7 @@ import { ehAndroid } from '../../services/plataforma';
 
 export const AVISO_TROCA = 'Ao trocar o ícone, o app pode fechar por um instante e o atalho da tela inicial pode ser recriado. Deseja trocar?';
 
-interface IconeDoAppProps {
-  progresso: Progresso;
-  nivel: number;
-}
-
-function IconeDoApp({ progresso, nivel }: IconeDoAppProps) {
+export const useIconeDoApp = () => {
   const [atual, setAtual] = useState('');
   const [trocaSuportada, setTrocaSuportada] = useState(false);
   const [atalho, setAtalho] = useState({ suportado: false, criado: false });
@@ -29,6 +24,16 @@ function IconeDoApp({ progresso, nivel }: IconeDoAppProps) {
     IconeApp.atalho().then(setAtalho).catch(() => {});
   }, []);
 
+  return { atual, setAtual, trocaSuportada, atalho, suportado: trocaSuportada || atalho.suportado };
+};
+
+interface IconeDoAppProps {
+  progresso: Progresso;
+  nivel: number;
+  icone: ReturnType<typeof useIconeDoApp>;
+}
+
+function IconeDoApp({ progresso, nivel, icone: { atual, setAtual, trocaSuportada, atalho, suportado } }: IconeDoAppProps) {
   const trocar = async (icone: string) => {
     if (icone === atual || !window.confirm(AVISO_TROCA)) {
       return;
@@ -56,12 +61,12 @@ function IconeDoApp({ progresso, nivel }: IconeDoAppProps) {
     }
   };
 
-  if (!trocaSuportada && !atalho.suportado) {
+  if (!suportado) {
     return null;
   }
 
   return (
-    <section className='personalizar-secao'>
+    <>
       {trocaSuportada && (
         <section className='personalizar-grupo'>
           <h3>📱 Ícone do app</h3>
@@ -107,7 +112,7 @@ function IconeDoApp({ progresso, nivel }: IconeDoAppProps) {
           </button>
         </section>
       )}
-    </section>
+    </>
   );
 }
 
