@@ -1,10 +1,11 @@
 import configData from "../../Config.json";
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import confetti from 'canvas-confetti';
 import { lerNome } from '../../services/jogador';
 import { compartilharResultado, conquistaDaMedalha, resultadoDaConquista, type ConquistaPartida, type ResultadoCompartilhado } from '../../services/compartilhar';
 import { urlDoSite } from '../../services/plataforma';
+import type { Questao } from '../../services/historico';
 import great from '../../assets/great.png';
 import donkey from '../../assets/donkey.png';
 import WalkingRobot from "./../../components/WalkingRobot/WalkingRobot";
@@ -13,31 +14,43 @@ import RoboPersonalizado from "./../../components/RoboPersonalizado/RoboPersonal
 import BarraXp from "./../../components/BarraXp/BarraXp";
 import CompartilharResultado from "./../../components/CompartilharResultado/CompartilharResultado";
 import { buscarMedalha, nomeNivel } from '../../gamificacao/medalhas';
-
-type Questao = {
-    questao: string;
-    resposta: string;
-    correta: boolean;
-};
+import { contasErradas, desempenhoDaPartida, mensagemDoDesempenho, respostasDaPartida } from './logic';
+import './Final.css';
 
 type EstadoFinal = {
     conquistas?: { id: string; nivel: number }[];
     ganhoXp?: number;
     conquistasPartida?: ConquistaPartida[];
+    novoRecorde?: boolean;
 };
 
 function Final(){
     const{tipo} = useParams();
     const location = useLocation();
+    const navigate = useNavigate();
     const[questoes , setQuestoes] = useState<Questao[]>([]);
     const [canShare, setCanShare] = useState(false);
-    const conquistas = ((location.state as EstadoFinal | null)?.conquistas || []).flatMap(({ id, nivel }) => {
+    const [respostasAbertas, setRespostasAbertas] = useState(false);
+    const estado = location.state as EstadoFinal | null;
+    const conquistas = (estado?.conquistas || []).flatMap(({ id, nivel }) => {
         const medalha = buscarMedalha(id);
         return medalha ? [{ medalha, nivel }] : [];
     });
-    const ganhoXp = (location.state as EstadoFinal | null)?.ganhoXp;
-    const isPerfect = localStorage.getItem(configData.QUANTIDADE_ACERTOS) === localStorage.getItem(configData.QUANTIDADE_PARAM);
-    const isWorst = localStorage.getItem(configData.QUANTIDADE_ACERTOS) === '0';
+    const ganhoXp = estado?.ganhoXp;
+    const nome = lerNome() || 'Jogador';
+    const acertos = parseInt(localStorage.getItem(configData.QUANTIDADE_ACERTOS) || '0');
+    const total = parseInt(localStorage.getItem(configData.QUANTIDADE_PARAM) || '0');
+    const tempo = parseInt(localStorage.getItem(configData.TEMPO_PARAM) || '0');
+    const pontuacao = localStorage.getItem(configData.PONTUACAO) || '0';
+    const recorde = localStorage.getItem(configData.RECORDE) || '0';
+    const percentual = total > 0 ? Math.round((acertos / total) * 100) : 0;
+    const desempenho = desempenhoDaPartida(acertos, total);
+    const isPerfect = desempenho === 'perfeito';
+    const isWorst = desempenho === 'zero';
+    const mensagem = mensagemDoDesempenho(desempenho, nome);
+    const respostas = respostasDaPartida(questoes);
+    const respostasCertas = respostas.filter(({ correta }) => correta).length;
+    const erradas = contasErradas(questoes);
 
     const labelTipo = (valor?: string) => {
         const tipoSelecionado = (valor || '').toUpperCase();
@@ -63,14 +76,7 @@ function Final(){
     };
 
     const buildShareResult = (): ResultadoCompartilhado => {
-        const nome = lerNome() || 'Jogador';
-        const acertos = parseInt(localStorage.getItem(configData.QUANTIDADE_ACERTOS) || '0');
-        const total = parseInt(localStorage.getItem(configData.QUANTIDADE_PARAM) || '0');
         const erros = Math.max(total - acertos, 0);
-        const tempo = parseInt(localStorage.getItem(configData.TEMPO_PARAM) || '0');
-        const pontuacao = localStorage.getItem(configData.PONTUACAO) || '0';
-        const recorde = localStorage.getItem(configData.RECORDE) || '0';
-        const percentual = total > 0 ? Math.round((acertos / total) * 100) : 0;
         const url = urlDoSite();
 
         return {
@@ -87,8 +93,14 @@ function Final(){
             ],
             convite: `Você consegue fazer melhor? ${url}`,
             resumo: `${labelTipo(tipo)}: ${acertos}/${total} em ${tempo}s`,
-            conquistas: (location.state as EstadoFinal | null)?.conquistasPartida || []
+            conquistas: estado?.conquistasPartida || []
         };
+    };
+
+    const treinarErros = () => {
+        localStorage.setItem(configData.TREINO, JSON.stringify(erradas));
+        localStorage.setItem(configData.QUANTIDADE_PARAM, String(erradas.length));
+        navigate('/contagem/T');
     };
 
     const launchFireworks = () => {
@@ -135,65 +147,47 @@ function Final(){
         <div className='global-pageContainer-left'>
             {ganhoXp !== undefined && <BarraXp ganho={ganhoXp} />}
         </div>
-        <div className='global-pageContainer-left options-preview'>
+        <div className='global-pageContainer-left options-preview final'>
             <WalkingRobot />
-            <h2>
-                {
-                    isPerfect ?
-                    <div className='congrats-final'>
-                        <img src={great} alt="great"/>
-                        <b>🎉Parabéns {lerNome() || 'Jogador'}, você é de outro planeta!!!🎉</b>
-                    </div>
-                    :
-                    isWorst ?
-                    <b>Você errou todas KKKKKKKKKKK</b>
-                    :
-                    <b>🎉Parabéns {lerNome() || 'Jogador'}, você é fera!!!🎉</b>
-                }
-            </h2>
-            <br/>
             <div className='robot-container'>
                 {isWorst ? <img src={donkey} alt='Robô triste' className='robot-donkey'/> : <RoboPersonalizado titulo='Robô feliz' className='robot'/>}
             </div>
+            <div className='final-cabecalho'>
+                {isPerfect && <img src={great} alt='great' className='final-cabecalho__imagem'/>}
+                <h2>{mensagem.titulo}</h2>
+                <p>{mensagem.texto}</p>
+                <p className='final-cabecalho__modo'>{labelTipo(tipo)} · {acertos} de {total}</p>
+                {estado?.novoRecorde && <span className='final-selo'>🏆 Novo recorde!</span>}
+            </div>
             <SequenciaDias />
-            <br/>
-            {
-                isPerfect ?
-                <h3>
-                    Você é um mestre da tabuada! 🧠💪<br/><br/>
-                    ✅Você acertou {localStorage.getItem(configData.QUANTIDADE_ACERTOS)} de {localStorage.getItem(configData.QUANTIDADE_PARAM)} em tempo recorde! ⏱️⚡️<br/>
-                    Você levou apenas {localStorage.getItem(configData.TEMPO_PARAM)} segundos! ⏱️<br/><br/>
-                    Pontuação final: {localStorage.getItem(configData.PONTUACAO)} | Recorde: {localStorage.getItem(configData.RECORDE)}<br/><br/>
-                    Compartilhe sua conquista com seus amigos e desafie-os a superar seu desempenho!<br/><br/>
-
-                    🔥 Quão rápido você pode ser? Descubra em Tabuada Divertida! 💥
-                </h3>
-                :
-                <h3>
-                    Não foi dessa vez, sua pontuação não foi suficiente para entrar no ranking 😢🧠💪<br/><br/>
-                    ✅Você acertou {localStorage.getItem(configData.QUANTIDADE_ACERTOS)} de {localStorage.getItem(configData.QUANTIDADE_PARAM)}! ⏱️⚡️<br/>
-                    Você levou apenas {localStorage.getItem(configData.TEMPO_PARAM)} segundos! ⏱️<br/><br/>
-                    Pontuação final: {localStorage.getItem(configData.PONTUACAO)} | Recorde: {localStorage.getItem(configData.RECORDE)}<br/><br/>
-                    Compartilhe sua conquista com seus amigos e desafie-os a superar seu desempenho!<br/><br/>
-
-                    🔥 Quão rápido você pode ser? Descubra em Tabuada Divertida! 💥
-                </h3>
-            }
+            <div className='final-numeros'>
+                <div className='final-numero'>
+                    <span>🎯 Acertos</span>
+                    <strong>{acertos}/{total} · {percentual}%</strong>
+                </div>
+                <div className='final-numero'>
+                    <span>⏱️ Tempo</span>
+                    <strong>{pluralize(tempo, 'segundo', 'segundos')}</strong>
+                </div>
+                <div className='final-numero'>
+                    <span>⭐ Pontuação</span>
+                    <strong>{pontuacao}</strong>
+                </div>
+                <div className='final-numero'>
+                    <span>🏆 Recorde</span>
+                    <strong>{recorde}</strong>
+                </div>
+            </div>
             {
                 conquistas.length > 0 &&
-                <div className='respostasQuestoes'>
-                    <h2>
-                        🏅 Medalhas desta partida:
-                    </h2>
-                    <p>Toque numa medalha para compartilhar só ela.</p>
-                    <div className='resultados-lista'>
+                <div className='final-medalhas'>
+                    <p>🏅 Medalhas desta partida <small>(toque para compartilhar)</small></p>
+                    <div className='final-medalhas__lista'>
                         {
                             conquistas.map(({ medalha, nivel }) => {
                                 return(
-                                    <button type='button' className='resultados-item resultados-item--botao' key={medalha.id} title='Compartilhar esta conquista' onClick={() => compartilharResultado(resultadoDaConquista(conquistaDaMedalha(medalha.id, nivel)[0]))}>
-                                        <h3>
-                                            {medalha.icone} {medalha.nome}{nomeNivel(medalha, nivel) && ` · ${nomeNivel(medalha, nivel)}`}
-                                        </h3>
+                                    <button type='button' className='final-medalha' key={medalha.id} title='Compartilhar esta conquista' onClick={() => compartilharResultado(resultadoDaConquista(conquistaDaMedalha(medalha.id, nivel)[0]))}>
+                                        {medalha.icone} {medalha.nome}{nomeNivel(medalha, nivel) && ` · ${nomeNivel(medalha, nivel)}`}
                                     </button>
                                 )
                             })
@@ -201,53 +195,73 @@ function Final(){
                     </div>
                 </div>
             }
-            <div className='respostasQuestoes'>
-                <h2>
-                    Respostas:
-                </h2>
-                <div className='resultados-lista'>
-                    {
-                        questoes.map((questao, index) => {
-                            return(
-                                <div className='resultados-item' key={index}>
-                                    <h3>
-                                        {questao.questao} = {questao.resposta} {questao.correta ? '🎉' : '😫'}
-                                    </h3>
-                                </div>
-                            )
-                        })
-                    }
-                </div>
-            </div>
 
-            <div className='botoes'>
-                <CompartilharResultado resultado={buildShareResult()} className='global-button global-button--full-width' rotulo={canShare ? 'Compartilhar resultado' : 'Copiar resultado'} classeRotulo='option-link' />
+            <div className='final-acoes'>
                 <a className='global-button global-button--full-width' href={`/contagem/` + tipo}>
                     <span className='option-link'>
-                        Jogar novamente
+                        🔁 Jogar novamente
                     </span>
                 </a>
-                <a className='global-button global-button--full-width' href={`/ranking`}>
-                    <span className='option-link'>
-                        Ranking
-                    </span>
-                </a>
-                <a className='global-button global-button--full-width' href="/progresso?aba=resultados">
-                    <span className='option-link'>
-                        Meus Resultados
-                    </span>
-                </a>
-                <a className='global-button global-button--full-width' href="/progresso?aba=conquistas">
-                    <span className='option-link'>
-                        Minhas conquistas
-                    </span>
-                </a>
-                <a className='global-button global-button--full-width' href="/">
-                    <span className='option-link'>
-                        Início
-                    </span>
-                </a>
+                <div className='final-acoes__linha'>
+                    <a className='global-button global-button--back' href='/selecionarjogo'>
+                        <span className='option-link'>
+                            🔀 Mudar jogo
+                        </span>
+                    </a>
+                    <CompartilharResultado resultado={buildShareResult()} className='global-button final-botao' rotulo={canShare ? '📤 Compartilhar' : '📋 Copiar resultado'} classeRotulo='option-link' />
+                </div>
+                {
+                    erradas.length > 0 &&
+                    <button type='button' className='global-button final-botao' onClick={treinarErros}>
+                        <span className='option-link'>
+                            🎯 Treinar {erradas.length === 1 ? 'o erro' : `os ${erradas.length} erros`}
+                        </span>
+                    </button>
+                }
+                {
+                    respostas.length > 0 &&
+                    <div className='final-respostas'>
+                        <button type='button' className='final-respostas__botao' aria-expanded={respostasAbertas} onClick={() => setRespostasAbertas(!respostasAbertas)}>
+                            <span>📋 Ver respostas · {pluralize(respostasCertas, 'certa', 'certas')}, {pluralize(respostas.length - respostasCertas, 'errada', 'erradas')}</span>
+                            <span aria-hidden='true'>{respostasAbertas ? '▲' : '▼'}</span>
+                        </button>
+                        {
+                            respostasAbertas &&
+                            <ul className='final-respostas__lista'>
+                                {
+                                    respostas.map((resposta, index) => {
+                                        return(
+                                            <li className={`final-resposta ${resposta.correta ? 'final-resposta--certa' : 'final-resposta--errada'}`} key={index}>
+                                                {resposta.questao} = {
+                                                    resposta.correta || resposta.certa === null ?
+                                                    resposta.resposta
+                                                    :
+                                                    <><s>{resposta.resposta}</s> <strong>{resposta.certa}</strong></>
+                                                } {resposta.correta ? '🎉' : '😫'}
+                                            </li>
+                                        )
+                                    })
+                                }
+                            </ul>
+                        }
+                    </div>
+                }
             </div>
+
+            <nav className='final-atalhos' aria-label='Mais opções'>
+                <a href='/ranking'>
+                    <span aria-hidden='true'>🏆</span>
+                    Ranking
+                </a>
+                <a href='/progresso'>
+                    <span aria-hidden='true'>📈</span>
+                    Meu progresso
+                </a>
+                <a href='/'>
+                    <span aria-hidden='true'>🏠</span>
+                    Início
+                </a>
+            </nav>
         </div>
         </>
     )

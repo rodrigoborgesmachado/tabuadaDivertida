@@ -402,7 +402,7 @@ function Jogo(){
         const irParaFinal = () => {
             navigate('/final/' + tipoSelecionado, {
                 replace: true,
-                state: { conquistas: conquistas.map((conquista) => ({ id: conquista.medalha.id, nivel: conquista.nivel })), ganhoXp, conquistasPartida }
+                state: { conquistas: conquistas.map((conquista) => ({ id: conquista.medalha.id, nivel: conquista.nivel })), ganhoXp, conquistasPartida, novoRecorde: novaPontuacao > recordeAnterior }
             });
         };
 
