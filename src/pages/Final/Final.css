@@ -1,0 +1,208 @@
+.final {
+  gap: var(--double-default-spacing);
+}
+
+.final .robot-container {
+  margin: 0;
+}
+
+.final-cabecalho {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--default-spacing);
+  text-align: center;
+}
+
+.final-cabecalho h2 {
+  font-family: var(--font-title);
+  font-size: 1.6rem;
+  line-height: 1.2;
+}
+
+.final-cabecalho p {
+  color: var(--text-color-secondary);
+}
+
+.final-cabecalho .final-cabecalho__modo {
+  color: var(--text-color-primary);
+  font-weight: 700;
+}
+
+.final-cabecalho__imagem {
+  max-width: 100px;
+}
+
+.final-selo {
+  padding: 4px 14px;
+  border-radius: 999px;
+  background: rgba(255, 196, 0, 0.22);
+  border: 1px solid rgba(255, 176, 0, 0.55);
+  color: var(--text-color-primary);
+  font-weight: 800;
+}
+
+.final-numeros {
+  width: min(100%, 520px);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--default-spacing);
+}
+
+.final-numero {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 12px 14px;
+  background: var(--block-color);
+  border: 1px solid var(--panel-border-color);
+  border-radius: var(--default-border-radius);
+  box-shadow: var(--shadow-card);
+}
+
+.final-numero span {
+  font-size: 0.85rem;
+  color: var(--text-color-secondary);
+}
+
+.final-numero strong {
+  font-family: var(--font-title);
+  font-size: 1.3rem;
+  line-height: 1.2;
+  color: var(--text-color-primary);
+}
+
+.final-medalhas {
+  width: min(100%, 520px);
+  text-align: center;
+}
+
+.final-medalhas small {
+  color: var(--text-color-secondary);
+}
+
+.final-medalhas__lista {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--default-spacing);
+  margin-top: var(--default-spacing);
+}
+
+.final-medalha {
+  font: inherit;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: var(--transient-color-primary);
+  border: 1px solid var(--panel-border-color);
+  color: var(--text-color-primary);
+  cursor: pointer;
+}
+
+.final-acoes {
+  width: min(100%, 520px);
+  display: flex;
+  flex-direction: column;
+  gap: var(--default-spacing);
+  margin-top: var(--default-spacing);
+}
+
+.final-acoes__linha {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--default-spacing);
+}
+
+.final-acoes__linha > * {
+  flex: 1 1 180px;
+}
+
+.global-button.final-botao {
+  background: transparent;
+  color: var(--text-color-primary);
+  border: 1px solid var(--panel-border-color);
+  box-shadow: none;
+}
+
+.final-respostas {
+  border: 1px solid var(--panel-border-color);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.final-respostas__botao {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--default-spacing);
+  padding: 11px 14px;
+  font: inherit;
+  font-weight: 700;
+  text-align: left;
+  background: transparent;
+  border: none;
+  color: var(--text-color-primary);
+  cursor: pointer;
+}
+
+.final-respostas__lista {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 6px;
+  margin: 0;
+  padding: 0 10px 10px;
+}
+
+.final-resposta {
+  padding: 6px 10px;
+  border-radius: 10px;
+  font-weight: 700;
+  color: var(--text-color-primary);
+}
+
+.final-resposta--certa {
+  background: rgba(45, 187, 127, 0.16);
+}
+
+.final-resposta--errada {
+  background: rgba(224, 88, 106, 0.18);
+}
+
+.final-resposta s {
+  color: var(--text-color-secondary);
+}
+
+.final-atalhos {
+  width: min(100%, 520px);
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--default-spacing);
+  padding-top: var(--double-default-spacing);
+  border-top: 1px solid var(--separator-color-primary);
+}
+
+.final-atalhos a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: var(--default-spacing);
+  border-radius: var(--default-border-radius);
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-align: center;
+  text-decoration: none;
+  color: var(--text-color-secondary);
+}
+
+.final-atalhos a:hover {
+  background: var(--transient-color-second);
+  color: var(--text-color-primary);
+}
+
+.final-atalhos a span {
+  font-size: 1.4rem;
+}
