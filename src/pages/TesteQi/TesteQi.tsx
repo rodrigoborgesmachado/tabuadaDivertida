@@ -30,8 +30,6 @@ interface Recorde {
 }
 
 const STORAGE_KEY = 'tabuada-divertida-teste-qi-recorde';
-const TITULO = 'Teste de QI com Números: desafio de lógica | Tabuada Divertida';
-const DESCRICAO = 'Faça o Teste de QI com Números: 15 questões de sequências, grades, analogias e pirâmides em dificuldade crescente. Estilo teste de QI, só por diversão.';
 const AVISO = 'Estilo teste de QI, só por diversão. Não é um teste científico.';
 const MAXIMO_DIGITOS = 5;
 
@@ -66,22 +64,6 @@ function TesteQi() {
 
   const questao = questoes[indice];
   const acertos = respostas.filter((resposta) => resposta.correta).length;
-
-  useEffect(() => {
-    const tituloAnterior = document.title;
-    const meta = document.querySelector('meta[name="description"]');
-    const descricaoAnterior = meta?.getAttribute('content');
-
-    document.title = TITULO;
-    meta?.setAttribute('content', DESCRICAO);
-
-    return () => {
-      document.title = tituloAnterior;
-      if (descricaoAnterior) {
-        meta?.setAttribute('content', descricaoAnterior);
-      }
-    };
-  }, []);
 
   useEffect(() => {
     if (fase !== 'contagem') {

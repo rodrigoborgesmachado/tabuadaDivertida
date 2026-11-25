@@ -1,5 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react';
-import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
+import { BrowserRouter, MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
 import RoutesApp from '../../routes';
 import { STORAGE_PERFIL_VISTO } from '../../services/jogador';
 import Progresso, { abaDoProgresso } from './Progresso';
@@ -65,7 +65,7 @@ describe('Progresso', () => {
     window.localStorage.setItem(STORAGE_PERFIL_VISTO, '1');
     window.history.pushState({}, '', antiga);
 
-    render(<RoutesApp />);
+    render(<BrowserRouter><RoutesApp /></BrowserRouter>);
 
     expect(window.location.pathname).toBe('/progresso');
     expect(window.location.search).toBe(aba);

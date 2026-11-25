@@ -41,20 +41,16 @@ describe('TesteQi', () => {
   beforeEach(() => {
     vi.useFakeTimers();
     window.localStorage.clear();
-    document.head.innerHTML = '<meta name="description" content="Descrição padrão" />';
-    document.title = 'Tabuada Divertida';
   });
 
   afterEach(() => {
     vi.useRealTimers();
   });
 
-  it('shows the just for fun notice and sets the page title', () => {
+  it('shows the just for fun notice', () => {
     renderJogo();
 
     expect(screen.getByText('Estilo teste de QI, só por diversão. Não é um teste científico.')).toBeTruthy();
-    expect(document.title).toMatch(/^Teste de QI com Números/);
-    expect(document.querySelector('meta[name="description"]')?.getAttribute('content')).toMatch(/teste de QI/);
   });
 
   it('shows the countdown and then the first question with 4 options', () => {

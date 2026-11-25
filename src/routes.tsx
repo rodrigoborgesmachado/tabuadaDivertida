@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import Home from './pages/Home/Home';
 import TipoJogo from './pages/TipoJogo/TipoJogo';
 import Contagem from './pages/Contagem/Contagem';
@@ -36,6 +36,7 @@ import Personalizar from './pages/Personalizar/Personalizar';
 import AvisoConquista from './components/AvisoConquista/AvisoConquista';
 import ComemoracaoNivel from './components/ComemoracaoNivel/ComemoracaoNivel';
 import ScrollToTop from './components/ScrollToTop/ScrollToTop';
+import Metadados from './components/Metadados/Metadados';
 import AppNativo from './components/AppNativo/AppNativo';
 import BarraNavegacao from './components/BarraNavegacao/BarraNavegacao';
 import Mais from './pages/Mais/Mais';
@@ -43,8 +44,9 @@ import { ehApp } from './services/plataforma';
 
 function RoutesApp() {
     return(
-        <BrowserRouter>
+        <>
             <ScrollToTop/>
+            <Metadados/>
             <AppNativo/>
             <Header/>
             <Breadcrumbs />
@@ -89,7 +91,7 @@ function RoutesApp() {
                 <Route path='*' element={<Erro/>}/>
             </Routes>
             <BarraNavegacao/>
-        </BrowserRouter>
+        </>
     )
 }
 

@@ -35,7 +35,7 @@
   "scripts": {
     "start": "vite",
     "dev": "vite",
-    "build": "tsc && vite build && node -e \"const fs=require('fs'); fs.copyFileSync('routes.json','build/routes.json');\"",
+    "build": "tsc && vite build && vite build --ssr src/entry-server.tsx --outDir build-ssr && node scripts/prerender.js && node -e \"const fs=require('fs'); fs.copyFileSync('staticwebapp.config.json','build/staticwebapp.config.json');\"",
     "build:app": "tsc && vite build --mode app",
     "preview": "vite preview",
     "test": "vitest run",

@@ -11,6 +11,7 @@
 # production
 /build
 /build-app
+/build-ssr
 
 # misc
 .DS_Store
