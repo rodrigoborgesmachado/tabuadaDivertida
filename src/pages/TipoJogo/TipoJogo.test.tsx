@@ -1,5 +1,5 @@
 import { act, fireEvent, render, screen } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import { BrowserRouter, MemoryRouter } from 'react-router-dom';
 import configData from '../../Config.json';
 import { lerNome, lerQuantidade, salvarNome, salvarQuantidade, STORAGE_PERFIL_VISTO } from '../../services/jogador';
 import RoutesApp from '../../routes';
@@ -69,7 +69,7 @@ describe('TipoJogo', () => {
     window.localStorage.setItem(STORAGE_PERFIL_VISTO, '1');
     window.history.pushState({}, '', '/formulario');
 
-    render(<RoutesApp />);
+    render(<BrowserRouter><RoutesApp /></BrowserRouter>);
 
     expect(window.location.pathname).toBe('/selecionarjogo');
     expect(screen.getByText('Jogando como', { exact: false })).toBeTruthy();

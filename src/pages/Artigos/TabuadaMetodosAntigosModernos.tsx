@@ -1,26 +1,6 @@
-import { useEffect } from 'react';
 import './Artigos.css';
 
-const TITULO = 'Tabuada: métodos antigos x métodos modernos | Tabuada Divertida';
-const DESCRICAO = 'Compare as formas tradicionais de ensinar a tabuada com as abordagens modernas, veja prós e contras de cada uma e como combiná-las no aprendizado.';
-
 function TabuadaMetodosAntigosModernos() {
-    useEffect(() => {
-        const tituloAnterior = document.title;
-        const meta = document.querySelector('meta[name="description"]');
-        const descricaoAnterior = meta?.getAttribute('content');
-
-        document.title = TITULO;
-        meta?.setAttribute('content', DESCRICAO);
-
-        return () => {
-            document.title = tituloAnterior;
-            if (descricaoAnterior) {
-                meta?.setAttribute('content', descricaoAnterior);
-            }
-        };
-    }, []);
-
     return (
         <div className='global-pageContainer options-preview'>
             <header className='tabuada-description'>

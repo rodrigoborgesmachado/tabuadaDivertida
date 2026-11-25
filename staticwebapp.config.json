@@ -1,6 +1,6 @@
 {
   "navigationFallback": {
-    "rewrite": "/index.html",
+    "rewrite": "/fallback.html",
     "exclude": [
       "/assets/*",
       "/img/*",
@@ -18,7 +18,7 @@
     ]
   },
   "responseOverrides": {
-    "404": { "rewrite": "/index.html" }
+    "404": { "rewrite": "/fallback.html" }
   },
   "globalHeaders": {
     "X-Frame-Options": "SAMEORIGIN",
