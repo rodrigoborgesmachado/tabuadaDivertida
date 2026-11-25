@@ -605,6 +605,38 @@ describe('progresso', () => {
     window.removeEventListener(EVENTO_CONQUISTAS, ouvinte);
   });
 
+  describe('analytics', () => {
+    beforeEach(() => {
+      window.gtag = vi.fn();
+    });
+
+    afterEach(() => {
+      delete window.gtag;
+    });
+
+    it('sends the finished match with the hits, the total and the duration', () => {
+      partidaFinalizada({ jogo: 'tabuada', modo: 'M', pontuacao: 90, tempoMedio: 2.5, contas: [{ correta: true }, { correta: true }, { correta: false }, { correta: true }] }, dia);
+
+      expect(window.gtag).toHaveBeenCalledWith('event', 'game_completed', { jogo: 'tabuada', modo: 'M', pontuacao: 90, acertos: 3, total: 4, duracao_s: 10 });
+    });
+
+    it('sends the level and the total time when the game informs them', () => {
+      partidaFinalizada({ jogo: 'memoria', nivel: 'dificil', tempo: 42 }, dia);
+
+      expect(window.gtag).toHaveBeenCalledWith('event', 'game_completed', { jogo: 'memoria', nivel: 'dificil', duracao_s: 42 });
+    });
+
+    it('sends each new medal', () => {
+      salvarSemMedalhasNemDesafios();
+      salvarProgresso({ ...lerProgresso(), medalhas: { ...lerProgresso().medalhas, 'rumo-ao-2048': undefined } });
+
+      registrarProgresso({ jogo: '2048', maiorPeca: 512 }, dia);
+
+      expect(window.gtag).toHaveBeenCalledWith('event', 'unlock_achievement', { achievement_id: 'rumo-ao-2048', nivel: 1 });
+      expect(window.gtag).not.toHaveBeenCalledWith('event', 'game_completed', expect.anything());
+    });
+  });
+
   it('counts the played days only for finished matches and unlocks the constancy medal', () => {
     registrarProgresso({ jogo: '2048', maiorPeca: 64 }, new Date(2026, 10, 1, 15, 0));
     partidaFinalizada({ jogo: 'memoria' }, dia);

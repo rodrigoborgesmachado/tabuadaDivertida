@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import BarraXp from '../../components/BarraXp/BarraXp';
 import RoboPersonalizado from '../../components/RoboPersonalizado/RoboPersonalizado';
 import { lerProgresso } from '../../gamificacao/progresso';
+import { registrarEvento } from '../../services/analytics';
 import {
   chaveDaRecompensa,
   condicaoRecompensa,
@@ -73,6 +74,9 @@ function Personalizar() {
         disabled={!liberada}
         onClick={() => {
           salvarPersonalizacao({ ...personalizacao, [chave]: ativa && !PERSONALIZACAO_PADRAO[chave] ? '' : recompensa.id });
+          if (!ativa) {
+            registrarEvento('customize_robot', { tipo: chave, item: recompensa.id });
+          }
           if (recompensa.tipo === 'som') {
             playSuccess();
           }

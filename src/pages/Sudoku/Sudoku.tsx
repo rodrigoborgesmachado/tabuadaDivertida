@@ -2,6 +2,7 @@ import { CSSProperties, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import confetti from 'canvas-confetti';
 import { lerProgresso, partidaFinalizada } from '../../gamificacao/progresso';
+import { partidaIniciada } from '../../services/analytics';
 import { conquistasDaPartida, type ConquistaPartida } from '../../services/compartilhar';
 import { urlDoSite } from '../../services/plataforma';
 import { playSuccess } from '../../services/sons';
@@ -108,6 +109,7 @@ function Sudoku() {
   const iniciarJogo = (id = modoId) => {
     const escolhido = buscarModo(id) || MODOS[0];
     const { inicial, solucao } = gerarTabuleiro(escolhido);
+    partidaIniciada('sudoku', { modo: escolhido.id });
     setPartida({ modo: escolhido.id, inicial, solucao, grade: copiarGrade(inicial), dicas: [], dicasUsadas: 0, historico: [], segundos: 0, desfez: false, marcouErros: false });
     setSelecionada(null);
     setResultado(null);

@@ -5,6 +5,7 @@ import confetti from 'canvas-confetti';
 import { lerNome } from '../../services/jogador';
 import { compartilharResultado, conquistaDaMedalha, resultadoDaConquista, type ConquistaPartida, type ResultadoCompartilhado } from '../../services/compartilhar';
 import { urlDoSite } from '../../services/plataforma';
+import { registrarEvento } from '../../services/analytics';
 import type { Questao } from '../../services/historico';
 import great from '../../assets/great.png';
 import donkey from '../../assets/donkey.png';
@@ -98,6 +99,7 @@ function Final(){
     };
 
     const treinarErros = () => {
+        registrarEvento('train_errors', { modo: tipo, total: erradas.length });
         localStorage.setItem(configData.TREINO, JSON.stringify(erradas));
         localStorage.setItem(configData.QUANTIDADE_PARAM, String(erradas.length));
         navigate('/contagem/T');

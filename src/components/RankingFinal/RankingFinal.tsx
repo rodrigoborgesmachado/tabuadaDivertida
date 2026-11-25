@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { lerNome, salvarNome } from '../../services/jogador';
 import { buscarRanking, enviarResultado, informarNome, normalizarNome, posicaoNoRanking, TOP_RANKING, type DadosResultado, type JogoComRanking } from '../../services/resultadosJogos';
 import { semConexao } from '../../services/plataforma';
+import { registrarEvento } from '../../services/analytics';
 import './RankingFinal.css';
 
 interface RankingFinalProps {
@@ -31,7 +32,11 @@ function RankingFinal({ jogo, modo, resultado }: RankingFinalProps) {
   const mostrarPosicao = useCallback(async (nomeJogador: string) => {
     try {
       const { lista } = await buscarRanking(jogo, modo);
-      setPosicao(posicaoNoRanking(lista, nomeJogador));
+      const posicaoJogador = posicaoNoRanking(lista, nomeJogador);
+      setPosicao(posicaoJogador);
+      if (posicaoJogador !== null) {
+        registrarEvento('post_score', { jogo, modo, score: resultadoRef.current.pontuacao, posicao: posicaoJogador });
+      }
     } catch {}
     setStatus('enviado');
   }, [jogo, modo]);

@@ -4,6 +4,7 @@ import { playError, playSuccess } from '../../services/sons';
 import { conquistasDaPartida, type ConquistaPartida } from '../../services/compartilhar';
 import { urlDoSite } from '../../services/plataforma';
 import { lerProgresso, partidaFinalizada } from '../../gamificacao/progresso';
+import { partidaIniciada } from '../../services/analytics';
 import BarraXp from '../../components/BarraXp/BarraXp';
 import BotaoSom from '../../components/BotaoSom/BotaoSom';
 import CompartilharResultado from '../../components/CompartilharResultado/CompartilharResultado';
@@ -192,6 +193,7 @@ function QueHorasSao() {
   }, [fase]);
 
   const iniciarJogo = () => {
+    partidaIniciada('que-horas-sao', { modo: `relogio-${nivel}` });
     const novas = gerarPartida(nivel);
     cancelarProximo();
     setQuestoes(novas);

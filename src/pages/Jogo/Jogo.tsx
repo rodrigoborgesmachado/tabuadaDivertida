@@ -4,11 +4,12 @@ import Tempo from '../../components/Tempo';
 import api from '../../services/api';
 import { TIMEOUT_ENVIO } from '../../services/resultadosJogos';
 import { lerNome } from '../../services/jogador';
+import { partidaIniciada } from '../../services/analytics';
 import { playError, playSuccess } from '../../services/sons';
 import { salvarPartida, type Questao } from '../../services/historico';
 import { conquistasDaPartida, type ConquistaPartida } from '../../services/compartilhar';
 import { contasDaTabuada, lerProgresso, partidaFinalizada, type Conquista } from '../../gamificacao/progresso';
-import { KeyboardEvent, useEffect, useMemo, useState } from 'react';
+import { KeyboardEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import Keypad from "../../components/Keypad/Keypad";
@@ -33,6 +34,7 @@ function Jogo(){
     const [contasCorrente, setContasCorrente] = useState('');
     const [respostaEsperada, setRespostaEsperada] = useState<number | null>(null);
     const [resposta, setResposta] = useState('');
+    const partidaIniciadaRef = useRef(false);
     const navigate = useNavigate();
     const [pontuacao, setPontuacao] = useState(0);
     const [recorde, setRecorde] = useState(parseInt(localStorage.getItem(configData.RECORDE) || '0'));
@@ -135,6 +137,10 @@ function Jogo(){
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
+        if (!partidaIniciadaRef.current) {
+            partidaIniciadaRef.current = true;
+            partidaIniciada('tabuada', { modo: tipoSelecionado });
+        }
         localStorage.setItem(configData.QUESTOES, JSON.stringify([]));
         localStorage.setItem(configData.PONTUACAO, '0');
 

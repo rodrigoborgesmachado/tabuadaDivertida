@@ -8,6 +8,7 @@ import { idsLiberados, idsLiberadosNaCurvaAnterior } from './recompensas';
 import { calcularNivel, nivelNaCurvaAnterior, xpDaPartida, xpDasMedalhas, xpDoDesafio, xpDoJogo, xpInicial, type NivelXp } from './xp';
 import { gravarItem } from '../services/armazenamento';
 import { ativarBoosters, boostersAtivados, multiplicadorDeXp, type BoosterAtivado } from './boosters';
+import { registrarEvento } from '../services/analytics';
 
 export const STORAGE_KEY = 'tabuada-divertida-progresso';
 export const EVENTO_CONQUISTAS = 'tabuada-divertida-conquistas';
@@ -490,6 +491,7 @@ const registrar = (evento: EventoJogo, finalizada: boolean, data: Date) => {
 
   if (novas.length > 0) {
     window.dispatchEvent(new CustomEvent<Conquista[]>(EVENTO_CONQUISTAS, { detail: novas }));
+    novas.forEach(({ medalha, nivel }) => registrarEvento('unlock_achievement', { achievement_id: medalha.id, nivel }));
   }
 
   const boosters = boostersAtivados(anterior, progresso, data);
@@ -506,7 +508,19 @@ const registrar = (evento: EventoJogo, finalizada: boolean, data: Date) => {
   return novas;
 };
 
-export const partidaFinalizada = (evento: EventoJogo, data = new Date()) => registrar(evento, true, data);
+export const partidaFinalizada = (evento: EventoJogo, data = new Date()) => {
+  const contas = evento.contas || [];
+  registrarEvento('game_completed', {
+    jogo: evento.jogo,
+    modo: evento.modo,
+    nivel: evento.nivel ?? evento.nivelRobo,
+    pontuacao: evento.pontuacao,
+    acertos: contas.length > 0 ? contas.filter((conta) => conta.correta).length : undefined,
+    total: contas.length > 0 ? contas.length : undefined,
+    duracao_s: evento.tempo ?? (evento.tempoMedio && contas.length > 0 ? Math.round(evento.tempoMedio * contas.length) : undefined),
+  });
+  return registrar(evento, true, data);
+};
 
 export const registrarProgresso = (evento: EventoJogo, data = new Date()) => registrar(evento, false, data);
 

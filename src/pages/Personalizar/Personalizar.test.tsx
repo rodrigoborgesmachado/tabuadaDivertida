@@ -110,6 +110,20 @@ describe('Personalizar', () => {
     expect(JSON.parse(window.localStorage.getItem(STORAGE_PERSONALIZACAO) || '{}').bichinho).toBe('');
   });
 
+  it('sends the chosen item to analytics only when it is chosen', () => {
+    window.gtag = vi.fn();
+    salvarProgresso({ xp: xpTotalDoNivel(38) });
+    renderPersonalizar();
+    abrirAba('🐾 Bichinhos');
+
+    fireEvent.click(item('Gatinho'));
+    fireEvent.click(item('Gatinho'));
+
+    expect(window.gtag).toHaveBeenCalledTimes(1);
+    expect(window.gtag).toHaveBeenCalledWith('event', 'customize_robot', { tipo: 'bichinho', item: 'bichinho-gato' });
+    delete window.gtag;
+  });
+
   it('plays the chosen sound set and keeps the default one selected', () => {
     salvarProgresso({ xp: xpTotalDoNivel(36) });
     renderPersonalizar();
