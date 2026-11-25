@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import confetti from 'canvas-confetti';
 import { addRandomTile, createInitialBoard, getSwipeDirection, hasNoMoves, moveBoard, type Board, type Direction } from './logic';
 import { lerProgresso, partidaFinalizada, registrarProgresso, type Progresso } from '../../gamificacao/progresso';
+import { partidaIniciada } from '../../services/analytics';
 import { conquistasDaPartida, type ConquistaPartida } from '../../services/compartilhar';
 import { urlDoSite } from '../../services/plataforma';
 import BarraXp from '../../components/BarraXp/BarraXp';
@@ -107,12 +108,20 @@ function Jogo2048() {
   const partidaRegistradaRef = useRef(false);
   const desfezRef = useRef(false);
   const progressoInicialRef = useRef<Progresso | null>(null);
+  const partidaNovaRef = useRef(initialState.history.length === 0);
   const [xpPartida, setXpPartida] = useState<{ xp: number; ganho: number } | null>(null);
   const [resultadoPartida, setResultadoPartida] = useState<{ id: number; pontuacao: number; maiorPeca: number; conquistas: ConquistaPartida[] } | null>(null);
 
   if (!progressoInicialRef.current) {
     progressoInicialRef.current = lerProgresso();
   }
+
+  useEffect(() => {
+    if (partidaNovaRef.current) {
+      partidaNovaRef.current = false;
+      partidaIniciada('2048');
+    }
+  }, []);
 
   useEffect(() => {
     scoreRef.current = score;
@@ -206,6 +215,7 @@ function Jogo2048() {
       registrarPartida();
     }
 
+    partidaIniciada('2048');
     const freshBoard = createInitialBoard();
     maiorPecaRef.current = getMaiorPeca(freshBoard);
     partidaRegistradaRef.current = false;

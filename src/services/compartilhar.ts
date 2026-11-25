@@ -10,6 +10,7 @@ import { buscarMedalha, nomeNivel } from '../gamificacao/medalhas';
 import type { Progresso } from '../gamificacao/progresso';
 import { calcularNivel } from '../gamificacao/xp';
 import { lerNome } from './jogador';
+import { registrarEvento } from './analytics';
 import { ehApp, urlDoSite } from './plataforma';
 
 export const MAXIMO_CONQUISTAS = 3;
@@ -60,11 +61,13 @@ export const compartilhar = async (title: string, text: string) => {
   try {
     if (navigator.share) {
       await navigator.share({ title, text });
+      registrarEvento('share', { method: 'nativo' });
       return;
     }
 
     if (navigator.clipboard) {
       await navigator.clipboard.writeText(text);
+      registrarEvento('share', { method: 'copiar' });
       toast.success('Texto copiado para compartilhar.');
       return;
     }
@@ -234,6 +237,7 @@ export const compartilharResultado = async (resultado: ResultadoCompartilhado, a
   if (imagem && (navigator as any).canShare?.({ files: [imagem] })) {
     try {
       await (navigator as any).share({ title: resultado.jogo, text: texto, files: [imagem] });
+      registrarEvento('share', { method: 'nativo' });
       return;
     } catch (erro) {
       if ((erro as Error)?.name === 'AbortError') {
@@ -257,5 +261,6 @@ export const baixarImagem = async (resultado: ResultadoCompartilhado) => {
   link.href = url;
   link.download = NOME_IMAGEM;
   link.click();
+  registrarEvento('share', { method: 'imagem' });
   window.setTimeout(() => URL.revokeObjectURL(url), 1000);
 };

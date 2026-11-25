@@ -5,6 +5,7 @@ import { playError, playSuccess } from '../../services/sons';
 import { salvarPartida } from '../../services/historico';
 import { conquistasDaPartida, type ConquistaPartida } from '../../services/compartilhar';
 import { lerProgresso, partidaFinalizada } from '../../gamificacao/progresso';
+import { partidaIniciada } from '../../services/analytics';
 import BarraXp from '../../components/BarraXp/BarraXp';
 import BotaoSom from '../../components/BotaoSom/BotaoSom';
 import RankingFinal from '../../components/RankingFinal/RankingFinal';
@@ -224,6 +225,7 @@ function TesteQi() {
   }, [fase, questao, feedback, respostas, responder, confirmar, irParaProxima]);
 
   const iniciarJogo = () => {
+    partidaIniciada('teste-qi');
     const novas = gerarPartida();
     setQuestoes(novas);
     setIndice(0);

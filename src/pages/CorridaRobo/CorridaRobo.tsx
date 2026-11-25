@@ -6,6 +6,7 @@ import { salvarPartida, type Questao } from '../../services/historico';
 import { conquistasDaPartida, type ConquistaPartida } from '../../services/compartilhar';
 import { urlDoSite } from '../../services/plataforma';
 import { contasDaTabuada, lerProgresso, partidaFinalizada } from '../../gamificacao/progresso';
+import { partidaIniciada } from '../../services/analytics';
 import { usePersonalizacao } from '../../gamificacao/usePersonalizacao';
 import BarraXp from '../../components/BarraXp/BarraXp';
 import BotaoSom from '../../components/BotaoSom/BotaoSom';
@@ -189,6 +190,7 @@ function CorridaRobo() {
   }, [fase, casas, nivel, decorrido, totalCasas, recordes, chave, questoes, acertos, operacao]);
 
   const iniciarCorrida = () => {
+    partidaIniciada('corrida-robo', { modo: operacao, nivel });
     setConta(null);
     setResposta('');
     setCasas(0);

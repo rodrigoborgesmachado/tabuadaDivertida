@@ -2,6 +2,7 @@ import { CSSProperties, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { falar, pararFala, playSuccess } from '../../services/sons';
 import { lerProgresso, partidaFinalizada } from '../../gamificacao/progresso';
+import { partidaIniciada } from '../../services/analytics';
 import BarraXp from '../../components/BarraXp/BarraXp';
 import BotaoSom from '../../components/BotaoSom/BotaoSom';
 import ComoJogar from '../../components/ComoJogar/ComoJogar';
@@ -110,6 +111,7 @@ function ContandoBichinhos() {
   };
 
   const iniciarJogo = () => {
+    partidaIniciada('contando-bichinhos', { nivel });
     cancelarProximo();
     setDesafios(gerarPartida(nivel));
     setErros(0);

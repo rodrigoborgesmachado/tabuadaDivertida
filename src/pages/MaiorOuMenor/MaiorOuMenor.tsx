@@ -6,6 +6,7 @@ import { salvarPartida, type Questao } from '../../services/historico';
 import { conquistasDaPartida, type ConquistaPartida } from '../../services/compartilhar';
 import { urlDoSite } from '../../services/plataforma';
 import { lerProgresso, partidaFinalizada } from '../../gamificacao/progresso';
+import { partidaIniciada } from '../../services/analytics';
 import BarraXp from '../../components/BarraXp/BarraXp';
 import BotaoSom from '../../components/BotaoSom/BotaoSom';
 import CompartilharResultado from '../../components/CompartilharResultado/CompartilharResultado';
@@ -165,6 +166,7 @@ function MaiorOuMenor() {
   }, [fase, tempo, pontos, questoes, segundos, recordes, chave]);
 
   const iniciarJogo = () => {
+    partidaIniciada('maior-ou-menor', { modo: modalidade, nivel });
     limparFeedback();
     setRodada(null);
     setTempo(CONFIG_NIVEL[nivel].segundos);

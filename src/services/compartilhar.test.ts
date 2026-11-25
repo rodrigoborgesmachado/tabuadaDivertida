@@ -110,6 +110,18 @@ describe('compartilhar', () => {
 
       expect(share).toHaveBeenCalledWith({ title: 'Tabuada Divertida', text: montarTextoResultado(resultado()) });
     });
+
+    it('sends the share to analytics only when it is completed', async () => {
+      window.gtag = vi.fn();
+
+      await compartilharResultado(resultado());
+      share.mockRejectedValue(Object.assign(new Error('cancelado'), { name: 'AbortError' }));
+      await compartilharResultado(resultado());
+
+      expect(window.gtag).toHaveBeenCalledTimes(1);
+      expect(window.gtag).toHaveBeenCalledWith('event', 'share', { method: 'nativo' });
+      delete window.gtag;
+    });
   });
 
   describe('app share', () => {
