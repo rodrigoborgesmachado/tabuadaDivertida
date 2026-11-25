@@ -6,8 +6,11 @@ export default defineConfig(({ mode }) => ({
   plugins: [
     react(),
     mode === 'app' && {
-      name: 'remover-adsense',
-      transformIndexHtml: (html: string) => html.replace(/\s*<script[^>]*adsbygoogle[^>]*><\/script>/, ''),
+      name: 'remover-adsense-analytics',
+      transformIndexHtml: (html: string) => html
+        .replace(/\s*<script[^>]*adsbygoogle[^>]*><\/script>/, '')
+        .replace(/\s*<script[^>]*googletagmanager[^>]*><\/script>/, '')
+        .replace(/\s*<script id="google-analytics">[\s\S]*?<\/script>/, ''),
     },
   ],
   server: {
